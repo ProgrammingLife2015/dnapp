@@ -1,5 +1,6 @@
 package graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Graph {
@@ -9,7 +10,7 @@ public class Graph {
 		this.nodes = nodes;
 	}
 	
-	public Collection<Node> getNodes() {
-		return nodes;
+	public ArrayList<Node> getNodes() {
+		return (ArrayList<Node>) nodes;
 	}
 }
