@@ -11,6 +11,6 @@ public class Graph {
 	}
 	
 	public ArrayList<Node> getNodes() {
-		return (ArrayList<Node>) nodes;
+		return new ArrayList<Node>(nodes);
 	}
 }
