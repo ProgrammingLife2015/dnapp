@@ -16,7 +16,7 @@ public class NodeReaderTest {
     File file = new File("src/test/resources/test.txt");
     Scanner sc = new Scanner(file);
     Graph graph = NodeReader.ReadNodes(sc);
-    assertEquals(graph.getNodes().get(0).getID(),0);
+    assertEquals(graph.getNodes().get(0).getId(),0);
   }
 
 }
