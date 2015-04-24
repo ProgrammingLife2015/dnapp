@@ -12,7 +12,7 @@ public class NodeReader {
       String nextnode = sc.nextLine();
       if(nextnode.charAt(0)=='>'){
         nextnode = nextnode.substring(1);
-        String[] n = nextnode.replace("\\s", "").split("\\|");
+        String[] n = nextnode.split("\\s\\|\\s");
         if(n.length!=4) {
           //TODO some error
         }

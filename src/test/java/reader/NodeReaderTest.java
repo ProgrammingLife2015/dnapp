@@ -12,11 +12,11 @@ import org.junit.Test;
 public class NodeReaderTest {
 
   @Test
-  public void test() throws FileNotFoundException {
-    File file = new File("src\\main\\resources\\test.txt");
+  public void readOneNode() throws FileNotFoundException {
+    File file = new File("src/test/resources/test.txt");
     Scanner sc = new Scanner(file);
     Graph graph = NodeReader.ReadNodes(sc);
-    System.out.println(graph.getNodes().size());
+    assertEquals(graph.getNodes().get(0).getID(),0);
   }
 
 }
