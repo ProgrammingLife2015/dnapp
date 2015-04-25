@@ -3,6 +3,12 @@ package graph;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * 
+ * @author Marissa, Mark
+ * @date 25-04-2015
+ * Lets you create a Graph with Nodes and Edges
+ */
 public class Graph {
 	
   private ArrayList<Node> nodes;

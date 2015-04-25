@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Lets you create Nodes for the Graph.
  * 
  * @author Marissa, Mark
  * @date 25-04-2015
+ *  Lets you create Nodes for the Graph.
  */
 public class Node {
 
@@ -42,7 +42,6 @@ public class Node {
   }
 
   /**
-   * Adds an edge to a node
    * 
    * @param e
    *          The edge added to the node

@@ -9,8 +9,21 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * 
+ * @author Marissa, Mark
+ * @date 25-04-2015
+ * Lets you read in all the data and returns a Graph.
+ */
 public class Reader {
   
+  /**
+   * 
+   * @param nodes File location of the Nodes data.
+   * @param edges File location of the Edges data.
+   * @return Graph with this information processed.
+   * @throws FileNotFoundException If file is not found.
+   */
   public static Graph read(String nodes, String edges) throws FileNotFoundException {
     Graph graph = readNodes(nodes);
     ArrayList<Edge> edg = readEdges(edges);

@@ -4,8 +4,19 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import graph.*;
+/**
+ * 
+ * @author Marissa, Mark
+ * @date 25-04-2015
+ * Lets you read the Nodes from the provided data.
+ */
 public class NodeReader {
   
+  /**
+   * 
+   * @param sc Scanner from which contains the Node information.
+   * @return Returns a Graph containing all the Nodes, but no Edges.
+   */
   public static Graph ReadNodes(Scanner sc) {
     ArrayList<Node> nodes = new ArrayList<Node>();
     while(sc.hasNextLine()){

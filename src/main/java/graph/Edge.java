@@ -2,8 +2,9 @@ package graph;
 
 /**
  * 
- * @author Mark, Marissa
- * @date 25-04-2014
+ * @author Marissa, Mark
+ * @date 25-04-2015
+ * Lets you create Edges for a Graph
  */
 public class Edge {
 
