@@ -12,6 +12,11 @@ import java.util.Collection;
 public class Graph {
 	
   private ArrayList<Node> nodes;
+  
+  public Graph() {
+    this.nodes = new ArrayList<Node>();
+  }
+  
 	public Graph(Collection<Node> nodes) {
 		this.nodes = new ArrayList<Node>(nodes);
 	}
