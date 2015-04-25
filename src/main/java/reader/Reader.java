@@ -12,9 +12,13 @@ import java.util.Scanner;
 public class Reader {
   
   public static Graph read(String nodes, String edges) throws FileNotFoundException {
-    BufferedReader reader = new BufferedReader(new FileReader(nodes));
-    Scanner sc = new Scanner(reader);
-    return null;
+    Graph graph = readNodes(nodes);
+    ArrayList<Edge> edg = readEdges(edges);
+    for(int i = 0; i<edg.size();i++) {
+      int startid = edg.get(i).getStartNode();
+      graph.getNode(startid).addEdge(edg.get(i));
+    }
+    return graph;
   }
   
   private static Graph readNodes(String nodes) throws FileNotFoundException {

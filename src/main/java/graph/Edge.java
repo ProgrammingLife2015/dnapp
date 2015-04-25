@@ -1,5 +1,10 @@
 package graph;
 
+/**
+ * 
+ * @author Mark, Marissa
+ * @date 25-04-2014
+ */
 public class Edge {
 
   /**

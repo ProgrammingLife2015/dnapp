@@ -6,8 +6,8 @@ import java.util.Collection;
 /**
  * Lets you create Nodes for the Graph.
  * 
- * @author Marissa
- * @date 24-04-2015
+ * @author Marissa, Mark
+ * @date 25-04-2015
  */
 public class Node {
 
