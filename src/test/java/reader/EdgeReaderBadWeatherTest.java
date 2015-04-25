@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized.Parameters;
 import exceptions.InvalidFileFormatException;
 
 @RunWith(Parameterized.class)
-public class EdgeReaderBadWeather {
+public class EdgeReaderBadWeatherTest {
 
   private static String edge1 = "a 5";
   private static String edge2 = "5 a";
@@ -31,7 +31,7 @@ public class EdgeReaderBadWeather {
   
   private String edge;
   
-  public EdgeReaderBadWeather(String edge) {
+  public EdgeReaderBadWeatherTest(String edge) {
     this.edge = edge;
   }
   
