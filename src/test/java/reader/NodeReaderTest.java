@@ -6,6 +6,7 @@ import graph.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.junit.Test;
@@ -17,8 +18,8 @@ public class NodeReaderTest {
   @Test
   public void readOneNode() {
     Scanner sc = new Scanner(node);
-    Graph graph = NodeReader.ReadNodes(sc);
-    assertEquals(graph.getNodes().get(0).getId(),0);
+    ArrayList<Node> graph = NodeReader.ReadNodes(sc);
+    assertEquals(graph.get(0).getId(),0);
     sc.close();
   }
   

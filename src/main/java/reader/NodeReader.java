@@ -18,7 +18,7 @@ public class NodeReader {
    * @param sc Scanner from which contains the Node information.
    * @return Returns a Graph containing all the Nodes, but no Edges.
    */
-  public static Graph ReadNodes(Scanner sc) {
+  public static ArrayList<Node> ReadNodes(Scanner sc) {
     ArrayList<Node> nodes = new ArrayList<Node>();
     while(sc.hasNextLine()){
       String nextnode = sc.nextLine();
@@ -56,6 +56,6 @@ public class NodeReader {
         throw new InvalidFileFormatException("Every new node line should start with >");
       }
     }
-    return new Graph(nodes);
+    return nodes;
   }
 }
