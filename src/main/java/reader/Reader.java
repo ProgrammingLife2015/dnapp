@@ -26,10 +26,11 @@ public class Reader {
    */
   public static Graph read(String nodes, String edges) throws FileNotFoundException {
     Graph graph = readNodes(nodes);
-    ArrayList<Edge> edg = readEdges(edges);
-    for(int i = 0; i<edg.size();i++) {
-      int startid = edg.get(i).getStartNode();
-      graph.getNode(startid).addEdge(edg.get(i));
+    for(Edge e : readEdges(edges)) {
+      int startid = e.getStartNode();
+      graph.getNode(startid).addEdge(e);
+      int endid = e.getEndNode();
+      graph.getNode(endid).addEdge(e);
     }
     return graph;
   }
