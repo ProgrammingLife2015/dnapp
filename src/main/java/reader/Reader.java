@@ -34,7 +34,7 @@ public class Reader {
     ArrayList<Edge> edge = readEdges(edges);
     Graph g = new SingleGraph("DNA Sequencing Graph");
     for (Node n : node) {
-      g.addNode(String.valueOf(n.getId()));
+      g.addNode(String.valueOf(n.getId())); //TODO not all properties are implemented yet
     }
     for (Edge e : edge) {
       g.addEdge(String.valueOf(e.getStartNode()) + String.valueOf(e.getEndNode()),
