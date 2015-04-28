@@ -35,6 +35,8 @@ public class Reader {
     Graph g = new SingleGraph("DNA Sequencing Graph");
     for (Node n : node) {
       g.addNode(String.valueOf(n.getId()));
+      g.getNode(n.getId()).addAttribute("start", n.getStart());
+      g.getNode(n.getId()).addAttribute("ui.label", n.getId());
     }
     for (Edge e : edge) {
       g.addEdge(String.valueOf(e.getStartNode()) + String.valueOf(e.getEndNode()),
