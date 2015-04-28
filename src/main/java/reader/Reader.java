@@ -36,6 +36,7 @@ public class Reader {
     for (Node n : node) {
       g.addNode(String.valueOf(n.getId()));
       g.getNode(n.getId()).addAttribute("start", n.getStart());
+      g.getNode(n.getId()).addAttribute("depth", 0);
       g.getNode(n.getId()).addAttribute("ui.label", n.getId());//TODO not all properties are implemented yet
     }
     for (Edge e : edge) {
