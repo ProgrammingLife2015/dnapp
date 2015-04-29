@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -11,30 +12,35 @@ import java.util.StringTokenizer;
  * http://www.cs.dartmouth.edu/~cbk/10/notes/7/code/BinaryTree.java
  * 
  * @author Chris Bailey-Kellogg, Dartmouth CS 10, Fall 2012
- * 
- * @param <E>
- *            the type of the data the tree carries.
  */
-public class BinaryTree<E> {
+public class BinaryTree {
 
 	/**
 	 * 
 	 */
-	private final BinaryTree<E> left, right; // children; can be null
+	private final BinaryTree left, right; // children; can be null
 
 	/**
 	 * 
 	 */
-	private E data;
+	private final double pathLength;
+
+	/**
+	 * 
+	 */
+	private String name;
 
 	/**
 	 * Constructs leaf node with no children.
 	 * 
-	 * @param dataIn
-	 *            the data to carry
+	 * @param nameIn
+	 *            The name of the node
+	 * @param length
+	 *            The path length
 	 */
-	public BinaryTree(final E dataIn) {
-		this.data = dataIn;
+	public BinaryTree(final String nameIn, final double length) {
+		this.name = nameIn;
+		this.pathLength = length;
 		this.left = null;
 		this.right = null;
 	}
@@ -42,18 +48,21 @@ public class BinaryTree<E> {
 	/**
 	 * Constructs inner node.
 	 * 
-	 * @param dataIn
-	 *            the data to carry
-	 * @param leftIn
-	 *            the left child
-	 * @param rightIn
-	 *            the right child
+	 * @param nameIn
+	 *            The name of the node
+	 * @param dist
+	 *            The distance to the parent.
+	 * @param leftChild
+	 *            The left child.
+	 * @param rightChild
+	 *            The right child.
 	 */
-	public BinaryTree(final E dataIn, final BinaryTree<E> leftIn,
-			final BinaryTree<E> rightIn) {
-		this.data = dataIn;
-		this.left = leftIn;
-		this.right = rightIn;
+	public BinaryTree(final String nameIn, final double dist,
+			final BinaryTree leftChild, final BinaryTree rightChild) {
+		this.name = nameIn;
+		this.pathLength = dist;
+		this.left = leftChild;
+		this.right = rightChild;
 	}
 
 	/**
@@ -85,7 +94,6 @@ public class BinaryTree<E> {
 	}
 
 	/**
-	 * 
 	 * @return the number of nodes (inner and leaf) in tree.
 	 */
 	public final int size() {
@@ -124,11 +132,11 @@ public class BinaryTree<E> {
 	 *            the tree to compare with
 	 * @return true iff this tree is equal to t2
 	 */
-	public final boolean equalsTree(final BinaryTree<E> t2) {
+	public final boolean equalsTree(final BinaryTree t2) {
 		if (hasLeft() != t2.hasLeft() || hasRight() != t2.hasRight()) {
 			return false;
 		}
-		if (!data.equals(t2.data)) {
+		if (!(pathLength == t2.pathLength)) {
 			return false;
 		}
 		if (hasLeft() && !left.equalsTree(t2.left)) {
@@ -143,8 +151,8 @@ public class BinaryTree<E> {
 	/**
 	 * @return leaves in order from left to right
 	 */
-	public final ArrayList<E> fringe() {
-		final ArrayList<E> f = new ArrayList<E>();
+	public final ArrayList<String> fringe() {
+		final ArrayList<String> f = new ArrayList<String>();
 		addToFringe(f);
 		return f;
 	}
@@ -160,9 +168,9 @@ public class BinaryTree<E> {
 	 * @param fringe
 	 *            the list to add to
 	 */
-	public final void addToFringe(final ArrayList<E> fringe) {
+	public final void addToFringe(final ArrayList<String> fringe) {
 		if (isLeaf()) {
-			fringe.add(data);
+			fringe.add(name);
 		} else {
 			if (hasLeft()) {
 				left.addToFringe(fringe);
@@ -188,12 +196,13 @@ public class BinaryTree<E> {
 	 * @return a visual text representation of the tree
 	 */
 	public final String toStringHelper(final String indent) {
-		String res = indent + data + "\n";
+		String res = indent + (name.equals("") ? "X" : name) + " (dist="
+				+ pathLength + ")\n";
 		if (hasLeft()) {
-			res += left.toStringHelper(indent + "  ");
+			res += left.toStringHelper(indent + "\t");
 		}
 		if (hasRight()) {
-			res += right.toStringHelper(indent + "  ");
+			res += right.toStringHelper(indent + "\t");
 		}
 		return res;
 	}
@@ -210,11 +219,10 @@ public class BinaryTree<E> {
 	 *            the string to parse
 	 * @return a phylogenetic tree
 	 */
-	public static BinaryTree<String> parseNewick(final String s) {
-		final BinaryTree<String> t = parseNewick(new StringTokenizer(s, "(,)",
-				true));
+	public static BinaryTree parseNewick(final String s) {
+		final BinaryTree t = parseNewick(new StringTokenizer(s, "(,)", true));
 		// Get rid of the semicolon
-		t.data = t.data.substring(0, t.data.length() - 1);
+		t.name = t.name.substring(0, t.name.length() - 1);
 		return t;
 	}
 
@@ -225,22 +233,41 @@ public class BinaryTree<E> {
 	 *            a string tokenizer
 	 * @return a phylogenetic tree
 	 */
-	public static BinaryTree<String> parseNewick(final StringTokenizer st) {
+	public static BinaryTree parseNewick(final StringTokenizer st) {
 		final String token = st.nextToken();
 		if (token.equals("(")) {
 			// Inner node
-			final BinaryTree<String> left = parseNewick(st);
+			final BinaryTree left = parseNewick(st);
 			st.nextToken(); // final String comma = st.nextToken();
-			final BinaryTree<String> right = parseNewick(st);
+			final BinaryTree right = parseNewick(st);
 			st.nextToken(); // final String close = st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new BinaryTree<String>(pieces[0], left, right);
+			System.out.println("label = " + label + " | split = "
+					+ Arrays.toString(pieces));
+			return new BinaryTree(pieces[0], parseDouble(pieces, 1), left,
+					right);
 		} else {
 			// Leaf
 			final String[] pieces = token.split(":");
-			return new BinaryTree<String>(pieces[0]);
+			return new BinaryTree(pieces[0], parseDouble(pieces, 1));
 		}
+	}
+
+	/**
+	 * 
+	 * @param array
+	 *            The array to extract the double from.
+	 * @param index
+	 *            The index in the array to parse the double from
+	 * @return the double value from the given array on the given index if the
+	 *         index exists, else: 0.0
+	 */
+	private static double parseDouble(final String[] array, final int index) {
+		if (index >= array.length) {
+			return 0.0;
+		}
+		return Double.parseDouble(array[index]);
 	}
 
 	/**
@@ -274,18 +301,18 @@ public class BinaryTree<E> {
 	 */
 	public static void main(final String[] args) throws IOException {
 		// Tree of life
-		final String s = readIntoString("inputs/itol.txt");
-		final BinaryTree<String> t = parseNewick(s);
+		final String s = readIntoString("src\\main\\resources\\nj_tree_10_strains.nwk");
+		final BinaryTree t = parseNewick(s);
 		System.out.println(t);
 		System.out.println("height:" + t.height());
 		System.out.println("size:" + t.size());
 
 		// Smaller trees
-		final BinaryTree<String> t1 = parseNewick("((a,b)c,(d,e)f)g;");
+		final BinaryTree t1 = parseNewick("((a,b)c,(d,e)f)g;");
 		System.out.println("fringe:" + t1.fringe());
 
-		final BinaryTree<String> t2 = parseNewick("((a,b)c,(d,e)f)g;");
-		final BinaryTree<String> t3 = parseNewick("((a,b)z,(d,e)f)g;");
+		final BinaryTree t2 = parseNewick("((a,b)c,(d,e)f)g;");
+		final BinaryTree t3 = parseNewick("((a,b)z,(d,e)f)g;");
 		System.out.println("== " + t1.equalsTree(t2) + " " + t1.equalsTree(t3));
 	}
 }
