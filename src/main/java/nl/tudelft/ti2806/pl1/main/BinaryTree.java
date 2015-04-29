@@ -27,7 +27,7 @@ public class BinaryTree {
 	/**
 	 * 
 	 */
-	private String name;
+	private final String name;
 
 	/**
 	 * Constructs leaf node with no children.
@@ -65,6 +65,20 @@ public class BinaryTree {
 	}
 
 	/**
+	 * @return the path length
+	 */
+	public final double getPathLength() {
+		return pathLength;
+	}
+
+	/**
+	 * @return the node name
+	 */
+	public final String getName() {
+		return name;
+	}
+
+	/**
 	 * @return true iff this is an inner node
 	 */
 	public final boolean isInner() {
@@ -90,6 +104,20 @@ public class BinaryTree {
 	 */
 	public final boolean hasRight() {
 		return right != null;
+	}
+
+	/**
+	 * @return the left child
+	 */
+	public final BinaryTree getLeft() {
+		return left;
+	}
+
+	/**
+	 * @return the right child
+	 */
+	public final BinaryTree getRight() {
+		return right;
 	}
 
 	/**
@@ -157,17 +185,13 @@ public class BinaryTree {
 	}
 
 	/**
-	 * Helper for fringe, adding fringe data to the list
-	 */
-
-	/**
-	 * Adds this node to a list if it is a leave, else the same recursively for
-	 * its two children.
+	 * Helper for fringe, adding fringe data to the list. Adds this node to a
+	 * list if it is a leave, else the same recursively for its two children.
 	 * 
 	 * @param fringe
 	 *            the list to add to
 	 */
-	public final void addToFringe(final ArrayList<String> fringe) {
+	private void addToFringe(final ArrayList<String> fringe) {
 		if (isLeaf()) {
 			fringe.add(name);
 		} else {
@@ -194,7 +218,7 @@ public class BinaryTree {
 	 *            indentation
 	 * @return a visual text representation of the tree
 	 */
-	public final String toStringHelper(final String indent) {
+	private String toStringHelper(final String indent) {
 		String res = indent + (name.equals("") ? "X" : name) + " (dist="
 				+ pathLength + ")\n";
 		if (hasLeft()) {
@@ -221,7 +245,7 @@ public class BinaryTree {
 	public static BinaryTree parseNewick(final String s) {
 		final BinaryTree t = parseNewick(new StringTokenizer(s, "(,)", true));
 		// Get rid of the semicolon
-		t.name = t.name.substring(0, t.name.length() - 1);
+		// t.name = t.name.substring(0, t.name.length() - 1);
 		return t;
 	}
 
@@ -232,7 +256,7 @@ public class BinaryTree {
 	 *            a string tokenizer
 	 * @return a phylogenetic tree
 	 */
-	public static BinaryTree parseNewick(final StringTokenizer st) {
+	private static BinaryTree parseNewick(final StringTokenizer st) {
 		final String token = st.nextToken();
 		if (token.equals("(")) {
 			// Inner node
@@ -242,13 +266,31 @@ public class BinaryTree {
 			st.nextToken(); // final String close = st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new BinaryTree(pieces[0], parseDouble(pieces, 1), left,
-					right);
+			return new BinaryTree(parseName(pieces, 0), parseDouble(pieces, 1),
+					left, right);
 		} else {
 			// Leaf
 			final String[] pieces = token.split(":");
-			return new BinaryTree(pieces[0], parseDouble(pieces, 1));
+			return new BinaryTree(parseName(pieces, 0), parseDouble(pieces, 1));
 		}
+	}
+
+	/**
+	 * 
+	 * @param array
+	 *            The array to extract the name from.
+	 * @param index
+	 *            The index in the array to parse the name from.
+	 * @return the name from the given array on the given index if the name is
+	 *         not equal to ";", else: empty string.
+	 */
+	private static String parseName(final String[] array, final int index) {
+		if (index >= array.length) {
+			return "";
+		} else if (array[index].endsWith(";")) {
+			return array[index].substring(0, array[index].length() - 1);
+		}
+		return array[index];
 	}
 
 	/**
@@ -290,7 +332,7 @@ public class BinaryTree {
 
 	/**
 	 * Some tree testing.
-	 * 
+	 *
 	 * @param args
 	 *            jwz
 	 * @throws IOException
