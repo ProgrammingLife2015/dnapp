@@ -37,7 +37,12 @@ public class Reader {
       g.addNode(String.valueOf(n.getId()));
       g.getNode(n.getId()).addAttribute("start", n.getStart());
       g.getNode(n.getId()).addAttribute("depth", 0);
-      g.getNode(n.getId()).addAttribute("ui.label", n.getId());//TODO not all properties are implemented yet
+      g.getNode(n.getId()).addAttribute("end", n.getEnd());
+      g.getNode(n.getId()).addAttribute("content", n.getContent());
+      g.getNode(n.getId()).addAttribute("inNodes", n.getInNodes());
+      g.getNode(n.getId()).addAttribute("outNodes", n.getOutNodes());
+      g.getNode(n.getId()).addAttribute("sources", n.getSources());
+      g.getNode(n.getId()).addAttribute("ui.label", n.getId());
     }
     for (Edge e : edge) {
       g.addEdge(String.valueOf(e.getStartNode()) + String.valueOf(e.getEndNode()),
