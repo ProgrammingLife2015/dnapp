@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -243,8 +242,6 @@ public class BinaryTree {
 			st.nextToken(); // final String close = st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			System.out.println("label = " + label + " | split = "
-					+ Arrays.toString(pieces));
 			return new BinaryTree(pieces[0], parseDouble(pieces, 1), left,
 					right);
 		} else {

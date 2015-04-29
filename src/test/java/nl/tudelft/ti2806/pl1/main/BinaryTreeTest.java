@@ -3,7 +3,10 @@
  */
 package nl.tudelft.ti2806.pl1.main;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,24 +18,32 @@ import org.junit.Test;
  */
 public class BinaryTreeTest {
 
+	/**
+	 * Path to the input file.
+	 */
+	private String path;
+	/**
+	 * Content of the input file in a single string.
+	 */
+	private String s;
+	/**
+	 * Binary treed made from the content of the input file.
+	 */
+	private BinaryTree t;
+
+	/**
+	 * Set the variables' values.
+	 * 
+	 * @throws IOException
+	 *             path not found
+	 */
 	@Before
-	public final void setUp() throws Exception {
+	public final void setUp() throws IOException {
 
 		// Tree of life
-		final String s = BinaryTree
-				.readIntoString("src\\main\\resources\\nj_tree_10_strains.nwk");
-		final BinaryTree t = BinaryTree.parseNewick(s);
-		System.out.println(t);
-		System.out.println("height:" + t.height());
-		System.out.println("size:" + t.size());
-
-		// Smaller trees
-		final BinaryTree t1 = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
-		System.out.println("fringe:" + t1.fringe());
-
-		final BinaryTree t2 = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
-		final BinaryTree t3 = BinaryTree.parseNewick("((a,b)z,(d,e)f)g;");
-		System.out.println("== " + t1.equalsTree(t2) + " " + t1.equalsTree(t3));
+		path = "src\\main\\resources\\nj_tree_10_strains.nwk";
+		s = BinaryTree.readIntoString(path);
+		t = BinaryTree.parseNewick(s);
 
 	}
 
@@ -181,10 +192,23 @@ public class BinaryTreeTest {
 	 * Test method for
 	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#readIntoString(java.lang.String)}
 	 * .
+	 * 
+	 * @throws IOException
 	 */
 	@Test
-	public final void testReadIntoString() {
-		fail("Not yet implemented"); // TODO
+	public final void testReadIntoString() throws IOException {
+		assertEquals(
+				BinaryTree.readIntoString(path),
+				"((((TKK_04_0031:0.001906661314"
+						+ ",((TKK_02_0068:0.00204157229"
+						+ ",TKK_02_0018:0.00066954501):0.0006628296031"
+						+ ",TKK-01-0026:0.0007123091469):0.001823665486):0.001010665755"
+						+ ",TKK-01-0058:0.002881882645):0.001130109667"
+						+ ",(TKK_REF:5.660219e-05"
+						+ ",TKK-01-0066:0.00011321144):0.004314309633):0.0004752532458"
+						+ ",((TKK-01-0015:0.002115260257"
+						+ ",TKK-01-0029:0.001554716943):0.001130522483"
+						+ ",TKK_04_0002:0.001006393417):0.003898313306);");
 	}
 
 	/**
