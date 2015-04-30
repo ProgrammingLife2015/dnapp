@@ -6,165 +6,197 @@ import java.util.Collection;
 /**
  * 
  * @author Marissa, Mark
- * @date 25-04-2015
- *  Lets you create Nodes for the Graph.
+ * @date 25-04-2015 Lets you create Nodes for the Graph.
  */
 public class Node {
 
-  private int id;
-  private Collection<Integer> outNodes;
-  private Collection<Integer> inNodes;
-  private Collection<String> sources;
-  private int start;
-  private int end;
-  private String content;
+	/**
+	 * 
+	 */
+	private int id;
 
-  /**
-   * @param id
-   *          ID of the Node.
-   * @param sources
-   *          Genomes which contain this Node.
-   * @param start
-   *          Starting point in reference genome.
-   * @param end
-   *          End point in reference genome.
-   * @param content
-   *          DNA bases inside the Node.
-   */
-  public Node(int id, Collection<String> sources, int start, int end, String content) {
-    this.id = id;
-    this.outNodes = new ArrayList<Integer>();
-    this.inNodes = new ArrayList<Integer>();
-    this.start = start;
-    this.end = end;
-    this.sources = sources;
-    this.content = content;
-  }
+	/**
+	 * 
+	 */
+	private Collection<Integer> outNodes;
 
-  /**
-   * 
-   * @param e
-   *          The edge added to the node
-   */
-  public void addEdge(Edge e) {
-    if (e.getStartNode() == id) {
-      outNodes.add(e.getEndNode());
-    } else {
-      inNodes.add(e.getStartNode());
-    }
-  }
+	/**
+	 * 
+	 */
+	private Collection<Integer> inNodes;
 
-  /**
-   * 
-   * @return The ID of the node
-   */
-  public int getId() {
-    return id;
-  }
+	/**
+	 * 
+	 */
+	private Collection<String> sources;
 
-  /**
-   * 
-   * @param id
-   *          The new ID of the node
-   */
-  public void setId(int id) {
-    this.id = id;
-  }
+	/**
+	 * 
+	 */
+	private int start;
 
-  
-  /**
-   * 
-   * @return Returns all the outgoing edges
-   */
-  public Collection<Integer> getOutNodes() {
-    return outNodes;
-  }
+	/**
+	 * 
+	 */
+	private int end;
 
-  /**
-   * 
-   * @param outEdges Sets all the outgoing edges 
-   */
-  public void setOutNodes(Collection<Integer> outNodes) {
-    this.outNodes = outNodes;
-  }
+	/**
+	 * 
+	 */
+	private String content;
 
-  /**
-   * 
-   * @return Returns all the incoming edges
-   */
-  public Collection<Integer> getInNodes() {
-    return inNodes;
-  }
+	/**
+	 * @param id
+	 *            ID of the Node.
+	 * @param sources
+	 *            Genomes which contain this Node.
+	 * @param start
+	 *            Starting point in reference genome.
+	 * @param end
+	 *            End point in reference genome.
+	 * @param content
+	 *            DNA bases inside the Node.
+	 */
+	public Node(final int id, final Collection<String> sources,
+			final int start, final int end, final String content) {
+		this.id = id;
+		this.outNodes = new ArrayList<Integer>();
+		this.inNodes = new ArrayList<Integer>();
+		this.start = start;
+		this.end = end;
+		this.sources = sources;
+		this.content = content;
+	}
 
-  /**
-   * 
-   * @param inEdges Sets all the incoming edges
-   */
-  public void setInEdges(Collection<Integer> inNodes) {
-    this.inNodes = inNodes;
-  }
+	/**
+	 * 
+	 * @param e
+	 *            The edge added to the node
+	 */
+	public final void addEdge(final Edge e) {
+		if (e.getStartNode() == id) {
+			outNodes.add(e.getEndNode());
+		} else {
+			inNodes.add(e.getStartNode());
+		}
+	}
 
-  /**
-   * 
-   * @return Returns the different sources which contains this node
-   */
-  public Collection<String> getSources() {
-    return sources;
-  }
+	/**
+	 * 
+	 * @return The ID of the node
+	 */
+	public final int getId() {
+		return id;
+	}
 
-  /**
-   * 
-   * @param sources Sets the new sources which contains this node
-   */
-  public void setSources(Collection<String> sources) {
-    this.sources = sources;
-  }
+	/**
+	 * 
+	 * @param id
+	 *            The new ID of the node
+	 */
+	public final void setId(final int id) {
+		this.id = id;
+	}
 
-  /**
-   * 
-   * @return Returns the starting point on the reference genome
-   */
-  public int getStart() {
-    return start;
-  }
+	/**
+	 * 
+	 * @return Returns all the outgoing edges
+	 */
+	public final Collection<Integer> getOutNodes() {
+		return outNodes;
+	}
 
-  /**
-   * 
-   * @param start Sets the starting point on the reference genome
-   */
-  public void setStart(int start) {
-    this.start = start;
-  }
+	/**
+	 * 
+	 * @param outEdges
+	 *            Sets all the outgoing edges
+	 */
+	public final void setOutNodes(final Collection<Integer> outNodes) {
+		this.outNodes = outNodes;
+	}
 
-  /**
-   * 
-   * @return Returns the ending point on the reference genome
-   */
-  public int getEnd() {
-    return end;
-  }
+	/**
+	 * 
+	 * @return Returns all the incoming edges
+	 */
+	public final Collection<Integer> getInNodes() {
+		return inNodes;
+	}
 
-  /**
-   * 
-   * @param end Sets the ending point on the reference genome
-   */
-  public void setEnd(int end) {
-    this.end = end;
-  }
+	/**
+	 * 
+	 * @param inEdges
+	 *            Sets all the incoming edges
+	 */
+	public final void setInEdges(final Collection<Integer> inNodes) {
+		this.inNodes = inNodes;
+	}
 
-  /**
-   * 
-   * @return Returns the content of the node
-   */
-  public String getContent() {
-    return content;
-  }
+	/**
+	 * 
+	 * @return Returns the different sources which contains this node
+	 */
+	public final Collection<String> getSources() {
+		return sources;
+	}
 
-  /**
-   * 
-   * @param content Sets the content on the reference genome
-   */
-  public void setContent(String content) {
-    this.content = content;
-  }
+	/**
+	 * 
+	 * @param sources
+	 *            Sets the new sources which contains this node
+	 */
+	public final void setSources(final Collection<String> sources) {
+		this.sources = sources;
+	}
+
+	/**
+	 * 
+	 * @return Returns the starting point on the reference genome
+	 */
+	public final int getStart() {
+		return start;
+	}
+
+	/**
+	 * 
+	 * @param start
+	 *            Sets the starting point on the reference genome
+	 */
+	public final void setStart(final int start) {
+		this.start = start;
+	}
+
+	/**
+	 * 
+	 * @return Returns the ending point on the reference genome
+	 */
+	public final int getEnd() {
+		return end;
+	}
+
+	/**
+	 * 
+	 * @param end
+	 *            Sets the ending point on the reference genome
+	 */
+	public final void setEnd(final int end) {
+		this.end = end;
+	}
+
+	/**
+	 * 
+	 * @return Returns the content of the node
+	 */
+	public final String getContent() {
+		return content;
+	}
+
+	/**
+	 * 
+	 * @param content
+	 *            Sets the content on the reference genome
+	 */
+	public final void setContent(final String content) {
+		this.content = content;
+	}
 }

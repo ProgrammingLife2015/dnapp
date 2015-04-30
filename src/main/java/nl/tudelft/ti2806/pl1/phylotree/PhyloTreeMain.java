@@ -17,6 +17,10 @@ public final class PhyloTreeMain {
 	 * 
 	 */
 	private PhyloTreeMain() {
+		// Prevent instantiation
+		// Optional: throw an exception e.g. AssertionError
+		// if this ever *is* called
+		// http://stackoverflow.com/questions/7766277/why-am-i-getting-this-warning-about-utility-classes-in-java
 	}
 
 	/**

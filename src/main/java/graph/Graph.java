@@ -6,30 +6,54 @@ import java.util.Collection;
 /**
  * 
  * @author Marissa, Mark
- * @date 25-04-2015
- * Lets you create a Graph with Nodes and Edges
+ * @version 25-04-2015 Lets you create a Graph with Nodes and Edges.
  */
 public class Graph {
-	
-  private ArrayList<Node> nodes;
-  
-  public Graph() {
-    this.nodes = new ArrayList<Node>();
-  }
-  
-	public Graph(Collection<Node> nodes) {
-		this.nodes = new ArrayList<Node>(nodes);
+
+	/**
+	 * 
+	 */
+	private ArrayList<Node> nodes;
+
+	/**
+	 * 
+	 */
+	public Graph() {
+		this.nodes = new ArrayList<Node>();
 	}
-	
-	public ArrayList<Node> getNodes() {
+
+	/**
+	 * 
+	 * @param nodesIn
+	 *            the collection of nodes for the graph.
+	 */
+	public Graph(final Collection<Node> nodesIn) {
+		this.nodes = new ArrayList<Node>(nodesIn);
+	}
+
+	/**
+	 * 
+	 * @return the list of nodes.
+	 */
+	public final ArrayList<Node> getNodes() {
 		return nodes;
 	}
-	
-	public Node getNode(int id) {
-	  return nodes.get(id);
+
+	/**
+	 * 
+	 * @param id
+	 *            The id of the node to get.
+	 * @return the node with the given id.
+	 */
+	public final Node getNode(final int id) {
+		return nodes.get(id);
 	}
-	
-	public int getSize() {
-	  return nodes.size();
+
+	/**
+	 * 
+	 * @return the number of nodes.
+	 */
+	public final int getSize() {
+		return nodes.size();
 	}
 }
