@@ -65,20 +65,6 @@ public class InnerNode extends BinaryTree {
 	}
 
 	/**
-	 * @return true iff this is an inner node
-	 */
-	public final boolean isInner() {
-		return left != null || right != null;
-	}
-
-	/**
-	 * @return true iff this is a leaf
-	 */
-	public final boolean isLeaf() {
-		return left == null && right == null;
-	}
-
-	/**
 	 * @return true iff this node has a left child
 	 */
 	@Override

@@ -253,30 +253,4 @@ public abstract class BinaryTree implements DSTreeNode {
 		final int base = 10;
 		return Math.round(x * (Math.pow(base, n))) / Math.pow(base, n);
 	}
-
-	/**
-	 * Some tree testing.
-	 *
-	 * @param args
-	 *            jwz
-	 * @throws IOException
-	 *             when something goes wrong xD
-	 */
-	public static void main(final String[] args) throws IOException {
-		// Tree of life
-		final String s = readIntoString("src\\main\\resources\\nj_tree_10_strains.nwk");
-		final BinaryTree t = parseNewick(s);
-		System.out.println(t);
-		System.out.println("height:" + t.height());
-		System.out.println("size:" + t.size());
-
-		// Smaller trees
-		final BinaryTree t1 = parseNewick("((a,b)c,(d,e)f)g;");
-		// System.out.println("fringe:" + t1.fringe());
-
-		final BinaryTree t2 = parseNewick("((a,b)c,(d,e)f)g;");
-		final BinaryTree t3 = parseNewick("((a,b)z,(d,e)f)g;");
-		System.out.println("== " + t1.equalsTree(t2) + " " + t1.equalsTree(t3));
-	}
-
 }
