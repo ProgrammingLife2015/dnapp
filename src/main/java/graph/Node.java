@@ -12,8 +12,8 @@ import java.util.Collection;
 public class Node {
 
   private int id;
-  private Collection<Edge> outEdges;
-  private Collection<Edge> inEdges;
+  private Collection<Integer> outNodes;
+  private Collection<Integer> inNodes;
   private Collection<String> sources;
   private int start;
   private int end;
@@ -33,8 +33,8 @@ public class Node {
    */
   public Node(int id, Collection<String> sources, int start, int end, String content) {
     this.id = id;
-    this.outEdges = new ArrayList<Edge>();
-    this.inEdges = new ArrayList<Edge>();
+    this.outNodes = new ArrayList<Integer>();
+    this.inNodes = new ArrayList<Integer>();
     this.start = start;
     this.end = end;
     this.sources = sources;
@@ -48,9 +48,9 @@ public class Node {
    */
   public void addEdge(Edge e) {
     if (e.getStartNode() == id) {
-      outEdges.add(e);
+      outNodes.add(e.getEndNode());
     } else {
-      inEdges.add(e);
+      inNodes.add(e.getStartNode());
     }
   }
 
@@ -76,32 +76,32 @@ public class Node {
    * 
    * @return Returns all the outgoing edges
    */
-  public Collection<Edge> getOutEdges() {
-    return outEdges;
+  public Collection<Integer> getOutNodes() {
+    return outNodes;
   }
 
   /**
    * 
    * @param outEdges Sets all the outgoing edges 
    */
-  public void setOutEdges(Collection<Edge> outEdges) {
-    this.outEdges = outEdges;
+  public void setOutNodes(Collection<Integer> outNodes) {
+    this.outNodes = outNodes;
   }
 
   /**
    * 
    * @return Returns all the incoming edges
    */
-  public Collection<Edge> getInEdges() {
-    return inEdges;
+  public Collection<Integer> getInNodes() {
+    return inNodes;
   }
 
   /**
    * 
    * @param inEdges Sets all the incoming edges
    */
-  public void setInEdges(Collection<Edge> inEdges) {
-    this.inEdges = inEdges;
+  public void setInEdges(Collection<Integer> inNodes) {
+    this.inNodes = inNodes;
   }
 
   /**
