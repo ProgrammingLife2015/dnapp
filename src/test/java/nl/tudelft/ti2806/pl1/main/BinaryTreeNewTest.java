@@ -9,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +61,7 @@ public class BinaryTreeNewTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#hasLeft()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#hasLeft()}.
 	 */
 	@Test
 	public final void testHasLeft() {
@@ -70,7 +72,7 @@ public class BinaryTreeNewTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#hasRight()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#hasRight()}.
 	 */
 	@Test
 	public final void testHasRight() {
@@ -81,7 +83,7 @@ public class BinaryTreeNewTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#size()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#size()}.
 	 */
 	@Test
 	public final void testSize() {
@@ -90,7 +92,7 @@ public class BinaryTreeNewTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#height()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#height()}.
 	 */
 	@Test
 	public final void testHeight() {
@@ -100,7 +102,7 @@ public class BinaryTreeNewTest {
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#equalsTree(nl.tudelft.ti2806.pl1.main.BinaryTree)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#equalsTree(nl.tudelft.ti2806.pl1.phylotree.BinaryTree)}
 	 * .
 	 */
 	@Test
@@ -113,7 +115,7 @@ public class BinaryTreeNewTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#toString()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#toString()}.
 	 */
 	@Test
 	public final void testToString() {
@@ -127,7 +129,7 @@ public class BinaryTreeNewTest {
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#parseNewick(java.lang.String)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#parseNewick(java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -140,7 +142,7 @@ public class BinaryTreeNewTest {
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#readIntoString(java.lang.String)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#readIntoString(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
