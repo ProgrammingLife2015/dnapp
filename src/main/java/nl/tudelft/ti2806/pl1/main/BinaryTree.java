@@ -1,10 +1,12 @@
 package nl.tudelft.ti2806.pl1.main;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import org.StructureGraphic.v1.DSTreeNode;
 
 /**
  * Generic binary tree, storing data of a parametric data in each node.
@@ -12,20 +14,15 @@ import java.util.StringTokenizer;
  * 
  * @author Chris Bailey-Kellogg, Dartmouth CS 10, Fall 2012
  */
-public class BinaryTree {
+public abstract class BinaryTree implements DSTreeNode {
 
 	/**
-	 * 
-	 */
-	private final BinaryTree left, right; // children; can be null
-
-	/**
-	 * 
+	 * The distance to the parent node.
 	 */
 	private final double pathLength;
 
 	/**
-	 * 
+	 * The name label of the node.
 	 */
 	private final String name;
 
@@ -40,169 +37,62 @@ public class BinaryTree {
 	public BinaryTree(final String nameIn, final double length) {
 		this.name = nameIn;
 		this.pathLength = length;
-		this.left = null;
-		this.right = null;
 	}
 
 	/**
-	 * Constructs inner node.
 	 * 
-	 * @param nameIn
-	 *            The name of the node
-	 * @param dist
-	 *            The distance to the parent.
-	 * @param leftChild
-	 *            The left child.
-	 * @param rightChild
-	 *            The right child.
+	 * @return the size of the (sub)tree.
 	 */
-	public BinaryTree(final String nameIn, final double dist,
-			final BinaryTree leftChild, final BinaryTree rightChild) {
-		this.name = nameIn;
-		this.pathLength = dist;
-		this.left = leftChild;
-		this.right = rightChild;
-	}
+	public abstract int size();
 
 	/**
-	 * @return the path length
+	 * @return the path length.
 	 */
 	public final double getPathLength() {
 		return pathLength;
 	}
 
 	/**
-	 * @return the node name
+	 * @return the node name.
 	 */
 	public final String getName() {
 		return name;
 	}
 
 	/**
-	 * @return true iff this is an inner node
-	 */
-	public final boolean isInner() {
-		return left != null || right != null;
-	}
-
-	/**
-	 * @return true iff this is a leaf
-	 */
-	public final boolean isLeaf() {
-		return left == null && right == null;
-	}
-
-	/**
-	 * @return true iff this node has a left child
-	 */
-	public final boolean hasLeft() {
-		return left != null;
-	}
-
-	/**
-	 * @return true iff this node has a right child
-	 */
-	public final boolean hasRight() {
-		return right != null;
-	}
-
-	/**
-	 * @return the left child
-	 */
-	public final BinaryTree getLeft() {
-		return left;
-	}
-
-	/**
-	 * @return the right child
-	 */
-	public final BinaryTree getRight() {
-		return right;
-	}
-
-	/**
-	 * @return the number of nodes (inner and leaf) in tree.
-	 */
-	public final int size() {
-		int num = 1;
-		if (hasLeft()) {
-			num += left.size();
-		}
-		if (hasRight()) {
-			num += right.size();
-		}
-		return num;
-	}
-
-	/**
 	 * 
-	 * @return the longest length to a leaf node from here
+	 * @return the longest length to a leaf node from here.
 	 */
-	public final int height() {
-		if (isLeaf()) {
-			return 0;
-		}
-		int h = 0;
-		if (hasLeft()) {
-			h = Math.max(h, left.height());
-		}
-		if (hasRight()) {
-			h = Math.max(h, right.height());
-		}
-		return h + 1; // inner: one higher than highest child
-	}
+	public abstract int height();
 
 	/**
 	 * Checks whether two trees are equal.
 	 * 
 	 * @param t2
-	 *            the tree to compare with
-	 * @return true iff this tree is equal to t2
+	 *            the tree to compare with.
+	 * @return true iff this tree is equal to t2.
 	 */
-	public final boolean equalsTree(final BinaryTree t2) {
-		if (hasLeft() != t2.hasLeft() || hasRight() != t2.hasRight()) {
-			return false;
-		}
-		if (!(pathLength == t2.pathLength)) {
-			return false;
-		}
-		if (hasLeft() && !left.equalsTree(t2.left)) {
-			return false;
-		}
-		if (hasRight() && !right.equalsTree(t2.right)) {
-			return false;
-		}
-		return true;
-	}
+	public abstract boolean equalsTree(final BinaryTree t2);
 
 	/**
-	 * @return leaves in order from left to right
+	 * @return true iff the node has a left child
 	 */
-	public final ArrayList<String> fringe() {
-		final ArrayList<String> f = new ArrayList<String>();
-		addToFringe(f);
-		return f;
-	}
+	public abstract boolean hasLeft();
 
 	/**
-	 * Helper for fringe, adding fringe data to the list. Adds this node to a
-	 * list if it is a leave, else the same recursively for its two children.
-	 * 
-	 * @param fringe
-	 *            the list to add to
+	 * @return true iff the node has a right child
 	 */
-	private void addToFringe(final ArrayList<String> fringe) {
-		if (isLeaf()) {
-			fringe.add(name);
-		} else {
-			if (hasLeft()) {
-				left.addToFringe(fringe);
-			}
-			if (hasRight()) {
-				right.addToFringe(fringe);
-			}
-		}
-	}
+	public abstract boolean hasRight();
+
+	/**
+	 * @return the left child, null if there is no left child
+	 */
+	public abstract BinaryTree getLeft();
+
+	/***
+	 * @return the left child, null if there is no left child
+	 */
+	public abstract BinaryTree getRight();
 
 	@Override
 	public final String toString() {
@@ -218,17 +108,7 @@ public class BinaryTree {
 	 *            indentation
 	 * @return a visual text representation of the tree
 	 */
-	private String toStringHelper(final String indent) {
-		String res = indent + (name.equals("") ? "X" : name) + " (dist="
-				+ pathLength + ")\n";
-		if (hasLeft()) {
-			res += left.toStringHelper(indent + "\t");
-		}
-		if (hasRight()) {
-			res += right.toStringHelper(indent + "\t");
-		}
-		return res;
-	}
+	protected abstract String toStringHelper(final String indent);
 
 	/**
 	 * Very simplistic binary tree parser based on Newick representation.
@@ -243,10 +123,7 @@ public class BinaryTree {
 	 * @return a phylogenetic tree
 	 */
 	public static BinaryTree parseNewick(final String s) {
-		final BinaryTree t = parseNewick(new StringTokenizer(s, "(,)", true));
-		// Get rid of the semicolon
-		// t.name = t.name.substring(0, t.name.length() - 1);
-		return t;
+		return parseNewick(new StringTokenizer(s, "(,)", true));
 	}
 
 	/**
@@ -258,20 +135,18 @@ public class BinaryTree {
 	 */
 	private static BinaryTree parseNewick(final StringTokenizer st) {
 		final String token = st.nextToken();
-		if (token.equals("(")) {
-			// Inner node
+		if (token.equals("(")) { // Inner node
 			final BinaryTree left = parseNewick(st);
 			st.nextToken(); // final String comma = st.nextToken();
 			final BinaryTree right = parseNewick(st);
 			st.nextToken(); // final String close = st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new BinaryTree(parseName(pieces, 0), parseDouble(pieces, 1),
+			return new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1),
 					left, right);
-		} else {
-			// Leaf
+		} else { // Leaf
 			final String[] pieces = token.split(":");
-			return new BinaryTree(parseName(pieces, 0), parseDouble(pieces, 1));
+			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1));
 		}
 	}
 
@@ -318,16 +193,64 @@ public class BinaryTree {
 	 * @throws IOException
 	 *             when something goes wrong xD
 	 */
-	public static String readIntoString(final String filename)
-			throws IOException {
+	public static String readIntoString(final String filename) {
 		final StringBuffer buff = new StringBuffer();
-		final BufferedReader in = new BufferedReader(new FileReader(filename));
-		String line;
-		while ((line = in.readLine()) != null) {
-			buff.append(line);
+		try {
+			final BufferedReader in = new BufferedReader(new FileReader(
+					filename));
+			String line;
+			while ((line = in.readLine()) != null) {
+				buff.append(line);
+			}
+			in.close();
+		} catch (IOException e) {
+			System.out.println(e);
 		}
-		in.close();
 		return buff.toString();
+	}
+
+	/**
+	 * @return the value to show in in this node
+	 */
+	public final Object DSgetValue() {
+		return stringOrElse(name, "X") + "\n" + roundN(pathLength, 3);
+	}
+
+	/**
+	 * @return the color of this node
+	 */
+	public final Color DSgetColor() {
+		return Color.black;
+	}
+
+	/**
+	 * Returns a string unless it is empty, then returns a given default string.
+	 * 
+	 * @param str
+	 *            The string to return if it is not empty
+	 * @param sElse
+	 *            The string to return if <code>str</code> is empty
+	 * @return <code>str</code> if it is not empty, else <code>sElse</code>
+	 */
+	private static String stringOrElse(final String str, final String sElse) {
+		if (str.equals("")) {
+			return sElse;
+		}
+		return str;
+	}
+
+	/**
+	 * Rounds a number to a given number of decimal places.
+	 * 
+	 * @param x
+	 *            the value to round
+	 * @param n
+	 *            the number of decimal places to round on
+	 * @return the value x rounded to n decimal places
+	 */
+	private static double roundN(final double x, final int n) {
+		final int base = 10;
+		return Math.round(x * (Math.pow(base, n))) / Math.pow(base, n);
 	}
 
 	/**
@@ -348,10 +271,11 @@ public class BinaryTree {
 
 		// Smaller trees
 		final BinaryTree t1 = parseNewick("((a,b)c,(d,e)f)g;");
-		System.out.println("fringe:" + t1.fringe());
+		// System.out.println("fringe:" + t1.fringe());
 
 		final BinaryTree t2 = parseNewick("((a,b)c,(d,e)f)g;");
 		final BinaryTree t3 = parseNewick("((a,b)z,(d,e)f)g;");
 		System.out.println("== " + t1.equalsTree(t2) + " " + t1.equalsTree(t3));
 	}
+
 }
