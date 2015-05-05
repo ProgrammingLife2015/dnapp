@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -18,8 +18,7 @@ public class StatusBar extends JPanel {
 	private static final long serialVersionUID = -2304279241558941973L;
 
 	/**
-	 * @param ehIn
-	 *            The event handler to use.
+	 * 
 	 */
 	public StatusBar() {
 		setBorder(new BevelBorder(BevelBorder.LOWERED));

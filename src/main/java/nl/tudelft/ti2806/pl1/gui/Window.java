@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.BorderLayout;
 import java.util.Observable;
@@ -27,22 +27,22 @@ public class Window extends JFrame implements Observer {
 	private WindowSettings settings;
 
 	/**
-	 * 
+	 * The menu bar of the window.
 	 */
 	private JMenuBar menuBar;
 
 	/**
-	 * 
+	 * The tool bar of the window.
 	 */
 	private JToolBar toolBar;
 
 	/**
-	 * 
+	 * The main pane of the window.
 	 */
 	private JPanel content;
 
 	/**
-	 * 
+	 * The status bar of the window.
 	 */
 	private StatusBar statusBar;
 

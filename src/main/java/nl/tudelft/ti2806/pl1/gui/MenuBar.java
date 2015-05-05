@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.net.URL;
 
@@ -24,8 +24,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu file = fileMenu(), edit = editMenu(), view = viewMenu();
 
 	/**
-	 * @param ehIn
-	 *            The event handler to use.
+	 * 
 	 */
 	public MenuBar() {
 		this.add(file);
@@ -83,12 +82,9 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem makeMI(final String text, final String iconName,
 			final char mnemonic, final String toolTipText, final Event action) {
 		JMenuItem mi = new JMenuItem();
-
 		mi.setText(text);
 		mi.setMnemonic(mnemonic);
 		mi.setToolTipText(toolTipText);
-
-		mi.setActionCommand(Event.stringify(action));
 		mi.addActionListener(action);
 
 		if (iconName != null) {

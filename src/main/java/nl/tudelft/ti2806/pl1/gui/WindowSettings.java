@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.Dimension;
 import java.util.Observable;
@@ -10,15 +10,26 @@ import java.util.Observable;
 public class WindowSettings extends Observable {
 
 	/**
+	 * 
+	 */
+	private static final int DEFAULT_MIN_SIZE_X = 500,
+			DEFAULT_MIN_SIZE_Y = 350;
+
+	/**
+	 * 
+	 */
+	private static final String DEFAULT_TITLE = "Genome browser";
+
+	/**
 	 * The minimum size of the window.
 	 */
-	private Dimension minimumSize = new Dimension(Defaults.minSizeX(),
-			Defaults.minSizeY());
+	private Dimension minimumSize = new Dimension(DEFAULT_MIN_SIZE_X,
+			DEFAULT_MIN_SIZE_Y);
 
 	/**
 	 * The window title.
 	 */
-	private String title = Defaults.title();
+	private String title = DEFAULT_TITLE;
 
 	/**
 	 * Creates a new instance of window settings with all variables set to
@@ -34,7 +45,6 @@ public class WindowSettings extends Observable {
 	 *            the window title.
 	 */
 	public WindowSettings(final String customTitle) {
-		this();
 		setTitle(customTitle);
 	}
 

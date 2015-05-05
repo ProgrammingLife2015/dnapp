@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -26,8 +26,7 @@ public class Content extends JPanel {
 	private GridBagConstraints gbc = new GridBagConstraints();
 
 	/**
-	 * @param ehIn
-	 *            The event handler to use.
+	 * 
 	 */
 	public Content() {
 		setLayout(new GridBagLayout());
@@ -50,7 +49,6 @@ public class Content extends JPanel {
 	 */
 	private void setupGBC() {
 		gbc.fill = GridBagConstraints.BOTH;
-
 	}
 
 	/**
@@ -87,7 +85,7 @@ public class Content extends JPanel {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);
-		button.setActionCommand(action.toString());
+		// button.setActionCommand(action.toString());
 		button.addActionListener(action);
 		return button;
 

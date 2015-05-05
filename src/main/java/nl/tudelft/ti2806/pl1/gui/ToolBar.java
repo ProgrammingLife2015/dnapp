@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.net.URL;
 
@@ -19,8 +19,6 @@ public class ToolBar extends JToolBar {
 
 	/**
 	 * 
-	 * @param ehIn
-	 *            The event handler to use.
 	 */
 	public ToolBar() {
 		super("NAME", JToolBar.HORIZONTAL);
@@ -53,7 +51,7 @@ public class ToolBar extends JToolBar {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);
-		button.setActionCommand(Event.stringify(action));
+		// button.setActionCommand(Event.stringify(action));
 		button.addActionListener(action);
 
 		if (imageName != null) {

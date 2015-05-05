@@ -1,4 +1,4 @@
-package gui;
+package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +13,10 @@ public enum Event implements ActionListener {
 	 * Instead of null, use NONE to indicate no event will be fired.
 	 */
 	NONE {
-		@Override
-		void action() {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Event NONE fired.");
 		}
 	},
@@ -23,8 +25,10 @@ public enum Event implements ActionListener {
 	 * 
 	 */
 	EXAMPLE_EVENT {
-		@Override
-		void action() {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Example event fired.");
 		}
 	},
@@ -33,8 +37,10 @@ public enum Event implements ActionListener {
 	 * 
 	 */
 	ANOTHER_EVENT {
-		@Override
-		void action() {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Another event fired.");
 		}
 	},
@@ -43,59 +49,39 @@ public enum Event implements ActionListener {
 	 * 
 	 */
 	PRINT_APP_NAME {
-		@Override
-		void action() {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
 			System.out.println(window.getTitle());
 		}
 	},
 
 	/**
-	 * 
+	 * Exits the application.
 	 */
 	EXIT_APP {
-		@Override
-		void action() {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			System.out.println("Bye bye!");
 			System.exit(0);
 		}
 
 	};
 
 	/**
-	 * 
+	 * The window effected by the actions performed by these events.
 	 */
 	private static Window window;
 
 	/**
-	 * 
 	 * @param w
+	 *            The window that should be effected.
 	 */
 	public static void setWindow(final Window w) {
 		window = w;
-	}
-
-	/**
-	 * 
-	 */
-	abstract void action();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void actionPerformed(final ActionEvent e) {
-		valueOf(e.getActionCommand()).action();
-	}
-
-	/**
-	 * 
-	 * @param action
-	 * @return the name of the enum constant <code>action</code>, or null
-	 */
-	public static String stringify(final Event action) {
-		if (action == null) {
-			return null;
-		} else {
-			return action.toString();
-		}
 	}
 
 }
