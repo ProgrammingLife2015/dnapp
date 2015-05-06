@@ -126,8 +126,8 @@ public class NodePlacer {
    *          The maximum depth of the nodes in the graph
    * @return The width location of the node
    */
-  private static int getWidth(int width, int depth, int maxdepth) {
-    int wdiff = width / maxdepth;
+  private static double getWidth(double width, double depth, double maxdepth) {
+    double wdiff = width / maxdepth;
     return wdiff * (depth + 1);
 
   }
