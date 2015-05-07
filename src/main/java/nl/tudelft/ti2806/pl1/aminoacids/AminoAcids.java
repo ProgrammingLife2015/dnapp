@@ -2,7 +2,14 @@ package nl.tudelft.ti2806.pl1.aminoacids;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 
 import reader.AminoMapReader;
 
@@ -17,6 +24,67 @@ public class AminoAcids {
 	 * The size of a DNA codon is 3.
 	 */
 	static final int CODON_SIZE = 3;
+
+	public static void main(final String[] args) throws IOException {
+		Graph graph = new SingleGraph("test graph");
+		graph.addNode("start");
+		graph.addNode("end");
+		graph.addNode("middle");
+		graph.addEdge("1", "start", "middle");
+		graph.addEdge("2", "middle", "end");
+		graph.display();
+		convertGraph(graph);
+	}
+
+	public final static Graph convertGraph(final Graph nucloids) {
+		Graph graph = new SingleGraph("Amino Acid Graph");
+		Collection<Node> nodes = nucloids.getNodeSet();
+		String s = getStart(nodes);
+		String e = getEnd(nodes);
+		// System.out.println("start: " + s);
+		// System.out.println("end: " + e);
+
+		return graph;
+	}
+
+	private final static String getStart(final Collection<Node> nodes) {
+		for (Node node : nodes) {
+
+			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
+			ArrayList<Edge> leaving = new ArrayList<Edge>();
+
+			while (it.hasNext()) {
+				Edge e = it.next();
+				if (e.getTargetNode().getId().equals(node.getId())) {
+					leaving.add(e);
+				}
+			}
+
+			if (leaving.isEmpty()) {
+				return node.getId();
+			}
+		}
+		return null;
+	}
+
+	private final static String getEnd(final Collection<Node> nodes) {
+		for (Node node : nodes) {
+			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
+			ArrayList<Edge> ingoing = new ArrayList<Edge>();
+
+			while (it.hasNext()) {
+				Edge e = it.next();
+				if (e.getSourceNode().getId().equals(node.getId())) {
+					ingoing.add(e);
+				}
+			}
+
+			if (ingoing.isEmpty()) {
+				return node.getId();
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Converts a genome string into an ArrayList of amino acid strings.
