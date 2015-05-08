@@ -39,15 +39,37 @@ public class AminoAcids {
 	public final static Graph convertGraph(final Graph nucloids) {
 		Graph graph = new SingleGraph("Amino Acid Graph");
 		Collection<Node> nodes = nucloids.getNodeSet();
-		String s = getStart(nodes);
-		String e = getEnd(nodes);
-		// System.out.println("start: " + s);
-		// System.out.println("end: " + e);
+		Node start = getStart(nodes);
+		Node end = getEnd(nodes);
+
+		String contents = start.getAttribute("content");
 
 		return graph;
 	}
 
-	private final static String getStart(final Collection<Node> nodes) {
+	private final static Graph getReferenceGraph(final Node start,
+			final Node end) {
+		Graph graph = new SingleGraph("Reference Amino Graph");
+		String contents = start.getAttribute("content");
+		Node current = start;
+		while (current != end) {
+			Iterator<Edge> outgoing = current.getEachLeavingEdge().iterator();
+			while (outgoing.hasNext()) {
+				Node next = outgoing.next().getNode1();
+				Collection<String> sources = next.getAttribute("sources");
+				if (sources.contains("TKK_REF")) {
+					current = next;
+					contents += current.getAttribute("content");
+					if (getStart(contents) != -1) {
+
+					}
+				}
+			}
+		}
+		return graph;
+	}
+
+	private final static Node getStart(final Collection<Node> nodes) {
 		for (Node node : nodes) {
 
 			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
@@ -61,13 +83,13 @@ public class AminoAcids {
 			}
 
 			if (leaving.isEmpty()) {
-				return node.getId();
+				return node;
 			}
 		}
 		return null;
 	}
 
-	private final static String getEnd(final Collection<Node> nodes) {
+	private final static Node getEnd(final Collection<Node> nodes) {
 		for (Node node : nodes) {
 			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
 			ArrayList<Edge> ingoing = new ArrayList<Edge>();
@@ -80,7 +102,7 @@ public class AminoAcids {
 			}
 
 			if (ingoing.isEmpty()) {
-				return node.getId();
+				return node;
 			}
 		}
 		return null;
