@@ -1,11 +1,13 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * A panel representing the content of the main window.
@@ -30,18 +32,37 @@ public class Content extends JPanel {
 	 */
 	public Content() {
 		setLayout(new GridBagLayout());
-		setupGBC();
+		// setupGBC();
+		Dimension d = new Dimension(10, 20);
+		setWeight(0);
+		JTextArea jta = new JTextArea("Bla bla bla bla bla.");
+		// jta.setMaximumSize(d);
+		// jta.setSize(d);
+		jta.setPreferredSize(d);
+		jta.setColumns(20);
+		place(add(jta), 1, 0);
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+
 		place(makeButton("button 00", Event.ANOTHER_EVENT, "another tool tip"),
 				0, 0);
-		gbc.weightx = 1;
-		gbc.weighty = 1;
+		// setWeight(1.0);
 		place(makeButton("Center button print app name", Event.PRINT_APP_NAME,
 				"print app name tool tip"), 1, 1);
-		gbc.weightx = 0;
-		gbc.weighty = 0;
+		// setWeight(0.0);
 		place(makeButton("Exit", Event.EXIT_APP, "exit the program tool tip"),
 				2, 2);
 
+	}
+
+	/**
+	 * Sets the grid bag constraint weight in both x and y direction.
+	 * 
+	 * @param weight
+	 *            The weight to set.
+	 */
+	private void setWeight(final double weight) {
+		gbc.weightx = weight;
+		gbc.weighty = weight;
 	}
 
 	/**

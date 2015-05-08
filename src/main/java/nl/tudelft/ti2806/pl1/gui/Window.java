@@ -81,9 +81,12 @@ public class Window extends JFrame implements Observer {
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
 
-		dispose();
-		setVisible(true);
 		pack();
+		// dispose();
+		setVisible(true);
+		revalidate();
+		// repaint();
+		// paint(getGraphics());
 	}
 
 	/**

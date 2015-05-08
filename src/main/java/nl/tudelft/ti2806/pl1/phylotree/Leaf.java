@@ -37,8 +37,8 @@ public class Leaf extends BinaryTree {
 
 	@Override
 	protected final String toStringHelper(final String indent) {
-		String res = indent + (getName().equals("") ? "X" : getName())
-				+ " (dist=" + getPathLength() + ")\n";
+		String res = indent + stringOrElse(getName(), "X") + " (dist="
+				+ getPathLength() + ")\n";
 		return res;
 	}
 

@@ -30,6 +30,8 @@ public class ToolBar extends JToolBar {
 	 */
 	private void addButtons() {
 		addButton("example", null, Event.EXAMPLE_EVENT, "Example tooltip text.");
+		addSeparator();
+		addButton("another button", null, Event.NONE, "boe");
 	}
 
 	/**
