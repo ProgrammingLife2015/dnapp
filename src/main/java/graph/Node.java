@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ * The node class we use for reader to read the nodes.
  * 
  * @author Marissa, Mark
- * @date 25-04-2015
- *  Lets you create Nodes for the Graph.
+ * @date 25-04-2015 Lets you create Nodes for the Graph.
  */
 public class Node {
 
@@ -20,6 +20,8 @@ public class Node {
   private String content;
 
   /**
+   * The constructor of the node.
+   * 
    * @param id
    *          ID of the Node.
    * @param sources
@@ -42,19 +44,21 @@ public class Node {
   }
 
   /**
+   * Add an edge to a node.
    * 
-   * @param e
+   * @param edge
    *          The edge added to the node
    */
-  public void addEdge(Edge e) {
-    if (e.getStartNode() == id) {
-      outNodes.add(e.getEndNode());
+  public void addEdge(Edge edge) {
+    if (edge.getStartNode() == id) {
+      outNodes.add(edge.getEndNode());
     } else {
-      inNodes.add(e.getStartNode());
+      inNodes.add(edge.getStartNode());
     }
   }
 
   /**
+   * Get the ID of the node.
    * 
    * @return The ID of the node
    */
@@ -63,6 +67,7 @@ public class Node {
   }
 
   /**
+   * Set the ID of the node.
    * 
    * @param id
    *          The new ID of the node
@@ -71,8 +76,8 @@ public class Node {
     this.id = id;
   }
 
-  
   /**
+   * Get all the outgoing edges.
    * 
    * @return Returns all the outgoing edges
    */
@@ -81,14 +86,17 @@ public class Node {
   }
 
   /**
+   * Set all the outgoing edges.
    * 
-   * @param outEdges Sets all the outgoing edges 
+   * @param outEdges
+   *          Sets all the outgoing edges
    */
   public void setOutNodes(Collection<Integer> outNodes) {
     this.outNodes = outNodes;
   }
 
   /**
+   * Get all the incoming edges.
    * 
    * @return Returns all the incoming edges
    */
@@ -97,14 +105,17 @@ public class Node {
   }
 
   /**
+   * Set all the incoming edges.
    * 
-   * @param inEdges Sets all the incoming edges
+   * @param inEdges
+   *          Sets all the incoming edges
    */
   public void setInEdges(Collection<Integer> inNodes) {
     this.inNodes = inNodes;
   }
 
   /**
+   * Get the sources which contains this node.
    * 
    * @return Returns the different sources which contains this node
    */
@@ -113,14 +124,17 @@ public class Node {
   }
 
   /**
+   * Set the sources which contain this node.
    * 
-   * @param sources Sets the new sources which contains this node
+   * @param sources
+   *          Sets the new sources which contains this node
    */
   public void setSources(Collection<String> sources) {
     this.sources = sources;
   }
 
   /**
+   * Get the starting point of the reference genome.
    * 
    * @return Returns the starting point on the reference genome
    */
@@ -129,14 +143,17 @@ public class Node {
   }
 
   /**
+   * Set the starting point of the reference genome.
    * 
-   * @param start Sets the starting point on the reference genome
+   * @param start
+   *          Sets the starting point on the reference genome
    */
   public void setStart(int start) {
     this.start = start;
   }
 
   /**
+   * Get the ending point of the genome.
    * 
    * @return Returns the ending point on the reference genome
    */
@@ -145,14 +162,17 @@ public class Node {
   }
 
   /**
+   * Set the ening point of the genome.
    * 
-   * @param end Sets the ending point on the reference genome
+   * @param end
+   *          Sets the ending point on the reference genome
    */
   public void setEnd(int end) {
     this.end = end;
   }
 
   /**
+   * Get the content of the node.
    * 
    * @return Returns the content of the node
    */
@@ -161,8 +181,10 @@ public class Node {
   }
 
   /**
+   * Set the content of the node.
    * 
-   * @param content Sets the content on the reference genome
+   * @param content
+   *          Sets the content on the reference genome
    */
   public void setContent(String content) {
     this.content = content;

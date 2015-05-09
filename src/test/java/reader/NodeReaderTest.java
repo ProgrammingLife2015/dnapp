@@ -18,7 +18,7 @@ public class NodeReaderTest {
   @Test
   public void readOneNode() {
     Scanner sc = new Scanner(node);
-    ArrayList<Node> graph = NodeReader.ReadNodes(sc);
+    ArrayList<Node> graph = NodeReader.readNodes(sc);
     assertEquals(graph.get(0).getId(),0);
     sc.close();
   }
@@ -26,25 +26,25 @@ public class NodeReaderTest {
   @Test(expected=InvalidFileFormatException.class)
   public void wrongFirstSymbol() {
     Scanner sc = new Scanner("a b c");
-    NodeReader.ReadNodes(sc);
+    NodeReader.readNodes(sc);
   }
   
   @Test(expected=InvalidFileFormatException.class)
   public void wrongNumberOfInput() {
     Scanner sc = new Scanner("> | b | c");
-    NodeReader.ReadNodes(sc);
+    NodeReader.readNodes(sc);
   }
   
   @Test(expected=InvalidFileFormatException.class)
   public void wrongID() {
     Scanner sc = new Scanner(">a | b | c | d" + "\n" + "A");
-    NodeReader.ReadNodes(sc);
+    NodeReader.readNodes(sc);
   }
   
   @Test(expected=InvalidFileFormatException.class)
   public void nonMatchingRef() {
     Scanner sc = new Scanner(">0 | b | 1 | 2" + "\n" + "AA");
-    NodeReader.ReadNodes(sc);
+    NodeReader.readNodes(sc);
   }
   
     

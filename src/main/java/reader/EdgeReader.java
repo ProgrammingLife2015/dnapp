@@ -37,8 +37,8 @@ public class EdgeReader {
       } catch (Exception e) {
         throw new InvalidFileFormatException("The id's should be integers");
       }
-      Edge e = new Edge(start, end);
-      edges.add(e);
+      Edge edge = new Edge(start, end);
+      edges.add(edge);
     }
 
     return edges;

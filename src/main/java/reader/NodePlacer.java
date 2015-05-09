@@ -1,18 +1,18 @@
 package reader;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.view.Viewer;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
- * This class takes care of placing the nodes in their resepective place
+ * This class takes care of placing the nodes in their respective place.
  * 
  * @author Marissa, Mark
  *
@@ -20,27 +20,27 @@ import org.graphstream.ui.view.Viewer;
 public class NodePlacer {
 
   /**
-   * The list which keeps the information about how many nodes are located at depth i
+   * The list which keeps the information about how many nodes are located at depth i.
    */
   private static ArrayList<Integer> nodesAtDepth;
 
   /**
    * The main placer method, this function sets the x and y coordinates of the nodes.
    * 
-   * @param g
+   * @param graph
    *          The graph for which the nodes are set
    * @param view
    *          The viewer of the graph
    */
-  public static void place(Graph g, Viewer view) {
-    if (g.getNodeCount() == 0) {
+  public static void place(Graph graph, Viewer view) {
+    if (graph.getNodeCount() == 0) {
       return;
     }
 
     nodesAtDepth = new ArrayList<Integer>();
-    nodesAtDepth.add(g.getNodeCount());
+    nodesAtDepth.add(graph.getNodeCount());
     view.disableAutoLayout(); // Diasble the autolayout (again) just to be sure
-    Node first = getStartNode(g);
+    Node first = getStartNode(graph);
 
     Queue<Node> que = new LinkedList<Node>();
     que.add(first);
@@ -52,24 +52,25 @@ public class NodePlacer {
 
     BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
     while (it.hasNext()) {
-      Node n = it.next();
-      n.setAttribute("x", getWidth(width, ((Integer) n.getAttribute("depth")), nodesAtDepth.size()));
+      Node node = it.next();
+      node.setAttribute("x",
+          getWidth(width, ((Integer) node.getAttribute("depth")), nodesAtDepth.size()));
 
-      n.setAttribute("y",
-          getHeight(((Integer) n.getAttribute("depth")), hdiff, nodesAtDepth, height));
+      node.setAttribute("y",
+          getHeight(((Integer) node.getAttribute("depth")), hdiff, nodesAtDepth, height));
     }
   }
 
   /**
-   * This function returns the starting node by looking for the lowest 'start' attribute
+   * This function returns the starting node by looking for the lowest 'start' attribute.
    * 
-   * @param g
+   * @param graph
    *          The graph which will be visualized
    * @return The staring node of the graph
    */
-  private static Node getStartNode(Graph g) {
+  private static Node getStartNode(Graph graph) {
     Node first = null;
-    for (Node n : g.getNodeSet()) {
+    for (Node n : graph.getNodeSet()) {
       if (first == null) {
         first = n;
       } else if (((Integer) n.getAttribute("start")) < ((Integer) first.getAttribute("start"))) {
@@ -81,10 +82,10 @@ public class NodePlacer {
 
   /**
    * For each node, this method finds the highest depth level possible and sets this in the node
-   * attribute 'depth' and it updates nodesAtDepth
+   * attribute 'depth' and it updates nodesAtDepth.
    * 
    * @param que
-   *          The queue in which we store the univisited edges
+   *          The queue in which we store the unvisited edges
    */
   private static void depthLevel(Queue<Node> que) {
     while (!que.isEmpty()) {
@@ -116,7 +117,7 @@ public class NodePlacer {
   }
 
   /**
-   * This method returns the with location of the node
+   * This method returns the with location of the node.
    * 
    * @param width
    *          The width of the viewer
@@ -133,7 +134,7 @@ public class NodePlacer {
   }
 
   /**
-   * This method returns the height of the node
+   * This method returns the height of the node.
    * 
    * @param depth
    *          The depth of the node
@@ -154,7 +155,7 @@ public class NodePlacer {
   }
 
   /**
-   * This method returns an array list with the height difference for each depth i
+   * Returns an array list with the height difference for each depth i.
    * 
    * @param nodesatdepth
    *          The amount of nodes at depth i
@@ -162,7 +163,8 @@ public class NodePlacer {
    *          The height of the viewer
    * @return The height difference for each node at depth i
    */
-  private static ArrayList<Integer> heightDiff(ArrayList<Integer> nodesatdepth, int heightofscreen) {
+  private static ArrayList<Integer> heightDiff(ArrayList<Integer> nodesatdepth, 
+      int heightofscreen) {
     ArrayList<Integer> hdiff = new ArrayList<Integer>(nodesatdepth.size());
     for (int i = 0; i < nodesatdepth.size(); i++) {
       hdiff.add(heightofscreen / (nodesatdepth.get(i) + 1));

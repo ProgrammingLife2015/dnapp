@@ -1,15 +1,15 @@
 package reader;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import exceptions.InvalidFileFormatException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import exceptions.InvalidFileFormatException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 @RunWith(Parameterized.class)
 public class EdgeReaderBadWeatherTest {
@@ -19,6 +19,10 @@ public class EdgeReaderBadWeatherTest {
   private static String edge3 = "1";
   private static String edge4 = "1 4 5";
   
+  /**
+   * Set the parameters for the test.
+   * @return The parameters for the parameterized test
+   */
   @Parameters
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][] {
@@ -35,7 +39,7 @@ public class EdgeReaderBadWeatherTest {
     this.edge = edge;
   }
   
-  @Test(expected=InvalidFileFormatException.class)
+  @Test(expected = InvalidFileFormatException.class)
   public void invalidStringsTest() {
     Scanner sc = new Scanner(edge);
     EdgeReader.readEdges(sc);
