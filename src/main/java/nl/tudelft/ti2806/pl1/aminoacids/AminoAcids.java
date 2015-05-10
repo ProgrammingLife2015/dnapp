@@ -12,6 +12,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import reader.AminoMapReader;
+import reader.Reader;
 
 /**
  * 
@@ -26,50 +27,77 @@ public class AminoAcids {
 	static final int CODON_SIZE = 3;
 
 	public static void main(final String[] args) throws IOException {
-		Graph graph = new SingleGraph("test graph");
+		Graph graph = new SingleGraph("simple test graph");
+		Graph g = Reader.read("src/main/resources/nodes.txt",
+				"src/main/resources/edges.txt");
 		graph.addNode("start");
 		graph.addNode("end");
 		graph.addNode("middle");
 		graph.addEdge("1", "start", "middle");
 		graph.addEdge("2", "middle", "end");
-		graph.display();
-		convertGraph(graph);
+		// graph.display();
+		// convertGraph(graph);
+		Collection<Node> nodes = g.getNodeSet();
+		Node start = getStart(nodes);
+		Node end = getEnd(nodes);
+		String gcontent = getGenomeString(start, end, "TKK-1");
+		System.out.println(gcontent);
 	}
 
-	public final static Graph convertGraph(final Graph nucloids) {
+	/**
+	 * Convert a nucloid graph into a amino acid graph.
+	 * 
+	 * @param nucloids
+	 *            Nucloid graph
+	 * @return Amino acid graph
+	 */
+	public static final Graph convertGraph(final Graph nucloids) {
 		Graph graph = new SingleGraph("Amino Acid Graph");
 		Collection<Node> nodes = nucloids.getNodeSet();
 		Node start = getStart(nodes);
 		Node end = getEnd(nodes);
 
-		String contents = start.getAttribute("content");
-
 		return graph;
 	}
 
-	private final static Graph getReferenceGraph(final Node start,
-			final Node end) {
-		Graph graph = new SingleGraph("Reference Amino Graph");
+	/**
+	 * Gets the genome string from the start/end nodes and the genome name.
+	 * 
+	 * @param start
+	 *            Start node
+	 * @param end
+	 *            End Node
+	 * @param genomeName
+	 *            Genome Name
+	 * @return Genome string
+	 */
+	private static String getGenomeString(final Node start, final Node end,
+			final String genomeName) {
 		String contents = start.getAttribute("content");
 		Node current = start;
+		int temp = 0;
 		while (current != end) {
 			Iterator<Edge> outgoing = current.getEachLeavingEdge().iterator();
 			while (outgoing.hasNext()) {
 				Node next = outgoing.next().getNode1();
 				Collection<String> sources = next.getAttribute("sources");
-				if (sources.contains("TKK_REF")) {
+				if (sources.contains(genomeName)) {
 					current = next;
 					contents += current.getAttribute("content");
-					if (getStart(contents) != -1) {
-
-					}
 				}
 			}
 		}
-		return graph;
+		return contents;
 	}
 
-	private final static Node getStart(final Collection<Node> nodes) {
+	/**
+	 * Gets the start Node of a collection of nodes.
+	 * 
+	 * @param nodes
+	 *            Collection of nodes
+	 * @return Start node
+	 */
+	private static Node getStart(final Collection<Node> nodes) {
 		for (Node node : nodes) {
 
 			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
@@ -89,7 +117,14 @@ public class AminoAcids {
 		return null;
 	}
 
-	private final static Node getEnd(final Collection<Node> nodes) {
+	/**
+	 * Gets the end Node of a collection of nodes.
+	 * 
+	 * @param nodes
+	 *            Collection of nodes
+	 * @return End node
+	 */
+	private static Node getEnd(final Collection<Node> nodes) {
 		for (Node node : nodes) {
 			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
 			ArrayList<Edge> ingoing = new ArrayList<Edge>();
