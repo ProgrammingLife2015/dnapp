@@ -73,21 +73,18 @@ public class AminoAcids {
 	 */
 	private static String getGenomeString(final Node start, final Node end,
 			final String genomeName) {
-		String contents = start.getAttribute("content");
-		Node current = start;
-		int temp = 0;
-		while (current != end) {
-			Iterator<Edge> outgoing = current.getEachLeavingEdge().iterator();
-			while (outgoing.hasNext()) {
-				Node next = outgoing.next().getNode1();
-				Collection<String> sources = next.getAttribute("sources");
-				if (sources.contains(genomeName)) {
-					current = next;
-					contents += current.getAttribute("content");
-				}
-			}
+		String contents = "";
+		String content = "";
+		Node current;
+		Iterator<Node> iter = start.getBreadthFirstIterator();
+		while (iter.hasNext()) {
+			current = iter.next();
+			content += current.getAttribute("content");
+			contents += current.getId() + current.getAttribute("content")
+					+ "\n";
 		}
-		return contents;
+		// return content + "\n" + contents;
+		return content;
 	}
 
 	/**
