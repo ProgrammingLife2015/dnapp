@@ -127,9 +127,9 @@ public class NodePlacer {
    *          The maximum depth of the nodes in the graph
    * @return The width location of the node
    */
-  private static double getWidth(double width, double depth, double maxdepth) {
+  protected static double getWidth(double width, double depth, double maxdepth) {
     double wdiff = width / maxdepth;
-    return wdiff * (depth + 1);
+    return wdiff * depth;
 
   }
 
@@ -146,12 +146,13 @@ public class NodePlacer {
    *          The height of the viewer
    * @return The height of the node
    */
-  private static int getHeight(int depth, ArrayList<Integer> heightdiff,
+  protected static int getHeight(int depth, ArrayList<Integer> heightdiff,
       ArrayList<Integer> nodesatdepth, int height) {
     int hdiff = heightdiff.get(depth);
     int natdepth = nodesatdepth.get(depth);
+    //TODO throw error if natdepth <1 ?
     nodesatdepth.set(depth, natdepth - 1);
-    return height - natdepth * hdiff;
+    return height/2 - natdepth * hdiff;
   }
 
   /**
@@ -163,7 +164,7 @@ public class NodePlacer {
    *          The height of the viewer
    * @return The height difference for each node at depth i
    */
-  private static ArrayList<Integer> heightDiff(ArrayList<Integer> nodesatdepth, 
+  protected static ArrayList<Integer> heightDiff(ArrayList<Integer> nodesatdepth, 
       int heightofscreen) {
     ArrayList<Integer> hdiff = new ArrayList<Integer>(nodesatdepth.size());
     for (int i = 0; i < nodesatdepth.size(); i++) {
