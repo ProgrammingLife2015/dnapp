@@ -4,10 +4,18 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Viewer;
+
+import reader.NodePlacer;
+import reader.Reader;
 
 /**
  * A panel representing the content of the main window.
@@ -33,6 +41,28 @@ public class Content extends JPanel {
 	public Content() {
 		setLayout(new GridBagLayout());
 		// setupGBC();
+
+		Graph g;
+		try {
+			g = Reader.read("src/main/resources/nodes.txt",
+					"src/main/resources/edges.txt");
+			// Viewer viewer = g.display();
+			Viewer viewer = new Viewer(g,
+					Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+			viewer.disableAutoLayout();
+			NodePlacer.place(g, viewer);
+
+			ViewPanel view = viewer.addDefaultView(false); // false indicates
+															// "no JFrame".
+			// ...
+			place(view, 0, 0);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void x() {
 		Dimension d = new Dimension(10, 20);
 		setWeight(0);
 		JTextArea jta = new JTextArea("Bla bla bla bla bla.");
@@ -51,7 +81,6 @@ public class Content extends JPanel {
 		// setWeight(0.0);
 		place(makeButton("Exit", Event.EXIT_APP, "exit the program tool tip"),
 				2, 2);
-
 	}
 
 	/**

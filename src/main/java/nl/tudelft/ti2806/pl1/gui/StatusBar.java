@@ -22,7 +22,6 @@ public class StatusBar extends JPanel {
 	 */
 	public StatusBar() {
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
-		// statusPanel.setPreferredSize(new Dimension(getWidth(), 20));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		JLabel statusLabel = new JLabel("status");
 		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
