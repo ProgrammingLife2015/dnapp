@@ -61,12 +61,95 @@ public class AminoAcids {
 	}
 
 	/**
+	 * Finds the indexes of all the relevant start and stop codons of a genome.
+	 * 
+	 * @param genome
+	 *            The genome string
+	 * @return An ArrayList of indexes
+	 * @throws IOException
+	 *             File error
+	 */
+	public static ArrayList<Integer> getExonIndexes(final String genome)
+			throws IOException {
+		HashMap<String, String> map = AminoMapReader
+				.readIntoMap("src/main/resources/amino_DNA_encoding.txt");
+		return getNextStartIndex(genome, 0, new ArrayList<Integer>(), map);
+	}
+
+	/**
+	 * Finds the index of the next Start codon of a genome.
+	 * 
+	 * @param genome
+	 *            The genome string
+	 * @param index
+	 *            The index from where the searching starts
+	 * @param indexes
+	 *            The collection of indexes
+	 * @param map
+	 *            Map of amino acid encoding
+	 * @return If the string ends, returns the collection of indexes, if an
+	 *         index is found: add it and find the next stop codon
+	 */
+	private static ArrayList<Integer> getNextStartIndex(final String genome,
+			final int index, final ArrayList<Integer> indexes,
+			final HashMap<String, String> map) {
+		int ind = -1;
+		int i = index;
+		char[] chars = genome.toCharArray();
+		while (i < chars.length && ind == -1) {
+			if (chars[i] == 'T' && chars[i + 1] == 'A' && chars[i + 2] == 'C') {
+				ind = i;
+			}
+			i++;
+		}
+		if (ind == -1) {
+			return indexes;
+		} else {
+			indexes.add(ind);
+			return getNextStopIndex(genome, ind, indexes, map);
+		}
+	}
+
+	/**
+	 * Finds the index of the next Stop codon of a genome.
+	 * 
+	 * @param genome
+	 *            The genome string
+	 * @param index
+	 *            The index from where the searching starts
+	 * @param indexes
+	 *            The collection of indexes
+	 * @param map
+	 *            Map of amino acid encoding
+	 * @return If the string ends, returns the collection of indexes, if an
+	 *         index is found: add it and find the next start codon
+	 */
+	private static ArrayList<Integer> getNextStopIndex(final String genome,
+			final int index, final ArrayList<Integer> indexes,
+			final HashMap<String, String> map) {
+		int ind = -1;
+		int i = index;
+		char[] chars = genome.toCharArray();
+		while (i < chars.length && ind == -1) {
+			if (getAcid("" + chars[i] + chars[i + 1] + chars[i + 2], map)
+					.equals("Stop")) {
+				ind = i;
+			}
+			i += CODON_SIZE;
+		}
+		if (ind == -1) {
+			return indexes;
+		} else {
+			indexes.add(ind);
+			return getNextStartIndex(genome, ind, indexes, map);
+		}
+	}
+
+	/**
 	 * Gets the genome string from the start/end nodes and the genome name.
 	 * 
 	 * @param start
 	 *            Start node
-	 * @param end
-	 *            End Node
 	 * @param genomeName
 	 *            Genome Name
 	 * @return Genome string
