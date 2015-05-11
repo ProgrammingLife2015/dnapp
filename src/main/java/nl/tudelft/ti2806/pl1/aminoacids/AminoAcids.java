@@ -40,7 +40,7 @@ public class AminoAcids {
 		Collection<Node> nodes = g.getNodeSet();
 		Node start = getStart(nodes);
 		Node end = getEnd(nodes);
-		String gcontent = getGenomeString(start, end, "TKK-1");
+		String gcontent = getGenomeString(start, "TKK-1");
 		System.out.println(gcontent);
 	}
 
@@ -71,20 +71,45 @@ public class AminoAcids {
 	 *            Genome Name
 	 * @return Genome string
 	 */
-	private static String getGenomeString(final Node start, final Node end,
+	private static String getGenomeString(final Node start,
 			final String genomeName) {
-		String contents = "";
-		String content = "";
-		Node current;
-		Iterator<Node> iter = start.getBreadthFirstIterator();
-		while (iter.hasNext()) {
-			current = iter.next();
-			content += current.getAttribute("content");
-			contents += current.getId() + current.getAttribute("content")
-					+ "\n";
+		StringBuilder builder = new StringBuilder();
+		Node current = start;
+		while (!isEndNode(current)) {
+			Iterator<Edge> it = current.getEachLeavingEdge().iterator();
+			while (it.hasNext()) {
+				Edge edge = it.next();
+				if (edge.getSourceNode() == current) {
+					Node next = edge.getTargetNode();
+					if (((Collection<String>) next.getAttribute("sources"))
+							.contains(genomeName)) {
+						builder.append(current.getAttribute("content"));
+						current = next;
+					}
+				}
+			}
 		}
-		// return content + "\n" + contents;
-		return content;
+		builder.append(current.getAttribute("content"));
+		return builder.toString();
+	}
+
+	/**
+	 * This method checks if a given node is an end node.
+	 * 
+	 * @param node
+	 *            The node to check
+	 * @return A boolean indicating if the given node is an end node
+	 */
+	public static boolean isEndNode(final Node node) {
+		Iterator<Edge> it = node.getEachLeavingEdge().iterator();
+		int leavingEdgeCount = 0;
+		while (it.hasNext()) {
+			Edge edge = it.next();
+			if (edge.getSourceNode() == node) {
+				leavingEdgeCount++;
+			}
+		}
+		return leavingEdgeCount == 0;
 	}
 
 	/**
