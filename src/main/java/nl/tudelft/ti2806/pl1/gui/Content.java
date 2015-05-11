@@ -4,11 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.ViewPanel;
@@ -40,12 +41,14 @@ public class Content extends JPanel {
 	 */
 	public Content() {
 		setLayout(new GridBagLayout());
-		// setupGBC();
+		setupGBC();
 
 		Graph g;
 		try {
+			// Graph graph = new MultiGraph("embedded");
 			g = Reader.read("src/main/resources/nodes.txt",
 					"src/main/resources/edges.txt");
+			// g = new MultiGraph("embedded");
 			// Viewer viewer = g.display();
 			Viewer viewer = new Viewer(g,
 					Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -54,9 +57,17 @@ public class Content extends JPanel {
 
 			ViewPanel view = viewer.addDefaultView(false); // false indicates
 															// "no JFrame".
-			// ...
-			place(view, 0, 0);
-		} catch (FileNotFoundException e) {
+			gbc.gridheight = 1;
+			gbc.gridwidth = 1;
+			setWeight(1);
+
+			JScrollPane jsp = new JScrollPane(
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+			jsp.setViewportView(view);
+
+			place(jsp, 0, 0);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

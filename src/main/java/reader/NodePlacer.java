@@ -34,7 +34,7 @@ public class NodePlacer {
 	 * @param view
 	 *            The viewer of the graph
 	 */
-	public static void place(Graph g, Viewer view) {
+	public static void place(final Graph g, final Viewer view) {
 		if (g.getNodeCount() == 0) {
 			return;
 		}
@@ -76,7 +76,7 @@ public class NodePlacer {
 	 *            The graph which will be visualized
 	 * @return The staring node of the graph
 	 */
-	private static Node getStartNode(Graph g) {
+	private static Node getStartNode(final Graph g) {
 		Node first = null;
 		for (Node n : g.getNodeSet()) {
 			if (first == null) {
@@ -96,7 +96,7 @@ public class NodePlacer {
 	 * @param que
 	 *            The queue in which we store the univisited edges
 	 */
-	private static void depthLevel(Queue<Node> que) {
+	private static void depthLevel(final Queue<Node> que) {
 		while (!que.isEmpty()) {
 			Node src = que.remove();
 			Iterable<Edge> itedge = src.getEachLeavingEdge();
@@ -137,7 +137,8 @@ public class NodePlacer {
 	 *            The maximum depth of the nodes in the graph
 	 * @return The width location of the node
 	 */
-	private static int getWidth(int width, int depth, int maxdepth) {
+	private static int getWidth(final int width, final int depth,
+			final int maxdepth) {
 		int wdiff = width / maxdepth;
 		return wdiff * (depth + 1);
 
@@ -156,8 +157,9 @@ public class NodePlacer {
 	 *            The height of the viewer
 	 * @return The height of the node
 	 */
-	private static int getHeight(int depth, ArrayList<Integer> heightdiff,
-			ArrayList<Integer> nodesatdepth, int height) {
+	private static int getHeight(final int depth,
+			final ArrayList<Integer> heightdiff,
+			final ArrayList<Integer> nodesatdepth, final int height) {
 		int hdiff = heightdiff.get(depth);
 		int natdepth = nodesatdepth.get(depth);
 		nodesatdepth.set(depth, natdepth - 1);
@@ -175,7 +177,7 @@ public class NodePlacer {
 	 * @return The height difference for each node at depth i
 	 */
 	private static ArrayList<Integer> heightDiff(
-			ArrayList<Integer> nodesatdepth, int heightofscreen) {
+			final ArrayList<Integer> nodesatdepth, final int heightofscreen) {
 		ArrayList<Integer> hdiff = new ArrayList<Integer>(nodesatdepth.size());
 		for (int i = 0; i < nodesatdepth.size(); i++) {
 			hdiff.add(heightofscreen / (nodesatdepth.get(i) + 1));
