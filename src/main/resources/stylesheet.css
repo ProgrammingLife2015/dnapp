@@ -1,0 +1,29 @@
+node {
+    size: 20px;
+    shape: circle;
+    text-alignment: above;
+    /*text-background-mode: rounded-box;*/
+    /*text-background-color: yellow;*/
+    /*text-padding: 3px, 0px;*/
+}
+node:clicked {
+    fill-color: green;
+}
+node.common {
+	fill-color: grey;
+}
+node.branch1 {
+	fill-color: blue;
+}
+node.branch2 {
+	fill-color: red;
+}
+node.branch3 {
+    fill-color: yellow;
+}
+node.branch4 {
+    fill-color: grey;
+}
+node.branch5 {
+    fill-color: orange;
+}

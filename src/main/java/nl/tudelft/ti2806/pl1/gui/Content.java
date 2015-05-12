@@ -62,6 +62,12 @@ public class Content extends JPanel {
 			// e.printStackTrace();
 			window.error(e.getMessage());
 		}
+		// Attach css file
+		System.setProperty("org.graphstream.ui.renderer",
+				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		g.addAttribute("ui.stylesheet",
+				"url('src/main/resources/stylesheet.css')");
+
 		Viewer viewer = new Viewer(g,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
