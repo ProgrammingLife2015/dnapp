@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,6 +26,11 @@ public class Window extends JFrame implements Observer {
 	 * The window settings.
 	 */
 	private WindowSettings settings;
+
+	/**
+	 * 
+	 */
+	// private JPanel all = new JPanel(new BorderLayout());
 
 	/**
 	 * The menu bar of the window.
@@ -64,6 +70,8 @@ public class Window extends JFrame implements Observer {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
+		// add(all, BorderLayout.CENTER);
+
 		setWindowSettings(wSettings);
 
 		Event.setWindow(this);
@@ -80,7 +88,9 @@ public class Window extends JFrame implements Observer {
 		content = new Content(this);
 		add(content, BorderLayout.CENTER);
 
-		pack();
+		addComponentListener(new WindowEvents(this));
+
+		// pack();
 		setLocationRelativeTo(null);
 		// dispose();
 		setVisible(true);
@@ -153,6 +163,16 @@ public class Window extends JFrame implements Observer {
 				new Window();
 			}
 		});
+	}
+
+	/**
+	 * 
+	 * @param evt
+	 */
+	public void resized(final ComponentEvent evt) {
+		// System.out.println(evt);
+		// pack();
+		info(this.getSize().toString());
 	}
 
 }

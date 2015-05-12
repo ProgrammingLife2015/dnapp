@@ -49,8 +49,8 @@ public class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		int height = view.getDefaultView().getHeight();
-		int width = view.getDefaultView().getWidth();
+		int height = 1000;// view.getDefaultView().getHeight();
+		int width = 1000;// view.getDefaultView().getWidth();
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);

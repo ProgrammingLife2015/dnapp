@@ -32,6 +32,7 @@ public class ToolBar extends JToolBar {
 		addButton("example", null, Event.EXAMPLE_EVENT, "Example tooltip text.");
 		addSeparator();
 		addButton("another button", null, Event.NONE, "boe");
+		addButton("hide window", null, Event.HIDE_WINDOW, "mouse over hoi");
 	}
 
 	/**

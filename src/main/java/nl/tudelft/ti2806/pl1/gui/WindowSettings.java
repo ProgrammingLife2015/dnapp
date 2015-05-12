@@ -23,7 +23,7 @@ public class WindowSettings extends Observable {
 	/**
 	 * 
 	 */
-	private static final String DEFAULT_TITLE = "Genome browser";
+	private static final String DEFAULT_TITLE = "DN/App Genome Browser";
 
 	/**
 	 * The minimum size of the window.

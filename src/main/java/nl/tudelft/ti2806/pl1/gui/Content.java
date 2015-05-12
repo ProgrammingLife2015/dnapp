@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
@@ -65,7 +67,7 @@ public class Content extends JPanel {
 		viewer.disableAutoLayout();
 		ViewPanel view = viewer.addDefaultView(false);
 		NodePlacer.place(g, viewer);
-		view.setPreferredSize(new Dimension(1500, 800));
+		view.setPreferredSize(new Dimension(10, 8));
 		// gbc.gridheight = 1;
 		// gbc.gridwidth = 1;
 		JScrollPane jsp = new JScrollPane(view);
@@ -73,6 +75,13 @@ public class Content extends JPanel {
 		place(new JPanel(), 0, 0);
 		setWeight(3);
 		place(jsp, 1, 0);
+
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(final ComponentEvent evt) {
+				window.resized(evt);
+			}
+		});
 
 	}
 

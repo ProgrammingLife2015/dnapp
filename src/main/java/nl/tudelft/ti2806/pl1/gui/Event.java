@@ -59,6 +59,33 @@ public enum Event implements ActionListener {
 	},
 
 	/**
+	 * 
+	 */
+	SHOW_WINDOW {
+		/**
+		 * 
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			window.setVisible(true);
+		}
+
+	},
+
+	/**
+	 * 
+	 */
+	HIDE_WINDOW {
+		/**
+		 * 
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			window.setVisible(false);
+
+		}
+
+	},
+
+	/**
 	 * Exits the application.
 	 */
 	EXIT_APP {
