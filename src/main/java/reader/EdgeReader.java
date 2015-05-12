@@ -19,7 +19,7 @@ public class EdgeReader {
 	 *            Scanner from which the edge information will be read.
 	 * @return ArrayList of all Edges.
 	 */
-	public static ArrayList<Edge> readEdges(Scanner sc) {
+	public static ArrayList<Edge> readEdges(final Scanner sc) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 
 		while (sc.hasNextLine()) {
@@ -38,10 +38,9 @@ public class EdgeReader {
 				throw new InvalidFileFormatException(
 						"The id's should be integers");
 			}
-			Edge e = new Edge(start, end);
-			edges.add(e);
+			Edge edge = new Edge(start, end);
+			edges.add(edge);
 		}
-
 		return edges;
 	}
 }

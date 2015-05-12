@@ -1,6 +1,7 @@
 package graph;
 
 /**
+ * Lets you create Edges for a Graph.
  * 
  * @author Marissa, Mark
  * @version 25-04-2015 Lets you create Edges for a Graph
