@@ -50,7 +50,15 @@ public final class Reader {
 			graph.getNode(n.getId()).addAttribute("inNodes", n.getInNodes());
 			graph.getNode(n.getId()).addAttribute("outNodes", n.getOutNodes());
 			graph.getNode(n.getId()).addAttribute("sources", n.getSources());
-			graph.getNode(n.getId()).addAttribute("ui.label", n.getId());
+			if (n.getContent().length() < 10) {
+				graph.getNode(n.getId()).addAttribute("ui.label",
+						n.getContent());
+			} else {
+				graph.getNode(n.getId()).addAttribute("ui.label",
+						Integer.toString(n.getContent().length()));
+			}
+			graph.getNode(n.getId()).addAttribute("ui.class",
+					"branch" + Integer.toString((int) (Math.random() * 6 + 1)));
 		}
 		for (Edge e : edge) {
 			graph.addEdge(
