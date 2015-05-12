@@ -19,6 +19,11 @@ public class EdgeReaderBadWeatherTest {
 	private static String edge3 = "1";
 	private static String edge4 = "1 4 5";
 
+	/**
+	 * Set the parameters for the test.
+	 * 
+	 * @return The parameters for the parameterized test
+	 */
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { { edge1 }, { edge2 }, { edge3 },
@@ -27,7 +32,7 @@ public class EdgeReaderBadWeatherTest {
 
 	private String edge;
 
-	public EdgeReaderBadWeatherTest(String edge) {
+	public EdgeReaderBadWeatherTest(final String edge) {
 		this.edge = edge;
 	}
 

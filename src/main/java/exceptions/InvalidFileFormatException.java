@@ -1,10 +1,10 @@
 package exceptions;
 
 /**
+ * Lets you throw a custom error on an invalid file format.
+ * 
  * @author Marissa, Mark
  * @since 25-04-2015
- * 
- *        Lets you throw a custom error on an ivalid file format
  */
 public class InvalidFileFormatException extends RuntimeException {
 

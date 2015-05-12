@@ -20,14 +20,14 @@ public class NodeReader {
 	 *            Scanner from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 */
-	public static ArrayList<Node> ReadNodes(Scanner sc) {
+	public static ArrayList<Node> readNodes(final Scanner sc) {
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		while (sc.hasNextLine()) {
 			String nextnode = sc.nextLine();
 			if (nextnode.charAt(0) == '>') {
 				nextnode = nextnode.substring(1);
-				String[] n = nextnode.split("\\s\\|\\s");
-				if (n.length != 4) {
+				String[] data = nextnode.split("\\s\\|\\s");
+				if (data.length != 4) {
 					throw new InvalidFileFormatException(
 							"Missing some information to create this node");
 				}
@@ -36,14 +36,14 @@ public class NodeReader {
 				int start;
 				int end;
 				try {
-					id = Integer.parseInt(n[0]);
+					id = Integer.parseInt(data[0]);
 				} catch (Exception e) {
 					throw new InvalidFileFormatException(
 							"The id should be an integer");
 				}
 				try {
-					start = Integer.parseInt(n[2]);
-					end = Integer.parseInt(n[3]);
+					start = Integer.parseInt(data[2]);
+					end = Integer.parseInt(data[3]);
 				} catch (Exception e) {
 					throw new InvalidFileFormatException(
 							"The start and end reference should be integers");
@@ -53,7 +53,7 @@ public class NodeReader {
 							"Size of Node content doesn't match with its reference size");
 				}
 				ArrayList<String> sources = new ArrayList<String>(
-						Arrays.asList(n[1].split(",")));
+						Arrays.asList(data[1].split(",")));
 				Node node = new Node(id, sources, start, end, content);
 				nodes.add(node);
 			} else {
