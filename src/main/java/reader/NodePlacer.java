@@ -34,6 +34,7 @@ public class NodePlacer {
 	 * @param view
 	 *            The viewer of the graph
 	 */
+
 	public static void place(final Graph graph, final Viewer view) {
 		if (graph.getNodeCount() == 0) {
 			return;
@@ -49,8 +50,8 @@ public class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		int height = view.getDefaultView().getHeight();
-		int width = view.getDefaultView().getWidth();
+		int height = 1000;// view.getDefaultView().getHeight();
+		int width = 1000;// view.getDefaultView().getWidth();
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
@@ -77,6 +78,7 @@ public class NodePlacer {
 	 * @return The staring node of the graph
 	 */
 	private static Node getStartNode(final Graph graph) {
+
 		Node first = null;
 		for (Node n : graph.getNodeSet()) {
 			if (first == null) {

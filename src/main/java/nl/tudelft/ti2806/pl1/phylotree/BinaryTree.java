@@ -10,9 +10,11 @@ import org.structureGraphic.v1.DSTreeNode;
 
 /**
  * Generic binary tree, storing data of a parametric data in each node.
- * http://www.cs.dartmouth.edu/~cbk/10/notes/7/code/BinaryTree.java
+ * http://www.cs.dartmouth.edu/~cbk/10/notes/7/code/BinaryTree.java Edited by
+ * Maarten.
  * 
  * @author Chris Bailey-Kellogg, Dartmouth CS 10, Fall 2012
+ * 
  */
 public abstract class BinaryTree implements DSTreeNode {
 
@@ -40,12 +42,6 @@ public abstract class BinaryTree implements DSTreeNode {
 	}
 
 	/**
-	 * 
-	 * @return the size of the (sub)tree.
-	 */
-	public abstract int size();
-
-	/**
 	 * @return the path length.
 	 */
 	public final double getPathLength() {
@@ -60,7 +56,11 @@ public abstract class BinaryTree implements DSTreeNode {
 	}
 
 	/**
-	 * 
+	 * @return the size of the (sub)tree.
+	 */
+	public abstract int size();
+
+	/**
 	 * @return the longest length to a leaf node from here.
 	 */
 	public abstract int height();
@@ -233,7 +233,7 @@ public abstract class BinaryTree implements DSTreeNode {
 	 *            The string to return if <code>str</code> is empty
 	 * @return <code>str</code> if it is not empty, else <code>sElse</code>
 	 */
-	private static String stringOrElse(final String str, final String sElse) {
+	protected static String stringOrElse(final String str, final String sElse) {
 		if (str.equals("")) {
 			return sElse;
 		}
