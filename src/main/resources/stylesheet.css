@@ -7,7 +7,7 @@ node {
     /*text-padding: 3px, 0px;*/
 }
 node:clicked {
-    fill-color: green;
+    size: 30px;
 }
 node.common {
 	fill-color: grey;
@@ -22,8 +22,11 @@ node.branch3 {
     fill-color: yellow;
 }
 node.branch4 {
-    fill-color: grey;
+    fill-color: pink;
 }
 node.branch5 {
     fill-color: orange;
+}
+node.branch6 {
+    fill-color: green;
 }
