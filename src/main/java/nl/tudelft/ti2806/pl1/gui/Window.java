@@ -22,7 +22,7 @@ public class Window extends JFrame implements Observer {
 	private static final long serialVersionUID = -2702972120954333899L;
 
 	/**
-	 * 
+	 * The window settings.
 	 */
 	private WindowSettings settings;
 
@@ -61,7 +61,6 @@ public class Window extends JFrame implements Observer {
 	 */
 	public Window(final WindowSettings wSettings) {
 
-		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -75,13 +74,14 @@ public class Window extends JFrame implements Observer {
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
 
-		content = new Content();
-		add(content, BorderLayout.CENTER);
-
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
 
+		content = new Content(this);
+		add(content, BorderLayout.CENTER);
+
 		pack();
+		setLocationRelativeTo(null);
 		// dispose();
 		setVisible(true);
 		revalidate();
@@ -107,8 +107,39 @@ public class Window extends JFrame implements Observer {
 	private void applyWindowSettings() {
 		setTitle(settings.getTitle());
 		setMinimumSize(settings.getMinimumSize());
-		setSize(settings.getMinimumSize());
-		pack();
+		setSize(settings.getSize());
+		setPreferredSize(settings.getSize());
+		// pack();
+	}
+
+	/**
+	 * @param o
+	 *            The changed observable object.
+	 * @param arg
+	 *            Optional arguments.
+	 */
+	public final void update(final Observable o, final Object arg) {
+		applyWindowSettings();
+	}
+
+	/**
+	 * Shows an information message in the status bar.
+	 * 
+	 * @param message
+	 *            The info message to show in the status bar.
+	 */
+	public final void info(final String message) {
+		statusBar.info(message);
+	}
+
+	/**
+	 * Shows an error message in the status bar.
+	 * 
+	 * @param message
+	 *            The error message to show in the status bar.
+	 */
+	public final void error(final String message) {
+		statusBar.error(message);
 	}
 
 	/**
@@ -124,13 +155,4 @@ public class Window extends JFrame implements Observer {
 		});
 	}
 
-	/**
-	 * @param o
-	 *            The changed observable object.
-	 * @param arg
-	 *            Optional arguments.
-	 */
-	public final void update(final Observable o, final Object arg) {
-		applyWindowSettings();
-	}
 }

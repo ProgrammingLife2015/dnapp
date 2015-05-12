@@ -18,6 +18,11 @@ public class WindowSettings extends Observable {
 	/**
 	 * 
 	 */
+	private static final int DEFAULT_SIZE_X = 700, DEFAULT_SIZE_Y = 500;
+
+	/**
+	 * 
+	 */
 	private static final String DEFAULT_TITLE = "Genome browser";
 
 	/**
@@ -25,6 +30,11 @@ public class WindowSettings extends Observable {
 	 */
 	private Dimension minimumSize = new Dimension(DEFAULT_MIN_SIZE_X,
 			DEFAULT_MIN_SIZE_Y);
+
+	/**
+	 * The initial size of the window.
+	 */
+	private Dimension size = new Dimension(DEFAULT_SIZE_X, DEFAULT_SIZE_Y);
 
 	/**
 	 * The window title.
@@ -78,6 +88,21 @@ public class WindowSettings extends Observable {
 	public final void setTitle(final String newTitle) {
 		this.title = newTitle;
 		notifyObservers();
+	}
+
+	/**
+	 * @return the size
+	 */
+	public final Dimension getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size
+	 *            the size to set
+	 */
+	public final void setSize(final Dimension size) {
+		this.size = size;
 	}
 
 	/**

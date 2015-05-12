@@ -18,14 +18,37 @@ public class StatusBar extends JPanel {
 	private static final long serialVersionUID = -2304279241558941973L;
 
 	/**
-	 * 
+	 * The text label of the status bar.
+	 */
+	private JLabel label;
+
+	/**
+	 * Initializes the status bar.
 	 */
 	public StatusBar() {
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		JLabel statusLabel = new JLabel("status");
-		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		add(statusLabel);
+		label = new JLabel();
+		label.setHorizontalAlignment(SwingConstants.LEFT);
+		add(label);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 *            The error message to show.
+	 */
+	public final void error(final String message) {
+		label.setText("Error: " + message);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 *            The info message to show.
+	 */
+	public final void info(final String message) {
+		label.setText(message);
 	}
 
 }

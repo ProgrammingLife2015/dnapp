@@ -4,12 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.ViewPanel;
@@ -32,48 +32,52 @@ public class Content extends JPanel {
 	private static final long serialVersionUID = -518196843048978296L;
 
 	/**
+	 * 
+	 */
+	private Window window;
+
+	/**
 	 * The constraints for the layout of the content panel.
 	 */
 	private GridBagConstraints gbc = new GridBagConstraints();
 
 	/**
+	 * Initializes the content panel.
 	 * 
+	 * @param w
+	 *            The window this content is part of.
 	 */
-	public Content() {
+	public Content(final Window w) {
+		this.window = w;
 		setLayout(new GridBagLayout());
 		setupGBC();
 
-		Graph g;
+		Graph g = null;
 		try {
-			// Graph graph = new MultiGraph("embedded");
-			g = Reader.read("src/main/resources/nodes.txt",
-					"src/main/resources/edges.txt");
-			// g = new MultiGraph("embedded");
-			// Viewer viewer = g.display();
-			Viewer viewer = new Viewer(g,
-					Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-			viewer.disableAutoLayout();
-			NodePlacer.place(g, viewer);
-
-			ViewPanel view = viewer.addDefaultView(false); // false indicates
-															// "no JFrame".
-			gbc.gridheight = 1;
-			gbc.gridwidth = 1;
-			setWeight(1);
-
-			JScrollPane jsp = new JScrollPane(
-					ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-			jsp.setViewportView(view);
-
-			place(jsp, 0, 0);
-		} catch (Exception e) {
-			e.printStackTrace();
+			g = Reader.read("src/main/resources/simple_graph.node.graph",
+					"src/main/resources/simple_graph.edge.graph");
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+			window.error(e.getMessage());
 		}
+		Viewer viewer = new Viewer(g,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		viewer.disableAutoLayout();
+		ViewPanel view = viewer.addDefaultView(false);
+		NodePlacer.place(g, viewer);
+		view.setPreferredSize(new Dimension(1500, 800));
+		// gbc.gridheight = 1;
+		// gbc.gridwidth = 1;
+		JScrollPane jsp = new JScrollPane(view);
+		setWeight(1);
+		place(new JPanel(), 0, 0);
+		setWeight(3);
+		place(jsp, 1, 0);
 
 	}
 
 	private void x() {
+
 		Dimension d = new Dimension(10, 20);
 		setWeight(0);
 		JTextArea jta = new JTextArea("Bla bla bla bla bla.");
