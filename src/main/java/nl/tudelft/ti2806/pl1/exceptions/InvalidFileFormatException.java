@@ -1,4 +1,4 @@
-package exceptions;
+package nl.tudelft.ti2806.pl1.exceptions;
 
 /**
  * Lets you throw a custom error on an invalid file format.

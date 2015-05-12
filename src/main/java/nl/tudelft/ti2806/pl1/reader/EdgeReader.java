@@ -1,17 +1,23 @@
-package reader;
-
-import exceptions.InvalidFileFormatException;
-import graph.Edge;
+package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+import nl.tudelft.ti2806.pl1.graph.Edge;
+
 /**
  * 
  * @author Marissa, Mark
- * @date 24-04-2015 Lets you read the Edges from the provided data.
+ * @since 24-04-2015 Lets you read the Edges from the provided data.
  */
-public class EdgeReader {
+public final class EdgeReader {
+
+	/**
+	 * 
+	 */
+	private EdgeReader() {
+	}
 
 	/**
 	 * 

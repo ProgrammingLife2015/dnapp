@@ -75,6 +75,7 @@ public enum Event implements ActionListener {
 	 * 
 	 */
 	HIDE_WINDOW {
+
 		/**
 		 * 
 		 */

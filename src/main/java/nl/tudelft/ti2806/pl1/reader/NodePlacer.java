@@ -1,4 +1,4 @@
-package reader;
+package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,13 @@ import org.graphstream.ui.view.Viewer;
  * @author Marissa, Mark
  *
  */
-public class NodePlacer {
+public final class NodePlacer {
+
+	/**
+	 * 
+	 */
+	private NodePlacer() {
+	}
 
 	/**
 	 * The list which keeps the information about how many nodes are located at
@@ -34,7 +40,6 @@ public class NodePlacer {
 	 * @param view
 	 *            The viewer of the graph
 	 */
-
 	public static void place(final Graph graph, final Viewer view) {
 		if (graph.getNodeCount() == 0) {
 			return;
@@ -50,8 +55,9 @@ public class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		int height = 1000;// view.getDefaultView().getHeight();
-		int width = 1000;// view.getDefaultView().getWidth();
+		// TODO
+		int height = 500;// view.getDefaultView().getHeight();
+		int width = 200000;// view.getDefaultView().getWidth();
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
@@ -106,7 +112,8 @@ public class NodePlacer {
 			while (it.hasNext()) {
 				Edge edg = it.next();
 				if (!edg.getSourceNode().getId().equals(src.getId())) {
-					// This is done because some strange behaviour occured where
+					// This is done because some strange behaviour occurred
+					// where
 					// the source node of the edge
 					// was not equal to the source node
 					continue;

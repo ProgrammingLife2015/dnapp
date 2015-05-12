@@ -1,4 +1,4 @@
-package graph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import nl.tudelft.ti2806.pl1.reader.Reader;
+
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.view.Viewer;
-
-import reader.Reader;
 
 /**
  * 

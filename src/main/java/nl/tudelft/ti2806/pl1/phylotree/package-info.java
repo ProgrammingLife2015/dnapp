@@ -1,7 +1,5 @@
 /**
- * 
- */
-/**
+ * Phylotrees.
  * @author PL1
  *
  */

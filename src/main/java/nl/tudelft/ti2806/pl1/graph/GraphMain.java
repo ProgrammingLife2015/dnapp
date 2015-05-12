@@ -1,12 +1,12 @@
-package graph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import java.io.FileNotFoundException;
 
+import nl.tudelft.ti2806.pl1.reader.NodePlacer;
+import nl.tudelft.ti2806.pl1.reader.Reader;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.view.Viewer;
-
-import reader.NodePlacer;
-import reader.Reader;
 
 /**
  * 

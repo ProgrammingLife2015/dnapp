@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import nl.tudelft.ti2806.pl1.reader.NodePlacer;
+import nl.tudelft.ti2806.pl1.reader.Reader;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
-
-import reader.NodePlacer;
-import reader.Reader;
 
 /**
  * A panel representing the content of the main window.
@@ -67,7 +67,7 @@ public class Content extends JPanel {
 		viewer.disableAutoLayout();
 		ViewPanel view = viewer.addDefaultView(false);
 		NodePlacer.place(g, viewer);
-		view.setPreferredSize(new Dimension(10, 8));
+		view.setPreferredSize(new Dimension(100000, 500));
 		// gbc.gridheight = 1;
 		// gbc.gridwidth = 1;
 		JScrollPane jsp = new JScrollPane(view);

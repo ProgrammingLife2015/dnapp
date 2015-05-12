@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.tudelft.ti2806.pl1.main;
+package nl.tudelft.ti2806.pl1.phylotree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -59,29 +59,8 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#isInner()}.
-	 */
-	@Test
-	public final void testIsInner() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
-		assertTrue(t.getLeft().isInner());
-		assertTrue(t.isInner());
-		assertFalse(t.getLeft().getLeft().isInner());
-	}
-
-	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#isLeaf()}.
-	 */
-	@Test
-	public final void testIsLeaf() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
-		assertFalse(t.getLeft().isLeaf());
-		assertFalse(t.isLeaf());
-		assertTrue(t.getRight().getLeft().isLeaf());
-	}
-
-	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#hasLeft()}.
+	 * Test method for
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#hasLeft()}.
 	 */
 	@Test
 	public final void testHasLeft() {
@@ -92,7 +71,8 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#hasRight()}.
+	 * Test method for
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#hasRight()}.
 	 */
 	@Test
 	public final void testHasRight() {
@@ -103,7 +83,8 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#size()}.
+	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#size()}
+	 * .
 	 */
 	@Test
 	public final void testSize() {
@@ -112,17 +93,20 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#height()}.
+	 * Test method for
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#height()}.
 	 */
 	@Test
 	public final void testHeight() {
 		final BinaryTree t = BinaryTree.parseNewick(s1);
+		final BinaryTree root = BinaryTree.parseNewick("root");
 		assertEquals(2, t.height());
+		assertEquals(0, root.height());
 	}
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#equalsTree(nl.tudelft.ti2806.pl1.main.BinaryTree)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#equalsTree(nl.tudelft.ti2806.pl1.phylotree.BinaryTree)}
 	 * .
 	 */
 	@Test
@@ -130,21 +114,21 @@ public class BinaryTreeTest {
 		final BinaryTree t1 = BinaryTree.parseNewick(s1);
 		final BinaryTree t2 = BinaryTree.parseNewick(s2);
 		final BinaryTree t3 = BinaryTree.parseNewick(s3);
+		final BinaryTree t4 = BinaryTree.parseNewick("(a,b)z");
+		final BinaryTree t5 = BinaryTree.parseNewick("(a:1.0,b:1.0)z:1.0");
+		final BinaryTree t6 = BinaryTree.parseNewick("(a:1.0,b:0.0)z:1.0");
 		assertTrue(t1.equalsTree(t2));
 		assertTrue(t1.equalsTree(t3));
+		assertFalse(t1.equalsTree(t4));
+		assertFalse(t5.equalsTree(t6));
+		assertFalse(t4.getLeft().equalsTree(t4));
+		assertEquals(t4.getLeft().getLeft(), null);
+		assertEquals(t4.getRight().getRight(), null);
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#fringe()}.
-	 */
-	@Test
-	public final void testFringe() {
-		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
-		assertEquals("[a, b, d, e]", t.fringe().toString());
-	}
-
-	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.main.BinaryTree#toString()}.
+	 * Test method for
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#toString()}.
 	 */
 	@Test
 	public final void testToString() {
@@ -158,20 +142,26 @@ public class BinaryTreeTest {
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#parseNewick(java.lang.String)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#parseNewick(java.lang.String)}
 	 * .
 	 */
 	@Test
 	public final void testParseNewick() {
 		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
+		final BinaryTree t2 = BinaryTree
+				.parseNewick("((((a:0.01,((b:0.2,c:0.3):0.4,d:0.5):0.6)"
+						+ ":0.7,e:0.8):0.9,(f:0.11,g:0.12)"
+						+ ":0.13):0.14,((h:0.15,i:0.15)"
+						+ ":0.16,j:0.17):0.18);");
 		assertEquals("g", t.getName());
 		assertEquals("c", t.getLeft().getName());
 		assertEquals(0.0, t.getPathLength(), 0.0);
+		assertEquals("", t2.getName());
 	}
 
 	/**
 	 * Test method for
-	 * {@link nl.tudelft.ti2806.pl1.main.BinaryTree#readIntoString(java.lang.String)}
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#readIntoString(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException

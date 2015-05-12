@@ -1,18 +1,24 @@
-package reader;
-
-import exceptions.InvalidFileFormatException;
-import graph.Node;
+package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+import nl.tudelft.ti2806.pl1.graph.Node;
 
 /**
  * 
  * @author Marissa, Mark
  * @date 25-04-2015 Lets you read the Nodes from the provided data.
  */
-public class NodeReader {
+public final class NodeReader {
+
+	/**
+	 * 
+	 */
+	private NodeReader() {
+	}
 
 	/**
 	 * 

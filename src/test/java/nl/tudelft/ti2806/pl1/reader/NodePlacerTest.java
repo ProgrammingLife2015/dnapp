@@ -1,9 +1,11 @@
-package reader;
+package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 
 import org.junit.After;
 import org.junit.Before;

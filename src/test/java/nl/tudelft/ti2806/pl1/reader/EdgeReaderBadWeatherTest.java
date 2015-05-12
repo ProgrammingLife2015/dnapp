@@ -1,15 +1,16 @@
-package reader;
+package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
+import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+import nl.tudelft.ti2806.pl1.reader.EdgeReader;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import exceptions.InvalidFileFormatException;
 
 @RunWith(Parameterized.class)
 public class EdgeReaderBadWeatherTest {

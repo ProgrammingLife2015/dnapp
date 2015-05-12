@@ -1,6 +1,7 @@
-package reader;
+package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
+import nl.tudelft.ti2806.pl1.reader.Reader;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;

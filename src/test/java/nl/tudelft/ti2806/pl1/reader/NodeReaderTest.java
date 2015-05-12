@@ -1,11 +1,13 @@
-package reader;
+package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
-import exceptions.InvalidFileFormatException;
-import graph.Node;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+import nl.tudelft.ti2806.pl1.graph.Node;
+import nl.tudelft.ti2806.pl1.reader.NodeReader;
 
 import org.junit.Test;
 

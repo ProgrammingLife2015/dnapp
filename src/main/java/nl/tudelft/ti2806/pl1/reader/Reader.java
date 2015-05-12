@@ -1,7 +1,4 @@
-package reader;
-
-import graph.Edge;
-import graph.Node;
+package nl.tudelft.ti2806.pl1.reader;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,15 +6,24 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import nl.tudelft.ti2806.pl1.graph.Edge;
+import nl.tudelft.ti2806.pl1.graph.Node;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  * 
  * @author Marissa, Mark
- * @date 25-04-2015 Lets you read in all the data and returns a Graph.
+ * @since 25-04-2015 Lets you read in all the data and returns a Graph.
  */
-public class Reader {
+public final class Reader {
+
+	/**
+	 * 
+	 */
+	private Reader() {
+	}
 
 	/**
 	 * Reads the graph from the two given files.
@@ -75,7 +81,7 @@ public class Reader {
 	/**
 	 * Reads the edges from the given node file path.
 	 * 
-	 * @param nodes
+	 * @param edges
 	 *            The path for the file containing the edges
 	 * @return Returns an ArrayList with the edges
 	 * @throws FileNotFoundException
