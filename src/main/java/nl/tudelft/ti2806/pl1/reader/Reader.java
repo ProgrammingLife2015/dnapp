@@ -32,7 +32,7 @@ public final class Reader {
 	 *            File location of the Nodes data.
 	 * @param edges
 	 *            File location of the Edges data.
-	 * @return Graph with this information processed.
+	 * @return Graph with this processed information.
 	 * @throws FileNotFoundException
 	 *             If file is not found.
 	 */
@@ -78,15 +78,15 @@ public final class Reader {
 	/**
 	 * Reads the nodes from the given node file path.
 	 * 
-	 * @param nodes
+	 * @param nodesPath
 	 *            The path for the file containing the nodes
-	 * @return Returns an ArrayList with the nodes
+	 * @return A list with the nodes
 	 * @throws FileNotFoundException
 	 *             Throws an exception when the file isn't found
 	 */
-	private static ArrayList<Node> readNodes(final String nodes)
+	private static ArrayList<Node> readNodes(final String nodesPath)
 			throws FileNotFoundException {
-		BufferedReader reader = new BufferedReader(new FileReader(nodes));
+		BufferedReader reader = new BufferedReader(new FileReader(nodesPath));
 		Scanner sc = new Scanner(reader);
 		return NodeReader.readNodes(sc);
 	}
@@ -94,15 +94,15 @@ public final class Reader {
 	/**
 	 * Reads the edges from the given node file path.
 	 * 
-	 * @param edges
+	 * @param edgesPath
 	 *            The path for the file containing the edges
-	 * @return Returns an ArrayList with the edges
+	 * @return A list with the edges
 	 * @throws FileNotFoundException
 	 *             Throws an exception when the file isn't found
 	 */
-	private static ArrayList<Edge> readEdges(final String edges)
+	private static ArrayList<Edge> readEdges(final String edgesPath)
 			throws FileNotFoundException {
-		BufferedReader reader = new BufferedReader(new FileReader(edges));
+		BufferedReader reader = new BufferedReader(new FileReader(edgesPath));
 		Scanner sc = new Scanner(reader);
 		return EdgeReader.readEdges(sc);
 	}
