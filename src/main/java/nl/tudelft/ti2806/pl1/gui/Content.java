@@ -63,8 +63,8 @@ public class Content extends JPanel {
 			window.error(e.getMessage());
 		}
 		// Attach css file
-		System.setProperty("org.graphstream.ui.renderer",
-				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		// System.setProperty("org.graphstream.ui.renderer",
+		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		g.addAttribute("ui.stylesheet",
 				"url('src/main/resources/stylesheet.css')");
 
