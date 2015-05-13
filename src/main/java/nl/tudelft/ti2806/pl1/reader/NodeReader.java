@@ -10,7 +10,7 @@ import nl.tudelft.ti2806.pl1.graph.Node;
 /**
  * 
  * @author Marissa, Mark
- * @date 25-04-2015 Lets you read the Nodes from the provided data.
+ * @since 25-04-2015 Lets you read the Nodes from the provided data.
  */
 public final class NodeReader {
 
