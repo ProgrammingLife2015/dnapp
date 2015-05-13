@@ -50,6 +50,7 @@ public final class Reader {
 			graph.getNode(n.getId()).addAttribute("inNodes", n.getInNodes());
 			graph.getNode(n.getId()).addAttribute("outNodes", n.getOutNodes());
 			graph.getNode(n.getId()).addAttribute("sources", n.getSources());
+
 			if (n.getContent().length() < 10) {
 				graph.getNode(n.getId()).addAttribute("ui.label",
 						n.getContent());
@@ -57,8 +58,12 @@ public final class Reader {
 				graph.getNode(n.getId()).addAttribute("ui.label",
 						Integer.toString(n.getContent().length()));
 			}
-			graph.getNode(n.getId()).addAttribute("ui.class",
-					"branch" + Integer.toString((int) (Math.random() * 6 + 1)));
+
+			if (n.getSources().contains("TKK_REF")) {
+				graph.getNode(n.getId()).addAttribute("ui.class", "branch2");
+			} else {
+				graph.getNode(n.getId()).addAttribute("ui.class", "common");
+			}
 		}
 		for (Edge e : edge) {
 			graph.addEdge(
