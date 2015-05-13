@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -58,7 +59,7 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"Size of Node content doesn't match with its reference size");
 				}
-				ArrayList<String> sources = new ArrayList<String>(
+				HashSet<String> sources = new HashSet<String>(
 						Arrays.asList(data[1].split(",")));
 				Node node = new Node(id, sources, start, end, content);
 				nodes.add(node);

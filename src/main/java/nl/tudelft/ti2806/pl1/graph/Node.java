@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * The node class we use for reader to read the nodes.
@@ -14,7 +15,7 @@ public class Node {
 	private int id;
 	private Collection<Integer> outNodes;
 	private Collection<Integer> inNodes;
-	private Collection<String> sources;
+	private HashSet<String> sources;
 	private int start;
 	private int end;
 	private String content;
@@ -33,8 +34,8 @@ public class Node {
 	 * @param content
 	 *            DNA bases inside the Node.
 	 */
-	public Node(final int id, final Collection<String> sources,
-			final int start, final int end, final String content) {
+	public Node(final int id, final HashSet<String> sources, final int start,
+			final int end, final String content) {
 		this.id = id;
 		this.outNodes = new ArrayList<Integer>();
 		this.inNodes = new ArrayList<Integer>();
@@ -130,7 +131,7 @@ public class Node {
 	 * @param sources
 	 *            Sets the new sources which contains this node
 	 */
-	public void setSources(final Collection<String> sources) {
+	public void setSources(final HashSet<String> sources) {
 		this.sources = sources;
 	}
 
