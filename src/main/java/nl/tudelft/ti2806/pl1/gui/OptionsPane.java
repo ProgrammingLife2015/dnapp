@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -32,7 +33,7 @@ public class OptionsPane extends JScrollPane {
 	/**
 	 * The width of the pane.
 	 */
-	private static final int WIDTH = 205;
+	private static final int WIDTH = 210;
 
 	/**
 	 * The width of the pane in a dimension object.
@@ -110,6 +111,7 @@ public class OptionsPane extends JScrollPane {
 		setBackground(Color.GRAY);
 		setPreferredSize(SIZE);
 		addControls();
+		pane.setAlignmentY(TOP_ALIGNMENT);
 		setViewportView(pane);
 	}
 
@@ -130,6 +132,8 @@ public class OptionsPane extends JScrollPane {
 			place(makeButton("Example option btn" + i, Event.EXAMPLE_EVENT,
 					"Hoi"));
 		}
+		gbc.weighty = 100;
+		place(Box.createGlue());
 	}
 
 	/**
@@ -244,7 +248,15 @@ public class OptionsPane extends JScrollPane {
 		gbc.gridx = 0;
 		gbc.gridy = GridBagConstraints.RELATIVE;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.insets = INSETS;
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void enableBtnLoadGraph(final boolean enabled) {
+		btnLoadGraph.setEnabled(enabled);
 	}
 }

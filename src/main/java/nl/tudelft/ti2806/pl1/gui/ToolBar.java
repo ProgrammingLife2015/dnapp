@@ -20,6 +20,12 @@ public class ToolBar extends JToolBar {
 	/**
 	 * 
 	 */
+	private JButton btnLoadGraph = makeButton("Load graph", null,
+			Event.LOAD_FILE, "Click to load the default graph.");
+
+	/**
+	 * 
+	 */
 	public ToolBar() {
 		super("NAME", JToolBar.HORIZONTAL);
 		addButtons();
@@ -29,15 +35,14 @@ public class ToolBar extends JToolBar {
 	 * 
 	 */
 	private void addButtons() {
-		addButton("example", null, Event.EXAMPLE_EVENT, "Example tooltip text.");
+		add(makeButton("example", null, Event.EXAMPLE_EVENT,
+				"Example tooltip text."));
+		add(makeButton("another button", null, Event.NONE, "boe"));
 		addSeparator();
-		addButton("another button", null, Event.NONE, "boe");
-		addButton("Load graph", null, Event.LOAD_FILE,
-				"Click this to load a default graph.");
+		add(btnLoadGraph);
 	}
 
 	/**
-	 * Adds a button to the tool bar.
 	 * 
 	 * @param text
 	 *            The text to show.
@@ -47,17 +52,14 @@ public class ToolBar extends JToolBar {
 	 *            Action id.
 	 * @param toolTipText
 	 *            Tool tip text.
-	 * 
-	 * @see Event
+	 * @return The created button.
 	 */
-	private void addButton(final String text, final String imageName,
+	private JButton makeButton(final String text, final String imageName,
 			final Event action, final String toolTipText) {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);
-		// button.setActionCommand(Event.stringify(action));
 		button.addActionListener(action);
-
 		if (imageName != null) {
 			String imgLocation = "images/" + imageName;
 			URL imageURL = ToolBar.class.getResource(imgLocation);
@@ -67,8 +69,15 @@ public class ToolBar extends JToolBar {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
+		return button;
+	}
 
-		add(button);
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void enableBtnLoadGraph(final boolean enabled) {
+		btnLoadGraph.setEnabled(enabled);
 	}
 
 }
