@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-
-import org.graphstream.graph.Graph;
+import nl.tudelft.ti2806.pl1.graph.Node;
 
 /**
  * 
@@ -27,7 +26,8 @@ public final class NodeReader {
 	 *            Scanner from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 */
-	public static void readNodes(final Scanner sc, final Graph graph) {
+	public static ArrayList<Node> readNodes(final Scanner sc) {
+		ArrayList<Node> nodes = new ArrayList<Node>();
 		while (sc.hasNextLine()) {
 			String nextnode = sc.nextLine();
 			if (nextnode.charAt(0) == '>') {
@@ -38,11 +38,11 @@ public final class NodeReader {
 							"Missing some information to create this node");
 				}
 				String content = sc.nextLine();
-				String id = data[0];
+				int id;
 				int start;
 				int end;
 				try {
-					Integer.parseInt(data[0]);
+					id = Integer.parseInt(data[0]);
 				} catch (Exception e) {
 					throw new InvalidFileFormatException(
 							"The id should be an integer");
@@ -60,18 +60,13 @@ public final class NodeReader {
 				}
 				ArrayList<String> sources = new ArrayList<String>(
 						Arrays.asList(data[1].split(",")));
-
-				graph.addNode(id);
-				graph.getNode(id).addAttribute("start", start);
-				graph.getNode(id).addAttribute("depth", 0);
-				graph.getNode(id).addAttribute("end", end);
-				graph.getNode(id).addAttribute("content", content);
-				graph.getNode(id).addAttribute("sources", sources);
-				graph.getNode(id).addAttribute("ui.label", id);
+				Node node = new Node(id, sources, start, end, content);
+				nodes.add(node);
 			} else {
 				throw new InvalidFileFormatException(
 						"Every new node line should start with >");
 			}
 		}
+		return nodes;
 	}
 }

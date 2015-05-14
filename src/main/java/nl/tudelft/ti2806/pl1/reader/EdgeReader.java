@@ -1,10 +1,10 @@
 package nl.tudelft.ti2806.pl1.reader;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-
-import org.graphstream.graph.Graph;
+import nl.tudelft.ti2806.pl1.graph.Edge;
 
 /**
  * 
@@ -25,7 +25,9 @@ public final class EdgeReader {
 	 *            Scanner from which the edge information will be read.
 	 * @return ArrayList of all Edges.
 	 */
-	public static void readEdges(final Scanner sc, final Graph graph) {
+	public static ArrayList<Edge> readEdges(final Scanner sc) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			String[] nodes = line.split("\\s");
@@ -33,14 +35,18 @@ public final class EdgeReader {
 				throw new InvalidFileFormatException(
 						"There should be 2 node id's seperated by spaces in the edge file");
 			}
+			int start;
+			int end;
 			try {
-				Integer.parseInt(nodes[0]);
-				Integer.parseInt(nodes[1]);
+				start = Integer.parseInt(nodes[0]);
+				end = Integer.parseInt(nodes[1]);
 			} catch (Exception e) {
 				throw new InvalidFileFormatException(
 						"The id's should be integers");
 			}
-			graph.addEdge(nodes[0] + nodes[1], nodes[0], nodes[1]);
+			Edge edge = new Edge(start, end);
+			edges.add(edge);
 		}
+		return edges;
 	}
 }
