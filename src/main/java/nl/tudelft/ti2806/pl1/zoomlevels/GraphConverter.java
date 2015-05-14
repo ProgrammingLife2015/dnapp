@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.implementations.Graphs;
 
 /**
  * 
@@ -31,24 +32,25 @@ public final class GraphConverter {
 	 * @return The converted graph.
 	 */
 	public static Graph collapsePointMutations(final Graph graph) {
-		Graph g = new SingleGraph("");
+		Graph g = Graphs.merge(graph);
 		Collection<Node> nodes = graph.getNodeSet();
-		Collection<Edge> edges = graph.getEdgeSet();
 		Node start = getStart(nodes);
-		if (start == null) {
-			return g;
+		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
+		while (it.hasNext()) {
+			Node node = it.next();
+			Iterator<Edge> leaving = node.getEachLeavingEdge().iterator();
+			ArrayList<String> muts = new ArrayList<String>();
+			while (leaving.hasNext()) {
+				Edge out = leaving.next();
+				Node outnode = graph.getNode(out.getId());
+				if (outnode.getAttribute("content", String.class).length() == 1) {
+					muts.add(outnode.getId());
+				}
+			}
+			if (muts.size() > 1) {
+
+			}
 		}
-		addNode(g, start);
-		// Collection<String> sources = start.getAttribute("sources");
-		// int genomeCount = sources.size();
-		// Iterator<Node> iter = start.getBreadthFirstIterator();
-		// Node cur;
-		// Node prev;
-		// while (iter.hasNext()) {
-		// cur = iter.next();
-		//
-		// prev = cur;
-		// }
 		return g;
 	}
 
