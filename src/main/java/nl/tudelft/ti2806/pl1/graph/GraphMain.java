@@ -1,7 +1,8 @@
 package nl.tudelft.ti2806.pl1.graph;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import nl.tudelft.ti2806.graphWriter.GraphWriter;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 
@@ -29,15 +30,15 @@ public final class GraphMain {
 	 * 
 	 * @param args
 	 *            jwz
-	 * @throws FileNotFoundException
-	 *             when the file to read is not found
+	 * @throws IOException
 	 */
-	public static void main(final String[] args) throws FileNotFoundException {
+	public static void main(final String[] args) throws IOException {
 		Graph g = Reader.read("src/main/resources/nodes.txt",
 				"src/main/resources/edges.txt");
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
 		NodePlacer.place(g, viewer);
+		GraphWriter.write("test.txt", g);
 	}
 
 }
