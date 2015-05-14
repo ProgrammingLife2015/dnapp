@@ -33,11 +33,13 @@ public final class GraphMain {
 	 *             when the file to read is not found
 	 */
 	public static void main(final String[] args) throws FileNotFoundException {
-		Graph g = Reader.read("src/main/resources/nodes.txt",
-				"src/main/resources/edges.txt");
+		long time = System.currentTimeMillis();
+		Graph g = Reader.read("src/main/resources/simple_graph.node.graph",
+				"src/main/resources/simple_graph.edge.graph");
+		long end = System.currentTimeMillis() - time;
+		System.out.println("Reading took: " + end + " milliseconds");
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
 		NodePlacer.place(g, viewer);
 	}
-
 }
