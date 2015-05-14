@@ -18,7 +18,13 @@ import org.graphstream.graph.Node;
  * 
  * @author mark
  */
-public class GraphWriter {
+public final class GraphWriter {
+
+	/**
+	 * 
+	 */
+	private GraphWriter() {
+	}
 
 	/**
 	 * Writes the graph to a file, first it writes the amount of nodes followed
