@@ -38,7 +38,7 @@ public final class GraphConverter {
 		if (start == null) {
 			return g;
 		}
-		g = addNode(g, start);
+		addNode(g, start);
 		// Collection<String> sources = start.getAttribute("sources");
 		// int genomeCount = sources.size();
 		// Iterator<Node> iter = start.getBreadthFirstIterator();
@@ -59,11 +59,11 @@ public final class GraphConverter {
 	 *            The graph.
 	 * @param edge
 	 *            The edge.
+	 * @return
 	 * @return The graph with the edge added
 	 */
-	private static Graph addEdge(final Graph graph, final Edge edge) {
+	private static void addEdge(final Graph graph, final Edge edge) {
 		graph.addEdge(edge.getId(), edge.getSourceNode(), edge.getTargetNode());
-		return graph;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public final class GraphConverter {
 	 *            The node.
 	 * @return The graph with the node added.
 	 */
-	private static Graph addNode(final Graph graph, final Node node) {
+	private static void addNode(final Graph graph, final Node node) {
 		graph.addNode(node.getId());
 		Node addedNode = graph.getNode(node.getId());
 		Iterator<String> iter = node.getEachAttributeKey().iterator();
@@ -83,7 +83,6 @@ public final class GraphConverter {
 			String next = iter.next();
 			addedNode.addAttribute(next, node.getAttribute(next));
 		}
-		return graph;
 	}
 
 	/**
