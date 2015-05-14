@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-import nl.tudelft.ti2806.pl1.graph.Edge;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
 
 /**
  * 
@@ -25,8 +25,8 @@ public final class EdgeReader {
 	 *            Scanner from which the edge information will be read.
 	 * @return ArrayList of all Edges.
 	 */
-	public static ArrayList<Edge> readEdges(final Scanner sc) {
-		ArrayList<Edge> edges = new ArrayList<Edge>();
+	public static ArrayList<DEdge> readEdges(final Scanner sc) {
+		ArrayList<DEdge> edges = new ArrayList<DEdge>();
 
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
@@ -44,7 +44,7 @@ public final class EdgeReader {
 				throw new InvalidFileFormatException(
 						"The id's should be integers");
 			}
-			Edge edge = new Edge(start, end);
+			DEdge edge = new DEdge(start, end);
 			edges.add(edge);
 		}
 		return edges;

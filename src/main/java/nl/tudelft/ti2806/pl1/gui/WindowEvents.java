@@ -19,36 +19,38 @@ public class WindowEvents implements ComponentListener {
 
 	/**
 	 * Initializes a new window events listener.
+	 * 
+	 * @param w
+	 *            The window this component listener listens to.
 	 */
 	public WindowEvents(final Window w) {
 		this.window = w;
 	}
 
 	/**
-	 * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
+	 * {@inheritDoc}
 	 */
-	public void componentResized(final ComponentEvent e) {
-		// TODO Auto-generated method stub
+	public final void componentResized(final ComponentEvent e) {
+		window.resized();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final void componentMoved(final ComponentEvent e) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final void componentShown(final ComponentEvent e) {
 
 	}
 
 	/**
-	 * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
+	 * {@inheritDoc}
 	 */
-	public void componentMoved(final ComponentEvent e) {
-	}
-
-	/**
-	 * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
-	 */
-	public void componentShown(final ComponentEvent e) {
-
-	}
-
-	/**
-	 * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
-	 */
-	public void componentHidden(final ComponentEvent e) {
+	public final void componentHidden(final ComponentEvent e) {
 
 	}
 

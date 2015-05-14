@@ -1,15 +1,13 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
+
+import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
  * @author Maarten
@@ -28,11 +26,6 @@ public class Window extends JFrame implements Observer {
 	private WindowSettings settings;
 
 	/**
-	 * 
-	 */
-	// private JPanel all = new JPanel(new BorderLayout());
-
-	/**
 	 * The menu bar of the window.
 	 */
 	private JMenuBar menuBar;
@@ -40,12 +33,17 @@ public class Window extends JFrame implements Observer {
 	/**
 	 * The tool bar of the window.
 	 */
-	private JToolBar toolBar;
+	private ToolBar toolBar;
+
+	/**
+	 * The left panel showing options.
+	 */
+	private OptionsPane optionPanel;
 
 	/**
 	 * The main pane of the window.
 	 */
-	private JPanel content;
+	private Content content;
 
 	/**
 	 * The status bar of the window.
@@ -70,8 +68,6 @@ public class Window extends JFrame implements Observer {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		// add(all, BorderLayout.CENTER);
-
 		setWindowSettings(wSettings);
 
 		Event.setWindow(this);
@@ -88,15 +84,15 @@ public class Window extends JFrame implements Observer {
 		content = new Content(this);
 		add(content, BorderLayout.CENTER);
 
+		optionPanel = new OptionsPane(this);
+		add(optionPanel, BorderLayout.WEST);
+		System.out.println("Added option panel");
+
 		addComponentListener(new WindowEvents(this));
 
-		// pack();
+		pack();
 		setLocationRelativeTo(null);
-		// dispose();
 		setVisible(true);
-		revalidate();
-		// repaint();
-		// paint(getGraphics());
 	}
 
 	/**
@@ -119,7 +115,8 @@ public class Window extends JFrame implements Observer {
 		setMinimumSize(settings.getMinimumSize());
 		setSize(settings.getSize());
 		setPreferredSize(settings.getSize());
-		// pack();
+		pack();
+		revalidate();
 	}
 
 	/**
@@ -133,23 +130,41 @@ public class Window extends JFrame implements Observer {
 	}
 
 	/**
-	 * Shows an information message in the status bar.
 	 * 
-	 * @param message
-	 *            The info message to show in the status bar.
 	 */
-	public final void info(final String message) {
-		statusBar.info(message);
+	public final void resized() {
+		statusBar.right("[" + (int) getSize().getWidth() + ","
+				+ (int) getSize().getHeight() + "]");
+	}
+
+	// ***** Getters for the high level window elements. ***** //
+
+	/**
+	 * @return the optionPanel
+	 */
+	public final OptionsPane optionPanel() {
+		return optionPanel;
 	}
 
 	/**
-	 * Shows an error message in the status bar.
-	 * 
-	 * @param message
-	 *            The error message to show in the status bar.
+	 * @return the content
 	 */
-	public final void error(final String message) {
-		statusBar.error(message);
+	public final Content content() {
+		return content;
+	}
+
+	/**
+	 * @return the toolBar
+	 */
+	public final ToolBar toolBar() {
+		return toolBar;
+	}
+
+	/**
+	 * @return the statusBar
+	 */
+	public final StatusBar statusBar() {
+		return statusBar;
 	}
 
 	/**
@@ -157,22 +172,7 @@ public class Window extends JFrame implements Observer {
 	 *            jwz
 	 */
 	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				// UIManager.put("swing.boldMetal", Boolean.FALSE);
-				new Window();
-			}
-		});
-	}
-
-	/**
-	 * 
-	 * @param evt
-	 */
-	public void resized(final ComponentEvent evt) {
-		// System.out.println(evt);
-		// pack();
-		info(this.getSize().toString());
+		Start.main(args);
 	}
 
 }

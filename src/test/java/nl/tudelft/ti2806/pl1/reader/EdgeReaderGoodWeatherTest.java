@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import nl.tudelft.ti2806.pl1.graph.Edge;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
 import nl.tudelft.ti2806.pl1.reader.EdgeReader;
 
 import org.junit.After;
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class EdgeReaderGoodWeatherTest {
 
 	String edge = "20 2";
-	ArrayList<Edge> edges;
+	ArrayList<DEdge> edges;
 
 	@Before
 	public void startUp() {

@@ -7,7 +7,7 @@ package nl.tudelft.ti2806.pl1.graph;
  * @version 25-04-2015 Lets you create Edges for a Graph
  * 
  */
-public class Edge {
+public class DEdge {
 
 	/**
 	 * The starting node of the edge.
@@ -23,8 +23,8 @@ public class Edge {
 	 * The empty constructor of the edge, it creates a new edge starting at 0
 	 * and ending at 0.
 	 */
-	public Edge() {
-		new Edge(0, 0);
+	public DEdge() {
+		new DEdge(0, 0);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class Edge {
 	 * @param end
 	 *            The ending node of the edge.
 	 */
-	public Edge(final int start, final int end) {
+	public DEdge(final int start, final int end) {
 		startNode = start;
 		endNode = end;
 	}
