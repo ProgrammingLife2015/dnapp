@@ -60,7 +60,6 @@ public final class NodePlacer {
 		depthLevel(que);
 
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
-		System.out.println(nodesAtDepth);
 
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
 		while (it.hasNext()) {
@@ -74,8 +73,6 @@ public final class NodePlacer {
 					"y",
 					getHeight(((Integer) node.getAttribute("depth")), hdiff,
 							nodesAtDepth, height));
-			System.out.println(node.getAttribute("x") + " "
-					+ node.getAttribute("y"));
 		}
 	}
 
