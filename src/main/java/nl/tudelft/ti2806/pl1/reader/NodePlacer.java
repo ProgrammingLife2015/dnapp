@@ -19,8 +19,12 @@ import org.graphstream.ui.view.Viewer;
  */
 public final class NodePlacer {
 
+	// TODO
+	static int height = 500; // view.getDefaultView().getHeight();
+	static int width = 200000; // view.getDefaultView().getWidth();
+
 	/**
-	 * 
+	 * empty private constructor.
 	 */
 	private NodePlacer() {
 	}
@@ -55,10 +59,8 @@ public final class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		// TODO
-		int height = 500;// view.getDefaultView().getHeight();
-		int width = 200000;// view.getDefaultView().getWidth();
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
+		System.out.println(nodesAtDepth);
 
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
 		while (it.hasNext()) {
@@ -72,6 +74,8 @@ public final class NodePlacer {
 					"y",
 					getHeight(((Integer) node.getAttribute("depth")), hdiff,
 							nodesAtDepth, height));
+			System.out.println(node.getAttribute("x") + " "
+					+ node.getAttribute("y"));
 		}
 	}
 
@@ -84,7 +88,6 @@ public final class NodePlacer {
 	 * @return The staring node of the graph
 	 */
 	private static Node getStartNode(final Graph graph) {
-
 		Node first = null;
 		for (Node n : graph.getNodeSet()) {
 			if (first == null) {
