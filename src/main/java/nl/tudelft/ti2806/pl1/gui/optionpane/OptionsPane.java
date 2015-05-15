@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.tudelft.ti2806.pl1.gui;
+package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -19,6 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.Window;
+
 /**
  * @author Maarten
  *
@@ -26,14 +28,14 @@ import javax.swing.JScrollPane;
 public class OptionsPane extends JScrollPane {
 
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = -8048134952005779117L;
 
 	/**
 	 * The width of the pane.
 	 */
-	private static final int WIDTH = 210;
+	private static final int WIDTH = 220;
 
 	/**
 	 * The width of the pane in a dimension object.
@@ -53,13 +55,17 @@ public class OptionsPane extends JScrollPane {
 	/**
 	 * The free space between control elements and the side pane borders.
 	 */
-	private static final int WIDTH_OFFSET = 30;
+	private static final int WIDTH_OFFSET = 40;
 
 	/**
 	 * The size of the genome list.
 	 */
-	private static final Dimension GENOME_LIST_SIZE = new Dimension(PANE_WIDTH
-			- WIDTH_OFFSET, 80);
+	private static final Dimension GENOME_LIST_SIZE = new Dimension(150, 110);
+
+	/**
+	 * 
+	 */
+	public static final int MAX_CHILD_WIDTH = 180;
 
 	/**
 	 * The default insets (free space) values added around every placed control.
@@ -91,16 +97,33 @@ public class OptionsPane extends JScrollPane {
 	 */
 	private JPanel pane = new JPanel(new GridBagLayout());
 
+	// /**
+	// * The item list containing the genomes of the graph.
+	// */
+	// private GenomeList list = new GenomeList();
+
 	/**
-	 * The item list containing the genomes of the graph.
+	 * 
 	 */
-	private GenomeList list = new GenomeList();
+	private GenomeTable genomes = new GenomeTable(GENOME_LIST_SIZE);
+
+	/**
+	 * @return the genome table
+	 */
+	public final GenomeTable getGenomes() {
+		return genomes;
+	}
 
 	/**
 	 * The button enabling the user to load a graph into the interface.
 	 */
 	private JButton btnLoadGraph = makeButton("Load graph", Event.LOAD_FILE,
 			"Click to load the default graph.");
+
+	/**
+	 * 
+	 */
+	private SelectedGenomeGroup selectedGenome = new SelectedGenomeGroup(this);
 
 	/**
 	 * @param w
@@ -121,19 +144,26 @@ public class OptionsPane extends JScrollPane {
 	private void addControls() {
 		setupConstraints();
 		place(btnLoadGraph, 0);
-		JScrollPane listScroll = new JScrollPane(list);
-		listScroll.setMinimumSize(GENOME_LIST_SIZE);
-		listScroll.setMaximumSize(GENOME_LIST_SIZE);
-		listScroll.setPreferredSize(GENOME_LIST_SIZE);
+
 		place(new JLabel("Genomes:"), 1, 0);
-		place(listScroll, 2);
-		// TODO temp
-		for (int i = 0; i < 20; i++) {
-			place(makeButton("Example option btn" + i, Event.EXAMPLE_EVENT,
-					"Hoi"));
-		}
+		place(genomes);
+		place(selectedGenome);
+
 		gbc.weighty = 100;
 		place(Box.createGlue());
+	}
+
+	/**
+	 * Sets up the grid bag constraints.
+	 */
+	private void setupConstraints() {
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		// gbc.gridy = GridBagConstraints.RELATIVE;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.insets = INSETS;
 	}
 
 	/**
@@ -142,13 +172,21 @@ public class OptionsPane extends JScrollPane {
 	 * 
 	 * @param genomeIds
 	 *            A list of genome identifiers/names
+	 * @param empty
+	 *            If true, the list will first be emptied before filled with the
+	 *            new rows.
+	 * @param selected
+	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fillGenomeList(final List<String> genomeIds) {
-		ArrayList<JCheckBox> cboxes = new ArrayList<JCheckBox>(genomeIds.size());
-		for (String id : genomeIds) {
-			cboxes.add(makeCheckBox(id, Event.GENOME_SELECT, null));
-		}
-		list.setListData((JCheckBox[]) cboxes.toArray());
+	public final void fillGenomeList(final List<String> genomeIds,
+			final boolean empty, final boolean selected) {
+		// JCheckBox[] cboxes = new JCheckBox[genomeIds.size()];
+		// int i = 0;
+		// for (String id : genomeIds) {
+		// cboxes[i] = makeCheckBox(id, Event.GENOME_SELECT, null);
+		// i++;
+		// }
+		genomes.fill(genomeIds, empty, selected);
 	}
 
 	/**
@@ -242,21 +280,10 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/**
-	 * Sets up the grid bag constraints.
-	 */
-	private void setupConstraints() {
-		gbc.gridx = 0;
-		gbc.gridy = GridBagConstraints.RELATIVE;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.anchor = GridBagConstraints.NORTH;
-		gbc.insets = INSETS;
-	}
-
-	/**
 	 * 
 	 * @param enabled
 	 */
-	public void enableBtnLoadGraph(final boolean enabled) {
+	public final void enableBtnLoadGraph(final boolean enabled) {
 		btnLoadGraph.setEnabled(enabled);
 	}
 }

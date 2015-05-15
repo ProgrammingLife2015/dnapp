@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.gui;
+package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -15,6 +15,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * 
@@ -22,15 +24,16 @@ import javax.swing.border.EmptyBorder;
  *
  */
 public class GenomeList extends JList<JCheckBox> {
+
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = 8122220717077360177L;
 
 	/**
-	 * 
+	 * The border to be used when an item is not selected: empty border.
 	 */
-	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+	private static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
 	/**
 	 * 
@@ -44,7 +47,7 @@ public class GenomeList extends JList<JCheckBox> {
 				int index = locationToIndex(e.getPoint());
 				if (index != -1) {
 					JCheckBox checkbox = getModel().getElementAt(index);
-					checkbox.setSelected(!checkbox.isSelected());
+					// checkbox.setSelected(!checkbox.isSelected());
 					repaint();
 				}
 			}
@@ -111,9 +114,33 @@ public class GenomeList extends JList<JCheckBox> {
 		GenomeList cbList = new GenomeList();
 
 		JCheckBox[] cbArray = new JCheckBox[3];
-		cbArray[0] = new JCheckBox("one");
-		cbArray[1] = new JCheckBox("two");
-		cbArray[2] = new JCheckBox("three");
+
+		JCheckBox a = new JCheckBox("one");
+		a.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(final ChangeEvent e) {
+				System.out.println("Checkbox changed!!!!");
+			}
+		});
+
+		JCheckBox b = new JCheckBox("one");
+		b.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(final ChangeEvent e) {
+				System.out.println("Checkbox changed!!!!");
+			}
+		});
+
+		JCheckBox c = new JCheckBox("one");
+		c.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(final ChangeEvent e) {
+				System.out.println("Checkbox changed!!!!");
+			}
+		});
+		cbArray[0] = a;
+		cbArray[1] = b;
+		cbArray[2] = c;
 
 		cbList.setListData(cbArray);
 

@@ -29,12 +29,16 @@ public enum Event implements ActionListener {
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
+			// (new Thread(new Runnable() {
+			// public void run() {
 			window.optionPanel().enableBtnLoadGraph(false);
 			window.toolBar().enableBtnLoadGraph(false);
-			window.content().loadGraph(
-					"src/main/resources/simple_graph.node.graph",
+			window.loadGraph("src/main/resources/simple_graph.node.graph",
 					"src/main/resources/simple_graph.edge.graph");
 			System.out.println("Graph loaded via event!");
+			window.revalidate();
+			// }
+			// })).start();
 		}
 	},
 

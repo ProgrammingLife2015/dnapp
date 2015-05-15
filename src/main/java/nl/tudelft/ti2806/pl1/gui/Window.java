@@ -6,7 +6,9 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.UIManager;
 
+import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
@@ -16,7 +18,7 @@ import nl.tudelft.ti2806.pl1.main.Start;
 public class Window extends JFrame implements Observer {
 
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = -2702972120954333899L;
 
@@ -64,6 +66,12 @@ public class Window extends JFrame implements Observer {
 	 *            The window settings to be applied.
 	 */
 	public Window(final WindowSettings wSettings) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// UIManager.put("swing.boldMetal", Boolean.FALSE);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -86,13 +94,24 @@ public class Window extends JFrame implements Observer {
 
 		optionPanel = new OptionsPane(this);
 		add(optionPanel, BorderLayout.WEST);
-		System.out.println("Added option panel");
 
 		addComponentListener(new WindowEvents(this));
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	/**
+	 * Loads a graph into the content scroll pane.
+	 * 
+	 * @param nodePath
+	 *            The path to the node file.
+	 * @param edgePath
+	 *            The path to the edge file.
+	 */
+	public final void loadGraph(final String nodePath, final String edgePath) {
+
 	}
 
 	/**
@@ -120,17 +139,14 @@ public class Window extends JFrame implements Observer {
 	}
 
 	/**
-	 * @param o
-	 *            The changed observable object.
-	 * @param arg
-	 *            Optional arguments.
+	 * {@inheritDoc}
 	 */
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();
 	}
 
 	/**
-	 * 
+	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
 		statusBar.right("[" + (int) getSize().getWidth() + ","
