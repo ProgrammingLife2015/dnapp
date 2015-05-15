@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
@@ -37,9 +36,10 @@ public final class GraphConverter {
 		Graph g = Graphs.merge(graph);
 		Collection<Node> nodes = g.getNodeSet();
 		Node start = getStart(nodes);
-		Iterator<String> keys = start.getAttributeKeyIterator();
-		while (keys.hasNext())
-			System.out.println(keys.next());
+		// Iterator<String> keys = start.getAttributeKeyIterator();
+		// while (keys.hasNext()) {
+		// System.out.println(keys.next());
+		// }
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
 		while (it.hasNext()) {
 			Node node = it.next();
@@ -68,15 +68,12 @@ public final class GraphConverter {
 						}
 					}
 				}
-				Set<Node> endnodes = nodegroups.keySet();
-				for (Node end : endnodes) {
+				for (Node end : nodegroups.keySet()) {
 					ArrayList<String> nodegroup = nodegroups.get(end);
 					if (nodegroup.size() == 1) {
 						Node nd = g.getNode(nodegroup.get(0));
-						String mutcontent = nd.getAttribute("content",
-								String.class);
-						String endcontent = end.getAttribute("content",
-								String.class);
+						String mutcontent = nd.getAttribute("content");
+						String endcontent = end.getAttribute("content");
 						end.addAttribute("content", mutcontent + endcontent);
 						removeNode(g, nd, end);
 					} else {
@@ -87,8 +84,8 @@ public final class GraphConverter {
 							Collection<String> sources = nd
 									.getAttribute("sources");
 							for (String source : sources) {
-								content.put(source, nd.getAttribute("content",
-										String.class));
+								content.put(source,
+										(String) nd.getAttribute("content"));
 							}
 							newId += " " + id;
 						}
@@ -102,6 +99,7 @@ public final class GraphConverter {
 								tempnode.getAttribute("depth"));
 						collapsednode.addAttribute("end",
 								tempnode.getAttribute("end"));
+						collapsednode.addAttribute("content", content);
 						collapseEdges(g, newId, nodegroup);
 
 						for (String id : nodegroup) {
@@ -168,7 +166,7 @@ public final class GraphConverter {
 		Edge cur;
 		while (enteringedges.hasNext()) {
 			cur = enteringedges.next();
-			Node sourcenode = cur.getSourceNode();
+			Node sourcenode = cur.getNode0();
 			g.addEdge(cur.getId(), sourcenode, end);
 			g.removeEdge(cur);
 		}
@@ -218,7 +216,7 @@ public final class GraphConverter {
 		Edge next;
 		while (edges.hasNext()) {
 			next = edges.next();
-			nodes.add(next.getTargetNode());
+			nodes.add(next.getNode1());
 		}
 		return nodes;
 	}
