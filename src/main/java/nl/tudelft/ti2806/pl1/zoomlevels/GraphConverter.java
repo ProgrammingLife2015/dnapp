@@ -36,10 +36,6 @@ public final class GraphConverter {
 		Graph g = Graphs.merge(graph);
 		Collection<Node> nodes = g.getNodeSet();
 		Node start = getStart(nodes);
-		// Iterator<String> keys = start.getAttributeKeyIterator();
-		// while (keys.hasNext()) {
-		// System.out.println(keys.next());
-		// }
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
 		while (it.hasNext()) {
 			Node node = it.next();
@@ -48,7 +44,6 @@ public final class GraphConverter {
 			while (leaving.hasNext()) {
 				Edge out = leaving.next();
 				Node outnode = out.getNode1();
-				System.out.println(outnode.getId());
 				String content = (String) outnode.getAttribute("content");
 				if (content.length() == 1) {
 					muts.add(outnode.getId());
