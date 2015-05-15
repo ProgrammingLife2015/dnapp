@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,9 +19,14 @@ public class StatusBar extends JPanel {
 	private static final long serialVersionUID = -2304279241558941973L;
 
 	/**
-	 * The text label of the status bar.
+	 * The main text label of the status bar.
 	 */
-	private JLabel label;
+	private JLabel mainLabel = new JLabel();
+
+	/**
+	 * 
+	 */
+	private JLabel rightLabel = new JLabel();
 
 	/**
 	 * Initializes the status bar.
@@ -28,27 +34,40 @@ public class StatusBar extends JPanel {
 	public StatusBar() {
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		label = new JLabel();
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		add(label);
+		mainLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		add(mainLabel);
+		add(Box.createHorizontalGlue());
+		add(rightLabel);
 	}
 
 	/**
+	 * Shows an error message in the main text label.
 	 * 
 	 * @param message
 	 *            The error message to show.
 	 */
 	public final void error(final String message) {
-		label.setText("Error: " + message);
+		mainLabel.setText("Error: " + message);
 	}
 
 	/**
+	 * Shows an info message in the main text label.
 	 * 
 	 * @param message
 	 *            The info message to show.
 	 */
 	public final void info(final String message) {
-		label.setText(message);
+		mainLabel.setText(message);
+	}
+
+	/**
+	 * Shows a message in the right text label.
+	 * 
+	 * @param message
+	 *            The message to show.
+	 */
+	public final void right(final String message) {
+		rightLabel.setText(message);
 	}
 
 }

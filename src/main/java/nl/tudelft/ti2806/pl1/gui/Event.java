@@ -22,6 +22,23 @@ public enum Event implements ActionListener {
 	},
 
 	/**
+	 * Loads a graph into the window content.
+	 */
+	LOAD_FILE {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			window.optionPanel().enableBtnLoadGraph(false);
+			window.toolBar().enableBtnLoadGraph(false);
+			window.content().loadGraph(
+					"src/main/resources/simple_graph.node.graph",
+					"src/main/resources/simple_graph.edge.graph");
+			System.out.println("Graph loaded via event!");
+		}
+	},
+
+	/**
 	 * 
 	 */
 	EXAMPLE_EVENT {
@@ -98,6 +115,19 @@ public enum Event implements ActionListener {
 			System.exit(0);
 		}
 
+	},
+
+	/**
+	 * 
+	 */
+	GENOME_SELECT {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			System.out.println("The user clicked the checkbox for genome: "
+					+ e.getActionCommand());
+		}
 	};
 
 	/**

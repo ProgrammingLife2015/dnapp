@@ -6,10 +6,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import nl.tudelft.ti2806.pl1.graph.Edge;
-import nl.tudelft.ti2806.pl1.graph.Node;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
@@ -38,21 +39,35 @@ public final class Reader {
 	 */
 	public static Graph read(final String nodes, final String edges)
 			throws FileNotFoundException {
-		ArrayList<Node> node = readNodes(nodes);
-		ArrayList<Edge> edge = readEdges(edges);
+		ArrayList<DNode> node = readNodes(nodes);
+		ArrayList<DEdge> edge = readEdges(edges);
 		Graph graph = new SingleGraph("DNA Sequencing Graph");
-		for (Node n : node) {
-			graph.addNode(String.valueOf(n.getId()));
-			graph.getNode(n.getId()).addAttribute("start", n.getStart());
-			graph.getNode(n.getId()).addAttribute("depth", 0);
-			graph.getNode(n.getId()).addAttribute("end", n.getEnd());
-			graph.getNode(n.getId()).addAttribute("content", n.getContent());
-			graph.getNode(n.getId()).addAttribute("inNodes", n.getInNodes());
-			graph.getNode(n.getId()).addAttribute("outNodes", n.getOutNodes());
-			graph.getNode(n.getId()).addAttribute("sources", n.getSources());
-			graph.getNode(n.getId()).addAttribute("ui.label", n.getId());
+		for (DNode n : node) {
+			Node gn = graph.addNode(String.valueOf(n.getId()));
+			gn.addAttribute("start", n.getStart());
+			gn.addAttribute("depth", 0);
+			gn.addAttribute("end", n.getEnd());
+			gn.addAttribute("content", n.getContent());
+			gn.addAttribute("inNodes", n.getInNodes());
+			gn.addAttribute("outNodes", n.getOutNodes());
+			gn.addAttribute("sources", n.getSources());
+
+			// UI attributes, to be moved! // TODO
+
+			if (n.getContent().length() < 10) {
+				gn.addAttribute("ui.label", n.getContent());
+			} else {
+				gn.addAttribute("ui.label",
+						Integer.toString(n.getContent().length()));
+			}
+
+			if (n.getSources().contains("TKK_REF")) {
+				gn.addAttribute("ui.class", "branch2");
+			} else {
+				gn.addAttribute("ui.class", "common");
+			}
 		}
-		for (Edge e : edge) {
+		for (DEdge e : edge) {
 			graph.addEdge(
 					String.valueOf(e.getStartNode())
 							+ String.valueOf(e.getEndNode()),
@@ -71,7 +86,7 @@ public final class Reader {
 	 * @throws FileNotFoundException
 	 *             Throws an exception when the file isn't found
 	 */
-	private static ArrayList<Node> readNodes(final String nodesPath)
+	private static ArrayList<DNode> readNodes(final String nodesPath)
 			throws FileNotFoundException {
 		BufferedReader reader = new BufferedReader(new FileReader(nodesPath));
 		Scanner sc = new Scanner(reader);
@@ -87,7 +102,7 @@ public final class Reader {
 	 * @throws FileNotFoundException
 	 *             Throws an exception when the file isn't found
 	 */
-	private static ArrayList<Edge> readEdges(final String edgesPath)
+	private static ArrayList<DEdge> readEdges(final String edgesPath)
 			throws FileNotFoundException {
 		BufferedReader reader = new BufferedReader(new FileReader(edgesPath));
 		Scanner sc = new Scanner(reader);

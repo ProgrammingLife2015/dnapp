@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-import nl.tudelft.ti2806.pl1.graph.Node;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.reader.NodeReader;
 
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class NodeReaderTest {
 	@Test
 	public void readOneNode() {
 		Scanner sc = new Scanner(node);
-		ArrayList<Node> graph = NodeReader.readNodes(sc);
+		ArrayList<DNode> graph = NodeReader.readNodes(sc);
 		assertEquals(graph.get(0).getId(), 0);
 		sc.close();
 	}
