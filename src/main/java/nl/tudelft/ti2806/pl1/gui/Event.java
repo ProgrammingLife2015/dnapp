@@ -29,6 +29,8 @@ public enum Event implements ActionListener {
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
+			window.optionPanel().enableBtnLoadGraph(false);
+			window.toolBar().enableBtnLoadGraph(false);
 			window.content().loadGraph(
 					"src/main/resources/simple_graph.node.graph",
 					"src/main/resources/simple_graph.edge.graph");
