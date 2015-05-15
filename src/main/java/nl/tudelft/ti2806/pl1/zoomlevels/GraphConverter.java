@@ -55,62 +55,105 @@ public final class GraphConverter {
 				}
 			}
 			if (muts.size() > 1) {
-				HashMap<Node, ArrayList<String>> nodegroups = new HashMap<Node, ArrayList<String>>();
-				for (String n : muts) {
-					ArrayList<Node> ns = getNextNodes(g, n);
-					for (Node nd : ns) {
-						if (!nodegroups.containsKey(nd)) {
-							ArrayList<String> nodegroup = new ArrayList<String>();
-							nodegroup.add(n);
-							nodegroups.put(nd, nodegroup);
-						} else {
-							nodegroups.get(nd).add(n);
-						}
-					}
-				}
-				for (Node end : nodegroups.keySet()) {
-					ArrayList<String> nodegroup = nodegroups.get(end);
-					if (nodegroup.size() == 1) {
-						Node nd = g.getNode(nodegroup.get(0));
-						String mutcontent = nd.getAttribute("content");
-						String endcontent = end.getAttribute("content");
-						end.addAttribute("content", mutcontent + endcontent);
-						removeNode(g, nd, end);
-					} else {
-						HashMap<String, String> content = new HashMap<String, String>();
-						String newId = "collapsed: ";
-						for (String id : nodegroup) {
-							Node nd = g.getNode(id);
-							Collection<String> sources = nd
-									.getAttribute("sources");
-							for (String source : sources) {
-								content.put(source,
-										(String) nd.getAttribute("content"));
-							}
-							newId += " " + id;
-						}
-						g.addNode(newId);
-						String temp = nodegroup.get(0);
-						Node tempnode = g.getNode(temp);
-						Node collapsednode = g.getNode(newId);
-						collapsednode.addAttribute("start",
-								tempnode.getAttribute("start"));
-						collapsednode.addAttribute("depth",
-								tempnode.getAttribute("depth"));
-						collapsednode.addAttribute("end",
-								tempnode.getAttribute("end"));
-						collapsednode.addAttribute("content", content);
-						collapseEdges(g, newId, nodegroup);
-
-						for (String id : nodegroup) {
-							Node nd = g.getNode(id);
-							removeNode(g, nd);
-						}
-					}
-				}
+				HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(
+						muts, g);
+				collapseNodes(nodegroups, g);
 			}
 		}
 		return g;
+	}
+
+	/**
+	 * Collapses the nodegroups in a graph.
+	 * 
+	 * @param nodegroups
+	 *            The nodegroup
+	 * @param g
+	 *            The graph
+	 */
+	private static void collapseNodes(
+			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
+		for (Node end : nodegroups.keySet()) {
+			ArrayList<String> nodegroup = nodegroups.get(end);
+			if (nodegroup.size() == 1) {
+				Node nd = g.getNode(nodegroup.get(0));
+				String mutcontent = nd.getAttribute("content");
+				String endcontent = end.getAttribute("content");
+				end.addAttribute("content", mutcontent + endcontent);
+				removeNode(g, nd, end);
+			} else {
+				HashMap<String, String> content = new HashMap<String, String>();
+				String newId = "collapsed:";
+				for (String id : nodegroup) {
+					Node nd = g.getNode(id);
+					Collection<String> sources = nd.getAttribute("sources");
+					for (String source : sources) {
+						content.put(source, (String) nd.getAttribute("content"));
+					}
+					newId += " " + id;
+				}
+				addNewCollapsedNode(newId, g, nodegroup, content);
+				for (String id : nodegroup) {
+					Node nd = g.getNode(id);
+					removeNode(g, nd);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds a new collapsed node to the graph.
+	 * 
+	 * @param newId
+	 *            The ID of the new node.
+	 * @param g
+	 *            The graph
+	 * @param nodegroup
+	 *            The nodegroup that is collapsed into the new node.
+	 * @param content
+	 *            The content of the new node.
+	 */
+	private static void addNewCollapsedNode(final String newId, final Graph g,
+			final ArrayList<String> nodegroup,
+			final HashMap<String, String> content) {
+		g.addNode(newId);
+		String temp = nodegroup.get(0);
+		Node tempnode = g.getNode(temp);
+		Node collapsednode = g.getNode(newId);
+		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
+		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
+		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
+		collapsednode.addAttribute("content", content);
+		collapseEdges(g, newId, nodegroup);
+
+	}
+
+	/**
+	 * Makes a HashMap of groups of nodes where the keys are the end nodes and
+	 * the values are the grouped nodes.
+	 * 
+	 * @param muts
+	 *            The mutated nodes, to be grouped
+	 * @param g
+	 *            The graph
+	 * @return The grouped nodes
+	 */
+	private static HashMap<Node, ArrayList<String>> makeNodeGroups(
+			final ArrayList<String> muts, final Graph g) {
+		HashMap<Node, ArrayList<String>> nodegroups = new HashMap<Node, ArrayList<String>>();
+		for (String n : muts) {
+			ArrayList<Node> ns = getNextNodes(g, n);
+			for (Node nd : ns) {
+				if (!nodegroups.containsKey(nd)) {
+					ArrayList<String> nodegroup = new ArrayList<String>();
+					nodegroup.add(n);
+					nodegroups.put(nd, nodegroup);
+				} else {
+					nodegroups.get(nd).add(n);
+				}
+			}
+		}
+		return nodegroups;
 	}
 
 	/**
