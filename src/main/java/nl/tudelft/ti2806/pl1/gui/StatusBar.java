@@ -14,7 +14,7 @@ import javax.swing.border.BevelBorder;
 public class StatusBar extends JPanel {
 
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = -2304279241558941973L;
 
