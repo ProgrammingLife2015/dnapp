@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
+import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
 import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 import nl.tudelft.ti2806.pl1.main.Start;
 
@@ -100,18 +101,6 @@ public class Window extends JFrame implements Observer {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-	}
-
-	/**
-	 * Loads a graph into the content scroll pane.
-	 * 
-	 * @param nodePath
-	 *            The path to the node file.
-	 * @param edgePath
-	 *            The path to the edge file.
-	 */
-	public final void loadGraph(final String nodePath, final String edgePath) {
-
 	}
 
 	/**

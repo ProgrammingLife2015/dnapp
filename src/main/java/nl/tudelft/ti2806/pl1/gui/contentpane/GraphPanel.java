@@ -1,16 +1,19 @@
 /**
  * 
  */
-package nl.tudelft.ti2806.pl1.gui;
+package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
+import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 
@@ -68,6 +71,7 @@ public class GraphPanel extends JSplitPane {
 		this.window = w;
 
 		graphPane = new JScrollPane();
+		graphPane.setMinimumSize(new Dimension(100, 100));
 
 		text = new JTextArea();
 		infoPane = new JScrollPane(text);
@@ -75,12 +79,32 @@ public class GraphPanel extends JSplitPane {
 		setTopComponent(graphPane);
 		setBottomComponent(infoPane);
 
-		SwingUtilities.invokeLater(new Runnable() {
+		// SwingUtilities.invokeLater(new Runnable() {
+		// public void run() {
+		setDividerLocation(300);
+		setResizeWeight(1);
+		// }
+		// });
+
+	}
+
+	/**
+	 * 
+	 * @param filePath
+	 */
+	public final void writeGraph(final String filePath) {
+		new Thread(new Runnable() {
 			public void run() {
-				setDividerLocation(0.8f);
+				try {
+					graph.write(filePath);
+				} catch (IOException e) {
+					window.statusBar().error(
+							"Writing the graph went wrong (" + e.getMessage()
+									+ ")");
+					e.printStackTrace();
+				}
 			}
 		});
-
 	}
 
 	/**
@@ -108,7 +132,33 @@ public class GraphPanel extends JSplitPane {
 		NodePlacer.place(graph, viewer);
 		view = viewer.addDefaultView(false);
 		view.setPreferredSize(new Dimension(100000, 500));
+		view.addMouseListener(new MouseListener() {
 
+			public void mouseReleased(final MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void mousePressed(final MouseEvent e) {
+				text.setText(e.getComponent().toString());
+
+			}
+
+			public void mouseExited(final MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void mouseEntered(final MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void mouseClicked(final MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 		graphPane.setViewportView(view);
 		graphPane.setMinimumSize(new Dimension(50, 50));
 		graphPane.setPreferredSize(new Dimension(50, 50));

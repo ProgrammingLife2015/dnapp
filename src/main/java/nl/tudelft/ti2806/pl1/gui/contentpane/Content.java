@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.gui;
+package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
 
@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.main.Start;
 
 import org.graphstream.graph.Graph;
@@ -75,19 +76,39 @@ public class Content extends JPanel {
 
 	/**
 	 * 
-	 * @param gp
+	 * @param filePath
 	 */
-	public final void setGraph(final GraphPanel gp) {
-		this.graphPanel = gp;
+	public final void writeGraph(final String filePath) {
+		graphPanel.writeGraph(filePath);
 	}
 
 	/**
+	 * Loads a graph into the graph tab.
 	 * 
-	 * @param pp
+	 * @param nodePath
+	 *            The path to the node file.
+	 * @param edgePath
+	 *            The path to the edge file.
 	 */
-	public final void setPhylo(final PhyloPanel pp) {
-		this.phyloPanel = pp;
+	public final void loadGraph(final String nodePath, final String edgePath) {
+		graphPanel.loadGraph(nodePath, edgePath);
 	}
+
+	// /**
+	// *
+	// * @param gp
+	// */
+	// public final void setGraph(final GraphPanel gp) {
+	// this.graphPanel = gp;
+	// }
+	//
+	// /**
+	// *
+	// * @param pp
+	// */
+	// public final void setPhylo(final PhyloPanel pp) {
+	// this.phyloPanel = pp;
+	// }
 
 	/**
 	 * @param args

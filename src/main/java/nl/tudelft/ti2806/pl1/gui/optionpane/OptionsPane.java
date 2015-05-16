@@ -123,6 +123,12 @@ public class OptionsPane extends JScrollPane {
 	/**
 	 * 
 	 */
+	private JButton btnWriteGraph = makeButton("Write graph", Event.WRITE_FILE,
+			"");
+
+	/**
+	 * 
+	 */
 	private SelectedGenomeGroup selectedGenome = new SelectedGenomeGroup(this);
 
 	/**
@@ -143,9 +149,11 @@ public class OptionsPane extends JScrollPane {
 	 */
 	private void addControls() {
 		setupConstraints();
-		place(btnLoadGraph, 0);
+		place(btnLoadGraph);
+		btnWriteGraph.setEnabled(false);
+		place(btnWriteGraph);
 
-		place(new JLabel("Genomes:"), 1, 0);
+		place(new JLabel("Genomes:"), 0);
 		place(genomes);
 		place(selectedGenome);
 
@@ -248,19 +256,19 @@ public class OptionsPane extends JScrollPane {
 		pane.revalidate();
 	}
 
-	/**
-	 * Places a component on a given row in the layout.
-	 * 
-	 * @param elem
-	 *            The element to place.
-	 * @param row
-	 *            The vertical coordinate in the pane to place the component.
-	 */
-	private void place(final Component elem, final int row) {
-		gbc.gridy = row;
-		pane.add(elem, gbc);
-		pane.revalidate();
-	}
+	// /**
+	// * Places a component on a given row in the layout.
+	// *
+	// * @param elem
+	// * The element to place.
+	// * @param row
+	// * The vertical coordinate in the pane to place the component.
+	// */
+	// private void place(final Component elem, final int row) {
+	// gbc.gridy = row;
+	// pane.add(elem, gbc);
+	// pane.revalidate();
+	// }
 
 	/**
 	 * Places a component on a given row in the layout, adding a given amount of
@@ -268,14 +276,12 @@ public class OptionsPane extends JScrollPane {
 	 * 
 	 * @param elem
 	 *            The element to place.
-	 * @param row
-	 *            The vertical coordinate in the pane to place the component.
 	 * @param belowInset
 	 *            The vertical insets below the element.
 	 */
-	private void place(final Component elem, final int row, final int belowInset) {
+	private void place(final Component elem, final int belowInset) {
 		gbc.insets = new Insets(VER_INSETS, HOR_INSETS, belowInset, HOR_INSETS);
-		place(elem, row);
+		place(elem);
 		gbc.insets = INSETS;
 	}
 
@@ -285,5 +291,6 @@ public class OptionsPane extends JScrollPane {
 	 */
 	public final void enableBtnLoadGraph(final boolean enabled) {
 		btnLoadGraph.setEnabled(enabled);
+		btnWriteGraph.setEnabled(!enabled);
 	}
 }

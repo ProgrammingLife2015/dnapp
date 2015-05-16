@@ -1,9 +1,11 @@
 /**
  * 
  */
-package nl.tudelft.ti2806.pl1.gui;
+package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import javax.swing.JScrollPane;
+
+import nl.tudelft.ti2806.pl1.gui.Window;
 
 /**
  * @author Maarten
