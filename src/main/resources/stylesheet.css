@@ -7,6 +7,7 @@ node {
     /*text-padding: 3px, 0px;*/
 }
 node:clicked {
+    fill-color: green;
     size: 30px;
 }
 node.common {
