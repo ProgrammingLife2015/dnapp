@@ -14,7 +14,7 @@ import javax.swing.JMenuItem;
 public class MenuBar extends JMenuBar {
 
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = -3046759850795865308L;
 

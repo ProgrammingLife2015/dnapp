@@ -3,6 +3,9 @@ package nl.tudelft.ti2806.pl1.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  * @author Maarten
  *
@@ -29,12 +32,17 @@ public enum Event implements ActionListener {
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
+			// (new Thread(new Runnable() {
+			// public void run() {
 			window.optionPanel().enableBtnLoadGraph(false);
 			window.toolBar().enableBtnLoadGraph(false);
 			window.content().loadGraph(
 					"src/main/resources/simple_graph.node.graph",
 					"src/main/resources/simple_graph.edge.graph");
 			System.out.println("Graph loaded via event!");
+			window.revalidate();
+			// }
+			// })).start();
 		}
 	},
 
@@ -127,6 +135,49 @@ public enum Event implements ActionListener {
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("The user clicked the checkbox for genome: "
 					+ e.getActionCommand());
+		}
+	},
+
+	/**
+	 * 
+	 */
+	WRITE_FILE {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			JFileChooser fs = new JFileChooser();
+			fs.setDialogTitle("Choose a folder to write the graph file to");
+			fs.setDialogType(JFileChooser.SAVE_DIALOG);
+			fs.setFileSelectionMode(JFileChooser.FILES_ONLY); // default
+			fs.setCurrentDirectory(new java.io.File("."));
+			fs.setCurrentDirectory(null);
+			fs.setAcceptAllFileFilterUsed(false);
+			FileNameExtensionFilter extensions = new FileNameExtensionFilter(
+					"DGS graph format", "dgs");
+			fs.setFileFilter(extensions);
+			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+				String writePath = fs.getSelectedFile().getAbsolutePath();
+				if (!writePath.endsWith(".dgs")) {
+					writePath += ".dgs";
+					System.out.println("Changed file format to dgs");
+				}
+				window.statusBar().info(
+						"Writing graph to file "
+								+ fs.getSelectedFile().getName() + " in "
+								+ fs.getCurrentDirectory());
+
+				System.out.println("dir=" + fs.getCurrentDirectory());
+				System.out.println("file=" + fs.getSelectedFile());
+
+				window.content().writeGraph(writePath);
+
+				System.out.println("Graph printed to " + writePath);
+				window.statusBar().info("Graph file written to " + writePath);
+			} else {
+				window.statusBar().error("No folder selected!");
+				System.out.println("No Selection ");
+			}
 		}
 	};
 
