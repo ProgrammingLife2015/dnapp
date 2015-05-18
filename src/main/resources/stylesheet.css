@@ -17,3 +17,6 @@ node.common {
 node.highlight {
     fill-color: red;
 }
+node.selected {
+    fill-color: yellow;
+}
