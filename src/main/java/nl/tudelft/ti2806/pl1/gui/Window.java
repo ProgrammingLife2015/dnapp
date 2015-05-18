@@ -90,11 +90,11 @@ public class Window extends JFrame implements Observer {
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
 
-		content = new Content(this);
-		add(content, BorderLayout.CENTER);
-
 		optionPanel = new OptionsPane(this);
 		add(optionPanel, BorderLayout.WEST);
+
+		content = new Content(this);
+		add(content, BorderLayout.CENTER);
 
 		addComponentListener(new WindowEvents(this));
 
