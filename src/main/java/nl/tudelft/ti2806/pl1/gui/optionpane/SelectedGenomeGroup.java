@@ -130,7 +130,8 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	/**
 	 * {@inheritDoc}
 	 */
-	public final void update(final GenomeRow genomeRow) {
+	public final void update(final GenomeRow genomeRow,
+			final boolean genomeFilterChanged) {
 		gID.setText(genomeRow.getId());
 		gShow.setText(genomeRow.getCol(1).toString());
 	}

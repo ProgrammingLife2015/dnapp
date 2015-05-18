@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -25,28 +26,6 @@ public enum Event implements ActionListener {
 	},
 
 	/**
-	 * Loads a graph into the window content.
-	 */
-	LOAD_FILE {
-		/**
-		 * {@inheritDoc}
-		 */
-		public void actionPerformed(final ActionEvent e) {
-			// (new Thread(new Runnable() {
-			// public void run() {
-			window.optionPanel().enableBtnLoadGraph(false);
-			window.toolBar().enableBtnLoadGraph(false);
-			window.content().loadGraph(
-					"src/main/resources/simple_graph.node.graph",
-					"src/main/resources/simple_graph.edge.graph");
-			System.out.println("Graph loaded via event!");
-			window.revalidate();
-			// }
-			// })).start();
-		}
-	},
-
-	/**
 	 * 
 	 */
 	EXAMPLE_EVENT {
@@ -56,6 +35,8 @@ public enum Event implements ActionListener {
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Example event fired. Actioncommand = \""
 					+ e.getActionCommand() + "\"");
+			window.optionPanel().fillGenomeList(new ArrayList<String>(), true,
+					true);
 		}
 	},
 
@@ -135,6 +116,28 @@ public enum Event implements ActionListener {
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("The user clicked the checkbox for genome: "
 					+ e.getActionCommand());
+		}
+	},
+
+	/**
+	 * Loads a graph into the window content.
+	 */
+	LOAD_FILE {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			// (new Thread(new Runnable() {
+			// public void run() {
+			window.optionPanel().enableBtnLoadGraph(false);
+			window.toolBar().enableBtnLoadGraph(false);
+			window.content().loadGraph(
+					"src/main/resources/simple_graph.node.graph",
+					"src/main/resources/simple_graph.edge.graph");
+			System.out.println("Graph loaded via event!");
+			window.revalidate();
+			// }
+			// })).start();
 		}
 	},
 

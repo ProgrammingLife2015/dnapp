@@ -132,6 +132,7 @@ public class GraphPanel extends JSplitPane {
 		NodePlacer.place(graph, viewer);
 		view = viewer.addDefaultView(false);
 		view.setPreferredSize(new Dimension(100000, 500));
+		// view.
 		view.addMouseListener(new MouseListener() {
 
 			public void mouseReleased(final MouseEvent e) {
@@ -141,6 +142,8 @@ public class GraphPanel extends JSplitPane {
 
 			public void mousePressed(final MouseEvent e) {
 				text.setText(e.getComponent().toString());
+				filter();
+				view.revalidate();
 
 			}
 
@@ -164,6 +167,21 @@ public class GraphPanel extends JSplitPane {
 		graphPane.setPreferredSize(new Dimension(50, 50));
 
 		window.revalidate();
+	}
+
+	/**
+	 * 
+	 */
+	public void filter() {
+		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
+		// .getText().length());
+
+		graph.getNode(1184).setAttribute("ui.class", "common");
+		graph.getNode(1184).setAttribute("ui.color", 1.5d);
+		graph.getNode(1183).setAttribute("ui.class", "common");
+		graph.getNode(1183).setAttribute("ui.color", 1d);
+		graph.getNode(1256).setAttribute("ui.class", "common");
+		graph.getNode(1256).setAttribute("ui.color", 2d);
 	}
 
 }
