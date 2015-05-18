@@ -2,10 +2,14 @@ package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import nl.tudelft.ti2806.pl1.file.GraphEdgeFileFilter;
+import nl.tudelft.ti2806.pl1.file.GraphNodeFileFilter;
 
 /**
  * @author Maarten
@@ -28,66 +32,25 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	EXAMPLE_EVENT {
+	SHOW_TOOLBAR {
 		/**
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
-			System.out.println("Example event fired. Actioncommand = \""
-					+ e.getActionCommand() + "\"");
-			window.optionPanel().fillGenomeList(new ArrayList<String>(), true,
-					true);
+			window.toolBar().setVisible(true);
 		}
+
 	},
 
 	/**
 	 * 
 	 */
-	ANOTHER_EVENT {
+	HIDE_TOOLBAR {
 		/**
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
-			System.out.println("Another event fired.");
-		}
-	},
-
-	/**
-	 * 
-	 */
-	PRINT_APP_NAME {
-		/**
-		 * {@inheritDoc}
-		 */
-		public void actionPerformed(final ActionEvent e) {
-			System.out.println(window.getTitle());
-		}
-	},
-
-	/**
-	 * 
-	 */
-	SHOW_WINDOW {
-		/**
-		 * 
-		 */
-		public void actionPerformed(final ActionEvent e) {
-			window.setVisible(true);
-		}
-
-	},
-
-	/**
-	 * 
-	 */
-	HIDE_WINDOW {
-
-		/**
-		 * 
-		 */
-		public void actionPerformed(final ActionEvent e) {
-			window.setVisible(false);
-
+			window.toolBar().setVisible(false);
 		}
 
 	},
@@ -107,37 +70,46 @@ public enum Event implements ActionListener {
 	},
 
 	/**
-	 * 
-	 */
-	GENOME_SELECT {
-		/**
-		 * {@inheritDoc}
-		 */
-		public void actionPerformed(final ActionEvent e) {
-			System.out.println("The user clicked the checkbox for genome: "
-					+ e.getActionCommand());
-		}
-	},
-
-	/**
 	 * Loads a graph into the window content.
 	 */
-	LOAD_FILE {
+	IMPORT_FILE {
 		/**
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
-			// (new Thread(new Runnable() {
-			// public void run() {
-			window.optionPanel().enableBtnLoadGraph(false);
-			window.toolBar().enableBtnLoadGraph(false);
-			window.content().loadGraph(
-					"src/main/resources/simple_graph.node.graph",
-					"src/main/resources/simple_graph.edge.graph");
-			System.out.println("Graph loaded via event!");
-			window.revalidate();
-			// }
-			// })).start();
+			FileFilter extNode = new GraphNodeFileFilter();
+			FileFilter extEdge = new GraphEdgeFileFilter();
+
+			JFileChooser fs = new JFileChooser();
+			fs.setDialogType(JFileChooser.OPEN_DIALOG);
+			fs.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fs.setCurrentDirectory(null);
+			// fs.setAcceptAllFileFilterUsed(false);
+
+			fs.setDialogTitle("Please locate and open the NODE file.");
+			fs.setFileFilter(extNode);
+			if (fs.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
+				final String nodePath = fs.getSelectedFile().getAbsolutePath();
+				fs.setCurrentDirectory(new File(nodePath));
+				fs.setFileFilter(extEdge);
+				fs.setDialogTitle("Please locate and open the EDGE file.");
+				if (fs.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
+					final String edgePath = fs.getSelectedFile()
+							.getAbsolutePath();
+					// (new Thread(new Runnable() {
+					// public void run() {
+					window.content().loadGraph(nodePath, edgePath);
+					// window.content()
+					// .loadGraph(
+					// "src/main/resources/simple_graph.node.graph",
+					// "src/main/resources/simple_graph.edge.graph");
+					// System.out.println("Graph loaded via event!");
+					// }
+					// })).start();
+					window.revalidate();
+				}
+			}
+
 		}
 	},
 
@@ -165,10 +137,9 @@ public enum Event implements ActionListener {
 					writePath += ".dgs";
 					System.out.println("Changed file format to dgs");
 				}
-				window.statusBar().info(
-						"Writing graph to file "
-								+ fs.getSelectedFile().getName() + " in "
-								+ fs.getCurrentDirectory());
+				statusBarInfo("Writing graph to file "
+						+ fs.getSelectedFile().getName() + " in "
+						+ fs.getCurrentDirectory());
 
 				System.out.println("dir=" + fs.getCurrentDirectory());
 				System.out.println("file=" + fs.getSelectedFile());
@@ -176,9 +147,9 @@ public enum Event implements ActionListener {
 				window.content().writeGraph(writePath);
 
 				System.out.println("Graph printed to " + writePath);
-				window.statusBar().info("Graph file written to " + writePath);
+				statusBarInfo("Graph file written to " + writePath);
 			} else {
-				window.statusBar().error("No folder selected!");
+				statusBarError("No folder selected!");
 				System.out.println("No Selection ");
 			}
 		}
@@ -195,6 +166,49 @@ public enum Event implements ActionListener {
 	 */
 	public static void setWindow(final Window w) {
 		window = w;
+	}
+
+	/**
+	 * Creates an action event to hold a command.
+	 * 
+	 * @param command
+	 *            The command.
+	 * @return the created action event.
+	 */
+	public static ActionEvent mkCommand(final String command) {
+		return new ActionEvent(null, ActionEvent.ACTION_FIRST, command);
+	}
+
+	/**
+	 * @param message
+	 *            The informative message to show.
+	 */
+	public static void statusBarInfo(final String message) {
+		window.statusBar().main(message, StatusBar.MessageType.INFO);
+	}
+
+	/**
+	 * @param message
+	 *            The error message to show.
+	 */
+	public static void statusBarError(final String message) {
+		window.statusBar().main(message, StatusBar.MessageType.ERROR);
+	}
+
+	/**
+	 * @param message
+	 *            The message to show.
+	 */
+	public static void statusBarRight(final String message) {
+		window.statusBar().right(message);
+	}
+
+	/**
+	 * @param message
+	 *            The message to show.
+	 */
+	public static void statusBarMid(final String message) {
+		window.statusBar().mid(message);
 	}
 
 }

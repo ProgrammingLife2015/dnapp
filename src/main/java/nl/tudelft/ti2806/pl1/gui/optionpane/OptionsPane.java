@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.Color;
@@ -97,39 +94,41 @@ public class OptionsPane extends JScrollPane {
 	 */
 	private JPanel pane = new JPanel(new GridBagLayout());
 
-	// /**
-	// * The item list containing the genomes of the graph.
-	// */
-	// private GenomeList list = new GenomeList();
-
 	/**
 	 * 
 	 */
-	private GenomeTable genomes = new GenomeTable(GENOME_LIST_SIZE);
+	private GenomeTable tblGenomes = new GenomeTable(GENOME_LIST_SIZE);
 
 	/**
 	 * @return the genome table
 	 */
 	public final GenomeTable getGenomes() {
-		return genomes;
+		return tblGenomes;
 	}
 
 	/**
-	 * The button enabling the user to load a graph into the interface.
+	 * 
 	 */
-	private JButton btnLoadGraph = makeButton("Load graph", Event.LOAD_FILE,
-			"Click to load the default graph.");
+	private JCheckBox chkHighlightSelected = new JCheckBox(
+			"Highlight selected genome");
 
 	/**
 	 * 
 	 */
-	private JButton btnWriteGraph = makeButton("Write graph", Event.WRITE_FILE,
-			"");
+	private SelectedGenomeGroup grpSelectedGenome = new SelectedGenomeGroup(
+			this);
 
 	/**
 	 * 
 	 */
-	private SelectedGenomeGroup selectedGenome = new SelectedGenomeGroup(this);
+	private SelectedNodeGroup grpSelectedNode = new SelectedNodeGroup(this);
+
+	/**
+	 * @return the selected node group
+	 */
+	public final SelectedNodeGroup getSelectedNodeGroup() {
+		return grpSelectedNode;
+	}
 
 	/**
 	 * @param w
@@ -145,17 +144,28 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/**
+	 * Method called after all window components are initialized.
+	 * 
+	 * @see Window#Window()
+	 */
+	public final void componentsLoaded() {
+		window.content().getGraphPanel().registerObserver(grpSelectedNode);
+	}
+
+	/**
 	 * Adds the control elements to the option pane.
 	 */
 	private void addControls() {
 		setupConstraints();
-		place(btnLoadGraph);
-		btnWriteGraph.setEnabled(false);
-		place(btnWriteGraph);
+		// place(btnLoadGraph);
+		// btnWriteGraph.setEnabled(false);
+		// place(btnWriteGraph);
 
 		place(new JLabel("Genomes:"), 0);
-		place(genomes);
-		place(selectedGenome);
+		place(tblGenomes);
+		place(chkHighlightSelected);
+		place(grpSelectedGenome);
+		place(grpSelectedNode);
 
 		gbc.weighty = 100;
 		place(Box.createGlue());
@@ -194,7 +204,7 @@ public class OptionsPane extends JScrollPane {
 		// cboxes[i] = makeCheckBox(id, Event.GENOME_SELECT, null);
 		// i++;
 		// }
-		genomes.fill(genomeIds, empty, selected);
+		tblGenomes.fill(genomeIds, empty, selected);
 	}
 
 	/**
@@ -256,20 +266,6 @@ public class OptionsPane extends JScrollPane {
 		pane.revalidate();
 	}
 
-	// /**
-	// * Places a component on a given row in the layout.
-	// *
-	// * @param elem
-	// * The element to place.
-	// * @param row
-	// * The vertical coordinate in the pane to place the component.
-	// */
-	// private void place(final Component elem, final int row) {
-	// gbc.gridy = row;
-	// pane.add(elem, gbc);
-	// pane.revalidate();
-	// }
-
 	/**
 	 * Places a component on a given row in the layout, adding a given amount of
 	 * vertical insets below the element.
@@ -285,12 +281,9 @@ public class OptionsPane extends JScrollPane {
 		gbc.insets = INSETS;
 	}
 
-	/**
-	 * 
-	 * @param enabled
-	 */
-	public final void enableBtnLoadGraph(final boolean enabled) {
-		btnLoadGraph.setEnabled(enabled);
-		btnWriteGraph.setEnabled(!enabled);
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
 	}
+
 }

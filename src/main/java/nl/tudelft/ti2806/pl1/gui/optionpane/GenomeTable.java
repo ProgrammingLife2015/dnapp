@@ -1,7 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +15,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
-import nl.tudelft.ti2806.pl1.gui.Event;
 
 /**
  * 
@@ -128,12 +126,12 @@ public class GenomeTable extends JScrollPane {
 	 *            If true, the list will first be emptied before filled with the
 	 *            new rows.
 	 */
-	private final void fill(final List<GenomeRow> genomeRows,
-			final boolean empty) {
+	private void fill(final List<GenomeRow> genomeRows, final boolean empty) {
 		if (empty) {
 			gtm.data.clear();
 		}
 		gtm.data.addAll(genomeRows);
+		revalidate();
 	}
 
 	// /**
@@ -158,7 +156,6 @@ public class GenomeTable extends JScrollPane {
 				"GenomeString3t", "GenomeString4t"), false, true);
 		fill(Arrays.asList("GenomeString5f", "GenomeString6f",
 				"GenomeString7f", "GenomeString48f"), false, false);
-
 	}
 
 	/**
@@ -181,6 +178,10 @@ public class GenomeTable extends JScrollPane {
 
 	/**
 	 * Notify genome table observers.
+	 * 
+	 * @param genomeFilterChanged
+	 *            Flag set true if the content of the genome table changed.
+	 *            Specifically: when a genome was checked or unchecked.
 	 */
 	private void notifyObservers(final boolean genomeFilterChanged) {
 		for (GenomeTableObserver sgo : observers) {
@@ -237,11 +238,6 @@ public class GenomeTable extends JScrollPane {
 			return data.get(row).getCol(col);
 		}
 
-		/*
-		 * JTable uses this method to determine the default renderer/ editor for
-		 * each cell. If we didn't implement this method, then the last column
-		 * would contain text ("true"/"false"), rather than a check box.
-		 */
 		@Override
 		public Class<? extends Object> getColumnClass(final int c) {
 			return getValueAt(0, c).getClass();
@@ -254,43 +250,11 @@ public class GenomeTable extends JScrollPane {
 
 		@Override
 		public void setValueAt(final Object value, final int row, final int col) {
-			if (true) {
-				System.out.println("Setting value at " + row + "," + col
-						+ " to " + value + " (an instance of "
-						+ value.getClass() + ")");
-			}
-
 			GenomeRow gr = data.get(row);
 			gr.set(col, value);
 			fireTableCellUpdated(row, col);
-			Event.GENOME_SELECT.actionPerformed(new ActionEvent(table,
-					ActionEvent.ACTION_FIRST, gr.getId()));
-
-			System.out.println("Genome \"" + gr.getId() + "\" set to "
-					+ gr.getCol(1));
-
-			if (true) {
-				System.out.println("New value of data:");
-				printDebugData();
-			}
 		}
 
-		/**
-		 * 
-		 */
-		private void printDebugData() {
-			int numRows = getRowCount();
-			int numCols = getColumnCount();
-
-			for (int i = 0; i < numRows; i++) {
-				System.out.print("    row " + i + ":");
-				for (int j = 0; j < numCols; j++) {
-					System.out.print("  " + getValueAt(i, j));
-				}
-				System.out.println();
-			}
-			System.out.println("--------------------------");
-		}
 	}
 
 }

@@ -65,7 +65,7 @@ public class GenomeRow {
 	 * @return
 	 * @throws IndexOutOfBoundsException
 	 */
-	public final Object getCol(final int col) throws IndexOutOfBoundsException {
+	Object getCol(final int col) throws IndexOutOfBoundsException {
 		switch (col) {
 		case 0:
 			return id;
