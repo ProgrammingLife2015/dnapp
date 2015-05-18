@@ -50,10 +50,14 @@ public final class GraphConverter {
 				} else {
 					content = (String) outnode.getAttribute("content");
 				}
+				// System.out.println(outnode + content);
 				if (content.length() == 1) {
 					muts.add(outnode.getId());
 				}
 			}
+			System.out.println(node);
+			System.out.println(muts);
+			// System.out.println("----------------------------------");
 			if (muts.size() > 1) {
 				HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(
 						muts, g);
@@ -61,73 +65,6 @@ public final class GraphConverter {
 			}
 		}
 		return g;
-	}
-
-	/**
-	 * Collapses the nodegroups in a graph.
-	 * 
-	 * @param nodegroups
-	 *            The nodegroup
-	 * @param g
-	 *            The graph
-	 */
-	private static void collapseNodes(
-			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
-		for (Node end : nodegroups.keySet()) {
-			ArrayList<String> nodegroup = nodegroups.get(end);
-			if (nodegroup.size() == 1) {
-				Node nd = g.getNode(nodegroup.get(0));
-				String mutcontent = nd.getAttribute("content");
-				String endcontent = end.getAttribute("content");
-				end.addAttribute("content", mutcontent + endcontent);
-				removeNode(g, nd, end);
-			} else {
-				HashMap<String, String> content = new HashMap<String, String>();
-				String newId = "collapsed:";
-				for (String id : nodegroup) {
-					Node nd = g.getNode(id);
-					System.out.println(nd);
-					Collection<String> sources = nd.getAttribute("sources");
-					for (String source : sources) {
-						content.put(source, (String) nd.getAttribute("content"));
-					}
-					newId += " " + id;
-				}
-				addNewCollapsedNode(newId, g, nodegroup, content);
-				for (String id : nodegroup) {
-					Node nd = g.getNode(id);
-					removeNode(g, nd);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Adds a new collapsed node to the graph.
-	 * 
-	 * @param newId
-	 *            The ID of the new node.
-	 * @param g
-	 *            The graph
-	 * @param nodegroup
-	 *            The nodegroup that is collapsed into the new node.
-	 * @param content
-	 *            The content of the new node.
-	 */
-	private static void addNewCollapsedNode(final String newId, final Graph g,
-			final ArrayList<String> nodegroup,
-			final HashMap<String, String> content) {
-		g.addNode(newId);
-		String temp = nodegroup.get(0);
-		Node tempnode = g.getNode(temp);
-		Node collapsednode = g.getNode(newId);
-		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
-		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
-		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
-		collapsednode.addAttribute("content", content);
-		collapsednode.addAttribute("sources", "hoi");
-		collapseEdges(g, newId, nodegroup);
-
 	}
 
 	/**
@@ -159,6 +96,80 @@ public final class GraphConverter {
 	}
 
 	/**
+	 * Collapses the nodegroups in a graph.
+	 * 
+	 * @param nodegroups
+	 *            The nodegroup
+	 * @param g
+	 *            The graph
+	 */
+	private static void collapseNodes(
+			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
+		for (Node end : nodegroups.keySet()) {
+			ArrayList<String> nodegroup = nodegroups.get(end);
+			if (nodegroup.size() == 1) {
+				Node nd = g.getNode(nodegroup.get(0));
+				String mutcontent = nd.getAttribute("content");
+				String endcontent = end.getAttribute("content");
+				end.addAttribute("content", mutcontent + endcontent);
+				// TODO situatie gaat nog fout
+				for (Edge edge : nd.getEnteringEdgeSet()) {
+					Node in = edge.getNode0();
+					g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
+							in, end);
+				}
+				removeNode(g, nd, end);
+			} else {
+				HashMap<String, String> content = new HashMap<String, String>();
+				String newId = "collapsed:";
+				for (String id : nodegroup) {
+					Node nd = g.getNode(id);
+					Collection<String> sources = nd.getAttribute("sources");
+					for (String source : sources) {
+						content.put(source, (String) nd.getAttribute("content"));
+					}
+					newId += " " + id;
+				}
+				addNewCollapsedNode(newId, g, nodegroup, content, end);
+				for (String id : nodegroup) {
+					Node nd = g.getNode(id);
+					removeNode(g, nd);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds a new collapsed node to the graph.
+	 * 
+	 * @param newId
+	 *            The ID of the new node.
+	 * @param g
+	 *            The graph
+	 * @param nodegroup
+	 *            The nodegroup that is collapsed into the new node.
+	 * @param content
+	 *            The content of the new node.
+	 * @param end
+	 *            The node which this group is going to.
+	 */
+	private static void addNewCollapsedNode(final String newId, final Graph g,
+			final ArrayList<String> nodegroup,
+			final HashMap<String, String> content, final Node end) {
+		g.addNode(newId);
+		String temp = nodegroup.get(0);
+		Node tempnode = g.getNode(temp);
+		Node collapsednode = g.getNode(newId);
+		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
+		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
+		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
+		collapsednode.addAttribute("content", content);
+		collapsednode.addAttribute("sources", "hoi");
+		collapseEdges(g, newId, nodegroup, end);
+
+	}
+
+	/**
 	 * Collapses all the edges of a group of nodes into a collapsed node.
 	 * 
 	 * @param g
@@ -167,32 +178,31 @@ public final class GraphConverter {
 	 *            The id of the collapsed node
 	 * @param nodegroup
 	 *            The group of nodes
+	 * @param end
+	 *            The node which this group is going to.
 	 */
 	private static void collapseEdges(final Graph g, final String id,
-			final ArrayList<String> nodegroup) {
+			final ArrayList<String> nodegroup, final Node end) {
 		Node collapsednode = g.getNode(id);
 		for (String old : nodegroup) {
 			Node oldnode = g.getNode(old);
 			Iterator<Edge> enteringedges = oldnode.getEnteringEdgeIterator();
-			Edge cur;
 			while (enteringedges.hasNext()) {
-				cur = enteringedges.next();
-				Node sourcenode = cur.getSourceNode();
+				Edge cur = enteringedges.next();
+				Node sourcenode = cur.getNode0();
 				if (!sourcenode.hasEdgeBetween(collapsednode)) {
 					g.addEdge("collapsed: " + cur.getId(), sourcenode,
 							collapsednode);
 				}
 			}
-			Iterator<Edge> leavingedges = oldnode.getLeavingEdgeIterator();
-			while (leavingedges.hasNext()) {
-				cur = leavingedges.next();
-				Node targetnode = cur.getTargetNode();
-				if (!collapsednode.hasEdgeBetween(targetnode)) {
-					g.addEdge("collapsed: " + cur.getId(), collapsednode,
-							targetnode);
+			for (Edge edge : oldnode.getLeavingEdgeSet()) {
+				if (edge.getNode1().equals(end)) {
+					g.removeEdge(edge);
 				}
 			}
 		}
+		g.addEdge("collapsed: " + collapsednode.getId() + " " + end.getId(),
+				collapsednode, end);
 	}
 
 	/**
@@ -207,38 +217,26 @@ public final class GraphConverter {
 	 *            The end node
 	 */
 	private static void removeNode(final Graph g, final Node nd, final Node end) {
-		Iterator<Edge> leavingedges = nd.getLeavingEdgeIterator();
-		while (leavingedges.hasNext()) {
-			Edge edge = leavingedges.next();
-			if (edge.getNode0().equals(nd) && edge.getNode1().equals(end)) {
+		for (Edge edge : nd.getLeavingEdgeSet()) {
+			if (edge.getNode1().equals(end)) {
 				g.removeEdge(edge);
 			}
 		}
 		if (nd.getLeavingEdgeSet().isEmpty()) {
-			for (Edge edge : nd.getLeavingEdgeSet()) {
+			for (Edge edge : nd.getEnteringEdgeSet()) {
 				g.removeEdge(edge);
 			}
 			g.removeNode(nd);
 		}
 	}
 
-	/**
-	 * Removes a node and all its edges from a graph.
-	 * 
-	 * @param g
-	 *            The graph
-	 * @param nd
-	 *            The to be removed node
-	 */
-	private static void removeNode(final Graph g, final Node nd) {
-		Iterator<Edge> edges = nd.getEdgeIterator();
-		Edge cur;
-		while (edges.hasNext()) {
-			cur = edges.next();
-			g.removeEdge(cur);
+	private static void removeNode(final Graph g, final Node node) {
+		if (node.getLeavingEdgeSet().isEmpty()) {
+			for (Edge edge : node.getEnteringEdgeSet()) {
+				g.removeEdge(edge);
+			}
+			g.removeNode(node);
 		}
-		g.removeNode(nd);
-
 	}
 
 	/**
