@@ -62,7 +62,7 @@ public final class Reader {
 			}
 
 			if (n.getSources().contains("TKK_REF")) {
-				gn.addAttribute("ui.class", "branch2");
+				gn.addAttribute("ui.class", "highlight");
 			} else {
 				gn.addAttribute("ui.class", "common");
 			}
