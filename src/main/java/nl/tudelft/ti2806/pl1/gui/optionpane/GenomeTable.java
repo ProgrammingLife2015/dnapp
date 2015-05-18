@@ -62,7 +62,7 @@ public class GenomeTable extends JScrollPane {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(final TableModelEvent e) {
-				notifyObservers();
+				notifyObservers(true);
 			}
 		});
 
@@ -71,7 +71,7 @@ public class GenomeTable extends JScrollPane {
 		lsm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(final ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					notifyObservers();
+					notifyObservers(false);
 				}
 			}
 		});
@@ -128,7 +128,8 @@ public class GenomeTable extends JScrollPane {
 	 *            If true, the list will first be emptied before filled with the
 	 *            new rows.
 	 */
-	public final void fill(final List<GenomeRow> genomeRows, final boolean empty) {
+	private final void fill(final List<GenomeRow> genomeRows,
+			final boolean empty) {
 		if (empty) {
 			gtm.data.clear();
 		}
@@ -181,9 +182,10 @@ public class GenomeTable extends JScrollPane {
 	/**
 	 * Notify genome table observers.
 	 */
-	private void notifyObservers() {
+	private void notifyObservers(final boolean genomeFilterChanged) {
 		for (GenomeTableObserver sgo : observers) {
-			sgo.update(gtm.data.get(table.getSelectedRow()));
+			sgo.update(gtm.data.get(table.getSelectedRow()),
+					genomeFilterChanged);
 		}
 	}
 

@@ -11,7 +11,8 @@ node:clicked {
     size: 30px;
 }
 node.common {
-	fill-color: grey;
+	fill-mode: dyn-plain;
+	fill-color: green, yellow, purple;
 }
 node.highlight {
     fill-color: red;
