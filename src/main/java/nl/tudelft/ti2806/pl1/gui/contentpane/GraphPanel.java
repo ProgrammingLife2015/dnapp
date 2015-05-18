@@ -1,7 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
@@ -12,7 +11,6 @@ import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JViewport;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -61,6 +59,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * 
 	 */
 	private Graph graph;
+
+	/**
+	 * 
+	 */
+	private Node selectedNode;
 
 	/**
 	 * 
@@ -197,7 +200,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * TODO debug method.
 	 */
-	public final void filter() {
+	private final void filter() {
 		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
 		// .getText().length());
 		graph.getNode(1184).setAttribute("ui.class", "common");
@@ -211,11 +214,18 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc}
 	 */
-	public final void update(final Node selectedNode) {
-		text.setText(selectedNode.getAttribute("content").toString());
+	public final void update(final Node newSelectedNode) {
+		text.setText(newSelectedNode.getAttribute("content").toString());
 		// infoPane.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-		JViewport jv = infoPane.getViewport();
-		jv.setViewPosition(new Point(0, 0));
+		// JViewport jv = infoPane.getViewport();
+		// jv.setViewPosition(new Point(0, 0));
+		if (selectedNode != null) {
+			selectedNode.removeAttribute("selected");
+		}
+		selectedNode = newSelectedNode;
+		selectedNode.addAttribute("selected", "true");
+		// TODO change strings to constants (still have to decide in which class
+		// to define them)
 	}
 
 	/**
