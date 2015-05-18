@@ -10,9 +10,9 @@ node:clicked {
     fill-color: green;
     size: 30px;
 }
-node.common {
-	fill-mode: dyn-plain;
-	fill-color: green, yellow, purple;
+node.common {   
+    fill-mode: dyn-plain;
+    fill-color: blue, green, yellow, purple;
 }
 node.highlight {
     fill-color: red;

@@ -14,6 +14,8 @@ import javax.swing.JTextArea;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
+import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
+import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 
@@ -106,7 +108,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		setResizeWeight(1);
 		// }
 		// });
-
+		GenomeHighlight GH = new GenomeHighlight();
 	}
 
 	/**
@@ -200,15 +202,55 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * TODO debug method.
 	 */
-	private final void filter() {
+	public void Check() {
 		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
 		// .getText().length());
 		graph.getNode(1184).setAttribute("ui.class", "common");
-		graph.getNode(1184).setAttribute("ui.color", 1.5d);
+		graph.getNode(1184).setAttribute("ui.color", 0.25);
 		graph.getNode(1183).setAttribute("ui.class", "common");
-		graph.getNode(1183).setAttribute("ui.color", 1d);
+		graph.getNode(1183).setAttribute("ui.color", 0.5);
 		graph.getNode(1256).setAttribute("ui.class", "common");
-		graph.getNode(1256).setAttribute("ui.color", 2d);
+		graph.getNode(1256).setAttribute("ui.color", 1);
+	}
+
+	public void Uncheck() {
+		graph.getNode(1184).setAttribute("ui.class", "highlight");
+		graph.getNode(1183).setAttribute("ui.class", "highlight");
+		graph.getNode(1256).setAttribute("ui.class", "highlight");
+	}
+
+	/**
+	 * Observer class implementing the GenomeTableObserver interface processing
+	 * events for filtering genomes.
+	 * 
+	 * @author ChakShun
+	 * @since 18-05-2015
+	 */
+	class GenomeHighlight implements GenomeTableObserver {
+
+		/**
+		 * Contructor in which it adds itself to the observers for the option
+		 * panel.
+		 */
+		public GenomeHighlight() {
+			window.optionPanel().getGenomes().registerObserver(this);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void update(final GenomeRow genomeRow,
+				final boolean genomeFilterChanged) {
+			System.out.println(genomeRow.toString() + genomeFilterChanged);
+			if (genomeFilterChanged) {
+				if (genomeRow.isSelected()) {
+					Check();
+				} else {
+					Uncheck();
+				}
+			}
+
+		}
 	}
 
 	/**
