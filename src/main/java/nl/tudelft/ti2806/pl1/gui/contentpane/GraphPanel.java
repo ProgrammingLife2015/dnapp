@@ -262,10 +262,14 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// JViewport jv = infoPane.getViewport();
 		// jv.setViewPosition(new Point(0, 0));
 		if (selectedNode != null) {
-			selectedNode.removeAttribute("selected");
+			selectedNode.setAttribute("ui.class",
+					selectedNode.getAttribute("oldclass"));
+			selectedNode.removeAttribute("oldclass");
 		}
 		selectedNode = newSelectedNode;
-		selectedNode.addAttribute("selected", "true");
+		selectedNode.setAttribute("oldclass",
+				selectedNode.getAttribute("ui.class"));
+		selectedNode.addAttribute("ui.class", "selected");
 		// TODO change strings to constants (still have to decide in which class
 		// to define them)
 	}
