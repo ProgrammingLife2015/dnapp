@@ -26,6 +26,11 @@ public class StatusBar extends JPanel {
 	/**
 	 * 
 	 */
+	private JLabel midLabel = new JLabel();
+
+	/**
+	 * 
+	 */
 	private JLabel rightLabel = new JLabel();
 
 	/**
@@ -35,30 +40,32 @@ public class StatusBar extends JPanel {
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		mainLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		midLabel.setAlignmentX(CENTER_ALIGNMENT);
 		add(mainLabel);
+		add(midLabel);
 		add(Box.createHorizontalGlue());
 		add(rightLabel);
 	}
 
-	/**
-	 * Shows an error message in the main text label.
-	 * 
-	 * @param message
-	 *            The error message to show.
-	 */
-	public final void error(final String message) {
-		mainLabel.setText("Error: " + message);
-	}
-
-	/**
-	 * Shows an info message in the main text label.
-	 * 
-	 * @param message
-	 *            The info message to show.
-	 */
-	public final void info(final String message) {
-		mainLabel.setText(message);
-	}
+	// /**
+	// * Shows an error message in the main text label.
+	// *
+	// * @param message
+	// * The error message to show.
+	// */
+	// public final void error(final String message) {
+	// mainLabel.setText("Error: " + message);
+	// }
+	//
+	// /**
+	// * Shows an info message in the main text label.
+	// *
+	// * @param message
+	// * The info message to show.
+	// */
+	// public final void info(final String message) {
+	// mainLabel.setText(message);
+	// }
 
 	/**
 	 * Shows a message in the right text label.
@@ -68,6 +75,58 @@ public class StatusBar extends JPanel {
 	 */
 	public final void right(final String message) {
 		rightLabel.setText(message);
+	}
+
+	/**
+	 * Shows a message in the left text label.
+	 * 
+	 * @param message
+	 *            The message to show.
+	 * @param type
+	 *            The type of message
+	 * @see MessageType
+	 */
+	public final void main(final String message, final MessageType type) {
+		rightLabel.setText(type.getPrefix() + message);
+	}
+
+	/**
+	 * Shows a message in the left text label.
+	 * 
+	 * @param message
+	 *            The message to show.
+	 */
+	public final void mid(final String message) {
+		midLabel.setText(message);
+	}
+
+	/**
+	 * @author Maarten
+	 */
+	public enum MessageType {
+
+		/** An informative message. */
+		INFO {
+			@Override
+			String getPrefix() {
+				return "";
+			}
+		},
+
+		/** An error message. */
+		ERROR {
+			@Override
+			String getPrefix() {
+				return "Error: ";
+			}
+		};
+
+		/**
+		 * 
+		 * @return The prefix to put in front of every message of this
+		 *         kind/type.
+		 */
+		abstract String getPrefix();
 	}
 
 }

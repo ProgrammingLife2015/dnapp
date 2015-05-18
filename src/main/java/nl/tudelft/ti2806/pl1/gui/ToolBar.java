@@ -13,21 +13,21 @@ import javax.swing.JToolBar;
 public class ToolBar extends JToolBar {
 
 	/**
-	 * 
+	 * The serial version UID.
 	 */
 	private static final long serialVersionUID = 7980283436568336682L;
 
 	/**
 	 * 
 	 */
-	private JButton btnLoadGraph = makeButton("Load graph", null,
-			Event.LOAD_FILE, "Click to load the default graph.");
+	private JButton btnImport = makeButton("Import", null, Event.IMPORT_FILE,
+			"Click to load a graph from .node.graph and .edge.graph files.");
 
 	/**
-	 * 
+	 * Initializes the tool bar.
 	 */
 	public ToolBar() {
-		super("NAME", JToolBar.HORIZONTAL);
+		super("DN/App toolbar", JToolBar.HORIZONTAL);
 		addButtons();
 	}
 
@@ -35,11 +35,8 @@ public class ToolBar extends JToolBar {
 	 * 
 	 */
 	private void addButtons() {
-		add(makeButton("example", null, Event.EXAMPLE_EVENT,
-				"Example tooltip text."));
-		add(makeButton("another button", null, Event.NONE, "boe"));
+		add(btnImport);
 		addSeparator();
-		add(btnLoadGraph);
 	}
 
 	/**
@@ -72,12 +69,12 @@ public class ToolBar extends JToolBar {
 		return button;
 	}
 
-	/**
-	 * 
-	 * @param enabled
-	 */
-	public void enableBtnLoadGraph(final boolean enabled) {
-		btnLoadGraph.setEnabled(enabled);
-	}
+	// /**
+	// *
+	// * @param enabled
+	// */
+	// public final void enableBtnLoadGraph(final boolean enabled) {
+	// btnLoadGraph.setEnabled(enabled);
+	// }
 
 }
