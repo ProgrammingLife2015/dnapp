@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
@@ -34,11 +36,17 @@ public final class GraphConverter {
 	 */
 	public static Graph collapsePointMutations(final Graph graph) {
 		Graph g = Graphs.merge(graph);
-		Collection<Node> nodes = g.getNodeSet();
-		Node start = getStart(nodes);
+		Node start = getStart(g);
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
+		Queue<Node> q = new LinkedList<Node>();
+		q.add(start);
 		while (it.hasNext()) {
 			Node node = it.next();
+			q.add(node);
+		}
+		while (!q.isEmpty()) {
+			Node node = q.remove();
+			System.out.println(node.getId());
 			Iterator<Edge> leaving = node.getEachLeavingEdge().iterator();
 			ArrayList<String> muts = new ArrayList<String>();
 			while (leaving.hasNext()) {
@@ -50,18 +58,14 @@ public final class GraphConverter {
 				} else {
 					content = (String) outnode.getAttribute("content");
 				}
-				// System.out.println(outnode + content);
 				if (content.length() == 1) {
 					muts.add(outnode.getId());
 				}
 			}
-			System.out.println(node);
-			System.out.println(muts);
-			// System.out.println("----------------------------------");
 			if (muts.size() > 1) {
 				HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(
 						muts, g);
-				collapseNodes(nodegroups, g);
+				collapseNodes(nodegroups, g, q);
 			}
 		}
 		return g;
@@ -102,9 +106,11 @@ public final class GraphConverter {
 	 *            The nodegroup
 	 * @param g
 	 *            The graph
+	 * @param q
 	 */
 	private static void collapseNodes(
-			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
+			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g,
+			final Queue<Node> q) {
 		for (Node end : nodegroups.keySet()) {
 			ArrayList<String> nodegroup = nodegroups.get(end);
 			if (nodegroup.size() == 1) {
@@ -130,7 +136,7 @@ public final class GraphConverter {
 					}
 					newId += " " + id;
 				}
-				addNewCollapsedNode(newId, g, nodegroup, content, end);
+				addNewCollapsedNode(newId, g, nodegroup, content, end, q);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					removeNode(g, nd);
@@ -152,10 +158,12 @@ public final class GraphConverter {
 	 *            The content of the new node.
 	 * @param end
 	 *            The node which this group is going to.
+	 * @param q
 	 */
 	private static void addNewCollapsedNode(final String newId, final Graph g,
 			final ArrayList<String> nodegroup,
-			final HashMap<String, String> content, final Node end) {
+			final HashMap<String, String> content, final Node end,
+			final Queue<Node> q) {
 		g.addNode(newId);
 		String temp = nodegroup.get(0);
 		Node tempnode = g.getNode(temp);
@@ -191,12 +199,12 @@ public final class GraphConverter {
 				Edge cur = enteringedges.next();
 				Node sourcenode = cur.getNode0();
 				if (!sourcenode.hasEdgeBetween(collapsednode)) {
-					g.addEdge("collapsed: " + cur.getId(), sourcenode,
-							collapsednode);
+					g.addEdge("collapsed: " + cur.getId() + sourcenode.getId()
+							+ Math.random(), sourcenode, collapsednode);
 				}
 			}
 			for (Edge edge : oldnode.getLeavingEdgeSet()) {
-				if (edge.getNode1().equals(end)) {
+				if (edge != null && edge.getNode1().equals(end)) {
 					g.removeEdge(edge);
 				}
 			}
@@ -218,12 +226,12 @@ public final class GraphConverter {
 	 */
 	private static void removeNode(final Graph g, final Node nd, final Node end) {
 		for (Edge edge : nd.getLeavingEdgeSet()) {
-			if (edge.getNode1().equals(end)) {
+			if (edge != null && edge.getNode1().equals(end)) {
 				g.removeEdge(edge);
 			}
 		}
 		if (nd.getLeavingEdgeSet().isEmpty()) {
-			for (Edge edge : nd.getEnteringEdgeSet()) {
+			for (Edge edge : nd.getEachEdge()) {
 				g.removeEdge(edge);
 			}
 			g.removeNode(nd);
@@ -232,7 +240,7 @@ public final class GraphConverter {
 
 	private static void removeNode(final Graph g, final Node node) {
 		if (node.getLeavingEdgeSet().isEmpty()) {
-			for (Edge edge : node.getEnteringEdgeSet()) {
+			for (Edge edge : node.getEachEdge()) {
 				g.removeEdge(edge);
 			}
 			g.removeNode(node);
@@ -298,20 +306,16 @@ public final class GraphConverter {
 	 *            Collection of nodes
 	 * @return Start node
 	 */
-	private static Node getStart(final Collection<Node> nodes) {
-		for (Node node : nodes) {
-			Iterator<Edge> it = node.getEachLeavingEdge().iterator();
-			ArrayList<Edge> leaving = new ArrayList<Edge>();
-			while (it.hasNext()) {
-				Edge e = it.next();
-				if (e.getTargetNode().getId().equals(node.getId())) {
-					leaving.add(e);
-				}
-			}
-			if (leaving.isEmpty()) {
-				return node;
+	private static Node getStart(final Graph g) {
+		Node first = null;
+		for (Node n : g.getNodeSet()) {
+			if (first == null) {
+				first = n;
+			} else if ((Integer) n.getAttribute("start") < (Integer) first
+					.getAttribute("start")) {
+				first = n;
 			}
 		}
-		return null;
+		return first;
 	}
 }
