@@ -81,7 +81,7 @@ public class Window extends JFrame implements Observer {
 
 		Event.setWindow(this);
 
-		menuBar = new MenuBar();
+		menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
 
 		toolBar = new ToolBar();
@@ -96,11 +96,22 @@ public class Window extends JFrame implements Observer {
 		content = new Content(this);
 		add(content, BorderLayout.CENTER);
 
+		// now let's call all cross dependent things.
+		callAfterInitialization();
+
 		addComponentListener(new WindowEvents(this));
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	/**
+	 * Calls child component methods which have cross dependencies with other
+	 * child components in the window.
+	 */
+	private void callAfterInitialization() {
+		optionPanel.componentsLoaded();
 	}
 
 	/**
@@ -138,7 +149,7 @@ public class Window extends JFrame implements Observer {
 	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
-		statusBar.right("[" + (int) getSize().getWidth() + ","
+		Event.statusBarRight("[" + (int) getSize().getWidth() + ","
 				+ (int) getSize().getHeight() + "]");
 	}
 
@@ -178,6 +189,11 @@ public class Window extends JFrame implements Observer {
 	 */
 	public static void main(final String[] args) {
 		Start.main(args);
+	}
+
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
 	}
 
 }

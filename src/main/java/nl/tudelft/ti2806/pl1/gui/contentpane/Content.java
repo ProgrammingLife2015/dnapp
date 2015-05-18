@@ -26,6 +26,11 @@ public class Content extends JPanel {
 	private static final long serialVersionUID = -518196843048978296L;
 
 	/**
+	 * 
+	 */
+	private boolean graphLoaded = false;
+
+	/**
 	 * The window this content pane is part of.
 	 */
 	private Window window;
@@ -39,6 +44,13 @@ public class Content extends JPanel {
 	 * The main panel showing the graph view in a scrollable environment.
 	 */
 	private GraphPanel graphPanel;
+
+	/**
+	 * @return the graph panel.
+	 */
+	public final GraphPanel getGraphPanel() {
+		return graphPanel;
+	}
 
 	/**
 	 * The panel showing the phylogenetic tree.
@@ -91,7 +103,7 @@ public class Content extends JPanel {
 	 *            The path to the edge file.
 	 */
 	public final void loadGraph(final String nodePath, final String edgePath) {
-		graphPanel.loadGraph(nodePath, edgePath);
+		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
 	}
 
 	// /**
@@ -116,6 +128,11 @@ public class Content extends JPanel {
 	 */
 	public static void main(final String[] args) {
 		Start.main(args);
+	}
+
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
 	}
 
 }

@@ -7,9 +7,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
+
+import org.graphstream.graph.Node;
 
 /**
  * @author Maarten
@@ -17,7 +20,7 @@ import javax.swing.JPanel;
  * @version 1.0
  *
  */
-public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
+public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
 	/**
 	 * The serial version UID.
@@ -27,7 +30,7 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	/**
 	 * The default visible title.
 	 */
-	private static final String DEFAULT_TITLE = "Selected genome";
+	private static final String DEFAULT_TITLE = "Selected node";
 
 	/**
 	 * 
@@ -59,7 +62,8 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	/**
 	 * TODO .
 	 */
-	private JLabel gID = new JLabel(), gShow = new JLabel();
+	private JLabel lblID = new JLabel(), lblContentLength = new JLabel(),
+			lblSources = new JLabel();
 
 	/**
 	 * Initialize the group layout panel.
@@ -67,10 +71,10 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	 * @param op
 	 *            The option panel (parent)
 	 */
-	public SelectedGenomeGroup(final OptionsPane op) {
+	public SelectedNodeGroup(final OptionsPane op) {
 		super();
 		this.parent = op;
-		parent.getGenomes().registerObserver(this);
+		// parent.getGenomes().registerObserver(this);
 		setLayout(new GridBagLayout());
 		setupGBC();
 		setFixedSize(this, SIZE);
@@ -82,16 +86,27 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 		add(new JLabel("ID:"), gbc);
 		gbc.gridx = 1;
 		gbc.weightx = 10;
-		add(gID, gbc);
+		add(lblID, gbc);
+
 		gbc.gridy = 1;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
-		add(new JLabel("Show:"), gbc);
+		add(new JLabel("Length:"), gbc);
 		gbc.gridx = 1;
 		gbc.weightx = 10;
-		add(gShow, gbc);
-		gbc.weighty = 100;
-		add(Box.createVerticalGlue());
+		add(lblContentLength, gbc);
+
+		gbc.gridy = 2;
+		gbc.gridx = 0;
+		gbc.weightx = 1;
+		add(new JLabel("Sources:"), gbc);
+		gbc.gridy = 3;
+		gbc.gridwidth = 2;
+		gbc.weightx = 0.0;
+		add(lblSources, gbc);
+
+		// gbc.weighty = 100;
+		// add(Box.createVerticalGlue());
 	}
 
 	/**
@@ -109,7 +124,7 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	 * 
 	 */
 	private void setupGBC() {
-		gbc.fill = GridBagConstraints.NONE;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.BASELINE_LEADING;
 		gbc.insets = INSETS;
 		gbc.weightx = 0;
@@ -129,10 +144,16 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	/**
 	 * {@inheritDoc}
 	 */
-	public final void update(final GenomeRow genomeRow,
-			final boolean genomeFilterChanged) {
-		gID.setText(genomeRow.getId());
-		gShow.setText(String.valueOf(genomeRow.isSelected()));
+	public final void update(final Node selectedNode) {
+		System.out.println("BOEEOEOEOE");
+		lblID.setText(selectedNode.getId());
+		lblContentLength.setText(String.valueOf(((String) selectedNode
+				.getAttribute("content")).length()));
+		lblSources.setText(selectedNode.getAttribute("sources").toString());
 	}
 
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
+	}
 }

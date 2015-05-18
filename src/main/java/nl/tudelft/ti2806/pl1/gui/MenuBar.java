@@ -3,9 +3,12 @@ package nl.tudelft.ti2806.pl1.gui;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * @author Maarten
@@ -21,12 +24,18 @@ public class MenuBar extends JMenuBar {
 	/**
 	 * 
 	 */
+	private Window window;
+
+	/**
+	 * 
+	 */
 	private JMenu file = fileMenu(), edit = editMenu(), view = viewMenu();
 
 	/**
 	 * 
 	 */
-	public MenuBar() {
+	public MenuBar(final Window w) {
+		this.window = w;
 		this.add(file);
 		this.add(edit);
 		this.add(view);
@@ -38,7 +47,11 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		ret.add(makeMI("Import...", null, 'I', "Import a graph file.", null));
+		ret.add(makeMI("Import", null, 'I', "Import a graph file.",
+				Event.IMPORT_FILE));
+		JMenu export = new JMenu("Export as");
+		export.add(makeMI("Export as", null, 'X', null, Event.WRITE_FILE));
+		ret.add(export);
 		ret.add(makeMI("Exit", null, 'E', "Exit the program.", Event.EXIT_APP));
 		return ret;
 	}
@@ -59,7 +72,15 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu viewMenu() {
 		JMenu ret = new JMenu("View");
-		ret.add(makeMI("?", null, '?', "?", null));
+		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
+				"Show tool bar", true);
+		showToolBar.addChangeListener(new ChangeListener() {
+			public void stateChanged(final ChangeEvent e) {
+				window.toolBar().setVisible(showToolBar.isSelected());
+			}
+		});
+		ret.add(showToolBar);
+		// ret.add(makeMI("?", null, '?', "?", null));
 		return ret;
 	}
 
