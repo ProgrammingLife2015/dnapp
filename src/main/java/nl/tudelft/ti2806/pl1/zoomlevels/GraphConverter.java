@@ -44,7 +44,12 @@ public final class GraphConverter {
 			while (leaving.hasNext()) {
 				Edge out = leaving.next();
 				Node outnode = out.getNode1();
-				String content = (String) outnode.getAttribute("content");
+				String content;
+				if (outnode.getAttribute("content") instanceof HashMap<?, ?>) {
+					content = outnode.getAttribute("content").toString();
+				} else {
+					content = (String) outnode.getAttribute("content");
+				}
 				if (content.length() == 1) {
 					muts.add(outnode.getId());
 				}
@@ -81,6 +86,7 @@ public final class GraphConverter {
 				String newId = "collapsed:";
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
+					System.out.println(nd);
 					Collection<String> sources = nd.getAttribute("sources");
 					for (String source : sources) {
 						content.put(source, (String) nd.getAttribute("content"));
@@ -119,6 +125,7 @@ public final class GraphConverter {
 		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
 		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
 		collapsednode.addAttribute("content", content);
+		collapsednode.addAttribute("sources", "hoi");
 		collapseEdges(g, newId, nodegroup);
 
 	}
@@ -200,22 +207,19 @@ public final class GraphConverter {
 	 *            The end node
 	 */
 	private static void removeNode(final Graph g, final Node nd, final Node end) {
-		Iterator<Edge> enteringedges = nd.getEnteringEdgeIterator();
-		Edge cur;
-		while (enteringedges.hasNext()) {
-			cur = enteringedges.next();
-			Node sourcenode = cur.getNode0();
-			g.addEdge(cur.getId(), sourcenode, end);
-			g.removeEdge(cur);
-		}
-
 		Iterator<Edge> leavingedges = nd.getLeavingEdgeIterator();
 		while (leavingedges.hasNext()) {
-			cur = leavingedges.next();
-			g.removeEdge(cur);
+			Edge edge = leavingedges.next();
+			if (edge.getNode0().equals(nd) && edge.getNode1().equals(end)) {
+				g.removeEdge(edge);
+			}
 		}
-		g.removeNode(nd);
-
+		if (nd.getLeavingEdgeSet().isEmpty()) {
+			for (Edge edge : nd.getLeavingEdgeSet()) {
+				g.removeEdge(edge);
+			}
+			g.removeNode(nd);
+		}
 	}
 
 	/**
