@@ -200,60 +200,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
-	 * TODO debug method.
-	 */
-	public void Check() {
-		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
-		// .getText().length());
-		graph.getNode(1184).setAttribute("ui.class", "common");
-		graph.getNode(1184).setAttribute("ui.color", 0.25);
-		graph.getNode(1183).setAttribute("ui.class", "common");
-		graph.getNode(1183).setAttribute("ui.color", 0.5);
-		graph.getNode(1256).setAttribute("ui.class", "common");
-		graph.getNode(1256).setAttribute("ui.color", 1);
-	}
-
-	public void Uncheck() {
-		graph.getNode(1184).setAttribute("ui.class", "highlight");
-		graph.getNode(1183).setAttribute("ui.class", "highlight");
-		graph.getNode(1256).setAttribute("ui.class", "highlight");
-	}
-
-	/**
-	 * Observer class implementing the GenomeTableObserver interface processing
-	 * events for filtering genomes.
-	 * 
-	 * @author ChakShun
-	 * @since 18-05-2015
-	 */
-	class GenomeHighlight implements GenomeTableObserver {
-
-		/**
-		 * Contructor in which it adds itself to the observers for the option
-		 * panel.
-		 */
-		public GenomeHighlight() {
-			window.optionPanel().getGenomes().registerObserver(this);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public void update(final GenomeRow genomeRow,
-				final boolean genomeFilterChanged,
-				final boolean genomeHighlightChanged) {
-			if (genomeHighlightChanged) {
-				if (genomeRow.isSelected()) {
-					Check();
-				} else {
-					Uncheck();
-				}
-			}
-
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public final void update(final Node newSelectedNode) {
@@ -348,9 +294,63 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 	}
 
+	/**
+	 * TODO debug method.
+	 */
+	public void Check() {
+		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
+		// .getText().length());
+		graph.getNode(1184).setAttribute("ui.class", "common");
+		graph.getNode(1184).setAttribute("ui.color", 0.25);
+		graph.getNode(1183).setAttribute("ui.class", "common");
+		graph.getNode(1183).setAttribute("ui.color", 0.5);
+		graph.getNode(1256).setAttribute("ui.class", "common");
+		graph.getNode(1256).setAttribute("ui.color", 1);
+	}
+
+	public void Uncheck() {
+		graph.getNode(1184).setAttribute("ui.class", "highlight");
+		graph.getNode(1183).setAttribute("ui.class", "highlight");
+		graph.getNode(1256).setAttribute("ui.class", "highlight");
+	}
+
 	@Override
 	public final String toString() {
 		return this.getClass().getName();
+	}
+
+	/**
+	 * Observer class implementing the GenomeTableObserver interface processing
+	 * events for filtering genomes.
+	 * 
+	 * @author ChakShun
+	 * @since 18-05-2015
+	 */
+	class GenomeHighlight implements GenomeTableObserver {
+
+		/**
+		 * Contructor in which it adds itself to the observers for the option
+		 * panel.
+		 */
+		public GenomeHighlight() {
+			window.optionPanel().getGenomes().registerObserver(this);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void update(final GenomeRow genomeRow,
+				final boolean genomeFilterChanged,
+				final boolean genomeHighlightChanged) {
+			if (genomeHighlightChanged && genomeRow.isSelected()) {
+				if (genomeRow.isHighlighted()) {
+					Check();
+				} else {
+					Uncheck();
+				}
+			}
+
+		}
 	}
 
 }

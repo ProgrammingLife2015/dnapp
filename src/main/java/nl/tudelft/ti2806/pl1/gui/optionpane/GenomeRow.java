@@ -23,11 +23,26 @@ public class GenomeRow {
 	private boolean highlighted;
 
 	/**
+	 * Column number for the id's.
+	 */
+	public static final int COL_ID = 0;
+	/**
+	 * Column number for select checkboxes.
+	 */
+	public static final int COL_SELECT = 1;
+	/**
+	 * Column number for highlight checkboxes.
+	 */
+	public static final int COL_HIGHLIGHT = 2;
+
+	/**
 	 * 
 	 * @param idIn
 	 *            the id to set
 	 * @param selectedIn
 	 *            whether the genome is selected or not
+	 * @param highlightedIn
+	 *            whether the genome is highlighted or not
 	 */
 	public GenomeRow(final String idIn, final boolean selectedIn,
 			final boolean highlightedIn) {
@@ -44,11 +59,11 @@ public class GenomeRow {
 	}
 
 	/**
-	 * @param highlighted
+	 * @param newHighlighted
 	 *            the highlighted to set
 	 */
-	public final void setHighlighted(final boolean highlighted) {
-		this.highlighted = highlighted;
+	public final void setHighlighted(final boolean newHighlighted) {
+		this.highlighted = newHighlighted;
 	}
 
 	/**
@@ -87,13 +102,13 @@ public class GenomeRow {
 	 * @return
 	 * @throws IndexOutOfBoundsException
 	 */
-	Object getCol(final int col) throws IndexOutOfBoundsException {
+	final Object getCol(final int col) throws IndexOutOfBoundsException {
 		switch (col) {
-		case 0:
+		case COL_ID:
 			return id;
-		case 1:
+		case COL_SELECT:
 			return selected;
-		case 2:
+		case COL_HIGHLIGHT:
 			return highlighted;
 		default:
 			throw new IndexOutOfBoundsException("Genome rows have 2 columns.");

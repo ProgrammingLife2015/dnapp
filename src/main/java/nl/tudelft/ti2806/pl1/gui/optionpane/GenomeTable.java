@@ -60,7 +60,8 @@ public class GenomeTable extends JScrollPane {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(final TableModelEvent e) {
-				notifyObservers(true, true);
+				notifyObservers(e.getColumn() == GenomeRow.COL_SELECT,
+						e.getColumn() == GenomeRow.COL_HIGHLIGHT);
 			}
 		});
 
