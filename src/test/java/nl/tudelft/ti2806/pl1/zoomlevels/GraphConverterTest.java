@@ -25,7 +25,7 @@ public class GraphConverterTest {
 	@Test
 	public void testCollapse1() throws FileNotFoundException {
 		graph = Reader.read(nodes1, edges1);
-		Graph g = GraphConverter.collapsePointMutations(graph);
+		Graph g = PointGraphConverter.collapsePointMutations(graph);
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
 		NodePlacer.place(g, viewer);
@@ -39,7 +39,7 @@ public class GraphConverterTest {
 	@Test
 	public void testCollapse2() throws FileNotFoundException {
 		graph = Reader.read(nodes2, edges2);
-		Graph g = GraphConverter.collapsePointMutations(graph);
+		Graph g = PointGraphConverter.collapsePointMutations(graph);
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
 		NodePlacer.place(g, viewer);
@@ -52,7 +52,7 @@ public class GraphConverterTest {
 	@Test
 	public void testCollapse3() throws FileNotFoundException {
 		graph = Reader.read(nodes3, edges3);
-		Graph g = GraphConverter.collapsePointMutations(graph);
+		Graph g = PointGraphConverter.collapsePointMutations(graph);
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
 		NodePlacer.place(g, viewer);
