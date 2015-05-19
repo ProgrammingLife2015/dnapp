@@ -14,25 +14,28 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.Graphs;
 
 /**
+ * This class converts the standard graph into a PointGraph.
  * 
  * @author Justin, Marissa
+ * @since 14-05-2015
  *
  */
-public final class GraphConverter {
+public final class PointGraphConverter {
 
 	/**
 	 * 
 	 */
-	private GraphConverter() {
+	private PointGraphConverter() {
+
 	}
 
 	/**
-	 * Converts a graph into a graph representing a zoom level where small point
-	 * mutations are collapsed.
+	 * Converts the standard graph into a graph representing a zoom level where
+	 * small point mutations are collapsed.
 	 * 
 	 * @param graph
 	 *            The initial graph of the original zoom level.
-	 * @return The converted graph.
+	 * @return The graph with collapsed point mutations.
 	 */
 	public static Graph collapsePointMutations(final Graph graph) {
 		Graph g = Graphs.merge(graph);
@@ -46,7 +49,6 @@ public final class GraphConverter {
 		}
 		while (!q.isEmpty()) {
 			Node node = q.remove();
-			System.out.println(node.getId());
 			Iterator<Edge> leaving = node.getEachLeavingEdge().iterator();
 			ArrayList<String> muts = new ArrayList<String>();
 			while (leaving.hasNext()) {
@@ -76,9 +78,9 @@ public final class GraphConverter {
 	 * the values are the grouped nodes.
 	 * 
 	 * @param muts
-	 *            The mutated nodes, to be grouped
+	 *            The mutated nodes, which are to be grouped
 	 * @param g
-	 *            The graph
+	 *            The graph we want to collapse
 	 * @return The grouped nodes
 	 */
 	private static HashMap<Node, ArrayList<String>> makeNodeGroups(
@@ -100,13 +102,14 @@ public final class GraphConverter {
 	}
 
 	/**
-	 * Collapses the nodegroups in a graph.
+	 * Collapses the nodegroups in the graph.
 	 * 
 	 * @param nodegroups
-	 *            The nodegroup
+	 *            The nodegroups
 	 * @param g
-	 *            The graph
+	 *            The graph we want to collapse on.
 	 * @param q
+	 *            The nodes we still want to check for.
 	 */
 	private static void collapseNodes(
 			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g,
@@ -118,7 +121,6 @@ public final class GraphConverter {
 				String mutcontent = nd.getAttribute("content");
 				String endcontent = end.getAttribute("content");
 				end.addAttribute("content", mutcontent + endcontent);
-				// TODO situatie gaat nog fout
 				for (Edge edge : nd.getEnteringEdgeSet()) {
 					Node in = edge.getNode0();
 					g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
@@ -151,7 +153,7 @@ public final class GraphConverter {
 	 * @param newId
 	 *            The ID of the new node.
 	 * @param g
-	 *            The graph
+	 *            The graph we want to collapse on.
 	 * @param nodegroup
 	 *            The nodegroup that is collapsed into the new node.
 	 * @param content
@@ -159,6 +161,7 @@ public final class GraphConverter {
 	 * @param end
 	 *            The node which this group is going to.
 	 * @param q
+	 *            The nodes we still want to check collapse for.
 	 */
 	private static void addNewCollapsedNode(final String newId, final Graph g,
 			final ArrayList<String> nodegroup,
@@ -178,14 +181,14 @@ public final class GraphConverter {
 	}
 
 	/**
-	 * Collapses all the edges of a group of nodes into a collapsed node.
+	 * Adds all the edges of a group of nodes onto the collapsed node.
 	 * 
 	 * @param g
-	 *            The graph
+	 *            The graph we want to collapse on.
 	 * @param id
-	 *            The id of the collapsed node
+	 *            The id of the collapsed node.
 	 * @param nodegroup
-	 *            The group of nodes
+	 *            The group of nodes we are collapsing.
 	 * @param end
 	 *            The node which this group is going to.
 	 */
@@ -218,11 +221,11 @@ public final class GraphConverter {
 	 * nodes to an end node.
 	 * 
 	 * @param g
-	 *            The graph
+	 *            The graph where we want to collapse.
 	 * @param nd
-	 *            The to be removed node
+	 *            The node to be removed.
 	 * @param end
-	 *            The end node
+	 *            The end node.
 	 */
 	private static void removeNode(final Graph g, final Node nd, final Node end) {
 		for (Edge edge : nd.getLeavingEdgeSet()) {
@@ -238,6 +241,13 @@ public final class GraphConverter {
 		}
 	}
 
+	/**
+	 * 
+	 * @param g
+	 *            The graph we want to collapse on.
+	 * @param node
+	 *            The node to be removed.
+	 */
 	private static void removeNode(final Graph g, final Node node) {
 		if (node.getLeavingEdgeSet().isEmpty()) {
 			for (Edge edge : node.getEachEdge()) {
@@ -248,13 +258,13 @@ public final class GraphConverter {
 	}
 
 	/**
-	 * Gets the next nodes from a certain node.
+	 * Gets the next nodes for a certain node.
 	 * 
 	 * @param graph
-	 *            The graph containing the node
+	 *            The graph containing the node.
 	 * @param id
-	 *            ID of the node
-	 * @return The next nodes
+	 *            ID of the node.
+	 * @return The nodes following the given node.
 	 */
 	private static ArrayList<Node> getNextNodes(final Graph graph,
 			final String id) {
@@ -270,40 +280,10 @@ public final class GraphConverter {
 	}
 
 	/**
-	 * Adds an edge to a graph.
+	 * Gets the first node of a graph.
 	 * 
-	 * @param graph
-	 *            The graph.
-	 * @param edge
-	 *            The edge.
-	 */
-	private static void addEdge(final Graph graph, final Edge edge) {
-		graph.addEdge(edge.getId(), edge.getSourceNode(), edge.getTargetNode());
-	}
-
-	/**
-	 * Adds a node to a graph, including all its content.
-	 * 
-	 * @param graph
-	 *            The graph.
-	 * @param node
-	 *            The node.
-	 */
-	private static void addNode(final Graph graph, final Node node) {
-		graph.addNode(node.getId());
-		Node addedNode = graph.getNode(node.getId());
-		Iterator<String> iter = node.getEachAttributeKey().iterator();
-		while (iter.hasNext()) {
-			String next = iter.next();
-			addedNode.addAttribute(next, node.getAttribute(next));
-		}
-	}
-
-	/**
-	 * Gets the start Node of a collection of nodes.
-	 * 
-	 * @param nodes
-	 *            Collection of nodes
+	 * @param g
+	 *            Graph of which we want to get the startnode
 	 * @return Start node
 	 */
 	private static Node getStart(final Graph g) {
