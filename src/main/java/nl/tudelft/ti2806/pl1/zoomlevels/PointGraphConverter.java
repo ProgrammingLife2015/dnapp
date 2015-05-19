@@ -202,8 +202,8 @@ public final class PointGraphConverter {
 				Edge cur = enteringedges.next();
 				Node sourcenode = cur.getNode0();
 				if (!sourcenode.hasEdgeBetween(collapsednode)) {
-					g.addEdge("collapsed: " + cur.getId() + sourcenode.getId()
-							+ Math.random(), sourcenode, collapsednode);
+					g.addEdge("collapsed: " + cur.getId() + " " + end.getId(),
+							sourcenode, collapsednode);
 				}
 			}
 			for (Edge edge : oldnode.getLeavingEdgeSet()) {

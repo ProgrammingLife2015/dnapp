@@ -23,6 +23,17 @@ public class PointGraphConverterTest {
 	Graph graph = new SingleGraph("test graph");
 
 	@Test
+	public void test() throws FileNotFoundException, InterruptedException {
+		Graph g = Reader.read("src/main/resources/simple_graph.node.graph",
+				"src/main/resources/simple_graph.edge.graph");
+		g = PointGraphConverter.collapsePointMutations(g);
+		Viewer viewer = g.display();
+		viewer.disableAutoLayout();
+		NodePlacer.place(g, viewer);
+		Thread.sleep(418741956);
+	}
+
+	@Test
 	public void testCollapse1() throws FileNotFoundException {
 		graph = Reader.read(nodes1, edges1);
 		Graph g = PointGraphConverter.collapsePointMutations(graph);
