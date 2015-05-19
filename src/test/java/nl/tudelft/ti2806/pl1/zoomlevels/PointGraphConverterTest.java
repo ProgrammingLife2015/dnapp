@@ -12,7 +12,7 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.view.Viewer;
 import org.junit.Test;
 
-public class GraphConverterTest {
+public class PointGraphConverterTest {
 
 	String nodes1 = "src/test/resources/collapsetest_nodes.txt";
 	String edges1 = "src/test/resources/collapsetest_edges.txt";
