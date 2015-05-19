@@ -60,7 +60,7 @@ public class GenomeTable extends JScrollPane {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(final TableModelEvent e) {
-				notifyObservers(true);
+				notifyObservers(true, true);
 			}
 		});
 
@@ -69,7 +69,7 @@ public class GenomeTable extends JScrollPane {
 		lsm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(final ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					notifyObservers(false);
+					notifyObservers(false, false);
 				}
 			}
 		});
@@ -113,7 +113,7 @@ public class GenomeTable extends JScrollPane {
 			final boolean selected) {
 		List<GenomeRow> res = new ArrayList<GenomeRow>();
 		for (String id : genomeIds) {
-			res.add(new GenomeRow(id, selected));
+			res.add(new GenomeRow(id, selected, false));
 		}
 		fill(res, empty);
 	}
@@ -147,10 +147,11 @@ public class GenomeTable extends JScrollPane {
 	 * TODO delete.
 	 */
 	public final void fillDebug() {
-		fill(Arrays.asList(new GenomeRow("Genome 1", true), new GenomeRow(
-				"Genome 2", false), new GenomeRow("Genome 3", false),
-				new GenomeRow("Genome 4", true), new GenomeRow("Genome 5",
-						false)), true);
+		fill(Arrays.asList(new GenomeRow("Genome 1", true, false),
+				new GenomeRow("Genome 2", false, false), new GenomeRow(
+						"Genome 3", false, false), new GenomeRow("Genome 4",
+						true, false), new GenomeRow("Genome 5", false, false)),
+				true);
 
 		fill(Arrays.asList("GenomeString1t", "GenomeString2t",
 				"GenomeString3t", "GenomeString4t"), false, true);
@@ -183,10 +184,11 @@ public class GenomeTable extends JScrollPane {
 	 *            Flag set true if the content of the genome table changed.
 	 *            Specifically: when a genome was checked or unchecked.
 	 */
-	private void notifyObservers(final boolean genomeFilterChanged) {
+	private void notifyObservers(final boolean genomeFilterChanged,
+			final boolean genomeHighlightChanged) {
 		for (GenomeTableObserver sgo : observers) {
 			sgo.update(gtm.data.get(table.getSelectedRow()),
-					genomeFilterChanged);
+					genomeFilterChanged, genomeHighlightChanged);
 		}
 	}
 
@@ -205,7 +207,7 @@ public class GenomeTable extends JScrollPane {
 		/**
 		 * The column headers.
 		 */
-		private String[] columnNames = { "Genome", "Show" };
+		private String[] columnNames = { "Genome", "Show", "Highlight" };
 
 		/**
 		 * The table content.
@@ -245,7 +247,7 @@ public class GenomeTable extends JScrollPane {
 
 		@Override
 		public boolean isCellEditable(final int row, final int col) {
-			return (col == 1);
+			return (col == 1 || col == 2);
 		}
 
 		@Override
