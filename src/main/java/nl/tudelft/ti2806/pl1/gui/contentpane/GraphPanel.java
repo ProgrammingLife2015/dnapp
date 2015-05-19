@@ -240,9 +240,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * {@inheritDoc}
 		 */
 		public void update(final GenomeRow genomeRow,
-				final boolean genomeFilterChanged) {
-			System.out.println(genomeRow.toString() + genomeFilterChanged);
-			if (genomeFilterChanged) {
+				final boolean genomeFilterChanged,
+				final boolean genomeHighlightChanged) {
+			if (genomeHighlightChanged) {
 				if (genomeRow.isSelected()) {
 					Check();
 				} else {
