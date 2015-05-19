@@ -12,6 +12,7 @@ public interface GenomeTableObserver {
 	 * @param genomeRow
 	 *            The currently selected genome row.
 	 */
-	void update(GenomeRow genomeRow, boolean genomeFilterChanged);
+	void update(GenomeRow genomeRow, boolean genomeFilterChanged,
+			boolean genomeHighlightChanged);
 
 }
