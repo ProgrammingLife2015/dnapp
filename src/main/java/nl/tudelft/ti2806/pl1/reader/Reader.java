@@ -72,7 +72,7 @@ public final class Reader {
 					String.valueOf(e.getStartNode())
 							+ String.valueOf(e.getEndNode()),
 					String.valueOf(e.getStartNode()),
-					String.valueOf(e.getEndNode()));
+					String.valueOf(e.getEndNode()), true);
 		}
 		return graph;
 	}
