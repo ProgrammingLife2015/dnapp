@@ -2,10 +2,11 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-import nl.tudelft.ti2806.pl1.graph.Node;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 /**
  * 
@@ -26,8 +27,8 @@ public final class NodeReader {
 	 *            Scanner from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 */
-	public static ArrayList<Node> readNodes(final Scanner sc) {
-		ArrayList<Node> nodes = new ArrayList<Node>();
+	public static ArrayList<DNode> readNodes(final Scanner sc) {
+		ArrayList<DNode> nodes = new ArrayList<DNode>();
 		while (sc.hasNextLine()) {
 			String nextnode = sc.nextLine();
 			if (nextnode.charAt(0) == '>') {
@@ -58,9 +59,9 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"Size of Node content doesn't match with its reference size");
 				}
-				ArrayList<String> sources = new ArrayList<String>(
+				HashSet<String> sources = new HashSet<String>(
 						Arrays.asList(data[1].split(",")));
-				Node node = new Node(id, sources, start, end, content);
+				DNode node = new DNode(id, sources, start, end, content);
 				nodes.add(node);
 			} else {
 				throw new InvalidFileFormatException(
