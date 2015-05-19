@@ -18,15 +18,37 @@ public class GenomeRow {
 	private boolean selected;
 
 	/**
+	 * Whether the genome is highlighted.
+	 */
+	private boolean highlighted;
+
+	/**
 	 * 
 	 * @param idIn
 	 *            the id to set
 	 * @param selectedIn
 	 *            whether the genome is selected or not
 	 */
-	public GenomeRow(final String idIn, final Boolean selectedIn) {
+	public GenomeRow(final String idIn, final boolean selectedIn,
+			final boolean highlightedIn) {
 		this.id = idIn;
 		this.selected = selectedIn;
+		this.highlighted = highlightedIn;
+	}
+
+	/**
+	 * @return the highlighted
+	 */
+	public final boolean isHighlighted() {
+		return highlighted;
+	}
+
+	/**
+	 * @param highlighted
+	 *            the highlighted to set
+	 */
+	public final void setHighlighted(final boolean highlighted) {
+		this.highlighted = highlighted;
 	}
 
 	/**
@@ -71,6 +93,8 @@ public class GenomeRow {
 			return id;
 		case 1:
 			return selected;
+		case 2:
+			return highlighted;
 		default:
 			throw new IndexOutOfBoundsException("Genome rows have 2 columns.");
 		}
@@ -91,6 +115,9 @@ public class GenomeRow {
 		case 1:
 			setSelected((Boolean) value);
 			break;
+		case 2:
+			setHighlighted((Boolean) value);
+			break;
 		default:
 			throw new IndexOutOfBoundsException("Genome rows have 2 columns.");
 		}
@@ -98,6 +125,7 @@ public class GenomeRow {
 
 	@Override
 	public final String toString() {
-		return "<Genome[" + id + ",selected=" + selected + "]>";
+		return "<Genome[" + id + ",selected=" + selected + ",highlighted="
+				+ highlighted + "]>";
 	}
 }
