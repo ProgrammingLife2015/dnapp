@@ -109,12 +109,6 @@ public class OptionsPane extends JScrollPane {
 	/**
 	 * 
 	 */
-	private JCheckBox chkHighlightSelected = new JCheckBox(
-			"Highlight selected genome");
-
-	/**
-	 * 
-	 */
 	private SelectedGenomeGroup grpSelectedGenome = new SelectedGenomeGroup(
 			this);
 
@@ -163,7 +157,6 @@ public class OptionsPane extends JScrollPane {
 
 		place(new JLabel("Genomes:"), 0);
 		place(tblGenomes);
-		place(chkHighlightSelected);
 		place(grpSelectedGenome);
 		place(grpSelectedNode);
 
