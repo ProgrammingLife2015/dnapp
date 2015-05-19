@@ -145,7 +145,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 * {@inheritDoc}
 	 */
 	public final void update(final Node selectedNode) {
-		System.out.println("BOEEOEOEOE");
 		lblID.setText(selectedNode.getId());
 		lblContentLength.setText(String.valueOf(((String) selectedNode
 				.getAttribute("content")).length()));
