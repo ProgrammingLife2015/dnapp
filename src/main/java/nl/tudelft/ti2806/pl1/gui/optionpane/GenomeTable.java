@@ -182,8 +182,12 @@ public class GenomeTable extends JScrollPane {
 	 * Notify genome table observers.
 	 * 
 	 * @param genomeFilterChanged
-	 *            Flag set true if the content of the genome table changed.
-	 *            Specifically: when a genome was checked or unchecked.
+	 *            Flag set true if the content of the genome table has changed.
+	 *            Specifically: when a genome was checked or unchecked to show.
+	 * @param genomeHighlightChanged
+	 *            Flag set true if the content of the genome table has changed.
+	 *            Specifically: when a genome was checked or unchecked to
+	 *            highlight.
 	 */
 	private void notifyObservers(final boolean genomeFilterChanged,
 			final boolean genomeHighlightChanged) {
