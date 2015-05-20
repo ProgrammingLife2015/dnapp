@@ -87,11 +87,11 @@ public class DNode {
 	 *            The edge added to the node
 	 */
 	public final boolean addEdge(final DEdge edge) {
-		if (edge.getStartNode().getId() == id && !outEdges.contains(edge)) {
+		if (edge.getStartNode().getId() == id && !getOutEdges().contains(edge)) {
 			outEdges.add(edge);
 			return true;
-		} else if (edge.getEndNode().id == id && !inEdges.contains(edge)) {
-			inEdges.add(edge);
+		} else if (edge.getEndNode().id == id && !getInEdges().contains(edge)) {
+			getInEdges().add(edge);
 			return true;
 		} else {
 			return false;
@@ -186,7 +186,7 @@ public class DNode {
 	 * 
 	 * @return the incoming edges
 	 */
-	public final Collection<DEdge> getInEdges() {
+	public Collection<DEdge> getInEdges() {
 		return inEdges;
 	}
 
@@ -319,7 +319,7 @@ public class DNode {
 	 *            The edge to be removed
 	 * @return A boolean indicating if it succeeded or failed
 	 */
-	public final boolean deleteEdge(final DEdge edge) {
+	public boolean deleteEdge(final DEdge edge) {
 		if (inEdges.contains(edge)) {
 			inEdges.remove(edge);
 			return true;

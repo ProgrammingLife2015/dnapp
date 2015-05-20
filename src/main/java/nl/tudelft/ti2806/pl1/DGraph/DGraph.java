@@ -101,6 +101,8 @@ public class DGraph {
 		}
 		DNode removeNode = nodes.get(n);
 		for (DEdge edge : removeNode.getAllEdges()) {
+			edge.getStartNode().deleteEdge(edge);
+			edge.getEndNode().deleteEdge(edge);
 			edges.remove(edge);
 		}
 		nodes.remove(n);
