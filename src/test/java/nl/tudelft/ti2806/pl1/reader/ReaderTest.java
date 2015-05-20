@@ -1,21 +1,22 @@
 package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
-import nl.tudelft.ti2806.pl1.reader.Reader;
 
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
+import nl.tudelft.ti2806.pl1.DGraph.DEdge;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.FileNotFoundException;
 
 public class ReaderTest {
 
 	String nodes = "src/test/resources/nodes.txt";
 	String edges = "src/test/resources/edges.txt";
-	Graph graph = new SingleGraph("test graph");
+	DGraph graph = new DGraph();
 
 	@Before
 	public void setUp() throws FileNotFoundException {
@@ -30,22 +31,31 @@ public class ReaderTest {
 	}
 
 	@Test
-	public void amountOfNodesTest() {
-		assertEquals(graph.getNodeCount(), 2);
+	public void added2NodesTest() {
+		assertEquals(graph.getNodeCount(), 4);
 	}
 
 	@Test
-	public void amountOfEdgesTest() {
-		assertEquals(graph.getEdgeCount(), 1);
+	public void getStartNodeTest() {
+		assertEquals(graph.getStart(), graph.getDNode(-2));
 	}
 
 	@Test
-	public void sourceNodeEdgeTest() {
-		assertEquals(graph.getEdge(0).getSourceNode(), graph.getNode(0));
+	public void getEndNodeTest() {
+		assertEquals(graph.getEnd(), graph.getDNode(-1));
 	}
 
 	@Test
-	public void targetNodeEdgeTest() {
-		assertEquals(graph.getEdge(0).getTargetNode(), graph.getNode(1));
+	public void starNodeHasEdgeToNode1Test() {
+		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-2)
+				.getOutEdges();
+		assertEquals(edges.get(0).getEndNode(), graph.getDNode(0));
+	}
+
+	@Test
+	public void endNodeHasEdgeToNode2Test() {
+		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-1)
+				.getInEdges();
+		assertEquals(edges.get(0).getStartNode(), graph.getDNode(1));
 	}
 }

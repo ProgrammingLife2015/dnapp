@@ -3,10 +3,12 @@ package nl.tudelft.ti2806.pl1.reader;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
-import nl.tudelft.ti2806.pl1.graph.DEdge;
-import nl.tudelft.ti2806.pl1.reader.EdgeReader;
+import nl.tudelft.ti2806.pl1.DGraph.DEdge;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +22,12 @@ public class EdgeReaderGoodWeatherTest {
 	@Before
 	public void startUp() {
 		Scanner sc = new Scanner(edge);
-		edges = EdgeReader.readEdges(sc);
+		DNode id20 = new DNode(20, new HashSet<String>(), 0, 0, "");
+		DNode id2 = new DNode(2, new HashSet<String>(), 0, 0, "");
+		DGraph graph = new DGraph();
+		graph.addDNode(id20);
+		graph.addDNode(id2);
+		edges = EdgeReader.readEdges(sc, graph);
 	}
 
 	@After
@@ -36,11 +43,11 @@ public class EdgeReaderGoodWeatherTest {
 
 	@Test
 	public void correctFileReadBeginNodeTest() {
-		assertTrue(edges.get(0).getStartNode() == 20);
+		assertTrue(edges.get(0).getStartNode().getId() == 20);
 	}
 
 	@Test
 	public void correctFileReadEndNodeTest() {
-		assertTrue(edges.get(0).getEndNode() == 2);
+		assertTrue(edges.get(0).getEndNode().getId() == 2);
 	}
 }

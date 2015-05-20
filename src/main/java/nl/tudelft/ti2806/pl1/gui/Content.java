@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.main.Start;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
@@ -80,7 +82,9 @@ public class Content extends JPanel {
 	 */
 	public final void loadGraph(final String nodePath, final String edgePath) {
 		try {
-			graph = Reader.read(nodePath, edgePath);
+			DGraph dgraph = Reader.read(nodePath, edgePath);
+			NodePlacer.place(dgraph);
+			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			window.statusBar().error(e.getMessage());
@@ -92,7 +96,6 @@ public class Content extends JPanel {
 		Viewer viewer = new Viewer(graph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		NodePlacer.place(graph, viewer);
 		view = viewer.addDefaultView(false);
 		view.setPreferredSize(new Dimension(100000, 500));
 

@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.graphWriter;
+package nl.tudelft.ti2806.pl1.graphWriter;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -43,6 +43,7 @@ public final class GraphWriter {
 		FileWriter fwriter = new FileWriter(file);
 		BufferedWriter bwriter = new BufferedWriter(fwriter);
 		PrintWriter writer = new PrintWriter(bwriter);
+
 		writer.println(graph.getNodeCount());
 		writeNodes(writer, graph);
 		writer.println(graph.getEdgeCount());
@@ -65,12 +66,11 @@ public final class GraphWriter {
 	 *            The graph
 	 */
 	public static void writeNodes(final PrintWriter writer, final Graph graph) {
+		String line = new String();
 		for (Node n : graph.getNodeSet()) {
-			writer.println(n.getId());
-			writer.println(n.getAttributeCount());
-			for (String s : n.getAttributeKeySet()) {
-				writer.println(s + " | " + n.getAttribute(s));
-			}
+			line = "";
+			line += ">";
+			line += n.getId().toString();
 		}
 	}
 
