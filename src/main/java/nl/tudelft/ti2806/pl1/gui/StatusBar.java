@@ -68,16 +68,6 @@ public class StatusBar extends JPanel {
 	// }
 
 	/**
-	 * Shows a message in the right text label.
-	 * 
-	 * @param message
-	 *            The message to show.
-	 */
-	public final void right(final String message) {
-		rightLabel.setText(message);
-	}
-
-	/**
 	 * Shows a message in the left text label.
 	 * 
 	 * @param message
@@ -87,7 +77,17 @@ public class StatusBar extends JPanel {
 	 * @see MessageType
 	 */
 	public final void main(final String message, final MessageType type) {
-		rightLabel.setText(type.getPrefix() + message);
+		mainLabel.setText(type.getPrefix() + message);
+	}
+
+	/**
+	 * Shows a message in the right text label.
+	 * 
+	 * @param message
+	 *            The message to show.
+	 */
+	public final void right(final String message) {
+		rightLabel.setText(message);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
+import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -102,7 +103,7 @@ public class Content extends JPanel {
 	 * @param edgePath
 	 *            The path to the edge file.
 	 */
-	public final void loadGraph(final String nodePath, final String edgePath) {
+	public final void loadGraph(final File nodePath, final File edgePath) {
 		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
 	}
 

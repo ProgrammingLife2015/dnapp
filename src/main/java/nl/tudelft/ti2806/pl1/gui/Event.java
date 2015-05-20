@@ -5,11 +5,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import nl.tudelft.ti2806.pl1.file.GraphEdgeFileFilter;
-import nl.tudelft.ti2806.pl1.file.GraphNodeFileFilter;
+import nl.tudelft.ti2806.pl1.file.ExportDialog;
+import nl.tudelft.ti2806.pl1.file.ImportDialog;
+import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
 
 /**
  * @author Maarten
@@ -77,39 +76,18 @@ public enum Event implements ActionListener {
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
-			FileFilter extNode = new GraphNodeFileFilter();
-			FileFilter extEdge = new GraphEdgeFileFilter();
-
-			JFileChooser fs = new JFileChooser();
-			fs.setDialogType(JFileChooser.OPEN_DIALOG);
-			fs.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fs.setCurrentDirectory(null);
-			// fs.setAcceptAllFileFilterUsed(false);
-
-			fs.setDialogTitle("Please locate and open the NODE file.");
-			fs.setFileFilter(extNode);
-			if (fs.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
-				final String nodePath = fs.getSelectedFile().getAbsolutePath();
-				fs.setCurrentDirectory(new File(nodePath));
-				fs.setFileFilter(extEdge);
-				fs.setDialogTitle("Please locate and open the EDGE file.");
-				if (fs.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
-					final String edgePath = fs.getSelectedFile()
-							.getAbsolutePath();
-					// (new Thread(new Runnable() {
-					// public void run() {
-					window.content().loadGraph(nodePath, edgePath);
-					// window.content()
-					// .loadGraph(
-					// "src/main/resources/simple_graph.node.graph",
-					// "src/main/resources/simple_graph.edge.graph");
-					// System.out.println("Graph loaded via event!");
-					// }
-					// })).start();
-					window.revalidate();
+			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
+			if (fsNode.showDialog(window, "Load nodes") == JFileChooser.APPROVE_OPTION) {
+				final File nodes = fsNode.getSelectedFile();
+				final ImportDialog fsEdge = new ImportDialog(ImportType.EDGES,
+						nodes);
+				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
+					final File edges = fsEdge.getSelectedFile();
+					window.content().loadGraph(nodes, edges);
+					return;
 				}
 			}
-
+			statusBarError("An error occured during the loading of the file(s)");
 		}
 	},
 
@@ -121,36 +99,19 @@ public enum Event implements ActionListener {
 		 * {@inheritDoc}
 		 */
 		public void actionPerformed(final ActionEvent e) {
-			JFileChooser fs = new JFileChooser();
-			fs.setDialogTitle("Choose a folder to write the graph file to");
-			fs.setDialogType(JFileChooser.SAVE_DIALOG);
-			fs.setFileSelectionMode(JFileChooser.FILES_ONLY); // default
-			fs.setCurrentDirectory(new java.io.File("."));
-			fs.setCurrentDirectory(null);
-			fs.setAcceptAllFileFilterUsed(false);
-			FileNameExtensionFilter extensions = new FileNameExtensionFilter(
-					"DGS graph format", "dgs");
-			fs.setFileFilter(extensions);
+			ExportDialog fs = new ExportDialog();
 			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
 				String writePath = fs.getSelectedFile().getAbsolutePath();
+				System.out.println("selected file filter: "
+						+ fs.getFileFilter());
 				if (!writePath.endsWith(".dgs")) {
 					writePath += ".dgs";
-					System.out.println("Changed file format to dgs");
+					statusBarInfo("Appended file extension .dgs");
 				}
-				statusBarInfo("Writing graph to file "
-						+ fs.getSelectedFile().getName() + " in "
-						+ fs.getCurrentDirectory());
-
-				System.out.println("dir=" + fs.getCurrentDirectory());
-				System.out.println("file=" + fs.getSelectedFile());
-
 				window.content().writeGraph(writePath);
-
-				System.out.println("Graph printed to " + writePath);
 				statusBarInfo("Graph file written to " + writePath);
 			} else {
 				statusBarError("No folder selected!");
-				System.out.println("No Selection ");
 			}
 		}
 	};
@@ -175,37 +136,55 @@ public enum Event implements ActionListener {
 	 *            The command.
 	 * @return the created action event.
 	 */
-	public static ActionEvent mkCommand(final String command) {
+	@SuppressWarnings("unused")
+	private static ActionEvent mkCommand(final String command) {
 		return new ActionEvent(null, ActionEvent.ACTION_FIRST, command);
 	}
 
 	/**
+	 * Shows an informative message in the status bar.
+	 * 
 	 * @param message
 	 *            The informative message to show.
+	 * @see StatusBar#main(String,
+	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarInfo(final String message) {
 		window.statusBar().main(message, StatusBar.MessageType.INFO);
 	}
 
 	/**
+	 * Shows an error message in the status bar.
+	 * 
 	 * @param message
 	 *            The error message to show.
+	 * @see StatusBar#main(String,
+	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarError(final String message) {
 		window.statusBar().main(message, StatusBar.MessageType.ERROR);
 	}
 
 	/**
+	 * 
+	 * Shows a message on the right side of the status bar.
+	 * 
 	 * @param message
 	 *            The message to show.
+	 * @see StatusBar#right(String)
 	 */
 	public static void statusBarRight(final String message) {
 		window.statusBar().right(message);
 	}
 
 	/**
+	 * Shows a message on the left side of the status bar if there is no message
+	 * shown on the left, otherwise shows the message in the center of the
+	 * status bar.
+	 * 
 	 * @param message
 	 *            The message to show.
+	 * @see StatusBar#mid(String)
 	 */
 	public static void statusBarMid(final String message) {
 		window.statusBar().mid(message);

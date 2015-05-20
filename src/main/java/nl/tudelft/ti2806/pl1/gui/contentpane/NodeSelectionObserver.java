@@ -11,8 +11,10 @@ import org.graphstream.graph.Node;
 public interface NodeSelectionObserver {
 
 	/**
+	 * Called when a node in the graph is clicked.
 	 * 
 	 * @param selectedNode
+	 *            The node selected in the graph view.
 	 */
 	void update(Node selectedNode);
 

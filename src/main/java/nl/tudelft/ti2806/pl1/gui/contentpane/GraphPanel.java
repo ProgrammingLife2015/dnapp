@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -116,32 +117,34 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param filePath
 	 */
 	public final void writeGraph(final String filePath) {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					graph.write(filePath);
-				} catch (IOException e) {
-					Event.statusBarError("Writing the graph went wrong ("
-							+ e.getMessage() + ")");
-					e.printStackTrace();
-				}
-			}
-		});
+		// new Thread(new Runnable() {
+		// public void run() {
+		try {
+			graph.write(filePath);
+			Event.statusBarInfo("Exported graph to: " + filePath);
+		} catch (IOException e) {
+			Event.statusBarError("Writing the graph went wrong ("
+					+ e.getMessage() + ")");
+			e.printStackTrace();
+		}
+		// }
+		// });
 	}
 
 	/**
 	 * Loads a graph into the content scroll pane.
 	 * 
-	 * @param nodePath
+	 * @param nodes
 	 *            The path to the node file.
-	 * @param edgePath
+	 * @param edges
 	 *            The path to the edge file.
 	 * @return true iff the graph was loaded successfully.
 	 */
-	public final boolean loadGraph(final String nodePath, final String edgePath) {
+	public final boolean loadGraph(final File nodes, final File edges) {
 		boolean ret = true;
 		try {
-			graph = Reader.read(nodePath, edgePath);
+			graph = Reader.read(nodes.getAbsolutePath(),
+					edges.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Event.statusBarError(e.getMessage());
@@ -193,14 +196,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 *            The node clicked on by the user
 	 */
 	private void notifyObservers(final Node selectedNode) {
-		System.out.println(observers);
 		for (NodeSelectionObserver sgo : observers) {
 			sgo.update(selectedNode);
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
 	public final void update(final Node newSelectedNode) {
 		text.setText(newSelectedNode.getAttribute("content").toString());
@@ -240,7 +242,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
-			System.out.println("button released on node " + id);
 			notifyObservers(graph.getNode(id));
 		}
 
@@ -248,7 +249,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * {@inheritDoc}
 		 */
 		public void buttonPushed(final String id) {
-			System.out.println("button pushed on node " + id);
 		}
 	}
 
