@@ -109,12 +109,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		setResizeWeight(1);
 		// }
 		// });
-		GenomeHighlight GH = new GenomeHighlight();
+		new GenomeHighlight();
 	}
 
 	/**
 	 * 
 	 * @param filePath
+	 *            Target path for exporting the file.
 	 */
 	public final void writeGraph(final String filePath) {
 		// new Thread(new Runnable() {
@@ -192,12 +193,12 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	/**
 	 * 
-	 * @param selectedNode
+	 * @param selectedNodeIn
 	 *            The node clicked on by the user
 	 */
-	private void notifyObservers(final Node selectedNode) {
+	private void notifyObservers(final Node selectedNodeIn) {
 		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selectedNode);
+			sgo.update(selectedNodeIn);
 		}
 	}
 
@@ -209,11 +210,15 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// infoPane.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		// JViewport jv = infoPane.getViewport();
 		// jv.setViewPosition(new Point(0, 0));
+
+		// Restores the old class of the previous selected node if present.
 		if (selectedNode != null) {
 			selectedNode.setAttribute("ui.class",
 					selectedNode.getAttribute("oldclass"));
 			selectedNode.removeAttribute("oldclass");
 		}
+
+		// Assigns new selected node and stores old ui.class
 		selectedNode = newSelectedNode;
 		selectedNode.setAttribute("oldclass",
 				selectedNode.getAttribute("ui.class"));
@@ -295,9 +300,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
-	 * TODO debug method.
+	 * Highlights a genome.
 	 */
-	public void Check() {
+	public final void highlight() {
 		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
 		// .getText().length());
 		graph.getNode(1184).setAttribute("ui.class", "common");
@@ -308,7 +313,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		graph.getNode(1256).setAttribute("ui.color", 1);
 	}
 
-	public void Uncheck() {
+	/**
+	 * Unhighlights a genome.
+	 */
+	public final void unHighlight() {
 		graph.getNode(1184).setAttribute("ui.class", "highlight");
 		graph.getNode(1183).setAttribute("ui.class", "highlight");
 		graph.getNode(1256).setAttribute("ui.class", "highlight");
@@ -344,9 +352,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				final boolean genomeHighlightChanged) {
 			if (genomeHighlightChanged && genomeRow.isSelected()) {
 				if (genomeRow.isHighlighted()) {
-					Check();
+					highlight();
 				} else {
-					Uncheck();
+					unHighlight();
 				}
 			}
 
