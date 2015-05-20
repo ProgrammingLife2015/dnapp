@@ -6,10 +6,10 @@ node {
     /*text-background-color: yellow;*/
     /*text-padding: 3px, 0px;*/
 }
-node:clicked {
+/*node:clicked {
     fill-color: green;
     size: 30px;
-}
+}*/
 node.common {   
     fill-mode: dyn-plain;
     fill-color: blue, green, yellow, purple;
