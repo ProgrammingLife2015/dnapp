@@ -110,7 +110,7 @@ public class DNode {
 	/**
 	 * @return the x
 	 */
-	public final int getX() {
+	public int getX() {
 		return x;
 	}
 
@@ -125,7 +125,7 @@ public class DNode {
 	/**
 	 * @return the y
 	 */
-	public final int getY() {
+	public int getY() {
 		return y;
 	}
 

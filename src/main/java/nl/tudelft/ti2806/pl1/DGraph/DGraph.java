@@ -40,7 +40,7 @@ public class DGraph {
 	/**
 	 * @return the edges
 	 */
-	public final Collection<DEdge> getEdges() {
+	public Collection<DEdge> getEdges() {
 		return edges;
 	}
 
@@ -55,7 +55,7 @@ public class DGraph {
 	/**
 	 * @return the nodes
 	 */
-	public final HashMap<Integer, DNode> getNodes() {
+	public HashMap<Integer, DNode> getNodes() {
 		return nodes;
 	}
 
@@ -174,7 +174,7 @@ public class DGraph {
 	/**
 	 * @return the start.
 	 */
-	public final DNode getStart() {
+	public DNode getStart() {
 		return start;
 	}
 

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -57,5 +58,15 @@ public class ReaderTest {
 		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-1)
 				.getInEdges();
 		assertEquals(edges.get(0).getStartNode(), graph.getDNode(1));
+	}
+
+	@Test
+	public void startNodeHasAllSourcesTest() {
+		HashSet<String> temp = new HashSet<String>();
+		temp.add("TKK-1");
+		temp.add("TKK-2");
+		temp.add("TKK-4");
+		HashSet<String> sources = graph.getDNode(-2).getSources();
+		assertEquals(temp, sources);
 	}
 }
