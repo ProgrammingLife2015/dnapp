@@ -12,10 +12,12 @@ node {
 }*/
 node.common {   
     fill-mode: dyn-plain;
-    fill-color: blue, green, yellow, purple;
+    fill-color: #f0f0f0, #bdbdbd, #636363;
+    /*fill-color: blue, green, yellow, purple;*/
 }
 node.highlight {
-    fill-color: red;
+    fill-mode: dyn-plain;
+    fill-color: #fee0d2, #fc9272, #de2d26;
 }
 node.selected {
     fill-color: yellow;

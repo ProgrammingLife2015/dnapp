@@ -53,6 +53,14 @@ public final class Reader {
 			gn.addAttribute("sources", n.getSources());
 
 			// UI attributes, to be moved! // TODO
+			int counter = 0;
+			for (int i = 0; i < n.getContent().length(); i++) {
+				if (n.getContent().charAt(i) == 'N') {
+					counter++;
+				}
+			}
+			gn.addAttribute("unknown", (double) 1
+					- (counter / n.getContent().length()));
 
 			if (n.getContent().length() < 10) {
 				gn.addAttribute("ui.label", n.getContent());
@@ -66,6 +74,8 @@ public final class Reader {
 			} else {
 				gn.addAttribute("ui.class", "common");
 			}
+
+			gn.setAttribute("ui.color", gn.getAttribute("unknown"));
 		}
 		for (DEdge e : edge) {
 			graph.addEdge(
