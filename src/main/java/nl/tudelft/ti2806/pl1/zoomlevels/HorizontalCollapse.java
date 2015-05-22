@@ -15,7 +15,7 @@ import org.graphstream.graph.implementations.Graphs;
  * @author Justin, Marissa
  * @since 21-05-2015
  */
-public class HorizontalCollapse {
+public final class HorizontalCollapse {
 
 	/**
 	 * The default max value on how much content we want to collapse.
@@ -30,6 +30,8 @@ public class HorizontalCollapse {
 	}
 
 	/**
+	 * Collapses the graph horizontally if the content size does not surpass the
+	 * maximum content size.
 	 * 
 	 * @param graph
 	 *            Graph we want to collapse on.
@@ -49,12 +51,14 @@ public class HorizontalCollapse {
 	}
 
 	/**
+	 * Collapses the graph horizontally if the content size does not surpass the
+	 * maximum content size.
 	 * 
 	 * @param graph
 	 *            Graph we want to collapse on.
 	 * @param maxcontent
 	 *            Maximum content a node can have after collapsing.
-	 * @return
+	 * @return Horizontally collapsed graph
 	 */
 	private static Graph collapseGraph(Graph graph, final int maxcontent) {
 		Node first = getStart(graph);
@@ -72,6 +76,18 @@ public class HorizontalCollapse {
 		return graph;
 	}
 
+	/**
+	 * Collapses a two nodes if their combined content size does not surpass the
+	 * maximum content size.
+	 * 
+	 * @param graph
+	 *            The graph.
+	 * @param node
+	 *            The node in which the other node will be collapsed.
+	 * @param maxcontent
+	 *            The maximum content size
+	 * @return The graph with the nodes collapsed or not.
+	 */
 	private static Graph collapseNodes(final Graph graph, final Node node,
 			final int maxcontent) {
 		if (node.getInDegree() == 1) {
@@ -109,7 +125,7 @@ public class HorizontalCollapse {
 			if (to.getAttribute("content") instanceof String) {
 				String contentto = to.getAttribute("content");
 				to.setAttribute("content", contentfrom + contentto);
-			} else if (from.getAttribute("content") instanceof HashMap<?, ?>) {
+			} else if (to.getAttribute("content") instanceof HashMap<?, ?>) {
 				HashMap<String, String> contentto = to.getAttribute("content");
 				HashMap<String, String> mergedcontent = mergeContent(
 						contentfrom, contentto);
@@ -183,6 +199,14 @@ public class HorizontalCollapse {
 		return contentto;
 	}
 
+	/**
+	 * Gets the content size of a node, if the content is a hashmap, the size of
+	 * the first value is taken.
+	 * 
+	 * @param node
+	 *            The node.
+	 * @return The content size.
+	 */
 	private static int getContentSize(final Node node) {
 		if (node.getAttribute("content") instanceof HashMap<?, ?>) {
 			HashMap<String, String> content = node.getAttribute("content");
