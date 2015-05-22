@@ -1,7 +1,10 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
+import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -53,32 +56,131 @@ public class HorizontalCollapse {
 	 *            Maximum content a node can have after collapsing.
 	 * @return
 	 */
-	private static Graph collapseGraph(final Graph graph, final int maxcontent) {
+	private static Graph collapseGraph(Graph graph, final int maxcontent) {
 		Node first = getStart(graph);
-		return collapseNodes(graph, first, maxcontent);
+		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(first);
+		Queue<Node> q = new LinkedList<Node>();
+		q.add(first);
+		while (it.hasNext()) {
+			Node node = it.next();
+			q.add(node);
+		}
+		while (!q.isEmpty()) {
+			Node node = q.remove();
+			graph = collapseNodes(graph, node, maxcontent);
+		}
+		return graph;
 	}
 
-	private static Graph collapseNodes(Graph graph, final Node node,
+	private static Graph collapseNodes(final Graph graph, final Node node,
 			final int maxcontent) {
-		if (node.getOutDegree() == 0) {
-			return graph;
-		} else if (node.getOutDegree() == 1) {
-			Node out = node.getEachLeavingEdge().iterator().next().getNode1();
-			if ((getContentSize(node) + getContentSize(out)) <= maxcontent) {
-
-			} else {
-				graph = collapseNodes(graph, out, maxcontent);
-			}
-			// if we add them together call it again on this node (because it
-			// should now have the edges of node out)
-			// if not we call it on the out node
-		} else {
-			for (Edge edge : node.getEachLeavingEdge()) {
-				Node out = edge.getNode1();
-				graph = collapseNodes(graph, node, maxcontent);
+		if (node.getInDegree() == 1) {
+			Node prev = node.getEnteringEdgeIterator().next().getNode0();
+			if (prev.getOutDegree() == 1
+					&& getContentSize(prev) + getContentSize(node) <= maxcontent) {
+				mergeAttributes(prev, node);
+				for (Edge edge : prev.getEnteringEdgeSet()) {
+					if (edge != null) {
+						String id = edge.getId();
+						// graph.removeEdge(id);
+						graph.addEdge(id + Math.random(), edge.getNode0(),
+								node, true);
+					}
+				}
+				graph.removeNode(prev);
 			}
 		}
 		return graph;
+	}
+
+	/**
+	 * Merges the attributes of two nodes.
+	 * 
+	 * @param from
+	 *            The node from which the attributes are taken
+	 * @param to
+	 *            The node into which the merged attributes are stored
+	 */
+	private static void mergeAttributes(final Node from, final Node to) {
+		to.setAttribute("inNodes", from.getAttribute("inNodes"));
+		to.setAttribute("start", from.getAttribute("start"));
+		if (from.getAttribute("content") instanceof String) {
+			String contentfrom = from.getAttribute("content");
+			if (to.getAttribute("content") instanceof String) {
+				String contentto = to.getAttribute("content");
+				to.setAttribute("content", contentfrom + contentto);
+			} else if (from.getAttribute("content") instanceof HashMap<?, ?>) {
+				HashMap<String, String> contentto = to.getAttribute("content");
+				HashMap<String, String> mergedcontent = mergeContent(
+						contentfrom, contentto);
+				to.setAttribute("content", mergedcontent);
+			}
+		} else if (from.getAttribute("content") instanceof HashMap<?, ?>) {
+			HashMap<String, String> contentfrom = from.getAttribute("content");
+			if (to.getAttribute("content") instanceof String) {
+				String contentto = to.getAttribute("content");
+				HashMap<String, String> mergedcontent = mergeContent(
+						contentfrom, contentto);
+				to.setAttribute("content", mergedcontent);
+			} else if (to.getAttribute("content") instanceof HashMap<?, ?>) {
+				HashMap<String, String> contentto = to.getAttribute("content");
+				HashMap<String, String> mergedcontent = mergeContent(
+						contentfrom, contentto);
+				to.setAttribute("content", mergedcontent);
+			}
+		}
+	}
+
+	/**
+	 * Merges the contents of two nodes.
+	 * 
+	 * @param contentfrom
+	 *            The content of the first node.
+	 * @param contentto
+	 *            The content of the second node.
+	 * @return The merged content.
+	 */
+	private static HashMap<String, String> mergeContent(
+			final HashMap<String, String> contentfrom,
+			final HashMap<String, String> contentto) {
+		for (String key : contentfrom.keySet()) {
+			contentto.put(key, contentfrom.get(key) + contentto.get(key));
+		}
+		return contentto;
+	}
+
+	/**
+	 * Merges the contents of two nodes.
+	 * 
+	 * @param contentfrom
+	 *            The content of the first node.
+	 * @param contentto
+	 *            The content of the second node.
+	 * @return The merged content.
+	 */
+	private static HashMap<String, String> mergeContent(
+			final HashMap<String, String> contentfrom, final String contentto) {
+		for (String key : contentfrom.keySet()) {
+			contentfrom.put(key, contentfrom.get(key) + contentto);
+		}
+		return contentfrom;
+	}
+
+	/**
+	 * Merges the contents of two nodes.
+	 * 
+	 * @param contentfrom
+	 *            The content of the first node.
+	 * @param contentto
+	 *            The content of the second node.
+	 * @return The merged content.
+	 */
+	private static HashMap<String, String> mergeContent(
+			final String contentfrom, final HashMap<String, String> contentto) {
+		for (String key : contentto.keySet()) {
+			contentto.put(key, contentfrom + contentto.get(key));
+		}
+		return contentto;
 	}
 
 	private static int getContentSize(final Node node) {
