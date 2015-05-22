@@ -13,11 +13,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
-import com.wordpress.tips4java.ScrollablePanel;
-import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
-
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
+
+import com.wordpress.tips4java.ScrollablePanel;
+import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
 
 /**
  * @author Maarten
@@ -35,16 +35,17 @@ public class OptionsPane extends JScrollPane {
 	private static final Dimension SIZE = new Dimension(WIDTH,
 			Integer.MAX_VALUE);
 
-	/**
-	 * 
-	 */
-	private static final int W_OFFSET = 20;
-
-	/**
-	 * 
-	 */
-	private static final Dimension PANE_SIZE = new Dimension(WIDTH - W_OFFSET,
-			Integer.MAX_VALUE);
+	// /**
+	// *
+	// */
+	// private static final int W_OFFSET = 20;
+	//
+	// /**
+	// *
+	// */
+	// private static final Dimension PANE_SIZE = new Dimension(WIDTH -
+	// W_OFFSET,
+	// Integer.MAX_VALUE);
 
 	/**
 	 * 
@@ -116,20 +117,17 @@ public class OptionsPane extends JScrollPane {
 		this.window = w;
 		this.gridBagLayout = new GridBagLayout();
 		this.gbc = new GridBagConstraints();
-
-		// Scrollable
-
 		this.pane = new ScrollablePanel(gridBagLayout);
 		pane.setAlignmentY(TOP_ALIGNMENT);
 		pane.setScrollableWidth(ScrollableSizeHint.FIT);
 		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
-		this.tblGenomes = new GenomeTable(MAX_CHILD_WIDTH);
+		this.tblGenomes = new GenomeTable();
 		this.grpSelectedNode = new SelectedNodeGroup(this);
 		this.grpSelectedGenome = new SelectedGenomeGroup(this);
 
-		// setMinimumSize(SIZE);
-		// setMaximumSize(SIZE);
+		// setMinimumSize(new Dimension(WIDTH, 10));
+		setMaximumSize(SIZE);
 
 		setPreferredSize(SIZE);
 		addControls();
@@ -171,7 +169,7 @@ public class OptionsPane extends JScrollPane {
 		gbc.gridx = 0;
 		// gbc.gridy = GridBagConstraints.RELATIVE;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.insets = INSETS;
 	}
 

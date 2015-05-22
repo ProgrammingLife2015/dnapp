@@ -56,7 +56,7 @@ public final class GraphWriter {
 	}
 
 	/**
-	 * This method writes the nodes. It first wrties the id's of the node, then
+	 * This method writes the nodes. It first writes the ids of the node, then
 	 * it writes the amount of attributes followed by each attribute on a new
 	 * line.
 	 * 

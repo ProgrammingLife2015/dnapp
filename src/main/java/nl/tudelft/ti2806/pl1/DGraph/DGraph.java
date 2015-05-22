@@ -3,11 +3,12 @@ package nl.tudelft.ti2806.pl1.DGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The DGraph class for representing our data.
  * 
- * @author mark
+ * @author Mark
  *
  */
 public class DGraph {
@@ -15,12 +16,12 @@ public class DGraph {
 	/**
 	 * The nodes in the graph.
 	 */
-	private final HashMap<Integer, DNode> nodes;
+	private final Map<Integer, DNode> nodes;
 
 	/**
-	 * A hashmap storing a collection nodes per genome reference
+	 * A map storing a collection nodes per genome reference.
 	 */
-	private HashMap<String, Collection<DNode>> references;
+	private Map<String, Collection<DNode>> references;
 
 	/**
 	 * The edges in the graph.
@@ -45,17 +46,17 @@ public class DGraph {
 	/**
 	 * @return the references
 	 */
-	public HashMap<String, Collection<DNode>> getReferences() {
+	public Map<String, Collection<DNode>> getReferences() {
 		return references;
 	}
 
 	/**
-	 * @param references
+	 * @param newReferences
 	 *            the references to set
 	 */
 	public void setReferences(
-			final HashMap<String, Collection<DNode>> references) {
-		this.references = references;
+			final HashMap<String, Collection<DNode>> newReferences) {
+		this.references = newReferences;
 	}
 
 	/**
@@ -66,17 +67,17 @@ public class DGraph {
 	}
 
 	/**
-	 * @param edges
+	 * @param newEdges
 	 *            the edges to set
 	 */
-	public final void setEdges(final Collection<DEdge> edges) {
-		this.edges = edges;
+	public final void setEdges(final Collection<DEdge> newEdges) {
+		this.edges = newEdges;
 	}
 
 	/**
 	 * @return the nodes
 	 */
-	public HashMap<Integer, DNode> getNodes() {
+	public Map<Integer, DNode> getNodes() {
 		return nodes;
 	}
 

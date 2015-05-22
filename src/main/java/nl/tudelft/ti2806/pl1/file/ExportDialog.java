@@ -3,26 +3,22 @@
  */
 package nl.tudelft.ti2806.pl1.file;
 
-import java.io.File;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * 
  * @author Maarten
- * @since 20-5-2015
- * @version 1.0
- *
+ * @since 22-5-2015
+ * @version 1.1
  */
 public class ExportDialog extends JFileChooser {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3764514151291068712L;
 
 	/**
-	 * 
+	 * Initialize the export dialog.
 	 */
 	public ExportDialog() {
 		super();
@@ -33,28 +29,8 @@ public class ExportDialog extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 		FileNameExtensionFilter extDGS = new FileNameExtensionFilter(
 				"DGS graph format", "dgs");
-		// FileNameExtensionFilter extDGS = new FileNameExtensionFilter(
-		// "DGS graph format", "dgs");
-		// FileNameExtensionFilter extDGS = new FileNameExtensionFilter(
-		// "DGS graph format", "dgs");
-		// FileNameExtensionFilter extDGS = new FileNameExtensionFilter(
-		// "DGS graph format", "dgs");
 
 		addChoosableFileFilter(extDGS);
-	}
-
-	/**
-	 * @param currentDirectoryPath
-	 */
-	public ExportDialog(final String currentDirectoryPath) {
-		super(currentDirectoryPath);
-	}
-
-	/**
-	 * @param currentDirectory
-	 */
-	public ExportDialog(final File currentDirectory) {
-		super(currentDirectory);
 	}
 
 }

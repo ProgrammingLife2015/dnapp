@@ -5,6 +5,8 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
+ * File filter accepting the .edge.graph file extension. Does not take into
+ * account the content of the file.
  * 
  * @author Maarten
  * @since 18-5-2015

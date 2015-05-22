@@ -8,19 +8,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 /**
+ * The status bar of the application at the bottom of the window.
+ * 
  * @author Maarten
- *
  */
 public class StatusBar extends JPanel {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -2304279241558941973L;
 
-	/**
-	 * The main text label of the status bar.
-	 */
+	/** The main text label of the status bar. */
 	private JLabel mainLabel = new JLabel();
 
 	/**

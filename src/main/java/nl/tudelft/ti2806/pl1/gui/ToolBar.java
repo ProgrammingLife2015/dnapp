@@ -7,19 +7,17 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 /**
+ * The main tool bar of the application showing at the top of the window (right
+ * below the menu bar), or floating around.
+ * 
  * @author Maarten
- *
  */
 public class ToolBar extends JToolBar {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = 7980283436568336682L;
 
-	/**
-	 * 
-	 */
+	/** The import button. */
 	private JButton btnImport = makeButton("Import", null, Event.IMPORT_FILE,
 			"Click to load a graph from .node.graph and .edge.graph files.");
 
@@ -31,9 +29,7 @@ public class ToolBar extends JToolBar {
 		addButtons();
 	}
 
-	/**
-	 * 
-	 */
+	/** Adds the control elements to the tool bar. */
 	private void addButtons() {
 		add(btnImport);
 		addSeparator();
@@ -68,13 +64,5 @@ public class ToolBar extends JToolBar {
 		}
 		return button;
 	}
-
-	// /**
-	// *
-	// * @param enabled
-	// */
-	// public final void enableBtnLoadGraph(final boolean enabled) {
-	// btnLoadGraph.setEnabled(enabled);
-	// }
 
 }

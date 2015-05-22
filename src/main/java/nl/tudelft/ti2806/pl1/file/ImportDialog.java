@@ -13,21 +13,18 @@ import javax.swing.filechooser.FileFilter;
  * @author Maarten
  * @since 20-5-2015
  * @version 1.0
- *
  */
 public class ImportDialog extends JFileChooser {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3764514151291068712L;
 
-	/**
-	 * 
-	 */
+	/** The type of files this dialog will be able to load. */
 	private static ImportType filterType;
 
 	/**
+	 * Initialize the import dialog.
+	 * 
 	 * @param type
 	 *            The type of files this dialog should be able to load.
 	 */
@@ -36,6 +33,8 @@ public class ImportDialog extends JFileChooser {
 	}
 
 	/**
+	 * Initialize the import dialog.
+	 * 
 	 * @param type
 	 *            The type of files this dialog should be able to load.
 	 * @param currentDirectory
@@ -51,11 +50,12 @@ public class ImportDialog extends JFileChooser {
 	}
 
 	/**
+	 * Enumeration of the type of files the application can import. All types
+	 * have a file filter.
 	 * 
 	 * @author Maarten
 	 * @since 20-5-2015
 	 * @version 1.0
-	 *
 	 */
 	public enum ImportType {
 

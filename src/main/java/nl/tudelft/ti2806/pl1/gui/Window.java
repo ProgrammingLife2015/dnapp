@@ -18,39 +18,25 @@ import nl.tudelft.ti2806.pl1.main.Start;
  */
 public class Window extends JFrame implements Observer {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -2702972120954333899L;
 
-	/**
-	 * The window settings.
-	 */
+	/** The window settings. */
 	private WindowSettings settings;
 
-	/**
-	 * The menu bar of the window.
-	 */
+	/** The menu bar of the window. */
 	private JMenuBar menuBar;
 
-	/**
-	 * The tool bar of the window.
-	 */
+	/** The tool bar of the window. */
 	private ToolBar toolBar;
 
-	/**
-	 * The left panel showing options.
-	 */
+	/** The left panel showing options. */
 	private OptionsPane optionPanel;
 
-	/**
-	 * The main pane of the window.
-	 */
+	/** The main pane of the window. */
 	private Content content;
 
-	/**
-	 * The status bar of the window.
-	 */
+	/** The status bar of the window. */
 	private StatusBar statusBar;
 
 	/**
@@ -86,6 +72,9 @@ public class Window extends JFrame implements Observer {
 
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
+
+		// ((BasicToolBarUI) toolBar.getUI()).setFloating(true,
+		// new Point(100, 100));
 
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);

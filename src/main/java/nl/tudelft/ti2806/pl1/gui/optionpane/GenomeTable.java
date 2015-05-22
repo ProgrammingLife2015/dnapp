@@ -23,14 +23,10 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
  */
 public class GenomeTable extends JScrollPane {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -2803975406952542688L;
 
-	/**
-	 * Fixed column width.
-	 */
+	/** Fixed column widths. */
 	private static final int COL_SHOW_WIDTH = 40, COL_HIGHLIGHT_WIDTH = 55;
 
 	/**
@@ -39,20 +35,15 @@ public class GenomeTable extends JScrollPane {
 	 */
 	private List<GenomeTableObserver> observers = new ArrayList<GenomeTableObserver>();
 
-	/**
-	 * The data model of the table.
-	 */
+	/** The data model of the table. */
 	private GenomeTableModel gtm = new GenomeTableModel();
 
-	/**
-	 * The table interface.
-	 */
+	/** The table interface. */
 	private JTable table = new JTable(gtm);
 
-	/**
-	 * 
-	 */
-	private final Dimension size;
+	/** The size of the table. */
+	private static final Dimension SIZE = new Dimension(
+			OptionsPane.MAX_CHILD_WIDTH, 120);
 
 	/**
 	 * Initializes the genome table.
@@ -60,12 +51,11 @@ public class GenomeTable extends JScrollPane {
 	 * @param width
 	 *            The width of the the scroll container.
 	 */
-	public GenomeTable(final int width) {
+	public GenomeTable() {
 		super();
-		size = new Dimension(width, 150);
-		setMinimumSize(size);
-		setMaximumSize(size);
-		setPreferredSize(size);
+		setMinimumSize(SIZE);
+		setMaximumSize(SIZE);
+		// setPreferredSize(size);
 		// table.setPreferredScrollableViewportSize(size);
 		// table.setFillsViewportHeight(true);
 		setColumnWidth(GenomeRow.COL_HIGHLIGHT, COL_HIGHLIGHT_WIDTH);

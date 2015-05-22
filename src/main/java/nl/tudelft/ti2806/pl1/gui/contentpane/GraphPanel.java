@@ -39,34 +39,34 @@ import org.graphstream.ui.view.ViewerPipe;
  */
 public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
 
 	/**
-	 * 
+	 * The default location for the divider between the graph view and the text
+	 * area.
 	 */
 	private static final int DEFAULT_DIVIDER_LOC = 300;
 
 	/**
+	 * TODO the temp hard coded size of the view.
+	 */
+	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
+
+	/**
+	 * The list of node selection observers.
 	 * 
+	 * @see NodeSelectionObserver
 	 */
 	private List<NodeSelectionObserver> observers = new ArrayList<NodeSelectionObserver>();
 
-	/**
-	 * The window this panel is part of.
-	 */
+	/** The window this panel is part of. */
 	private Window window;
 
-	/**
-	 * The top pane showing the graph.
-	 */
+	/** The top pane showing the graph. */
 	private JScrollPane graphPane;
 
-	/**
-	 * The bottom pane showing (for example) node content.
-	 */
+	/** The bottom pane showing node content. */
 	private JScrollPane infoPane;
 
 	/** The graph loaded into the panel. */
@@ -117,6 +117,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
+	 * Write the visual graph representation to a file.
 	 * 
 	 * @param filePath
 	 *            Target path for exporting the file.
@@ -151,11 +152,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		boolean ret = true;
 		// Thread t = new Thread(new Runnable() {
 		// public void run() {
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e1) {
+		// e1.printStackTrace();
+		// }
 		try {
 			DGraph dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
@@ -173,15 +174,15 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = viewer.addDefaultView(false);
-		view.setPreferredSize(new Dimension(100000, 500));
+		view.setPreferredSize(VIEW_SIZE);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
 		view.addMouseListener(new ViewMouseListener());
 		graphPane.setViewportView(view);
-		graphPane.setMinimumSize(new Dimension(50, 50));
-		graphPane.setPreferredSize(new Dimension(50, 50));
+		// graphPane.setMinimumSize(new Dimension(50, 50));
+		// graphPane.setPreferredSize(new Dimension(50, 50));
 		window.revalidate();
 		pd.end();
 		graphPane.getVerticalScrollBar().setValue(
