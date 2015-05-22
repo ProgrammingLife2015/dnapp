@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 
+import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 
@@ -20,7 +22,7 @@ public class PointGraphConverterTest {
 	String edges2 = "src/test/resources/collapsetest2_edges.txt";
 	String nodes3 = "src/test/resources/collapsetest3_nodes.txt";
 	String edges3 = "src/test/resources/collapsetest3_edges.txt";
-	Graph graph = new SingleGraph("test graph");
+	Graph graph = new SingleGraph("test graph");=
 
 	// @Test
 	// public void testCollapse1() throws FileNotFoundException {
@@ -38,11 +40,12 @@ public class PointGraphConverterTest {
 
 	@Test
 	public void testCollapse2() throws FileNotFoundException {
-		graph = Reader.read(nodes2, edges2);
+		DGraph dgraph = Reader.read(nodes2, edges2);
+		NodePlacer.place(dgraph);
+		graph = ConvertDGraph.convert(dgraph);
 		Graph g = PointGraphConverter.collapsePointMutations(graph);
 		Viewer viewer = g.display();
 		viewer.disableAutoLayout();
-		NodePlacer.place(g, viewer);
 		assertEquals(g.getNode("3").getAttribute("content"), "AC");
 		assertEquals(g.getNode("4").getAttribute("content"), "AA");
 		assertEquals(g.getNode("5").getAttribute("content"), "CT");

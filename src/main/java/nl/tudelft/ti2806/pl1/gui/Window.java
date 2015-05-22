@@ -6,7 +6,10 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.UIManager;
 
+import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
+import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
@@ -15,39 +18,25 @@ import nl.tudelft.ti2806.pl1.main.Start;
  */
 public class Window extends JFrame implements Observer {
 
-	/**
-	 * 
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -2702972120954333899L;
 
-	/**
-	 * The window settings.
-	 */
+	/** The window settings. */
 	private WindowSettings settings;
 
-	/**
-	 * The menu bar of the window.
-	 */
+	/** The menu bar of the window. */
 	private JMenuBar menuBar;
 
-	/**
-	 * The tool bar of the window.
-	 */
+	/** The tool bar of the window. */
 	private ToolBar toolBar;
 
-	/**
-	 * The left panel showing options.
-	 */
+	/** The left panel showing options. */
 	private OptionsPane optionPanel;
 
-	/**
-	 * The main pane of the window.
-	 */
+	/** The main pane of the window. */
 	private Content content;
 
-	/**
-	 * The status bar of the window.
-	 */
+	/** The status bar of the window. */
 	private StatusBar statusBar;
 
 	/**
@@ -64,6 +53,12 @@ public class Window extends JFrame implements Observer {
 	 *            The window settings to be applied.
 	 */
 	public Window(final WindowSettings wSettings) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// UIManager.put("swing.boldMetal", Boolean.FALSE);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -72,27 +67,40 @@ public class Window extends JFrame implements Observer {
 
 		Event.setWindow(this);
 
-		menuBar = new MenuBar();
+		menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
 
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
 
+		// ((BasicToolBarUI) toolBar.getUI()).setFloating(true,
+		// new Point(100, 100));
+
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
+
+		optionPanel = new OptionsPane(this);
+		add(optionPanel, BorderLayout.WEST);
 
 		content = new Content(this);
 		add(content, BorderLayout.CENTER);
 
-		optionPanel = new OptionsPane(this);
-		add(optionPanel, BorderLayout.WEST);
-		System.out.println("Added option panel");
+		// now let's call all cross dependent things.
+		callAfterInitialization();
 
 		addComponentListener(new WindowEvents(this));
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	/**
+	 * Calls child component methods which have cross dependencies with other
+	 * child components in the window.
+	 */
+	private void callAfterInitialization() {
+		optionPanel.componentsLoaded();
 	}
 
 	/**
@@ -120,20 +128,17 @@ public class Window extends JFrame implements Observer {
 	}
 
 	/**
-	 * @param o
-	 *            The changed observable object.
-	 * @param arg
-	 *            Optional arguments.
+	 * {@inheritDoc}
 	 */
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();
 	}
 
 	/**
-	 * 
+	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
-		statusBar.right("[" + (int) getSize().getWidth() + ","
+		Event.statusBarRight("[" + (int) getSize().getWidth() + ","
 				+ (int) getSize().getHeight() + "]");
 	}
 
@@ -173,6 +178,11 @@ public class Window extends JFrame implements Observer {
 	 */
 	public static void main(final String[] args) {
 		Start.main(args);
+	}
+
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
 	}
 
 }

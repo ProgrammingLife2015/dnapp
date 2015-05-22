@@ -1,5 +1,5 @@
 /**
- * The main package.
+ * The main package containing the utility class Start. The main method in this class will run the program.
  * @author PL1
  *
  */

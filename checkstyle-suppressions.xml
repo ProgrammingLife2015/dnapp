@@ -6,6 +6,6 @@
 
 <suppressions>
     <suppress files="test[/\\]" checks=".*"/>
-    <suppress files="horstmann[/\\]" checks=".*"/>
+    <suppress files="com[/\\]" checks=".*"/>
     <suppress files="structureGraphic[/\\]" checks=".*"/>
 </suppressions>

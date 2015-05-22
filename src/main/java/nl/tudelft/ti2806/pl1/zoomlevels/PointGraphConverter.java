@@ -287,15 +287,6 @@ public final class PointGraphConverter {
 	 * @return Start node
 	 */
 	private static Node getStart(final Graph g) {
-		Node first = null;
-		for (Node n : g.getNodeSet()) {
-			if (first == null) {
-				first = n;
-			} else if ((Integer) n.getAttribute("start") < (Integer) first
-					.getAttribute("start")) {
-				first = n;
-			}
-		}
-		return first;
+		return g.getNode(String.valueOf(g.getAttribute("start")));
 	}
 }
