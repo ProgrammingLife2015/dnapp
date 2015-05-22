@@ -125,11 +125,15 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 */
 	public final void update(final Node selectedNode) {
 		lblID.setText(selectedNode.getId());
-		lblContentLength.setText(String.valueOf(((String) selectedNode
-				.getAttribute("content")).length()));
-		lblSources.setText(selectedNode.getAttribute("sources").toString());
-		nodeChart
-				.analyseString(selectedNode.getAttribute("content").toString());
+		lblContentLength.setText("NOT AVAILABLE"); // TODO
+		// lblContentLength.setText(String.valueOf(((String) selectedNode
+		// .getAttribute("content")).length()));
+
+		lblSources.setText("NOT AVAILABLE"); // TODO
+		// lblSources.setText(selectedNode.getAttribute("sources").toString());
+		// nodeChart
+		// .analyseString(selectedNode.getAttribute("content").toString());
+		// TODO
 		nodeChart.repaint();
 		// System.out.println("Update SelNodeGrp called "
 		// + selectedNode.getAttribute("content").toString());

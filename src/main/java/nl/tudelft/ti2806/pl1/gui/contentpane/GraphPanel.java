@@ -224,7 +224,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
 	public final void update(final Node newSelectedNode) {
-		text.setText(newSelectedNode.getAttribute("content").toString());
+		// text.setText(newSelectedNode.getAttribute("content").toString());
+
 		// infoPane.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		// JViewport jv = infoPane.getViewport();
 		// jv.setViewPosition(new Point(0, 0));
