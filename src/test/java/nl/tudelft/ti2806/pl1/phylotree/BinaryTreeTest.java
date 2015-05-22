@@ -171,7 +171,7 @@ public class BinaryTreeTest {
 		assertEquals(
 				"Bla bla bla test tekst bla bla",
 				BinaryTree
-						.readIntoString("src\\test\\resources\\readIntoFileTest.txt"));
+						.readIntoString("src/test/resources/readIntoFileTest.txt"));
 	}
 
 }
