@@ -99,8 +99,8 @@ public final class HorizontalCollapse {
 					if (edge != null) {
 						String id = edge.getId();
 						// graph.removeEdge(id);
-						graph.addEdge(id + node.getId(), edge.getNode0(), node,
-								true);
+						graph.addEdge(id + " " + node.getId(), edge.getNode0(),
+								node, true);
 					}
 				}
 				graph.removeNode(prev);
