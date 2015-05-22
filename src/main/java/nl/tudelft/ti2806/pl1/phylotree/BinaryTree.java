@@ -89,7 +89,7 @@ public abstract class BinaryTree implements DSTreeNode {
 	 */
 	public abstract BinaryTree getLeft();
 
-	/***
+	/**
 	 * @return the left child, null if there is no left child
 	 */
 	public abstract BinaryTree getRight();

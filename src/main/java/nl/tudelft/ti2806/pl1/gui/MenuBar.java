@@ -22,17 +22,20 @@ public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = -3046759850795865308L;
 
 	/**
-	 * 
+	 * The window this menu bar is part of.
 	 */
 	private Window window;
 
 	/**
-	 * 
+	 * The menus.
 	 */
 	private JMenu file = fileMenu(), edit = editMenu(), view = viewMenu();
 
 	/**
+	 * Initializes the menu bar.
 	 * 
+	 * @param w
+	 *            The window this menu bar is part of.
 	 */
 	public MenuBar(final Window w) {
 		this.window = w;
@@ -42,6 +45,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	/**
+	 * Creates and fulls the file menu.
 	 * 
 	 * @return the file menu
 	 */
@@ -50,23 +54,25 @@ public class MenuBar extends JMenuBar {
 		ret.add(makeMI("Import", null, 'I', "Import a graph file.",
 				Event.IMPORT_FILE));
 		JMenu export = new JMenu("Export as");
-		export.add(makeMI("Export as", null, 'X', null, Event.WRITE_FILE));
+		export.add(makeMI("DGS", null, 'X', null, Event.WRITE_FILE));
 		ret.add(export);
 		ret.add(makeMI("Exit", null, 'E', "Exit the program.", Event.EXIT_APP));
 		return ret;
 	}
 
 	/**
+	 * Creates and fills the edit menu.
 	 * 
 	 * @return the edit menu
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-		ret.add(makeMI("?", null, '?', "?", null));
+		// ret.add(makeMI("?", null, '?', "?", null));
 		return ret;
 	}
 
 	/**
+	 * Creates and fills the view menu.
 	 * 
 	 * @return the view menu
 	 */
@@ -74,17 +80,27 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("View");
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
+		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
+				"Show option panel", true);
 		showToolBar.addChangeListener(new ChangeListener() {
 			public void stateChanged(final ChangeEvent e) {
 				window.toolBar().setVisible(showToolBar.isSelected());
+				window.revalidate();
+			}
+		});
+		showOptionPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(final ChangeEvent e) {
+				window.optionPanel().setVisible(showOptionPane.isSelected());
+				window.revalidate();
 			}
 		});
 		ret.add(showToolBar);
-		// ret.add(makeMI("?", null, '?', "?", null));
+		ret.add(showOptionPane);
 		return ret;
 	}
 
 	/**
+	 * Creates and sets up a menu item.
 	 * 
 	 * @param text
 	 *            The text to show.

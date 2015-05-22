@@ -102,8 +102,8 @@ public enum Event implements ActionListener {
 			ExportDialog fs = new ExportDialog();
 			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
 				String writePath = fs.getSelectedFile().getAbsolutePath();
-				System.out.println("selected file filter: "
-						+ fs.getFileFilter());
+				// System.out.println("selected file filter: "
+				// + fs.getFileFilter());
 				if (!writePath.endsWith(".dgs")) {
 					writePath += ".dgs";
 					statusBarInfo("Appended file extension .dgs");

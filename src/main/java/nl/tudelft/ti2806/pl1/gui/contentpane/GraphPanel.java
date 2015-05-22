@@ -1,6 +1,8 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.Dimension;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -9,11 +11,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
@@ -41,6 +45,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * 
 	 */
+	private static final int DEFAULT_DIVIDER_LOC = 300;
+
+	/**
+	 * 
+	 */
 	private List<NodeSelectionObserver> observers = new ArrayList<NodeSelectionObserver>();
 
 	/**
@@ -58,32 +67,24 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	private JScrollPane infoPane;
 
-	/**
-	 * 
-	 */
+	/** The graph loaded into the panel. */
 	private Graph graph;
 
-	/**
-	 * 
-	 */
+	/** The last selected node. */
 	private Node selectedNode;
 
-	/**
-	 * 
-	 */
+	/** The graph's view panel. */
 	private ViewPanel view;
 
-	/**
-	 * 
-	 */
+	/** The graph's view pipe. Used to listen for node click events. */
 	private ViewerPipe vp;
 
-	/**
-	 * The text area where (for example) node content will be shown in.
-	 */
+	/** The text area where node content will be shown. */
 	private JTextArea text;
 
 	/**
+	 * Initialize a graph panel.
+	 * 
 	 * @param w
 	 *            The window this panel is part of.
 	 */
@@ -93,7 +94,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		registerObserver(this);
 
 		graphPane = new JScrollPane();
-		graphPane.setMinimumSize(new Dimension(100, 100));
+		graphPane.setMinimumSize(new Dimension(2, 2));
 
 		text = new JTextArea();
 		text.setLineWrap(true);
@@ -105,11 +106,12 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 		// SwingUtilities.invokeLater(new Runnable() {
 		// public void run() {
-		setDividerLocation(300);
+		setDividerLocation(DEFAULT_DIVIDER_LOC);
 		setResizeWeight(1);
 		// }
 		// });
 		new GenomeHighlight();
+		new ScrollListener(graphPane.getHorizontalScrollBar());
 	}
 
 	/**
@@ -142,14 +144,22 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @return true iff the graph was loaded successfully.
 	 */
 	public final boolean loadGraph(final File nodes, final File edges) {
+		ProgressDialog pd = new ProgressDialog(window, "Importing graph", true);
+		pd.start();
 		boolean ret = true;
+		// Thread t = new Thread(new Runnable() {
+		// public void run() {
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			graph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Event.statusBarError(e.getMessage());
-			ret = false;
 		}
 		graph.addAttribute("ui.stylesheet",
 				"url('src/main/resources/stylesheet.css')");
@@ -170,6 +180,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		graphPane.setMinimumSize(new Dimension(50, 50));
 		graphPane.setPreferredSize(new Dimension(50, 50));
 		window.revalidate();
+		pd.end();
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getMaximum());
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getValue() / 2);
 		return ret;
 	}
 
@@ -228,11 +243,115 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
+	 * Highlights a genome. TODO debug code delete
+	 */
+	public final void highlight() {
+		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
+		// .getText().length());
+		graph.getNode(1184).setAttribute("ui.class", "common");
+		graph.getNode(1184).setAttribute("ui.color", 0.25);
+		graph.getNode(1183).setAttribute("ui.class", "common");
+		graph.getNode(1183).setAttribute("ui.color", 0.5);
+		graph.getNode(1256).setAttribute("ui.class", "common");
+		graph.getNode(1256).setAttribute("ui.color", 1);
+	}
+
+	/**
+	 * Unhighlights a genome. TODO debug code delete
+	 */
+	public final void unHighlight() {
+		graph.getNode(1184).setAttribute("ui.class", "highlight");
+		graph.getNode(1183).setAttribute("ui.class", "highlight");
+		graph.getNode(1256).setAttribute("ui.class", "highlight");
+	}
+
+	@Override
+	public final String toString() {
+		return this.getClass().getName();
+	}
+
+	/**
+	 * 
+	 * @author Maarten
+	 * @since 22-5-2015
+	 * @version 1.0
+	 */
+	final class ScrollListener implements AdjustmentListener {
+
+		/**
+		 * Initialize the scroll listener and make it observe a given scroll
+		 * bar.
+		 * 
+		 * @param scrollBar
+		 *            The scroll bar to observe.
+		 */
+		private ScrollListener(final JScrollBar scrollBar) {
+			scrollBar.addAdjustmentListener(this);
+		}
+
+		/** {@inheritDoc} */
+		public void adjustmentValueChanged(final AdjustmentEvent e) {
+			int type = e.getAdjustmentType();
+			if (type == AdjustmentEvent.BLOCK_DECREMENT) {
+				System.out.println("Scroll block decr");
+			} else if (type == AdjustmentEvent.BLOCK_INCREMENT) {
+				System.out.println("Scroll block incr");
+			} else if (type == AdjustmentEvent.UNIT_DECREMENT) {
+				System.out.println("Scroll unit incr");
+			} else if (type == AdjustmentEvent.UNIT_INCREMENT) {
+				System.out.println("Scroll unit incr");
+			} else if (type == AdjustmentEvent.TRACK) {
+				System.out.println("Scroll track");
+				System.out.println("e.getValue() == " + e.getValue());
+				// TODO (use this for genome location plotting?)
+				// seems to always have this adjustment event type :$
+				// http://examples.javacodegeeks.com/desktop-java/awt/event/adjustmentlistener-example
+			}
+		}
+
+	}
+
+	/**
+	 * Observer class implementing the GenomeTableObserver interface processing
+	 * events for filtering genomes.
+	 * 
+	 * @author ChakShun
+	 * @since 18-05-2015
+	 */
+	class GenomeHighlight implements GenomeTableObserver {
+
+		/**
+		 * Constructor in which it adds itself to the observers for the option
+		 * panel.
+		 */
+		public GenomeHighlight() {
+			window.optionPanel().getGenomes().registerObserver(this);
+		}
+
+		/** {@inheritDoc} */
+		public void update(final GenomeRow genomeRow,
+				final boolean genomeFilterChanged,
+				final boolean genomeHighlightChanged) {
+			if (genomeHighlightChanged && genomeRow.isVisible()) {
+				if (genomeRow.isHighlighted()) {
+					highlight();
+				} else {
+					unHighlight();
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * A viewer listener notifying all node selection observers when a node in
+	 * the currently loaded graph gets clicked.
+	 * 
+	 * @see NodeSelectionObserver
 	 * 
 	 * @author Maarten
 	 * @since 18-5-2015
 	 * @version 1.0
-	 *
 	 */
 	class NodeClickListener implements ViewerListener {
 
@@ -258,106 +377,39 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
+	 * A mouse listener pumping the viewer pipe each time the mouse is pressed
+	 * or released. This makes sure that the NodeClickListener receives its
+	 * click events immediately when a node is clicked.
+	 * 
+	 * @see NodeClickListener
+	 * @see ViewerPipe
 	 * 
 	 * @author Maarten
 	 * @since 18-5-2015
 	 * @version 1.0
-	 *
 	 */
 	class ViewMouseListener implements MouseListener {
 
-		/**
-		 * {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		public void mouseExited(final MouseEvent e) {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		public void mouseEntered(final MouseEvent e) {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		public void mouseClicked(final MouseEvent e) {
-		}
-	}
-
-	/**
-	 * Highlights a genome.
-	 */
-	public final void highlight() {
-		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
-		// .getText().length());
-		graph.getNode(1184).setAttribute("ui.class", "common");
-		graph.getNode(1184).setAttribute("ui.color", 0.25);
-		graph.getNode(1183).setAttribute("ui.class", "common");
-		graph.getNode(1183).setAttribute("ui.color", 0.5);
-		graph.getNode(1256).setAttribute("ui.class", "common");
-		graph.getNode(1256).setAttribute("ui.color", 1);
-	}
-
-	/**
-	 * Unhighlights a genome.
-	 */
-	public final void unHighlight() {
-		graph.getNode(1184).setAttribute("ui.class", "highlight");
-		graph.getNode(1183).setAttribute("ui.class", "highlight");
-		graph.getNode(1256).setAttribute("ui.class", "highlight");
-	}
-
-	@Override
-	public final String toString() {
-		return this.getClass().getName();
-	}
-
-	/**
-	 * Observer class implementing the GenomeTableObserver interface processing
-	 * events for filtering genomes.
-	 * 
-	 * @author ChakShun
-	 * @since 18-05-2015
-	 */
-	class GenomeHighlight implements GenomeTableObserver {
-
-		/**
-		 * Contructor in which it adds itself to the observers for the option
-		 * panel.
-		 */
-		public GenomeHighlight() {
-			window.optionPanel().getGenomes().registerObserver(this);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public void update(final GenomeRow genomeRow,
-				final boolean genomeFilterChanged,
-				final boolean genomeHighlightChanged) {
-			if (genomeHighlightChanged && genomeRow.isSelected()) {
-				if (genomeRow.isHighlighted()) {
-					highlight();
-				} else {
-					unHighlight();
-				}
-			}
-
 		}
 	}
 

@@ -1,6 +1,5 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -12,8 +11,10 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import com.wordpress.tips4java.ScrollablePanel;
+import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -24,80 +25,63 @@ import nl.tudelft.ti2806.pl1.gui.Window;
  */
 public class OptionsPane extends JScrollPane {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -8048134952005779117L;
 
-	/**
-	 * The width of the pane.
-	 */
+	/** The width of the container. */
 	private static final int WIDTH = 220;
 
-	/**
-	 * The width of the pane in a dimension object.
-	 */
-	private static final Dimension SIZE = new Dimension(WIDTH, 100);
-
-	/**
-	 * The width of the scrollabe content.
-	 */
-	private static final int PANE_WIDTH = 200;
-
-	/**
-	 * The width of the scrollable content in a dimension object.
-	 */
-	private static final Dimension PANE_SIZE = new Dimension(PANE_WIDTH, 200);
-
-	/**
-	 * The free space between control elements and the side pane borders.
-	 */
-	private static final int WIDTH_OFFSET = 40;
-
-	/**
-	 * The size of the genome list.
-	 */
-	private static final Dimension GENOME_LIST_SIZE = new Dimension(150, 110);
+	/** The width of the pane in a dimension object. */
+	private static final Dimension SIZE = new Dimension(WIDTH,
+			Integer.MAX_VALUE);
 
 	/**
 	 * 
 	 */
-	public static final int MAX_CHILD_WIDTH = 180;
+	private static final int W_OFFSET = 20;
 
 	/**
-	 * The default insets (free space) values added around every placed control.
+	 * 
+	 */
+	private static final Dimension PANE_SIZE = new Dimension(WIDTH - W_OFFSET,
+			Integer.MAX_VALUE);
+
+	/**
+	 * 
+	 */
+	public static final int MAX_CHILD_WIDTH = 200;
+
+	/**
+	 * 
 	 */
 	private static final int HOR_INSETS = 10, VER_INSETS = 5;
 
 	/**
-	 * The default insets (free space) added around every placed control.
+	 * 
 	 */
 	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS,
 			VER_INSETS, HOR_INSETS);
 
-	// ***** ***** //
+	// ***** Fields ***** //
 
 	/**
 	 * The window this option pane is part of.
 	 */
 	private Window window;
 
-	/**
-	 * The grid bag constraints used by the layout manager.
-	 */
-	private GridBagConstraints gbc = new GridBagConstraints();
-
 	// ***** Elements ***** //
 
-	/**
-	 * The panel containing the control elements.
-	 */
-	private JPanel pane = new JPanel(new GridBagLayout());
+	/** The panel containing the control elements. */
+	private ScrollablePanel pane;
 
-	/**
-	 * 
-	 */
-	private GenomeTable tblGenomes = new GenomeTable(GENOME_LIST_SIZE);
+	/** */
+	private GridBagLayout gridBagLayout;
+
+	/** The grid bag constraints used by the layout manager. */
+	private GridBagConstraints gbc;
+
+	/** The genome table. */
+	private GenomeTable tblGenomes;
 
 	/**
 	 * @return the genome table
@@ -107,15 +91,13 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/**
-	 * 
+	 * The group of elements showing information about a selected genome in the
+	 * genome table.
 	 */
-	private SelectedGenomeGroup grpSelectedGenome = new SelectedGenomeGroup(
-			this);
+	private SelectedGenomeGroup grpSelectedGenome;
 
-	/**
-	 * 
-	 */
-	private SelectedNodeGroup grpSelectedNode = new SelectedNodeGroup(this);
+	/** The group of elements showing information about a selected node. */
+	private SelectedNodeGroup grpSelectedNode;
 
 	/**
 	 * @return the selected node group
@@ -125,15 +107,33 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/**
+	 * Initialize the option pane.
+	 * 
 	 * @param w
 	 *            The window this option pane is part of.
 	 */
 	public OptionsPane(final Window w) {
 		this.window = w;
-		setBackground(Color.GRAY);
+		this.gridBagLayout = new GridBagLayout();
+		this.gbc = new GridBagConstraints();
+
+		// Scrollable
+
+		this.pane = new ScrollablePanel(gridBagLayout);
+		pane.setAlignmentY(TOP_ALIGNMENT);
+		pane.setScrollableWidth(ScrollableSizeHint.FIT);
+		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
+
+		this.tblGenomes = new GenomeTable(MAX_CHILD_WIDTH);
+		this.grpSelectedNode = new SelectedNodeGroup(this);
+		this.grpSelectedGenome = new SelectedGenomeGroup(this);
+
+		// setMinimumSize(SIZE);
+		// setMaximumSize(SIZE);
+
 		setPreferredSize(SIZE);
 		addControls();
-		pane.setAlignmentY(TOP_ALIGNMENT);
+
 		setViewportView(pane);
 	}
 
@@ -151,9 +151,6 @@ public class OptionsPane extends JScrollPane {
 	 */
 	private void addControls() {
 		setupConstraints();
-		// place(btnLoadGraph);
-		// btnWriteGraph.setEnabled(false);
-		// place(btnWriteGraph);
 
 		place(new JLabel("Genomes:"), 0);
 		place(tblGenomes);
@@ -168,6 +165,7 @@ public class OptionsPane extends JScrollPane {
 	 * Sets up the grid bag constraints.
 	 */
 	private void setupConstraints() {
+		// gridBagLayout.rowWeights = new double[] { 1.0 };
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
 		gbc.gridx = 0;
@@ -191,12 +189,6 @@ public class OptionsPane extends JScrollPane {
 	 */
 	public final void fillGenomeList(final List<String> genomeIds,
 			final boolean empty, final boolean selected) {
-		// JCheckBox[] cboxes = new JCheckBox[genomeIds.size()];
-		// int i = 0;
-		// for (String id : genomeIds) {
-		// cboxes[i] = makeCheckBox(id, Event.GENOME_SELECT, null);
-		// i++;
-		// }
 		tblGenomes.fill(genomeIds, empty, selected);
 	}
 
@@ -256,7 +248,7 @@ public class OptionsPane extends JScrollPane {
 	private void place(final Component elem) {
 		gbc.gridy = GridBagConstraints.RELATIVE;
 		pane.add(elem, gbc);
-		pane.revalidate();
+		// pane.revalidate();
 	}
 
 	/**

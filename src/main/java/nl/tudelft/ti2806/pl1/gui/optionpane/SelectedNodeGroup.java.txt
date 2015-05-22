@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,7 +32,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/** The insets. */
 	private static final Insets INSETS = new Insets(2, 5, 2, 5);
 
-	/** The size of the group. */
 	private static final Dimension SIZE = new Dimension(
 			OptionsPane.MAX_CHILD_WIDTH, 120);
 
@@ -54,7 +54,9 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	public SelectedNodeGroup(final OptionsPane op) {
 		super();
 		setLayout(new GridBagLayout());
-		setMaximumSize(SIZE);
+		setMinimumSize(SIZE);
+		// setMaximumSize(new Dimension(OptionsPane.MAX_CHILD_WIDTH,
+		// Integer.MAX_VALUE));
 		setupGBC();
 		setAlignmentY(TOP_ALIGNMENT);
 		setBorder(BorderFactory.createTitledBorder(DEFAULT_TITLE));
@@ -101,12 +103,26 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		return ret;
 	}
 
+	/**
+	 * Sets the size of a component.
+	 * 
+	 * @param c
+	 *            The component.
+	 * @param size
+	 *            The size.
+	 */
+	private void setFixedSize(final Component c, final Dimension size) {
+		c.setPreferredSize(size);
+		c.setMinimumSize(size);
+		c.setMaximumSize(size);
+	}
+
 	/** Sets up the grid bag constraints. */
 	private void setupGBC() {
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.fill = GridBagConstraints.NORTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.insets = INSETS;
-		gbc.weightx = 1;
+		gbc.weightx = 0;
 		gbc.weighty = 1;
 	}
 
@@ -131,8 +147,8 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		nodeChart
 				.analyseString(selectedNode.getAttribute("content").toString());
 		nodeChart.repaint();
-		// System.out.println("Update SelNodeGrp called "
-		// + selectedNode.getAttribute("content").toString());
+		System.out.println("Update SelNodeGrp called "
+				+ selectedNode.getAttribute("content").toString());
 	}
 
 	@Override

@@ -29,7 +29,13 @@ public class GenomeTable extends JScrollPane {
 	private static final long serialVersionUID = -2803975406952542688L;
 
 	/**
-	 * 
+	 * Fixed column width.
+	 */
+	private static final int COL_SHOW_WIDTH = 40, COL_HIGHLIGHT_WIDTH = 55;
+
+	/**
+	 * The list of registered observers getting notified when the contents or
+	 * the selection of the table changes.
 	 */
 	private List<GenomeTableObserver> observers = new ArrayList<GenomeTableObserver>();
 
@@ -45,22 +51,31 @@ public class GenomeTable extends JScrollPane {
 
 	/**
 	 * 
-	 * @param size
 	 */
-	public GenomeTable(final Dimension size) {
+	private final Dimension size;
+
+	/**
+	 * Initializes the genome table.
+	 * 
+	 * @param width
+	 *            The width of the the scroll container.
+	 */
+	public GenomeTable(final int width) {
 		super();
+		size = new Dimension(width, 150);
 		setMinimumSize(size);
 		setMaximumSize(size);
 		setPreferredSize(size);
 		// table.setPreferredScrollableViewportSize(size);
 		// table.setFillsViewportHeight(true);
-		table.getColumnModel().getColumn(1).setMinWidth(50);
-		table.getColumnModel().getColumn(1).setMaxWidth(50);
-		table.getColumnModel().getColumn(1).setPreferredWidth(50);
+		setColumnWidth(GenomeRow.COL_HIGHLIGHT, COL_HIGHLIGHT_WIDTH);
+		setColumnWidth(GenomeRow.COL_SHOW, COL_SHOW_WIDTH);
+
+		// table.getColumnModel().getColumn(1).setPreferredWidth(50);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(final TableModelEvent e) {
-				notifyObservers(e.getColumn() == GenomeRow.COL_SELECT,
+				notifyObservers(e.getColumn() == GenomeRow.COL_SHOW,
 						e.getColumn() == GenomeRow.COL_HIGHLIGHT);
 			}
 		});
@@ -77,6 +92,19 @@ public class GenomeTable extends JScrollPane {
 
 		setViewportView(table);
 		fillDebug();
+	}
+
+	/**
+	 * Sets the width of a column.
+	 * 
+	 * @param col
+	 *            The column index
+	 * @param colWidth
+	 *            The width of the column to set
+	 */
+	private void setColumnWidth(final int col, final int colWidth) {
+		table.getColumnModel().getColumn(col).setMinWidth(colWidth);
+		table.getColumnModel().getColumn(col).setMaxWidth(colWidth);
 	}
 
 	/**
