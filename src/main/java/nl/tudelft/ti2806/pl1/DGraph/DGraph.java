@@ -18,6 +18,11 @@ public class DGraph {
 	private final HashMap<Integer, DNode> nodes;
 
 	/**
+	 * A hashmap storing a collection nodes per genome reference
+	 */
+	private HashMap<String, Collection<DNode>> references;
+
+	/**
 	 * The edges in the graph.
 	 */
 	private Collection<DEdge> edges;
@@ -35,6 +40,22 @@ public class DGraph {
 		edges = new ArrayList<DEdge>();
 		start = null;
 		end = null;
+	}
+
+	/**
+	 * @return the references
+	 */
+	public HashMap<String, Collection<DNode>> getReferences() {
+		return references;
+	}
+
+	/**
+	 * @param references
+	 *            the references to set
+	 */
+	public void setReferences(
+			final HashMap<String, Collection<DNode>> references) {
+		this.references = references;
 	}
 
 	/**
