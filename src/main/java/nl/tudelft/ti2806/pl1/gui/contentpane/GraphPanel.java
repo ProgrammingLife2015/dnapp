@@ -16,6 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
+import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -155,8 +157,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			e1.printStackTrace();
 		}
 		try {
-			graph = Reader.read(nodes.getAbsolutePath(),
+			DGraph dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
+			NodePlacer.place(dgraph);
+			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Event.statusBarError(e.getMessage());
@@ -168,7 +172,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		Viewer viewer = new Viewer(graph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		NodePlacer.place(graph, viewer);
 		view = viewer.addDefaultView(false);
 		view.setPreferredSize(new Dimension(100000, 500));
 

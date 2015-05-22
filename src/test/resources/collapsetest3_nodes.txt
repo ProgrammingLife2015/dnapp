@@ -1,0 +1,16 @@
+>0 | TKK-1,TKK-2,TKK-3, TKK-4 | 1 | 4
+GGG
+>1 | TKK-1,TKK-2 | 5 | 7
+AT
+>2 | TKK-3, TKK-4 | 5 | 7
+CG
+>3 | TKK-1 | 8 | 9
+C
+>4 | TKK-2 | 8 | 9
+A
+>5 | TKK-3 | 8 | 9
+T
+>6 | TKK-4 | 8 | 9
+G
+>7 | TKK-1,TKK-2, TKK-3, TKK-4 | 10 | 13
+ACC

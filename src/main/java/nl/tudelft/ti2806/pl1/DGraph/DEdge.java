@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.graph;
+package nl.tudelft.ti2806.pl1.DGraph;
 
 /**
  * Lets you create Edges for a Graph.
@@ -12,20 +12,12 @@ public class DEdge {
 	/**
 	 * The starting node of the edge.
 	 */
-	private int startNode;
+	private DNode startNode;
 
 	/**
 	 * The ending node of the edge.
 	 */
-	private int endNode;
-
-	/**
-	 * The empty constructor of the edge, it creates a new edge starting at 0
-	 * and ending at 0.
-	 */
-	public DEdge() {
-		new DEdge(0, 0);
-	}
+	private DNode endNode;
 
 	/**
 	 * The constructor for the edge, which creates a new edge starting at start
@@ -36,7 +28,7 @@ public class DEdge {
 	 * @param end
 	 *            The ending node of the edge.
 	 */
-	public DEdge(final int start, final int end) {
+	public DEdge(final DNode start, final DNode end) {
 		startNode = start;
 		endNode = end;
 	}
@@ -46,7 +38,7 @@ public class DEdge {
 	 * 
 	 * @return the starting node of the edge
 	 */
-	public final int getStartNode() {
+	public DNode getStartNode() {
 		return startNode;
 	}
 
@@ -56,7 +48,7 @@ public class DEdge {
 	 * @param startNodeIn
 	 *            The new starting node of the edge.
 	 */
-	public final void setStartNode(final int startNodeIn) {
+	public final void setStartNode(final DNode startNodeIn) {
 		this.startNode = startNodeIn;
 	}
 
@@ -65,7 +57,7 @@ public class DEdge {
 	 * 
 	 * @return the ending node of the edge.
 	 */
-	public final int getEndNode() {
+	public DNode getEndNode() {
 		return endNode;
 	}
 
@@ -75,7 +67,38 @@ public class DEdge {
 	 * @param endNodeIn
 	 *            The new ending node of the edge.
 	 */
-	public final void setEndNode(final int endNodeIn) {
+	public final void setEndNode(final DNode endNodeIn) {
 		this.endNode = endNodeIn;
+	}
+
+	/**
+	 * Checks if an edge is equal to this edge.
+	 * 
+	 * @param edge
+	 *            The edge to check if it's equal to this edge
+	 * @return True if the edge is equal, false otherwise
+	 */
+	@Override
+	public final boolean equals(final Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (object instanceof DEdge) {
+			DEdge edge = (DEdge) object;
+			return edge.getStartNode().getId() == getStartNode().getId()
+					&& edge.getEndNode().getId() == getEndNode().getId();
+		}
+		return false;
+	}
+
+	/**
+	 * Overrides the hashCode function for DEdge.
+	 */
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result += 37 * result + getStartNode().getId();
+		result += 37 * result + getEndNode().getId();
+		return result;
 	}
 }

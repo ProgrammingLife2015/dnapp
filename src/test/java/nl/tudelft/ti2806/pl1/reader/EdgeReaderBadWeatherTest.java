@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
-import nl.tudelft.ti2806.pl1.reader.EdgeReader;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +19,7 @@ public class EdgeReaderBadWeatherTest {
 	private static String edge2 = "5 a";
 	private static String edge3 = "1";
 	private static String edge4 = "1 4 5";
+	private static String edge5 = "3 4";
 
 	/**
 	 * Set the parameters for the test.
@@ -28,7 +29,7 @@ public class EdgeReaderBadWeatherTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { { edge1 }, { edge2 }, { edge3 },
-				{ edge4 } });
+				{ edge4 }, { edge5 } });
 	}
 
 	private String edge;
@@ -40,6 +41,7 @@ public class EdgeReaderBadWeatherTest {
 	@Test(expected = InvalidFileFormatException.class)
 	public void invalidStringsTest() {
 		Scanner sc = new Scanner(edge);
-		EdgeReader.readEdges(sc);
+		DGraph graph = new DGraph();
+		EdgeReader.readEdges(sc, graph);
 	}
 }
