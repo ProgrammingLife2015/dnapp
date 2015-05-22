@@ -48,4 +48,21 @@ public class HorizonalCollapseTest {
 		assertEquals(hash.get("TKK-2"), "GGGATAGGGATAA");
 	}
 
+	@Test
+	public void testContent2() throws FileNotFoundException {
+		graph = Reader.read(nodes4, edges4);
+		Graph g = PointGraphConverter.collapsePointMutations(graph);
+		g = HorizontalCollapse.horizontalCollapse(g, 5);
+		Viewer viewer = g.display();
+		viewer.disableAutoLayout();
+		NodePlacer.place(g, viewer);
+		HashMap<String, String> hash1 = g.getNode("4").getAttribute("content");
+		HashMap<String, String> hash2 = g.getNode("8").getAttribute("content");
+		assertEquals(g.getNode("1").getAttribute("content"), "GGGAT");
+		assertEquals(hash1.get("TKK-1"), "GGGG");
+		assertEquals(hash1.get("TKK-2"), "AGGG");
+		assertEquals(hash2.get("TKK-1"), "ATGA");
+		assertEquals(hash2.get("TKK-2"), "ATAA");
+	}
+
 }
