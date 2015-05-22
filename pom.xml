@@ -51,8 +51,8 @@
           <configuration>
             <propertyExpansion>basedir=${project.basedir}/src/main/resources</propertyExpansion>
             <failOnViolation>false</failOnViolation>
-            <configLocation>src/main/resources/Sun Checks (Eclipse) ContextProject.xml</configLocation>
-            <suppressionsLocation>src/main/resources/checkstyle-suppressions.xml</suppressionsLocation>
+            <configLocation>Sun Checks (Eclipse) ContextProject.xml</configLocation>
+            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
           </configuration>
           <reportSets>
             <reportSet>
