@@ -37,7 +37,7 @@ public final class ConvertDGraph {
 		for (DEdge edge : dgraph.getEdges()) {
 			String src = String.valueOf(edge.getStartNode().getId());
 			String target = String.valueOf(edge.getEndNode().getId());
-			graph.addEdge(src + target, src, target);
+			graph.addEdge(src + target, src, target, true);
 		}
 		return graph;
 	}
