@@ -35,7 +35,8 @@ public final class ConvertDGraph {
 			graph.getNode(id).addAttribute("ui.label",
 					checkLabelLength(n.getContent()));
 			graph.getNode(id).addAttribute("ui.class", "common");
-			graph.getNode(id).addAttribute("ui.color", 0.5);
+			graph.getNode(id).addAttribute("ui.color",
+					percentageUnknown(n.getContent()));
 		}
 		for (DEdge edge : dgraph.getEdges()) {
 			String src = String.valueOf(edge.getStartNode().getId());
@@ -60,5 +61,17 @@ public final class ConvertDGraph {
 			return String.valueOf(l);
 		}
 		return label;
+	}
+
+	private static double percentageUnknown(final String content) {
+		if (content.isEmpty())
+			return 0.0;
+		int counter = 0;
+		for (int i = 0; i < content.length(); i++) {
+			if (content.charAt(i) == 'N') {
+				counter++;
+			}
+		}
+		return 1 - ((double) counter / content.length());
 	}
 }
