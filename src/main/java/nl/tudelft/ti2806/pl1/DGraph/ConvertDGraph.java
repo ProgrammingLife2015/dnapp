@@ -32,11 +32,20 @@ public final class ConvertDGraph {
 			graph.addNode(id);
 			graph.getNode(id).addAttribute("x", n.getX());
 			graph.getNode(id).addAttribute("y", n.getY());
+			// graph.getNode(id).addAttribute("content", n.getContent());
 			graph.getNode(id).addAttribute("ui.label",
 					checkLabelLength(n.getContent()));
-			graph.getNode(id).addAttribute("ui.class", "common");
-			graph.getNode(id).addAttribute("ui.color",
-					percentageUnknown(n.getContent()));
+
+			if (n.getSources().contains("TKK_REF"))
+				graph.getNode(id).addAttribute("ui.class", "highlight");
+			else
+				graph.getNode(id).addAttribute("ui.class", "common");
+
+			double unknown = 0;
+			if (Integer.valueOf(id) >= 0) {
+				unknown = percentageUnknown(n.getContent());
+			}
+			graph.getNode(id).addAttribute("ui.color", unknown);
 		}
 		for (DEdge edge : dgraph.getEdges()) {
 			String src = String.valueOf(edge.getStartNode().getId());
@@ -63,9 +72,15 @@ public final class ConvertDGraph {
 		return label;
 	}
 
+	/**
+	 * Count the amount of unknown nucleotides in the content and returns the
+	 * inverse percentage of it.
+	 * 
+	 * @param content
+	 *            The string to be processed.
+	 * @return Inverse percentage of the amount of unknown nucleotides.
+	 */
 	private static double percentageUnknown(final String content) {
-		if (content.isEmpty())
-			return 0.0;
 		int counter = 0;
 		for (int i = 0; i < content.length(); i++) {
 			if (content.charAt(i) == 'N') {
