@@ -21,7 +21,7 @@ public class DGraph {
 	/**
 	 * A map storing a collection nodes per genome reference.
 	 */
-	private Map<String, Collection<DNode>> references;
+	private HashMap<String, Collection<DNode>> references;
 
 	/**
 	 * The edges in the graph.
@@ -39,6 +39,7 @@ public class DGraph {
 	public DGraph() {
 		nodes = new HashMap<Integer, DNode>();
 		edges = new ArrayList<DEdge>();
+		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
 	}
@@ -54,7 +55,7 @@ public class DGraph {
 	 * @param newReferences
 	 *            the references to set
 	 */
-	public void setReferences(
+	protected void setReferences(
 			final HashMap<String, Collection<DNode>> newReferences) {
 		this.references = newReferences;
 	}
@@ -70,7 +71,7 @@ public class DGraph {
 	 * @param newEdges
 	 *            the edges to set
 	 */
-	public final void setEdges(final Collection<DEdge> newEdges) {
+	protected final void setEdges(final Collection<DEdge> newEdges) {
 		this.edges = newEdges;
 	}
 
@@ -91,6 +92,15 @@ public class DGraph {
 	public final boolean addDNode(final DNode node) {
 		if (nodes.containsKey(node.getId())) {
 			return false;
+		}
+		for (String s : node.getSources()) {
+			if (!references.containsKey(s)) {
+				ArrayList<DNode> temp = new ArrayList<DNode>();
+				temp.add(node);
+				references.put(s, temp);
+			} else {
+				references.get(s).add(node);
+			}
 		}
 		nodes.put(node.getId(), node);
 		return true;
@@ -126,6 +136,9 @@ public class DGraph {
 			edge.getStartNode().deleteEdge(edge);
 			edge.getEndNode().deleteEdge(edge);
 			edges.remove(edge);
+		}
+		for (String s : removeNode.getSources()) {
+			references.get(s).remove(removeNode);
 		}
 		nodes.remove(n);
 		return true;
