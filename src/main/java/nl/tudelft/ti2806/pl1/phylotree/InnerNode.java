@@ -85,7 +85,8 @@ public class InnerNode extends BinaryTree {
 	@Override
 	protected final String toStringHelper(final String indent) {
 		String res = indent + stringOrElse(getID(), "X") + " (dist="
-				+ getPathLength() + ")\n";
+				+ getPathLength() + ",x=" + getGridCoordinates().getX() + ",y="
+				+ getGridCoordinates().getY() + ")\n";
 		if (hasLeft()) {
 			res += left.toStringHelper(indent + "\t");
 		}
