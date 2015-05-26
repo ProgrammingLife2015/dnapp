@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.gui.optionpane;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -19,7 +20,7 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 /**
  * 
  * @author Maarten
- *
+ * 
  */
 public class GenomeTable extends JScrollPane {
 
@@ -81,7 +82,7 @@ public class GenomeTable extends JScrollPane {
 		});
 
 		setViewportView(table);
-		fillDebug();
+		// fillDebug();
 	}
 
 	/**
@@ -125,14 +126,14 @@ public class GenomeTable extends JScrollPane {
 	 * @param empty
 	 *            If true, the list will first be emptied before filled with the
 	 *            new rows.
-	 * @param selected
+	 * @param shown
 	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fill(final List<String> genomeIds, final boolean empty,
-			final boolean selected) {
+	public final void fill(final Collection<String> genomeIds,
+			final boolean empty, final boolean shown) {
 		List<GenomeRow> res = new ArrayList<GenomeRow>();
 		for (String id : genomeIds) {
-			res.add(new GenomeRow(id, selected, false));
+			res.add(new GenomeRow(id, shown, false));
 		}
 		fill(res, empty);
 	}
@@ -218,7 +219,7 @@ public class GenomeTable extends JScrollPane {
 	/**
 	 * 
 	 * @author Maarten
-	 *
+	 * 
 	 */
 	class GenomeTableModel extends AbstractTableModel {
 

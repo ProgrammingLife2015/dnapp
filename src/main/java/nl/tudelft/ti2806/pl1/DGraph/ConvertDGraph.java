@@ -36,10 +36,10 @@ public final class ConvertDGraph {
 			graph.getNode(id).addAttribute("ui.label",
 					checkLabelLength(n.getContent()));
 
-			if (n.getSources().contains("TKK_REF"))
-				graph.getNode(id).addAttribute("ui.class", "highlight");
-			else
-				graph.getNode(id).addAttribute("ui.class", "common");
+			// if (n.getSources().contains("TKK_REF"))
+			// graph.getNode(id).addAttribute("ui.class", "highlight");
+			// else
+			graph.getNode(id).addAttribute("ui.class", "common");
 
 			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
