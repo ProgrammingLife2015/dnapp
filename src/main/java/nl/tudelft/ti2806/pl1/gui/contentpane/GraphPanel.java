@@ -260,22 +260,16 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * Highlights a genome. TODO debug code delete
 	 */
 	public final void highlight(final String genomeId) {
-		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
-		// .getText().length());
 		for (DNode n : dgraph.getReferences().get(genomeId)) {
 			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
 					"highlight");
 		}
-
 	}
 
 	/**
 	 * Unhighlights a genome. TODO debug code delete
 	 */
 	public final void unHighlight(final String genomeId) {
-		// graph.getNode(1184).setAttribute("ui.class", "highlight");
-		// graph.getNode(1183).setAttribute("ui.class", "highlight");
-		// graph.getNode(1256).setAttribute("ui.class", "highlight");
 		for (DNode n : dgraph.getReferences().get(genomeId)) {
 			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
 					"common");
