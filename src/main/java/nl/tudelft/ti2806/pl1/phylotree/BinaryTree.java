@@ -46,6 +46,7 @@ public abstract class BinaryTree extends JButton {
 	 *            The path length
 	 */
 	public BinaryTree(final String nameIn, final double length) {
+		super(nameIn);
 		this.id = nameIn;
 		this.pathLength = length;
 	}
