@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.main.Start;
 
@@ -92,8 +93,11 @@ public class Content extends JPanel {
 	 *            The path to the node file.
 	 * @param edgePath
 	 *            The path to the edge file.
+	 * @throws InvalidNodePlacementException
+	 *             Placing node at invalid place.
 	 */
-	public final void loadGraph(final File nodePath, final File edgePath) {
+	public final void loadGraph(final File nodePath, final File edgePath)
+			throws InvalidNodePlacementException {
 		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
 	}
 

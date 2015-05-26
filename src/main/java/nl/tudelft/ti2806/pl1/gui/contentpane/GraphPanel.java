@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -51,7 +52,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * TODO the temp hard coded size of the view.
 	 */
-	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
+	private static final Dimension VIEW_SIZE = new Dimension(1000000, 5000);
 
 	/**
 	 * The list of node selection observers.
@@ -145,8 +146,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param edges
 	 *            The path to the edge file.
 	 * @return true iff the graph was loaded successfully.
+	 * @throws InvalidNodePlacementException
+	 *             Placing node at invalid place.
 	 */
-	public final boolean loadGraph(final File nodes, final File edges) {
+	public final boolean loadGraph(final File nodes, final File edges)
+			throws InvalidNodePlacementException {
 		ProgressDialog pd = new ProgressDialog(window, "Importing graph", true);
 		pd.start();
 		boolean ret = true;
