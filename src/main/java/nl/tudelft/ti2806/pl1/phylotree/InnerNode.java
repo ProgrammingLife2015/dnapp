@@ -1,7 +1,5 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
-import org.structureGraphic.v1.DSTreeNode;
-
 /**
  * 
  * @author Maarten
@@ -9,6 +7,10 @@ import org.structureGraphic.v1.DSTreeNode;
  */
 public class InnerNode extends BinaryTree {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4003391741650507864L;
 	/**
 	 * The children of the node.
 	 */
@@ -53,13 +55,13 @@ public class InnerNode extends BinaryTree {
 	 * @return the number of nodes (inner and leaf) in tree.
 	 */
 	@Override
-	public final int size() {
+	public final int treeSize() {
 		int num = 1;
 		if (hasLeft()) {
-			num += left.size();
+			num += left.treeSize();
 		}
 		if (hasRight()) {
-			num += right.size();
+			num += right.treeSize();
 		}
 		return num;
 	}
@@ -80,16 +82,9 @@ public class InnerNode extends BinaryTree {
 		return right != null;
 	}
 
-	/**
-	 * @return an array of the children of this node
-	 */
-	public final DSTreeNode[] dsGetChildren() {
-		return new BinaryTree[] { left, right };
-	}
-
 	@Override
 	protected final String toStringHelper(final String indent) {
-		String res = indent + stringOrElse(getName(), "X") + " (dist="
+		String res = indent + stringOrElse(getID(), "X") + " (dist="
 				+ getPathLength() + ")\n";
 		if (hasLeft()) {
 			res += left.toStringHelper(indent + "\t");
@@ -134,4 +129,16 @@ public class InnerNode extends BinaryTree {
 		return h + 1; // inner: one higher than highest child
 	}
 
+	@Override
+	public final int drawTree(final int x, final int y) {
+		setGridLoc(x, y);
+		int lOffset = left.drawTree(x + 1, y);
+		int rOffset = right.drawTree(x + 1, lOffset);
+		return lOffset + rOffset;
+	}
+
+	@Override
+	public final BinaryTree[] getChildren() {
+		return new BinaryTree[] { left, right };
+	}
 }

@@ -8,6 +8,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.jfree.ui.ExtensionFileFilter;
+
 /**
  * 
  * @author Maarten
@@ -86,6 +88,21 @@ public class ImportDialog extends JFileChooser {
 			@Override
 			public String getTitle() {
 				return "Load edge file";
+			}
+		},
+
+		/**
+		 * 
+		 */
+		PHYLO {
+			@Override
+			public FileFilter getFileFilter() {
+				return new ExtensionFileFilter("Newick file", "nwk");
+			}
+
+			@Override
+			public String getTitle() {
+				return "Load phylogenetic tree file";
 			}
 		};
 
