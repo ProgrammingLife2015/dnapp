@@ -1,12 +1,12 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
-import org.graphstream.graph.Node;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 
 /**
  * @author Maarten
  * @since 18-5-2015
  * @version 1.0
- *
+ * 
  */
 public interface NodeSelectionObserver {
 
@@ -16,6 +16,6 @@ public interface NodeSelectionObserver {
 	 * @param selectedNode
 	 *            The node selected in the graph view.
 	 */
-	void update(Node selectedNode);
+	void update(DNode selectedNode);
 
 }

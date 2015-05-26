@@ -10,15 +10,14 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
-
-import org.graphstream.graph.Node;
 
 /**
  * @author Maarten
  * @since 18-5-2015
  * @version 1.0
- *
+ * 
  */
 public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
@@ -123,13 +122,14 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc}
 	 */
-	public final void update(final Node selectedNode) {
-		lblID.setText(selectedNode.getId());
-		lblContentLength.setText("NOT AVAILABLE"); // TODO
+	public final void update(final DNode selectedNode) {
+		lblID.setText(String.valueOf(selectedNode.getId()));
+		lblContentLength.setText(String.valueOf(selectedNode.getContent()
+				.length())); // TODO
 		// lblContentLength.setText(String.valueOf(((String) selectedNode
 		// .getAttribute("content")).length()));
 
-		lblSources.setText("NOT AVAILABLE"); // TODO
+		lblSources.setText(selectedNode.getSources().toString()); // TODO
 		// lblSources.setText(selectedNode.getAttribute("sources").toString());
 		// nodeChart
 		// .analyseString(selectedNode.getAttribute("content").toString());
