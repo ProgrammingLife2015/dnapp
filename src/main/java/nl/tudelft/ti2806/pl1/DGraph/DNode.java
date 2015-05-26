@@ -52,6 +52,22 @@ public class DNode {
 	 */
 	private int depth;
 
+	/** Percentage of unknown nucleotides in the content. */
+	private double percUnknown;
+
+	/** @return the percUnknown */
+	public double getPercUnknown() {
+		return percUnknown;
+	}
+
+	/**
+	 * @param percUnknown
+	 *            the percUnknown to set
+	 */
+	public void setPercUnknown(final double percUnknown) {
+		this.percUnknown = percUnknown;
+	}
+
 	/**
 	 * The constructor of the node.
 	 * 
@@ -78,6 +94,29 @@ public class DNode {
 		this.x = 0;
 		this.y = 0;
 		this.depth = 0;
+		if (id >= 0) {
+			this.percUnknown = percentageUnknown(contentIn);
+		} else {
+			this.percUnknown = 1.0;
+		}
+	}
+
+	/**
+	 * Count the amount of unknown nucleotides in the content and returns the
+	 * inverse percentage of it.
+	 * 
+	 * @param content
+	 *            The string to be processed.
+	 * @return Percentage of the amount of unknown nucleotides.
+	 */
+	private double percentageUnknown(final String content) {
+		int counter = 0;
+		for (int i = 0; i < content.length(); i++) {
+			if (content.charAt(i) == 'N') {
+				counter++;
+			}
+		}
+		return ((double) counter / content.length());
 	}
 
 	/**

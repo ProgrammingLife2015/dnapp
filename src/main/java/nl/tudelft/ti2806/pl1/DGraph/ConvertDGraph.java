@@ -7,7 +7,7 @@ import org.graphstream.graph.implementations.SingleGraph;
  * Converts a DGraph into a graphstream graph.
  * 
  * @author mark
- *
+ * 
  */
 public final class ConvertDGraph {
 
@@ -32,7 +32,16 @@ public final class ConvertDGraph {
 			graph.addNode(id);
 			graph.getNode(id).addAttribute("x", n.getX());
 			graph.getNode(id).addAttribute("y", n.getY());
-			graph.getNode(id).addAttribute("ui.label", id);
+			// graph.getNode(id).addAttribute("content", n.getContent());
+			graph.getNode(id).addAttribute("ui.label",
+					checkLabelLength(n.getContent()));
+
+			if (n.getSources().contains("TKK_REF"))
+				graph.getNode(id).addAttribute("ui.class", "highlight");
+			else
+				graph.getNode(id).addAttribute("ui.class", "common");
+
+			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
 		for (DEdge edge : dgraph.getEdges()) {
 			String src = String.valueOf(edge.getStartNode().getId());
@@ -41,4 +50,22 @@ public final class ConvertDGraph {
 		}
 		return graph;
 	}
+
+	/**
+	 * Compares the label with a threshold length and returns the label if it's
+	 * smaller than the threshold, otherwise it returns the length.
+	 * 
+	 * @param label
+	 *            The label to be checked.
+	 * @return Length of label if bigger than threshold, otherwise the label
+	 *         itself.
+	 */
+	private static String checkLabelLength(final String label) {
+		int l = label.length();
+		if (l > 10) {
+			return String.valueOf(l);
+		}
+		return label;
+	}
+
 }
