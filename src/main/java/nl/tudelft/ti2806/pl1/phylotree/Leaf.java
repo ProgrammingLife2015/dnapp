@@ -1,13 +1,16 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
-import org.structureGraphic.v1.DSTreeNode;
-
 /**
  * 
  * @author Maarten
  *
  */
 public class Leaf extends BinaryTree {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -287972955469890107L;
 
 	/**
 	 * 
@@ -24,20 +27,13 @@ public class Leaf extends BinaryTree {
 	 * @return the number of nodes (inner and leaf) in tree.
 	 */
 	@Override
-	public final int size() {
+	public final int treeSize() {
 		return 1;
-	}
-
-	/**
-	 * @return an empty list of Binary Trees.
-	 */
-	public final DSTreeNode[] dsGetChildren() {
-		return new BinaryTree[] {};
 	}
 
 	@Override
 	protected final String toStringHelper(final String indent) {
-		String res = indent + stringOrElse(getName(), "X") + " (dist="
+		String res = indent + stringOrElse(getID(), "X") + " (dist="
 				+ getPathLength() + ")\n";
 		return res;
 	}
@@ -78,6 +74,17 @@ public class Leaf extends BinaryTree {
 	@Override
 	public final BinaryTree getRight() {
 		return null;
+	}
+
+	@Override
+	public final int drawTree(final int x, final int y) {
+		setGridLoc(x, y);
+		return 1;
+	}
+
+	@Override
+	public final BinaryTree[] getChildren() {
+		return new BinaryTree[] {};
 	}
 
 }

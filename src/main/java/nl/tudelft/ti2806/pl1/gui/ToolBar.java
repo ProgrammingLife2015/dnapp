@@ -21,6 +21,11 @@ public class ToolBar extends JToolBar {
 	private JButton btnImport = makeButton("Import", null, Event.IMPORT_FILE,
 			"Click to load a graph from .node.graph and .edge.graph files.");
 
+	/** The import phylo tree button. */
+	private JButton btnImportPhylo = makeButton("Import phylo", null,
+			Event.IMPORT_PHYLO,
+			"Click to load a phylogenetic tree from a newick file format.");
+
 	/**
 	 * Initializes the tool bar.
 	 */
@@ -32,6 +37,7 @@ public class ToolBar extends JToolBar {
 	/** Adds the control elements to the tool bar. */
 	private void addButtons() {
 		add(btnImport);
+		add(btnImportPhylo);
 		addSeparator();
 	}
 

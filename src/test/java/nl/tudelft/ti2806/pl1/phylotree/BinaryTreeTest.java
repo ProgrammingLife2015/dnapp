@@ -7,7 +7,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
 
 import org.junit.After;
 import org.junit.Before;
@@ -83,13 +86,13 @@ public class BinaryTreeTest {
 	}
 
 	/**
-	 * Test method for {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#size()}
-	 * .
+	 * Test method for
+	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#treeSize()} .
 	 */
 	@Test
 	public final void testSize() {
 		final BinaryTree t = BinaryTree.parseNewick(s1);
-		assertEquals(7, t.size());
+		assertEquals(7, t.treeSize());
 	}
 
 	/**
@@ -153,10 +156,10 @@ public class BinaryTreeTest {
 						+ ":0.7,e:0.8):0.9,(f:0.11,g:0.12)"
 						+ ":0.13):0.14,((h:0.15,i:0.15)"
 						+ ":0.16,j:0.17):0.18);");
-		assertEquals("g", t.getName());
-		assertEquals("c", t.getLeft().getName());
+		assertEquals("g", t.getID());
+		assertEquals("c", t.getLeft().getID());
 		assertEquals(0.0, t.getPathLength(), 0.0);
-		assertEquals("", t2.getName());
+		assertEquals("", t2.getID());
 	}
 
 	/**
@@ -168,10 +171,9 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testReadIntoString() throws IOException {
-		assertEquals(
-				"Bla bla bla test tekst bla bla",
-				BinaryTree
-						.readIntoString("src/test/resources/readIntoFileTest.txt"));
+		assertEquals("Bla bla bla test tekst bla bla",
+				PhyloPanel.readIntoString(new File(
+						"src/test/resources/readIntoFileTest.txt")));
 	}
 
 }
