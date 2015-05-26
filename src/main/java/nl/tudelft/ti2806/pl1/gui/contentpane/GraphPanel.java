@@ -39,7 +39,7 @@ import org.graphstream.ui.view.ViewerPipe;
 
 /**
  * @author Maarten
- *
+ * 
  */
 public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
@@ -271,6 +271,12 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// JViewport jv = infoPane.getViewport();
 		// jv.setViewPosition(new Point(0, 0));
 
+		// TODO change strings to constants (still have to decide in which class
+		// to define them)
+
+	}
+
+	public final void selectNode(final Node newSelectedNode) {
 		// Restores the old class of the previous selected node if present.
 		if (selectedNode != null) {
 			selectedNode.setAttribute("ui.class",
@@ -283,8 +289,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		selectedNode.setAttribute("oldclass",
 				selectedNode.getAttribute("ui.class"));
 		selectedNode.addAttribute("ui.class", "selected");
-		// TODO change strings to constants (still have to decide in which class
-		// to define them)
 	}
 
 	/**
@@ -531,6 +535,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * {@inheritDoc}
 		 */
 		public void buttonPushed(final String id) {
+			selectNode(graph.getNode(id));
 		}
 	}
 
