@@ -89,10 +89,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/** The text area where node content will be shown. */
 	private JTextArea text;
 
-	private Scrolling scroll;
-
 	/** The DGraph data storage. */
 	private DGraph dgraph;
+
+	private Scrolling scroll;
 
 	/**
 	 * Initialize a graph panel.
