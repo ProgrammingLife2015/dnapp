@@ -177,6 +177,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			ret = false;
 			Event.statusBarError(e.getMessage());
 		}
 		graph.addAttribute("ui.stylesheet",

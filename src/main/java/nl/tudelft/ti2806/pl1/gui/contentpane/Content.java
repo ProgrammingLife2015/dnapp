@@ -4,11 +4,11 @@ import java.awt.BorderLayout;
 import java.io.File;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
+import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
  * A panel representing the content pane of the main window. Contains a tabbed
@@ -27,6 +27,12 @@ public class Content extends JPanel {
 
 	/** Flag to indicate whether a graph has been loaded into the graph panel. */
 	private boolean graphLoaded = false;
+
+	/**
+	 * Flag to indicate whether a phylo tree has been loaded into the phylo
+	 * panel.
+	 */
+	private boolean treeLoaded = false;
 
 	/**
 	 * @return true iff there is a graph loaded
@@ -52,7 +58,7 @@ public class Content extends JPanel {
 	}
 
 	/** The panel showing the phylogenetic tree. */
-	private JScrollPane phyloPanel;
+	private PhyloPanel phyloPanel;
 
 	/**
 	 * Initializes the content panel.
@@ -98,6 +104,22 @@ public class Content extends JPanel {
 	public final void loadGraph(final File nodePath, final File edgePath)
 			throws InvalidNodePlacementException {
 		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
+	}
+
+	/**
+	 * 
+	 * @param newick
+	 */
+	public final void loadTree(final File newick) {
+		treeLoaded = phyloPanel.loadTree(newick);
+	}
+
+	/**
+	 * @param args
+	 *            jwz
+	 */
+	public static void main(final String[] args) {
+		Start.main(args);
 	}
 
 	@Override

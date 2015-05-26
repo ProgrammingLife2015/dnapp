@@ -97,6 +97,26 @@ public enum Event implements ActionListener {
 	},
 
 	/**
+	 * Loads a phylogenetic tree into the window content.
+	 */
+	IMPORT_PHYLO {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void actionPerformed(final ActionEvent e) {
+			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
+			if (fcPhylo.showDialog(window, "Load phylogenetic tree") == JFileChooser.APPROVE_OPTION) {
+				final File newick = fcPhylo.getSelectedFile();
+				window.content().loadTree(newick);
+			} else {
+				System.out.println("JA DIT IS HIER");
+				statusBarError("An error occured during the loading of the file(s)");
+			}
+		}
+
+	},
+
+	/**
 	 * 
 	 */
 	WRITE_FILE {

@@ -1,12 +1,10 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.awt.Point;
 import java.util.StringTokenizer;
 
-import org.structureGraphic.v1.DSTreeNode;
+import javax.swing.JButton;
 
 /**
  * Generic binary tree, storing data of a parametric data in each node.
@@ -16,17 +14,28 @@ import org.structureGraphic.v1.DSTreeNode;
  * @author Chris Bailey-Kellogg, Dartmouth CS 10, Fall 2012
  * 
  */
-public abstract class BinaryTree implements DSTreeNode {
+public abstract class BinaryTree extends JButton {
 
-	/**
-	 * The distance to the parent node.
-	 */
+	/** The serial version UID. */
+	private static final long serialVersionUID = -7580501984360893313L;
+
+	/** The distance to the parent node. */
 	private final double pathLength;
 
+	/** The name label of the node. */
+	private final String id;
+
 	/**
-	 * The name label of the node.
+	 * 
 	 */
-	private final String name;
+	private Point gridCoordinates;
+
+	/**
+	 * @return the gridCoordinates
+	 */
+	public final Point getGridCoordinates() {
+		return gridCoordinates;
+	}
 
 	/**
 	 * Constructs leaf node with no children.
@@ -37,7 +46,7 @@ public abstract class BinaryTree implements DSTreeNode {
 	 *            The path length
 	 */
 	public BinaryTree(final String nameIn, final double length) {
-		this.name = nameIn;
+		this.id = nameIn;
 		this.pathLength = length;
 	}
 
@@ -51,14 +60,14 @@ public abstract class BinaryTree implements DSTreeNode {
 	/**
 	 * @return the node name.
 	 */
-	public final String getName() {
-		return name;
+	public final String getID() {
+		return id;
 	}
 
 	/**
 	 * @return the size of the (sub)tree.
 	 */
-	public abstract int size();
+	public abstract int treeSize();
 
 	/**
 	 * @return the longest length to a leaf node from here.
@@ -93,6 +102,27 @@ public abstract class BinaryTree implements DSTreeNode {
 	 * @return the left child, null if there is no left child
 	 */
 	public abstract BinaryTree getRight();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract BinaryTree[] getChildren();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract int drawTree(int x, int y);
+
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	protected void setGridLoc(final int x, final int y) {
+		this.gridCoordinates = new Point(x, y);
+	}
 
 	@Override
 	public final String toString() {
@@ -185,36 +215,11 @@ public abstract class BinaryTree implements DSTreeNode {
 	}
 
 	/**
-	 * Copies the entire file content into a single String, and returns it.
-	 * 
-	 * @param filename
-	 *            relative path to the file to read
-	 * @return the file content as a continuous string
-	 * @throws IOException
-	 *             when something goes wrong xD
-	 */
-	public static String readIntoString(final String filename) {
-		final StringBuffer buff = new StringBuffer();
-		try {
-			final BufferedReader in = new BufferedReader(new FileReader(
-					filename));
-			String line;
-			while ((line = in.readLine()) != null) {
-				buff.append(line);
-			}
-			in.close();
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		return buff.toString();
-	}
-
-	/**
 	 * @return the value to show in in this node
 	 */
 	public final Object dsGetValue() {
 		final int roundN = 5;
-		return stringOrElse(name, "X") + "\n" + roundN(pathLength, roundN);
+		return stringOrElse(id, "X") + "\n" + roundN(pathLength, roundN);
 	}
 
 	/**
