@@ -107,7 +107,7 @@ public class DNode {
 	 * 
 	 * @param content
 	 *            The string to be processed.
-	 * @return Inverse percentage of the amount of unknown nucleotides.
+	 * @return Percentage of the amount of unknown nucleotides.
 	 */
 	private double percentageUnknown(final String content) {
 		int counter = 0;
