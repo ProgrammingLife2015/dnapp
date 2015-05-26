@@ -244,7 +244,7 @@ public class DNode {
 	 * 
 	 * @return Returns the different sources which contains this node
 	 */
-	public final HashSet<String> getSources() {
+	public HashSet<String> getSources() {
 		return sources;
 	}
 

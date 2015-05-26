@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,16 +37,29 @@ public class DGraphTest {
 		edge1 = mock(DEdge.class);
 		edge2 = mock(DEdge.class);
 
+		HashSet<String> reference1 = new HashSet<String>();
+		reference1.add("tkk-1");
+
+		HashSet<String> reference2 = new HashSet<String>();
+		reference2.add("tkk-1");
+		reference2.add("tkk-2");
+
+		HashSet<String> reference3 = new HashSet<String>();
+		reference3.add("tkk-3");
+
 		when(node1.getId()).thenReturn(1);
 		when(node1.getAllEdges()).thenReturn(Arrays.asList(edge1));
 		when(node1.getInEdges()).thenReturn(new ArrayList<DEdge>());
+		when(node1.getSources()).thenReturn(reference1);
 
 		when(node2.getId()).thenReturn(2);
 		when(node2.getAllEdges()).thenReturn(Arrays.asList(edge1, edge2));
 		when(node2.getInEdges()).thenReturn(new ArrayList<DEdge>());
+		when(node2.getSources()).thenReturn(reference2);
 
 		when(node3.getId()).thenReturn(3);
 		when(node3.getAllEdges()).thenReturn(Arrays.asList(edge2));
+		when(node3.getSources()).thenReturn(reference3);
 
 		when(edge1.getStartNode()).thenReturn(node1);
 		when(edge1.getEndNode()).thenReturn(node2);
@@ -190,4 +204,40 @@ public class DGraphTest {
 		assertEquals(graph.getEdges().size(), n - 1);
 	}
 
+	@Test
+	public void referencesAreAddedTest1() {
+		graph.addDNode(node1);
+		assertTrue(graph.getReferences().get("tkk-1").contains(node1));
+	}
+
+	@Test
+	public void referencesAreAddedTest2() {
+		graph.addDNode(node1);
+		assertTrue(graph.getReferences().size() == 1);
+	}
+
+	@Test
+	public void referencesAreAddedTest3() {
+		graph.addDNode(node1);
+		graph.addDNode(node2);
+		assertTrue(graph.getReferences().get("tkk-1").size() == 2);
+	}
+
+	@Test
+	public void removeReferenceNodeTest() {
+		graph.addDNode(node1);
+		graph.removeDNode(node1);
+		assertTrue(graph.getReferences().size() == 0);
+	}
+
+	@Test
+	public void getReferenceTest1() {
+		graph.addDNode(node1);
+		assertTrue(graph.getReference("tkk-1").contains(node1));
+	}
+
+	@Test
+	public void getReferenceTest2() {
+		assertTrue(graph.getReference("hs").isEmpty());
+	}
 }
