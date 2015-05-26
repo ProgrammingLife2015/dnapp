@@ -7,7 +7,7 @@ import org.graphstream.graph.implementations.SingleGraph;
  * Converts a DGraph into a graphstream graph.
  * 
  * @author mark
- *
+ * 
  */
 public final class ConvertDGraph {
 
@@ -41,11 +41,7 @@ public final class ConvertDGraph {
 			else
 				graph.getNode(id).addAttribute("ui.class", "common");
 
-			double unknown = 0;
-			if (Integer.valueOf(id) >= 0) {
-				unknown = percentageUnknown(n.getContent());
-			}
-			graph.getNode(id).addAttribute("ui.color", unknown);
+			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
 		for (DEdge edge : dgraph.getEdges()) {
 			String src = String.valueOf(edge.getStartNode().getId());
@@ -72,21 +68,4 @@ public final class ConvertDGraph {
 		return label;
 	}
 
-	/**
-	 * Count the amount of unknown nucleotides in the content and returns the
-	 * inverse percentage of it.
-	 * 
-	 * @param content
-	 *            The string to be processed.
-	 * @return Inverse percentage of the amount of unknown nucleotides.
-	 */
-	private static double percentageUnknown(final String content) {
-		int counter = 0;
-		for (int i = 0; i < content.length(); i++) {
-			if (content.charAt(i) == 'N') {
-				counter++;
-			}
-		}
-		return 1 - ((double) counter / content.length());
-	}
 }
