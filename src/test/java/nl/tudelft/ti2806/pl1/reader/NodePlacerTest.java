@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +21,8 @@ public class NodePlacerTest {
 	private DGraph graph;
 
 	@Before
-	public void startUp() throws FileNotFoundException {
+	public void startUp() throws FileNotFoundException,
+			InvalidNodePlacementException {
 		nodesatdepth = new ArrayList<Integer>();
 		nodesatdepth.add(2);
 		nodesatdepth.add(1);
@@ -38,7 +40,7 @@ public class NodePlacerTest {
 	}
 
 	@Test
-	public void heightDiffTest() {
+	public void heightDiffTest() throws InvalidNodePlacementException {
 		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), -10);
 		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), 10);
 	}
