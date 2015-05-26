@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -83,6 +84,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	/** The text area where node content will be shown. */
 	private JTextArea text;
+
+	private DGraph dgraph;
 
 	/**
 	 * Initialize a graph panel.
@@ -158,7 +161,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// e1.printStackTrace();
 		// }
 		try {
-			DGraph dgraph = Reader.read(nodes.getAbsolutePath(),
+			dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
 			NodePlacer.place(dgraph);
 			graph = ConvertDGraph.convert(dgraph);
@@ -189,6 +192,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
+		window.optionPanel().getGenomes()
+				.fill(dgraph.getReferences().keySet(), false, true);
 		return ret;
 	}
 
@@ -215,7 +220,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user
 	 */
-	private void notifyObservers(final Node selectedNodeIn) {
+	private void notifyObservers(final DNode selectedNodeIn) {
 		for (NodeSelectionObserver sgo : observers) {
 			sgo.update(selectedNodeIn);
 		}
@@ -224,8 +229,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
-	public final void update(final Node newSelectedNode) {
-		// text.setText(newSelectedNode.getAttribute("content").toString());
+	public final void update(final DNode newSelectedNode) {
+		text.setText(newSelectedNode.getContent());
 
 		// infoPane.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		// JViewport jv = infoPane.getViewport();
@@ -254,24 +259,27 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * Highlights a genome. TODO debug code delete
 	 */
-	public final void highlight() {
+	public final void highlight(final String genomeId) {
 		// text.insert(String.valueOf(graph.getNode(1184).getDegree()), text
 		// .getText().length());
-		graph.getNode(1184).setAttribute("ui.class", "common");
-		graph.getNode(1184).setAttribute("ui.color", 0.25);
-		graph.getNode(1183).setAttribute("ui.class", "common");
-		graph.getNode(1183).setAttribute("ui.color", 0.5);
-		graph.getNode(1256).setAttribute("ui.class", "common");
-		graph.getNode(1256).setAttribute("ui.color", 1);
+		for (DNode n : dgraph.getReferences().get(genomeId)) {
+			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
+					"highlight");
+		}
+
 	}
 
 	/**
 	 * Unhighlights a genome. TODO debug code delete
 	 */
-	public final void unHighlight() {
-		graph.getNode(1184).setAttribute("ui.class", "highlight");
-		graph.getNode(1183).setAttribute("ui.class", "highlight");
-		graph.getNode(1256).setAttribute("ui.class", "highlight");
+	public final void unHighlight(final String genomeId) {
+		// graph.getNode(1184).setAttribute("ui.class", "highlight");
+		// graph.getNode(1183).setAttribute("ui.class", "highlight");
+		// graph.getNode(1256).setAttribute("ui.class", "highlight");
+		for (DNode n : dgraph.getReferences().get(genomeId)) {
+			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
+					"common");
+		}
 	}
 
 	@Override
@@ -343,9 +351,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				final boolean genomeHighlightChanged) {
 			if (genomeHighlightChanged && genomeRow.isVisible()) {
 				if (genomeRow.isHighlighted()) {
-					highlight();
+					highlight(genomeRow.getId());
 				} else {
-					unHighlight();
+					unHighlight(genomeRow.getId());
 				}
 			}
 
@@ -375,7 +383,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
-			notifyObservers(graph.getNode(id));
+			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
 		}
 
 		/**
