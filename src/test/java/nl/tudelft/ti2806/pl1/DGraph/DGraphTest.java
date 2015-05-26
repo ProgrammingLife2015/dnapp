@@ -227,6 +227,18 @@ public class DGraphTest {
 	public void removeReferenceNodeTest() {
 		graph.addDNode(node1);
 		graph.removeDNode(node1);
+		System.out.println(graph.getReferences().size());
 		assertTrue(graph.getReferences().size() == 0);
+	}
+
+	@Test
+	public void getReferenceTest1() {
+		graph.addDNode(node1);
+		assertTrue(graph.getReference("tkk-1").contains(node1));
+	}
+
+	@Test
+	public void getReferenceTest2() {
+		assertTrue(graph.getReference("hs").isEmpty());
 	}
 }

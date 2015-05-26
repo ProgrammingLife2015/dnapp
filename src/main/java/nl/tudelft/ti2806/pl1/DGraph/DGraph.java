@@ -61,6 +61,20 @@ public class DGraph {
 	}
 
 	/**
+	 * Returns all the nodes which contain a specific reference.
+	 * 
+	 * @param s
+	 *            The reference from which we want to gain the nodes
+	 * @return A collection which contain
+	 */
+	public Collection<DNode> getReference(final String s) {
+		if (!references.containsKey(s)) {
+			return new ArrayList<DNode>();
+		}
+		return references.get(s);
+	}
+
+	/**
 	 * @return the edges
 	 */
 	public Collection<DEdge> getEdges() {
