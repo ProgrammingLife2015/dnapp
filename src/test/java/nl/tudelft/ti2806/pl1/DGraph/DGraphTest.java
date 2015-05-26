@@ -227,7 +227,6 @@ public class DGraphTest {
 	public void removeReferenceNodeTest() {
 		graph.addDNode(node1);
 		graph.removeDNode(node1);
-		System.out.println(graph.getReferences().size());
 		assertTrue(graph.getReferences().size() == 0);
 	}
 

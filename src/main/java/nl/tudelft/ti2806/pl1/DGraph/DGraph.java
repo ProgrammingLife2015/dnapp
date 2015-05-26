@@ -153,6 +153,9 @@ public class DGraph {
 		}
 		for (String s : removeNode.getSources()) {
 			references.get(s).remove(removeNode);
+			if (references.get(s).isEmpty()) {
+				references.remove(s);
+			}
 		}
 		nodes.remove(n);
 		return true;
