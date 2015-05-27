@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -94,8 +96,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	private Scrolling scroll;
 
-	/** The DGraph data storage */
+	/** The DGraph data storage. */
 	private DGraph dgraph;
+
+	private Set<String> highlightedGenomes;
 
 	/**
 	 * Initialize a graph panel.
@@ -128,6 +132,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
 		graphPane.getHorizontalScrollBar().setUnitIncrement(1000);
+		highlightedGenomes = new HashSet<String>();
 	}
 
 	/**
@@ -309,15 +314,25 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
 					"highlight");
 		}
+		highlightedGenomes.add(genomeId);
+		System.out.println(highlightedGenomes.toString());
 	}
 
 	/**
 	 * Unhighlights a genome. TODO debug code delete
 	 */
 	public final void unHighlight(final String genomeId) {
+		highlightedGenomes.remove(genomeId);
+		System.out.println(highlightedGenomes.toString());
 		for (DNode n : dgraph.getReferences().get(genomeId)) {
-			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-					"common");
+			boolean contains = false;
+			for (String source : n.getSources()) {
+				contains = contains || highlightedGenomes.contains(source);
+			}
+			if (!contains) {
+				graph.getNode(String.valueOf(n.getId())).setAttribute(
+						"ui.class", "common");
+			}
 		}
 	}
 
