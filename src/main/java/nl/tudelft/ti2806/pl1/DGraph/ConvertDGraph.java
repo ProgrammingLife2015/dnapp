@@ -32,15 +32,9 @@ public final class ConvertDGraph {
 			graph.addNode(id);
 			graph.getNode(id).addAttribute("x", n.getX());
 			graph.getNode(id).addAttribute("y", n.getY());
-			// graph.getNode(id).addAttribute("content", n.getContent());
 			graph.getNode(id).addAttribute("ui.label",
 					checkLabelLength(n.getContent()));
-
-			// if (n.getSources().contains("TKK_REF"))
-			// graph.getNode(id).addAttribute("ui.class", "highlight");
-			// else
 			graph.getNode(id).addAttribute("ui.class", "common");
-
 			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
 		for (DEdge edge : dgraph.getEdges()) {
