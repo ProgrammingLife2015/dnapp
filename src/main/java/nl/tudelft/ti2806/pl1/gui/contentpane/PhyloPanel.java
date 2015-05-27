@@ -1,19 +1,23 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
+
+import com.wordpress.tips4java.ScrollablePanel;
 
 /**
  * @author Maarten
@@ -40,12 +44,20 @@ public class PhyloPanel extends JScrollPane {
 	/**
 	 * 
 	 */
-	private GridBagConstraints gbc = new GridBagConstraints();
+	private ScrollablePanel treePanel;
 
 	/**
 	 * 
 	 */
-	private JPanel treePanel;
+	private int maxX = 0, maxY = 0;
+
+	/**
+	 * The space inbetween the nodes.
+	 */
+	private static final Insets INSETS = new Insets(3, 10, 0, 0);
+
+	/** The size of the nodes. */
+	private static final int NODE_WIDTH = 100, NODE_HEIGHT = 25;
 
 	/**
 	 * Initializes the panel.
@@ -55,13 +67,9 @@ public class PhyloPanel extends JScrollPane {
 	 */
 	public PhyloPanel(final Window w) {
 		this.window = w;
-		treePanel = new JPanel();
-		treePanel.setLayout(new GridBagLayout());
+		treePanel = new ScrollablePanel();
+		treePanel.setLayout(null);
 		setViewportView(treePanel);
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.insets = new Insets(10, 10, 10, 10);
 	}
 
 	/**
@@ -80,14 +88,31 @@ public class PhyloPanel extends JScrollPane {
 					+ " could not be read.");
 			e.printStackTrace();
 		}
-		this.tree = BinaryTree.parseNewick(newickSource);
-		// add(treePanel, BorderLayout.CENTER);
-		// drawTree(tree, 0);
-		tree.drawTree(0, 0);
-		System.out.println(tree.toString());
-		addNode(tree);
-		// add(treePanel);
+		this.tree = BinaryTree.parseNewick(newickSource, this);
+		plotTree();
 		return ret;
+	}
+
+	/**
+	 * 
+	 */
+	public final void plotTree() {
+		removeTree();
+		int treeWidth = tree.computePlacement(0, 0);
+		int treeHeight = tree.height();
+		// System.out.println(tree.toString());
+		addNode(tree);
+		treePanel.setPreferredSize(new Dimension((treeHeight + 1)
+				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)
+				* (NODE_HEIGHT + INSETS.top) + INSETS.top));
+		repaint();
+	}
+
+	/**
+	 * Empties the panel. All tree components will be deleted.
+	 */
+	public final void removeTree() {
+		treePanel.removeAll();
 	}
 
 	/**
@@ -95,22 +120,22 @@ public class PhyloPanel extends JScrollPane {
 	 * @param tree
 	 */
 	private void addNode(final BinaryTree tree) {
-		gbc.gridx = (int) tree.getGridCoordinates().getX();
-		gbc.gridy = (int) tree.getGridCoordinates().getY();
-		treePanel.add(tree, gbc);
-		for (BinaryTree t : tree.getChildren()) {
-			addNode(t);
+		// treePanel.remove(tree);
+		int x = (int) tree.getGridCoordinates().getX();
+		int y = (int) tree.getGridCoordinates().getY();
+		maxX = Math.max(maxX, x);
+		maxY = Math.max(maxY, y);
+		tree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y
+				* (NODE_HEIGHT + INSETS.top) + INSETS.top, NODE_WIDTH,
+				NODE_HEIGHT);
+		tree.setText(tree.getID());
+		treePanel.add(tree);
+		if (!tree.isCollapsed()) {
+			for (BinaryTree t : tree.getChildren()) {
+				addNode(t);
+			}
 		}
 	}
-
-	// /**
-	// *
-	// * @param tree
-	// */
-	// private final int drawTree(final BinaryTree tree, final int x) {
-	//
-	// return 0;
-	// }
 
 	/**
 	 * Copies the entire file content into a single String, and returns it.
@@ -132,6 +157,27 @@ public class PhyloPanel extends JScrollPane {
 		in.close();
 
 		return buff.toString();
+	}
+
+	@Override
+	protected final void paintComponent(final Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		g.setColor(Color.PINK);
+		g2.setColor(Color.PINK);
+		g2.setStroke(new BasicStroke(3));
+		g2.fillRect(20, 20, 200, 200);
+		g.fillRect(150, 100, 300, 300);
+		if (tree != null) {
+
+			g2.drawLine((int) (tree.getX() + 0.5 * tree.getWidth()),
+					(int) (tree.getY() + 0.5 * tree.getHeight()), (int) (tree
+							.getX() + 0.5 * tree.getWidth()), (int) (tree
+							.getRight().getY() + 0.5 * tree.getRight()
+							.getHeight()));
+		}
+
+		System.out.println("Drawn!");
 	}
 
 }

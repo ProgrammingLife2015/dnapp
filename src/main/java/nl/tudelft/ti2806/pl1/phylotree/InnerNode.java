@@ -1,5 +1,11 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
+
 /**
  * 
  * @author Maarten
@@ -7,13 +13,10 @@ package nl.tudelft.ti2806.pl1.phylotree;
  */
 public class InnerNode extends BinaryTree {
 
-	/**
-	 * 
-	 */
+	/** Serial version UID. */
 	private static final long serialVersionUID = 4003391741650507864L;
-	/**
-	 * The children of the node.
-	 */
+
+	/** The children of the node. */
 	private final BinaryTree left, right;
 
 	/**
@@ -29,10 +32,12 @@ public class InnerNode extends BinaryTree {
 	 *            The right child.
 	 */
 	public InnerNode(final String nameIn, final double dist,
-			final BinaryTree leftChild, final BinaryTree rightChild) {
-		super(nameIn, dist);
+			final BinaryTree leftChild, final BinaryTree rightChild,
+			final PhyloPanel panel) {
+		super(nameIn, dist, panel);
 		this.left = leftChild;
 		this.right = rightChild;
+		addMouseListener(new NodeMouseListener());
 	}
 
 	/**
@@ -119,6 +124,24 @@ public class InnerNode extends BinaryTree {
 	}
 
 	@Override
+	public final Color getBackground() {
+		super.getBackground();
+		if (isCollapsed()) {
+			return Color.RED;
+		}
+		return Color.GREEN;
+	}
+
+	@Override
+	public final Color getForeground() {
+		super.getForeground();
+		if (isCollapsed()) {
+			return Color.RED;
+		}
+		return Color.GREEN;
+	}
+
+	@Override
 	public final int height() {
 		int h = 0;
 		if (hasLeft()) {
@@ -131,15 +154,63 @@ public class InnerNode extends BinaryTree {
 	}
 
 	@Override
-	public final int drawTree(final int x, final int y) {
+	public final int computePlacement(final int x, final int y) {
 		setGridLoc(x, y);
-		int lOffset = left.drawTree(x + 1, y);
-		int rOffset = right.drawTree(x + 1, lOffset);
-		return lOffset + rOffset;
+		if (isCollapsed()) {
+			return 1;
+		} else {
+			int lWidth = left.computePlacement(x + 1, y);
+			int rWidth = right.computePlacement(x + 1, y + lWidth);
+			return lWidth + rWidth;
+		}
 	}
 
 	@Override
 	public final BinaryTree[] getChildren() {
 		return new BinaryTree[] { left, right };
+	}
+
+	/**
+	 * 
+	 * @author Maarten, Justin
+	 * @since 27-5-2015
+	 * @version 1.0
+	 *
+	 */
+	class NodeMouseListener implements MouseListener {
+
+		/** {@inheritDoc} */
+		public void mouseClicked(final MouseEvent e) {
+			switch (e.getButton()) {
+			case MouseEvent.BUTTON1:
+				System.out.println("Button1");
+				break;
+			case MouseEvent.BUTTON3:
+				System.out.println("Button3");
+				setCollapsed(!isCollapsed());
+				getPhyloPanel().plotTree();
+				break;
+			default:
+				System.out.println("Other button: " + e.getButton());
+				break;
+			}
+		}
+
+		/** {@inheritDoc} */
+		public void mousePressed(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mouseReleased(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mouseEntered(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mouseExited(final MouseEvent e) {
+		}
+
 	}
 }

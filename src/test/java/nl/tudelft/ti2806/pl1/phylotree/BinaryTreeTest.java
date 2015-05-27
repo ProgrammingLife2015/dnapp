@@ -67,7 +67,7 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testHasLeft() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
+		final BinaryTree t = BinaryTree.parseNewick(s1, null);
 		assertTrue(t.hasLeft());
 		assertTrue(t.getLeft().hasLeft());
 		assertFalse(t.getRight().getLeft().hasLeft());
@@ -79,7 +79,7 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testHasRight() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
+		final BinaryTree t = BinaryTree.parseNewick(s1, null);
 		assertTrue(t.hasRight());
 		assertTrue(t.getLeft().hasRight());
 		assertFalse(t.getRight().getLeft().hasRight());
@@ -91,7 +91,7 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testSize() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
+		final BinaryTree t = BinaryTree.parseNewick(s1, null);
 		assertEquals(7, t.treeSize());
 	}
 
@@ -101,8 +101,8 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testHeight() {
-		final BinaryTree t = BinaryTree.parseNewick(s1);
-		final BinaryTree root = BinaryTree.parseNewick("root");
+		final BinaryTree t = BinaryTree.parseNewick(s1, null);
+		final BinaryTree root = BinaryTree.parseNewick("root", null);
 		assertEquals(2, t.height());
 		assertEquals(0, root.height());
 	}
@@ -114,12 +114,14 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testEqualsTree() {
-		final BinaryTree t1 = BinaryTree.parseNewick(s1);
-		final BinaryTree t2 = BinaryTree.parseNewick(s2);
-		final BinaryTree t3 = BinaryTree.parseNewick(s3);
-		final BinaryTree t4 = BinaryTree.parseNewick("(a,b)z");
-		final BinaryTree t5 = BinaryTree.parseNewick("(a:1.0,b:1.0)z:1.0");
-		final BinaryTree t6 = BinaryTree.parseNewick("(a:1.0,b:0.0)z:1.0");
+		final BinaryTree t1 = BinaryTree.parseNewick(s1, null);
+		final BinaryTree t2 = BinaryTree.parseNewick(s2, null);
+		final BinaryTree t3 = BinaryTree.parseNewick(s3, null);
+		final BinaryTree t4 = BinaryTree.parseNewick("(a,b)z", null);
+		final BinaryTree t5 = BinaryTree
+				.parseNewick("(a:1.0,b:1.0)z:1.0", null);
+		final BinaryTree t6 = BinaryTree
+				.parseNewick("(a:1.0,b:0.0)z:1.0", null);
 		assertTrue(t1.equalsTree(t2));
 		assertTrue(t1.equalsTree(t3));
 		assertFalse(t1.equalsTree(t4));
@@ -135,11 +137,14 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testToString() {
-		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
-		final String expected = "g (dist=0.0)\n" + "\tc (dist=0.0)\n"
-				+ "\t\ta (dist=0.0)\n" + "\t\tb (dist=0.0)\n"
-				+ "\tf (dist=0.0)\n" + "\t\td (dist=0.0)\n"
-				+ "\t\te (dist=0.0)\n";
+		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;", null);
+		final String expected = "g (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\tc (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\t\ta (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\t\tb (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\tf (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\t\td (dist=0.0,x=0.0,y=0.0)\n"
+				+ "\t\te (dist=0.0,x=0.0,y=0.0)\n";
 		assertEquals(expected, t.toString());
 	}
 
@@ -150,12 +155,12 @@ public class BinaryTreeTest {
 	 */
 	@Test
 	public final void testParseNewick() {
-		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;");
-		final BinaryTree t2 = BinaryTree
-				.parseNewick("((((a:0.01,((b:0.2,c:0.3):0.4,d:0.5):0.6)"
+		final BinaryTree t = BinaryTree.parseNewick("((a,b)c,(d,e)f)g;", null);
+		final BinaryTree t2 = BinaryTree.parseNewick(
+				"((((a:0.01,((b:0.2,c:0.3):0.4,d:0.5):0.6)"
 						+ ":0.7,e:0.8):0.9,(f:0.11,g:0.12)"
 						+ ":0.13):0.14,((h:0.15,i:0.15)"
-						+ ":0.16,j:0.17):0.18);");
+						+ ":0.16,j:0.17):0.18);", null);
 		assertEquals("g", t.getID());
 		assertEquals("c", t.getLeft().getID());
 		assertEquals(0.0, t.getPathLength(), 0.0);
