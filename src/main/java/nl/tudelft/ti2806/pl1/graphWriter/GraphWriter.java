@@ -1,14 +1,12 @@
 package nl.tudelft.ti2806.pl1.graphWriter;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
+import nl.tudelft.ti2806.pl1.DGraph.DEdge;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 
 /**
  * Writes the graph to a file. File format will be
@@ -27,65 +25,60 @@ public final class GraphWriter {
 	}
 
 	/**
-	 * Writes the graph to a file, first it writes the amount of nodes followed
-	 * by the writeNodes method. Then it writes the amount of edges followed by
-	 * the writeEdge method.
+	 * The timeout.
+	 */
+	public static final int TIMEOUT = 30; // set timeout to 30 sec.
+
+	/**
+	 * Writes the dgraph to an sqlite database.
 	 * 
 	 * @param location
-	 *            The file location
+	 *            The location of the database
 	 * @param graph
-	 *            The graph
-	 * @throws IOException
+	 *            The graph which will be written to a database.
+	 * @throws ClassNotFoundException
+	 *             When de JDBC class cannot be loaded
 	 */
-	public static void write(final String location, final Graph graph)
-			throws IOException {
-		File file = new File(location);
-		FileWriter fwriter = new FileWriter(file);
-		BufferedWriter bwriter = new BufferedWriter(fwriter);
-		PrintWriter writer = new PrintWriter(bwriter);
+	public static void write(final String location, final DGraph graph)
+			throws ClassNotFoundException {
+		Class.forName("org.sqlite.JDBC");
 
-		writer.println(graph.getNodeCount());
-		writeNodes(writer, graph);
-		writer.println(graph.getEdgeCount());
-		writeEdges(writer, graph);
-		if (writer.checkError()) {
-			System.err.println("an error occured during writing");
-			// TODO make an exception, and throw it.
-		}
-		writer.close();
-	}
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:" + location);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(TIMEOUT);
 
-	/**
-	 * This method writes the nodes. It first writes the ids of the node, then
-	 * it writes the amount of attributes followed by each attribute on a new
-	 * line.
-	 * 
-	 * @param writer
-	 *            The writer which writes the nodes
-	 * @param graph
-	 *            The graph
-	 */
-	public static void writeNodes(final PrintWriter writer, final Graph graph) {
-		String line = new String();
-		for (Node n : graph.getNodeSet()) {
-			line = "";
-			line += ">";
-			line += n.getId().toString();
-		}
-	}
+			statement
+					.executeUpdate("DROP TABLE IF EXISTS nodes OR edges OR sources");
+			statement
+					.executeUpdate("CREATE TABLE node (id integer, start integer, end integer,"
+							+ " x integer, y integer, depth integer)");
+			statement
+					.executeUpdate("CREATE TABLE edges (startId integer, endId integer)");
+			statement
+					.executeUpdate("CREATE TABLE sources (nodeId integer, reference string)");
 
-	/**
-	 * This method writes the edges in the form of id | sourceNode | targetNode.
-	 * 
-	 * @param writer
-	 *            The writer which writes the nodes
-	 * @param graph
-	 *            The graph
-	 */
-	public static void writeEdges(final PrintWriter writer, final Graph graph) {
-		for (Edge e : graph.getEdgeSet()) {
-			writer.println(e.getId() + " | " + e.getSourceNode() + " | "
-					+ e.getTargetNode());
+			// TODO Assumed that start and end node are in the graph
+			for (DNode node : graph.getNodes().values()) {
+				statement.executeUpdate("INSERT INTO nodes VALUES ("
+						+ node.getId() + ", " + node.getStart() + ", "
+						+ node.getEnd() + ", " + node.getX() + ", "
+						+ node.getY() + ", " + node.getDepth() + ")");
+
+				for (String s : node.getSources()) {
+					statement.executeUpdate("INSERT INTO sources VALUES ("
+							+ node.getId() + ", " + s + ")");
+				}
+			}
+
+			for (DEdge edge : graph.getEdges()) {
+				statement.executeUpdate("INSERT INTO edges VALUES ("
+						+ edge.getStartNode().getId() + ", "
+						+ edge.getEndNode().getId() + ")");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
