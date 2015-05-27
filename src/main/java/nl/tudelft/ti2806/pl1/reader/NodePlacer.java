@@ -18,6 +18,8 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
  */
 public final class NodePlacer {
 
+	private static final int SIZEMULTIPLIER = 10;
+
 	/** Vertical space over which we will spread the nodes. */
 	private static int height;
 	/** Horizontal space over which we will spread the nodes. */
@@ -57,8 +59,8 @@ public final class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		width = nodesAtDepth.size();
-		height = Collections.max(nodesAtDepth) * 2;
+		width = nodesAtDepth.size() * SIZEMULTIPLIER;
+		height = Collections.max(nodesAtDepth) * SIZEMULTIPLIER * 2;
 
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
