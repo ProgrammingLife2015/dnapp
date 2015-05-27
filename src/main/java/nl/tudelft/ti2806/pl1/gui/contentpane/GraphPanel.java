@@ -52,7 +52,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * TODO the temp hard coded size of the view.
 	 */
-	private static final Dimension VIEW_SIZE = new Dimension(1000000, 5000);
+	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
 
 	/**
 	 * The list of node selection observers.
@@ -115,6 +115,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// });
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
+		graphPane.getHorizontalScrollBar().setUnitIncrement(1000);
 	}
 
 	/**
@@ -420,6 +421,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/** {@inheritDoc} */
 		public void mouseClicked(final MouseEvent e) {
 		}
+
 	}
 
 }

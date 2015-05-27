@@ -24,13 +24,11 @@ public class NodePlacerTest {
 	public void startUp() throws FileNotFoundException,
 			InvalidNodePlacementException {
 		nodesatdepth = new ArrayList<Integer>();
-		nodesatdepth.add(2);
+		nodesatdepth.add(3);
 		nodesatdepth.add(1);
 		hdiff = NodePlacer.heightDiff(nodesatdepth, height);
 		graph = Reader.read("src/test/resources/nodes.txt",
 				"src/test/resources/edges.txt");
-		NodePlacer.setWidth(100);
-		NodePlacer.setHeight(100);
 		NodePlacer.place(graph);
 	}
 
@@ -41,8 +39,8 @@ public class NodePlacerTest {
 
 	@Test
 	public void heightDiffTest() throws InvalidNodePlacementException {
-		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), -10);
-		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), 10);
+		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), -15);
+		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), 0);
 	}
 
 	@Test
@@ -78,16 +76,16 @@ public class NodePlacerTest {
 
 	@Test
 	public void xLevelNodeEndTest() {
-		assertEquals(graph.getDNode(-1).getX(), 75);
+		assertEquals(graph.getDNode(-1).getX(), 30);
 	}
 
 	@Test
 	public void xLevelNode0Test() {
-		assertEquals(graph.getDNode(0).getX(), 25);
+		assertEquals(graph.getDNode(0).getX(), 10);
 	}
 
 	@Test
 	public void xLevelNode1Test() {
-		assertEquals(graph.getDNode(1).getX(), 50);
+		assertEquals(graph.getDNode(1).getX(), 20);
 	}
 }
