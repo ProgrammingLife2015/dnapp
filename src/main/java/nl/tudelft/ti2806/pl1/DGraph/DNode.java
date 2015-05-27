@@ -61,11 +61,11 @@ public class DNode {
 	}
 
 	/**
-	 * @param percUnknown
+	 * @param percUnknownIn
 	 *            the percUnknown to set
 	 */
-	public final void setPercUnknown(final double percUnknown) {
-		this.percUnknown = percUnknown;
+	public final void setPercUnknown(final double percUnknownIn) {
+		this.percUnknown = percUnknownIn;
 	}
 
 	/**
