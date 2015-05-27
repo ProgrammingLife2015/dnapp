@@ -1,5 +1,7 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
+import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
+
 /**
  * 
  * @author Maarten
@@ -7,9 +9,7 @@ package nl.tudelft.ti2806.pl1.phylotree;
  */
 public class Leaf extends BinaryTree {
 
-	/**
-	 * 
-	 */
+	/** Serial version UID. */
 	private static final long serialVersionUID = -287972955469890107L;
 
 	/**
@@ -19,8 +19,8 @@ public class Leaf extends BinaryTree {
 	 * @param dist
 	 *            The distance to the parent.
 	 */
-	public Leaf(final String nameIn, final double dist) {
-		super(nameIn, dist);
+	public Leaf(final String nameIn, final double dist, final PhyloPanel panel) {
+		super(nameIn, dist, panel);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Leaf extends BinaryTree {
 	}
 
 	@Override
-	public final int drawTree(final int x, final int y) {
+	public final int computePlacement(final int x, final int y) {
 		setGridLoc(x, y);
 		return 1;
 	}
