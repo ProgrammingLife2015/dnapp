@@ -90,6 +90,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/** The DGraph data storage. */
 	private DGraph dgraph;
 
+	/** A collection of the highlighted genomes. */
 	private Set<String> highlightedGenomes;
 
 	/**
@@ -247,6 +248,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	}
 
+	/**
+	 * Assigns the css class for a node being selected and stores the old one.
+	 * Also restores the css for the previous selected node.
+	 * 
+	 * @param newSelectedNode
+	 *            Newly selected node.
+	 */
 	public final void selectNode(final Node newSelectedNode) {
 		// Restores the old class of the previous selected node if present.
 		if (selectedNode != null) {
@@ -263,7 +271,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
-	 * Highlights a genome. TODO debug code delete
+	 * Highlights a genome.
+	 * 
+	 * @param genomeId
+	 *            Id of the genome to be highlighted.
 	 */
 	public final void highlight(final String genomeId) {
 		for (DNode n : dgraph.getReferences().get(genomeId)) {
@@ -271,15 +282,16 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 					"highlight");
 		}
 		highlightedGenomes.add(genomeId);
-		System.out.println(highlightedGenomes.toString());
 	}
 
 	/**
-	 * Unhighlights a genome. TODO debug code delete
+	 * Unhighlights a genome.
+	 * 
+	 * @param genomeId
+	 *            Id of the genome to be highlighted.
 	 */
 	public final void unHighlight(final String genomeId) {
 		highlightedGenomes.remove(genomeId);
-		System.out.println(highlightedGenomes.toString());
 		for (DNode n : dgraph.getReferences().get(genomeId)) {
 			boolean contains = false;
 			for (String source : n.getSources()) {

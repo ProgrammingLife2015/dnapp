@@ -48,7 +48,7 @@ public class DNode {
 	private int x, y;
 
 	/**
-	 * The depth of the node
+	 * The depth of the node.
 	 */
 	private int depth;
 
@@ -56,7 +56,7 @@ public class DNode {
 	private double percUnknown;
 
 	/** @return the percUnknown */
-	public double getPercUnknown() {
+	public final double getPercUnknown() {
 		return percUnknown;
 	}
 
@@ -64,7 +64,7 @@ public class DNode {
 	 * @param percUnknown
 	 *            the percUnknown to set
 	 */
-	public void setPercUnknown(final double percUnknown) {
+	public final void setPercUnknown(final double percUnknown) {
 		this.percUnknown = percUnknown;
 	}
 
@@ -105,18 +105,18 @@ public class DNode {
 	 * Count the amount of unknown nucleotides in the content and returns the
 	 * inverse percentage of it.
 	 * 
-	 * @param content
+	 * @param contentIn
 	 *            The string to be processed.
 	 * @return Percentage of the amount of unknown nucleotides.
 	 */
-	private double percentageUnknown(final String content) {
+	private double percentageUnknown(final String contentIn) {
 		int counter = 0;
-		for (int i = 0; i < content.length(); i++) {
-			if (content.charAt(i) == 'N') {
+		for (int i = 0; i < contentIn.length(); i++) {
+			if (contentIn.charAt(i) == 'N') {
 				counter++;
 			}
 		}
-		return ((double) counter / content.length());
+		return ((double) counter / contentIn.length());
 	}
 
 	/**
@@ -142,38 +142,38 @@ public class DNode {
 	 * 
 	 * @return The ID of the node
 	 */
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 
 	/**
 	 * @return the x
 	 */
-	public int getX() {
+	public final int getX() {
 		return x;
 	}
 
 	/**
-	 * @param x
+	 * @param xIn
 	 *            the x to set
 	 */
-	public final void setX(final int x) {
-		this.x = x;
+	public final void setX(final int xIn) {
+		this.x = xIn;
 	}
 
 	/**
 	 * @return the y
 	 */
-	public int getY() {
+	public final int getY() {
 		return y;
 	}
 
 	/**
-	 * @param y
+	 * @param yIn
 	 *            the y to set
 	 */
-	public final void setY(final int y) {
-		this.y = y;
+	public final void setY(final int yIn) {
+		this.y = yIn;
 	}
 
 	/**
@@ -184,11 +184,11 @@ public class DNode {
 	}
 
 	/**
-	 * @param depth
+	 * @param depthIn
 	 *            the depth to set
 	 */
-	public final void setDepth(final int depth) {
-		this.depth = depth;
+	public final void setDepth(final int depthIn) {
+		this.depth = depthIn;
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class DNode {
 	 * 
 	 * @return the incoming edges
 	 */
-	public Collection<DEdge> getInEdges() {
+	public final Collection<DEdge> getInEdges() {
 		return inEdges;
 	}
 
@@ -244,7 +244,7 @@ public class DNode {
 	 * 
 	 * @return Returns the different sources which contains this node
 	 */
-	public HashSet<String> getSources() {
+	public final HashSet<String> getSources() {
 		return sources;
 	}
 
@@ -318,7 +318,7 @@ public class DNode {
 	 * 
 	 * @return All the edges in the node.
 	 */
-	public Collection<DEdge> getAllEdges() {
+	public final Collection<DEdge> getAllEdges() {
 		Collection<DEdge> allEdges = new ArrayList<DEdge>();
 		allEdges.addAll(inEdges);
 		allEdges.addAll(outEdges);
@@ -358,7 +358,7 @@ public class DNode {
 	 *            The edge to be removed
 	 * @return A boolean indicating if it succeeded or failed
 	 */
-	public boolean deleteEdge(final DEdge edge) {
+	public final boolean deleteEdge(final DEdge edge) {
 		if (inEdges.contains(edge)) {
 			inEdges.remove(edge);
 			return true;
@@ -393,7 +393,7 @@ public class DNode {
 	 * returns the hashcode of this class.
 	 */
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return getId();
 	}
 }
