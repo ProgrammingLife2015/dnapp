@@ -1,10 +1,11 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
 
 /**
  * Generic binary tree, storing data of a parametric data in each node.
@@ -19,6 +20,9 @@ public abstract class BinaryTree extends JButton {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -7580501984360893313L;
 
+	/** The parent container. */
+	private final PhyloPanel phyloPanel;
+
 	/** The distance to the parent node. */
 	private final double pathLength;
 
@@ -28,7 +32,12 @@ public abstract class BinaryTree extends JButton {
 	/**
 	 * 
 	 */
-	private Point gridCoordinates;
+	private boolean collapsed = false;
+
+	/**
+	 * 
+	 */
+	private Point gridCoordinates = new Point(0, 0);
 
 	/**
 	 * @return the gridCoordinates
@@ -41,38 +50,37 @@ public abstract class BinaryTree extends JButton {
 	 * Constructs leaf node with no children.
 	 * 
 	 * @param nameIn
-	 *            The name of the node
+	 *            The name of the node.
 	 * @param length
-	 *            The path length
+	 *            The path length.
+	 * @param panel
+	 *            The phylo panel this node is part of.
 	 */
-	public BinaryTree(final String nameIn, final double length) {
+	public BinaryTree(final String nameIn, final double length,
+			final PhyloPanel panel) {
 		super(nameIn);
 		this.id = nameIn;
 		this.pathLength = length;
+		this.phyloPanel = panel;
+		if (!nameIn.isEmpty()) {
+			this.setToolTipText(nameIn);
+		}
 	}
 
-	/**
-	 * @return the path length.
-	 */
+	/** @return the path length. */
 	public final double getPathLength() {
 		return pathLength;
 	}
 
-	/**
-	 * @return the node name.
-	 */
+	/** @return the node name. */
 	public final String getID() {
 		return id;
 	}
 
-	/**
-	 * @return the size of the (sub)tree.
-	 */
+	/** @return the size of the (sub)tree. */
 	public abstract int treeSize();
 
-	/**
-	 * @return the longest length to a leaf node from here.
-	 */
+	/** @return the longest length to a leaf node from here. */
 	public abstract int height();
 
 	/**
@@ -84,44 +92,39 @@ public abstract class BinaryTree extends JButton {
 	 */
 	public abstract boolean equalsTree(final BinaryTree t2);
 
-	/**
-	 * @return true iff the node has a left child
-	 */
+	/** @return true iff the node has a left child */
 	public abstract boolean hasLeft();
 
-	/**
-	 * @return true iff the node has a right child
-	 */
+	/** @return true iff the node has a right child */
 	public abstract boolean hasRight();
 
-	/**
-	 * @return the left child, null if there is no left child
-	 */
+	/** @return the left child, null if there is no left child */
 	public abstract BinaryTree getLeft();
 
-	/**
-	 * @return the left child, null if there is no left child
-	 */
+	/** @return the left child, null if there is no left child */
 	public abstract BinaryTree getRight();
 
-	/**
-	 * 
-	 * @return
-	 */
+	/** @return an array of the children of this node. */
 	public abstract BinaryTree[] getChildren();
 
 	/**
-	 * 
-	 * @return
+	 * @param x
+	 *            The horizontal grid coordinate of the node
+	 * @param y
+	 *            The vertical grid coordinate of the node
+	 * @return the width (delta y) of the tree
 	 */
-	public abstract int drawTree(int x, int y);
+	public abstract int computePlacement(int x, int y);
 
 	/**
+	 * Sets the grid coordinates.
 	 * 
 	 * @param x
+	 *            The horizontal coordinate
 	 * @param y
+	 *            The vertical coordinate
 	 */
-	protected void setGridLoc(final int x, final int y) {
+	protected final void setGridLoc(final int x, final int y) {
 		this.gridCoordinates = new Point(x, y);
 	}
 
@@ -153,31 +156,32 @@ public abstract class BinaryTree extends JButton {
 	 *            the string to parse
 	 * @return a phylogenetic tree
 	 */
-	public static BinaryTree parseNewick(final String s) {
-		return parseNewick(new StringTokenizer(s, "(,)", true));
+	public static BinaryTree parseNewick(final String s, final PhyloPanel panel) {
+		return parseNewick(new StringTokenizer(s, "(,)", true), panel);
 	}
 
 	/**
 	 * Does the real work of parsing, now given a tokenizer for the string.
 	 * 
 	 * @param st
-	 *            a string tokenizer
+	 *            A string tokenizer.
 	 * @return a phylogenetic tree
 	 */
-	private static BinaryTree parseNewick(final StringTokenizer st) {
+	private static BinaryTree parseNewick(final StringTokenizer st,
+			final PhyloPanel panel) {
 		final String token = st.nextToken();
 		if (token.equals("(")) { // Inner node
-			final BinaryTree left = parseNewick(st);
-			st.nextToken(); // final String comma = st.nextToken();
-			final BinaryTree right = parseNewick(st);
-			st.nextToken(); // final String close = st.nextToken();
+			final BinaryTree left = parseNewick(st, panel);
+			st.nextToken();
+			final BinaryTree right = parseNewick(st, panel);
+			st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
 			return new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1),
-					left, right);
+					left, right, panel);
 		} else { // Leaf
 			final String[] pieces = token.split(":");
-			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1));
+			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1), panel);
 		}
 	}
 
@@ -216,21 +220,6 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @return the value to show in in this node
-	 */
-	public final Object dsGetValue() {
-		final int roundN = 5;
-		return stringOrElse(id, "X") + "\n" + roundN(pathLength, roundN);
-	}
-
-	/**
-	 * @return the color of this node
-	 */
-	public final Color dsGetColor() {
-		return Color.black;
-	}
-
-	/**
 	 * Returns a string unless it is empty, then returns a given default string.
 	 * 
 	 * @param str
@@ -259,4 +248,28 @@ public abstract class BinaryTree extends JButton {
 		final int base = 10;
 		return Math.round(x * (Math.pow(base, n))) / Math.pow(base, n);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public PhyloPanel getPhyloPanel() {
+		return phyloPanel;
+	}
+
+	/**
+	 * @return the collapsed
+	 */
+	public final boolean isCollapsed() {
+		return collapsed;
+	}
+
+	/**
+	 * @param collapsed
+	 *            the collapsed to set
+	 */
+	public final void setCollapsed(final boolean collapsed) {
+		this.collapsed = collapsed;
+	}
+
 }
