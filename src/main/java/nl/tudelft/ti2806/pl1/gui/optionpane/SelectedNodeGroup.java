@@ -131,8 +131,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
 		lblSources.setText(selectedNode.getSources().toString()); // TODO
 		// lblSources.setText(selectedNode.getAttribute("sources").toString());
-		// nodeChart
-		// .analyseString(selectedNode.getAttribute("content").toString());
+		nodeChart.analyseString(selectedNode.getContent().toString());
 		// TODO
 		nodeChart.repaint();
 		// System.out.println("Update SelNodeGrp called "
