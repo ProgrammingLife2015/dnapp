@@ -145,8 +145,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param edges
 	 *            The path to the edge file.
 	 * @return true iff the graph was loaded successfully.
+	 * @throws IOException
 	 */
-	public final boolean loadGraph(final File nodes, final File edges) {
+	public final boolean loadGraph(final File nodes, final File edges)
+			throws IOException {
 		ProgressDialog pd = new ProgressDialog(window, "Importing graph", true);
 		pd.start();
 		boolean ret = true;

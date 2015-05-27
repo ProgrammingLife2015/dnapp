@@ -3,7 +3,7 @@ package nl.tudelft.ti2806.pl1.reader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -20,7 +20,7 @@ public class NodePlacerTest {
 	private DGraph graph;
 
 	@Before
-	public void startUp() throws FileNotFoundException {
+	public void startUp() throws IOException {
 		nodesatdepth = new ArrayList<Integer>();
 		nodesatdepth.add(2);
 		nodesatdepth.add(1);

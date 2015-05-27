@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
@@ -83,7 +84,12 @@ public enum Event implements ActionListener {
 						nodes);
 				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
 					final File edges = fsEdge.getSelectedFile();
-					window.content().loadGraph(nodes, edges);
+					try {
+						window.content().loadGraph(nodes, edges);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					return;
 				}
 			}

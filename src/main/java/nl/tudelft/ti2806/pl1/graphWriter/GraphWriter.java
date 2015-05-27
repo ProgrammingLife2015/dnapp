@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.graphWriter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
@@ -23,6 +24,8 @@ public final class GraphWriter {
 	 */
 	private GraphWriter() {
 	}
+
+	static int x = 0;
 
 	/**
 	 * The timeout.
@@ -49,10 +52,11 @@ public final class GraphWriter {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(TIMEOUT);
 
+			statement.executeUpdate("DROP TABLE IF EXISTS nodes");
+			statement.executeUpdate("DROP TABLE IF EXISTS edges");
+			statement.executeUpdate("DROP TABLE IF EXISTS sources");
 			statement
-					.executeUpdate("DROP TABLE IF EXISTS nodes OR edges OR sources");
-			statement
-					.executeUpdate("CREATE TABLE node (id integer, start integer, end integer,"
+					.executeUpdate("CREATE TABLE nodes (id integer, start integer, end integer,"
 							+ " x integer, y integer, depth integer)");
 			statement
 					.executeUpdate("CREATE TABLE edges (startId integer, endId integer)");
@@ -60,25 +64,43 @@ public final class GraphWriter {
 					.executeUpdate("CREATE TABLE sources (nodeId integer, reference string)");
 
 			// TODO Assumed that start and end node are in the graph
+			StringBuilder nodes = new StringBuilder();
+			StringBuilder sources = new StringBuilder();
+			StringBuilder edges = new StringBuilder();
+
+			nodes.append("INSERT INTO nodes VALUES ");
+			sources.append("INSERT INTO sources VALUES ");
+			edges.append("INSERT INTO edges VALUES ");
+
 			for (DNode node : graph.getNodes().values()) {
-				statement.executeUpdate("INSERT INTO nodes VALUES ("
-						+ node.getId() + ", " + node.getStart() + ", "
+				nodes.append("(" + node.getId() + ", " + node.getStart() + ", "
 						+ node.getEnd() + ", " + node.getX() + ", "
-						+ node.getY() + ", " + node.getDepth() + ")");
+						+ node.getY() + ", " + node.getDepth() + "),");
 
 				for (String s : node.getSources()) {
-					statement.executeUpdate("INSERT INTO sources VALUES ("
-							+ node.getId() + ", " + s + ")");
+					sources.append("(" + node.getId() + ", \"" + s + "\"),");
 				}
+
 			}
 
 			for (DEdge edge : graph.getEdges()) {
-				statement.executeUpdate("INSERT INTO edges VALUES ("
-						+ edge.getStartNode().getId() + ", "
-						+ edge.getEndNode().getId() + ")");
+				edges.append("(" + edge.getStartNode().getId() + ", "
+						+ edge.getEndNode().getId() + "),");
 			}
+
+			statement.executeUpdate(nodes.substring(0, nodes.length() - 1));
+			statement.executeUpdate(sources.substring(0, sources.length() - 1));
+			statement.executeUpdate(edges.substring(0, edges.length() - 1));
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				// connection close failed.
+				System.err.println(e);
+			}
 		}
 	}
 }
