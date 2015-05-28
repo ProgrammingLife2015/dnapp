@@ -35,10 +35,14 @@ public class ConvertDGraphTest {
 		when(node1.getId()).thenReturn(1);
 		when(node1.getX()).thenReturn(0);
 		when(node1.getY()).thenReturn(0);
+		when(node1.getPercUnknown()).thenReturn(1.0);
+		when(node1.getContent()).thenReturn("CATG");
 
 		when(node2.getId()).thenReturn(2);
 		when(node2.getX()).thenReturn(20);
 		when(node2.getY()).thenReturn(0);
+		when(node2.getPercUnknown()).thenReturn(1.0);
+		when(node2.getContent()).thenReturn("CATG");
 
 		when(edge.getStartNode()).thenReturn(node1);
 		when(edge.getEndNode()).thenReturn(node2);

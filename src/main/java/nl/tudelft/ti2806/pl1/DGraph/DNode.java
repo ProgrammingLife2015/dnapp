@@ -56,7 +56,7 @@ public class DNode {
 	private double percUnknown;
 
 	/** @return the percUnknown */
-	public final double getPercUnknown() {
+	public double getPercUnknown() {
 		return percUnknown;
 	}
 
@@ -142,14 +142,14 @@ public class DNode {
 	 * 
 	 * @return The ID of the node
 	 */
-	public final int getId() {
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @return the x
 	 */
-	public final int getX() {
+	public int getX() {
 		return x;
 	}
 
@@ -164,7 +164,7 @@ public class DNode {
 	/**
 	 * @return the y
 	 */
-	public final int getY() {
+	public int getY() {
 		return y;
 	}
 
@@ -179,7 +179,7 @@ public class DNode {
 	/**
 	 * @return the depth
 	 */
-	public final int getDepth() {
+	public int getDepth() {
 		return depth;
 	}
 
@@ -206,7 +206,7 @@ public class DNode {
 	 * 
 	 * @return Returns all the outgoing edges
 	 */
-	public final Collection<DEdge> getOutEdges() {
+	public Collection<DEdge> getOutEdges() {
 		return outEdges;
 	}
 
@@ -225,7 +225,7 @@ public class DNode {
 	 * 
 	 * @return the incoming edges
 	 */
-	public final Collection<DEdge> getInEdges() {
+	public Collection<DEdge> getInEdges() {
 		return inEdges;
 	}
 
@@ -244,7 +244,7 @@ public class DNode {
 	 * 
 	 * @return Returns the different sources which contains this node
 	 */
-	public final HashSet<String> getSources() {
+	public HashSet<String> getSources() {
 		return sources;
 	}
 
@@ -263,7 +263,7 @@ public class DNode {
 	 * 
 	 * @return The starting point on the reference genome
 	 */
-	public final int getStart() {
+	public int getStart() {
 		return start;
 	}
 
@@ -280,7 +280,7 @@ public class DNode {
 	/**
 	 * @return The ending point on the reference genome.
 	 */
-	public final int getEnd() {
+	public int getEnd() {
 		return end;
 	}
 
@@ -299,7 +299,7 @@ public class DNode {
 	 * 
 	 * @return The content of the node
 	 */
-	public final String getContent() {
+	public String getContent() {
 		return content;
 	}
 
@@ -318,10 +318,10 @@ public class DNode {
 	 * 
 	 * @return All the edges in the node.
 	 */
-	public final Collection<DEdge> getAllEdges() {
+	public Collection<DEdge> getAllEdges() {
 		Collection<DEdge> allEdges = new ArrayList<DEdge>();
-		allEdges.addAll(inEdges);
-		allEdges.addAll(outEdges);
+		allEdges.addAll(getInEdges());
+		allEdges.addAll(getOutEdges());
 		return allEdges;
 	}
 
@@ -330,9 +330,9 @@ public class DNode {
 	 * 
 	 * @return All the nodes which have an edge to this node
 	 */
-	public final Collection<DNode> getPreviousNodes() {
+	public Collection<DNode> getPreviousNodes() {
 		ArrayList<DNode> previous = new ArrayList<DNode>();
-		for (DEdge edge : inEdges) {
+		for (DEdge edge : getInEdges()) {
 			previous.add(edge.getStartNode());
 		}
 		return previous;
@@ -343,9 +343,9 @@ public class DNode {
 	 * 
 	 * @return All the nodes to which this node has an edge
 	 */
-	public final Collection<DNode> getNextNodes() {
+	public Collection<DNode> getNextNodes() {
 		ArrayList<DNode> next = new ArrayList<DNode>();
-		for (DEdge edge : outEdges) {
+		for (DEdge edge : getOutEdges()) {
 			next.add(edge.getEndNode());
 		}
 		return next;
@@ -358,12 +358,12 @@ public class DNode {
 	 *            The edge to be removed
 	 * @return A boolean indicating if it succeeded or failed
 	 */
-	public final boolean deleteEdge(final DEdge edge) {
-		if (inEdges.contains(edge)) {
-			inEdges.remove(edge);
+	public boolean deleteEdge(final DEdge edge) {
+		if (getInEdges().contains(edge)) {
+			getInEdges().remove(edge);
 			return true;
-		} else if (outEdges.contains(edge)) {
-			outEdges.remove(edge);
+		} else if (getOutEdges().contains(edge)) {
+			getOutEdges().remove(edge);
 			return true;
 		} else {
 			return false;
