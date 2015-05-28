@@ -5,6 +5,8 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,6 +31,7 @@ import nl.tudelft.ti2806.pl1.reader.Reader;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
@@ -194,7 +197,34 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
+		view.addMouseWheelListener(new Scrolling());
 		return ret;
+	}
+
+	/**
+	 * 
+	 * @param newgraph
+	 *            The graph you want to draw.
+	 */
+	private void drawNewGraph(final Graph newgraph) {
+		Viewer viewer = new Viewer(newgraph,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		viewer.disableAutoLayout();
+		view = viewer.addDefaultView(false);
+		view.setPreferredSize(VIEW_SIZE);
+
+		vp = viewer.newViewerPipe();
+		vp.addViewerListener(new NodeClickListener());
+
+		view.addMouseListener(new ViewMouseListener());
+		graphPane.setViewportView(view);
+		window.revalidate();
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getMaximum());
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getValue() / 2);
+		view.addMouseWheelListener(new Scrolling());
+
 	}
 
 	/**
@@ -278,6 +308,113 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	@Override
 	public final String toString() {
 		return this.getClass().getName();
+	}
+
+	/**
+	 * Defines scroll behaviour.
+	 * 
+	 * @author Marissa
+	 * @since 27-05-2015
+	 */
+	class Scrolling implements MouseWheelListener {
+		/** How far we're zoomed in on the current level. **/
+		private int count = 0;
+		/** Which zoomlevel we're on. **/
+		private int zoomlevel = 0;
+
+		/** How far there has to be zoomed in to get to a new zoomlevel. **/
+		private static final int NEWLEVEL = 10;
+
+		/** How far one scroll zooms in. **/
+		private final double ZOOMPERCENTAGE = 1.1;
+
+		/**
+		 * This method decides what to do when the mouse is scrolled.
+		 * 
+		 * @param e
+		 *            MouseWheelEvent for which is being handled.
+		 */
+		public void mouseWheelMoved(final MouseWheelEvent e) {
+			int rotation = e.getWheelRotation();
+			count += rotation;
+			if (count > NEWLEVEL) {
+				upZoomlevel();
+				// TODO define which zoomlevel does what and get the new graph
+			} else if (count < -NEWLEVEL) {
+				downZoomlevel();
+				// TODO define which zoomlevel does what and get the new graph
+			} else if (rotation > 0) {
+				zoomIn(ZOOMPERCENTAGE);
+			} else if (rotation < 0) {
+				zoomOut(ZOOMPERCENTAGE);
+			}
+
+		}
+
+		/**
+		 * Resets zoompercentage to 1.
+		 */
+		public void resetZoom() {
+			view.getCamera().setViewPercent(1);
+			count = 0;
+		}
+
+		/**
+		 * Lets you zoom in a defined amount.
+		 * 
+		 * @param percentage
+		 *            How much you want to zoom.
+		 */
+		public void zoomIn(final double percentage) {
+			count++;
+			Point3 curcenter = view.getCamera().getViewCenter();
+			view.getCamera().setViewPercent(
+					view.getCamera().getViewPercent() * percentage);
+			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
+					curcenter.z);
+		}
+
+		/**
+		 * Lets you zoom out a defined amount.
+		 * 
+		 * @param percentage
+		 *            How much you want to zoom.
+		 */
+		public void zoomOut(final double percentage) {
+			count--;
+			Point3 curcenter = view.getCamera().getViewCenter();
+			view.getCamera().setViewPercent(
+					view.getCamera().getViewPercent() / percentage);
+			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
+					curcenter.z);
+		}
+
+		/**
+		 * Lets you zoom in one level further.
+		 */
+		public void upZoomlevel() {
+			count = 0;
+			zoomlevel++;
+		}
+
+		/**
+		 * Lets you zoom out one level further.
+		 */
+		public void downZoomlevel() {
+			count = 0;
+			zoomlevel--;
+		}
+
+		/**
+		 * Lets you go to a new zoomlevel.
+		 * 
+		 * @param newzoomlevel
+		 *            The new zoomlevel
+		 */
+		public void setZoomlevel(final int newzoomlevel) {
+			count = 0;
+			zoomlevel = newzoomlevel;
+		}
 	}
 
 	/**
@@ -423,5 +560,4 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 	}
-
 }
