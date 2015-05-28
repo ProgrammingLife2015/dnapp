@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,7 +49,7 @@ public class BinaryTreeTest {
 	 *             path not found
 	 */
 	@Before
-	public final void setUp() throws IOException {
+	public final void setUp() {
 		s1 = "((a,b)c,(d,e)f)g;";
 		s2 = "((a,b)c,(d,e)f)g;";
 		s3 = "((a,b)z,(d,e)f)g;";
@@ -179,6 +180,28 @@ public class BinaryTreeTest {
 		assertEquals("Bla bla bla test tekst bla bla",
 				PhyloPanel.readIntoString(new File(
 						"src/test/resources/readIntoFileTest.txt")));
+	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public final void testGetCenter() {
+		final InnerNode t = (InnerNode) BinaryTree.parseNewick(
+				"((a,b)c,(d,e)f)g;", null);
+		assertEquals(t.getCenter(), new Point(0, 0));
+	}
+
+	@Test
+	public final void testComputePlacement() {
+		PhyloPanel pp = new PhyloPanel();
+		pp.loadTree(new File("src/test/resources/phylotree.txt"));
+		BinaryTree t = pp.getTree();
+		assertEquals(t.computePlacement(0, 0), 4);
+		t.setCollapsed(true);
+		t.getPhyloPanel().plotTree();
+		assertEquals(t.computePlacement(0, 0), 1);
 	}
 
 }
