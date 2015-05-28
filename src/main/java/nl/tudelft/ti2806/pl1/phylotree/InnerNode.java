@@ -181,6 +181,10 @@ public class InnerNode extends BinaryTree {
 
 		/** {@inheritDoc} */
 		public void mouseClicked(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mousePressed(final MouseEvent e) {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				System.out.println("Button1");
@@ -194,10 +198,6 @@ public class InnerNode extends BinaryTree {
 				System.out.println("Other button: " + e.getButton());
 				break;
 			}
-		}
-
-		/** {@inheritDoc} */
-		public void mousePressed(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
