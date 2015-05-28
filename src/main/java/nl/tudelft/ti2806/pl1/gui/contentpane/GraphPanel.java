@@ -52,10 +52,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	private static final int DEFAULT_DIVIDER_LOC = 300;
 
-	// /**
-	// * TODO the temp hard coded size of the view.
-	// */
-	// private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
+	/**
+	 * TODO the temp hard coded size of the view.
+	 */
+	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
 
 	/**
 	 * The list of node selection observers.
