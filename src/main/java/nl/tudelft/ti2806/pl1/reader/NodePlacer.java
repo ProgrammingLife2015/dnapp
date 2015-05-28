@@ -1,27 +1,32 @@
 package nl.tudelft.ti2806.pl1.reader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 
 /**
- * This class takes care of placing the nodes in their respective place.
+ * This class calculates where to place the nodes.
  * 
  * @author Marissa, Mark
  *
  */
 public final class NodePlacer {
 
-	// TODO
-	static int height = 500; // view.getDefaultView().getHeight();
-	static int width = 200000; // view.getDefaultView().getWidth();
+	private static final int SIZEMULTIPLIER = 10;
+
+	/** Vertical space over which we will spread the nodes. */
+	private static int height;
+	/** Horizontal space over which we will spread the nodes. */
+	private static int width;
 
 	/**
-	 * empty private constructor.
+	 * Empty private constructor.
 	 */
 	private NodePlacer() {
 	}
@@ -37,15 +42,15 @@ public final class NodePlacer {
 	 * nodes.
 	 * 
 	 * @param graph
-	 *            The graph for which the nodes are set
-	 * @param view
-	 *            The viewer of the graph
+	 *            The Graph for which the Nodes are set
+	 * @throws InvalidNodePlacementException
+	 *             Placing node at invalid place.
 	 */
-	public static void place(final DGraph graph) {
+	public static void place(final DGraph graph)
+			throws InvalidNodePlacementException {
 		if (graph.getNodeCount() == 0) {
 			return;
 		}
-
 		nodesAtDepth = new ArrayList<Integer>();
 		nodesAtDepth.add(graph.getNodeCount());
 		DNode first = graph.getStart();
@@ -53,6 +58,9 @@ public final class NodePlacer {
 		Queue<DNode> que = new LinkedList<DNode>();
 		que.add(first);
 		depthLevel(que);
+
+		width = nodesAtDepth.size() * SIZEMULTIPLIER;
+		height = Collections.max(nodesAtDepth) * SIZEMULTIPLIER * 2;
 
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
@@ -91,20 +99,20 @@ public final class NodePlacer {
 	}
 
 	/**
-	 * This method returns the with location of the node.
+	 * This method returns the width location of the node.
 	 * 
-	 * @param width
+	 * @param screenwidth
 	 *            The width of the viewer
-	 * @param depth
+	 * @param nodedepth
 	 *            The depth of the node
 	 * @param maxdepth
 	 *            The maximum depth of the nodes in the graph
 	 * @return The width location of the node
 	 */
-	protected static int getWidth(final double width, final double depth,
-			final double maxdepth) {
-		double wdiff = width / maxdepth;
-		return (int) (wdiff * depth);
+	protected static int getWidth(final double screenwidth,
+			final double nodedepth, final double maxdepth) {
+		double wdiff = screenwidth / maxdepth;
+		return (int) (wdiff * nodedepth);
 
 	}
 
@@ -117,18 +125,24 @@ public final class NodePlacer {
 	 *            The difference in height between nodes
 	 * @param nodesatdepth
 	 *            The amount of nodes at depth i
-	 * @param height
+	 * @param screenheight
 	 *            The height of the viewer
 	 * @return The height of the node
+	 * @throws InvalidNodePlacementException
+	 *             Placing node at invalid place.
 	 */
 	protected static int getHeight(final int depth,
 			final ArrayList<Integer> heightdiff,
-			final ArrayList<Integer> nodesatdepth, final int height) {
+			final ArrayList<Integer> nodesatdepth, final int screenheight)
+			throws InvalidNodePlacementException {
 		int hdiff = heightdiff.get(depth);
 		int natdepth = nodesatdepth.get(depth);
-		// TODO throw error if natdepth <1 ?
-		nodesatdepth.set(depth, natdepth - 1);
-		return height / 2 - natdepth * hdiff;
+		if (natdepth >= 1) {
+			nodesatdepth.set(depth, natdepth - 1);
+			return screenheight / 2 - natdepth * hdiff;
+		} else {
+			throw new InvalidNodePlacementException();
+		}
 	}
 
 	/**
@@ -157,11 +171,11 @@ public final class NodePlacer {
 	}
 
 	/**
-	 * @param height
+	 * @param newheight
 	 *            the height to set
 	 */
-	public static void setHeight(final int height) {
-		NodePlacer.height = height;
+	public static void setHeight(final int newheight) {
+		NodePlacer.height = newheight;
 	}
 
 	/**
@@ -172,11 +186,11 @@ public final class NodePlacer {
 	}
 
 	/**
-	 * @param width
+	 * @param newwidth
 	 *            the width to set
 	 */
-	public static void setWidth(final int width) {
-		NodePlacer.width = width;
+	public static void setWidth(final int newwidth) {
+		NodePlacer.width = newwidth;
 	}
 
 }

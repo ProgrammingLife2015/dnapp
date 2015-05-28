@@ -6,6 +6,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.file.ExportDialog;
 import nl.tudelft.ti2806.pl1.file.ImportDialog;
 import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
@@ -83,7 +84,11 @@ public enum Event implements ActionListener {
 						nodes);
 				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
 					final File edges = fsEdge.getSelectedFile();
-					window.content().loadGraph(nodes, edges);
+					try {
+						window.content().loadGraph(nodes, edges);
+					} catch (InvalidNodePlacementException e1) {
+						e1.printStackTrace();
+					}
 					return;
 				}
 			}
