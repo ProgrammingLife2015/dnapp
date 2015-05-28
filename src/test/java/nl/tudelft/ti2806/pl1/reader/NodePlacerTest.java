@@ -76,16 +76,16 @@ public class NodePlacerTest {
 
 	@Test
 	public void xLevelNodeEndTest() {
-		assertEquals(graph.getDNode(-1).getX(), 30);
+		assertEquals(graph.getDNode(-1).getX(), 90);
 	}
 
 	@Test
 	public void xLevelNode0Test() {
-		assertEquals(graph.getDNode(0).getX(), 10);
+		assertEquals(graph.getDNode(0).getX(), 30);
 	}
 
 	@Test
 	public void xLevelNode1Test() {
-		assertEquals(graph.getDNode(1).getX(), 20);
+		assertEquals(graph.getDNode(1).getX(), 60);
 	}
 }
