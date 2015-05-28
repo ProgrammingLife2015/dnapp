@@ -65,18 +65,25 @@ public abstract class AbstractDNode {
 	}
 
 	/**
-	 * Get the content of the node.
+	 * Returns the content of the node to show in the information bar..
+	 * 
+	 * @return Content of the node.
+	 */
+	public abstract String showContent();
+
+	/**
+	 * Get the content of the node in a hashmap.
 	 * 
 	 * @return Content of the DNode.
 	 */
-	public abstract HashMap<String, String> getContent();
+	public abstract HashMap<String, String> getContentMap();
 
 	/**
-	 * Get the percentage of unknown nucleotides.
+	 * Get the percentage of unknown nucleotides for each source in a hashmap.
 	 * 
 	 * @return Percentage of unknown nucleotides.
 	 */
-	public abstract double getPercUnknown();
+	public abstract HashMap<String, Double> getPercUnknownMap();
 
 	/**
 	 * Add an edge to a node.
