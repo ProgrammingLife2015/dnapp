@@ -32,6 +32,10 @@ public class PhyloPanel extends JScrollPane {
 	 */
 	private BinaryTree tree;
 
+	public BinaryTree getTree() {
+		return tree;
+	}
+
 	/**
 	 * The path to the nwk file.
 	 */
