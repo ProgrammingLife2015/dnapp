@@ -1,8 +1,19 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 /** Decides which zoomlevel to use. **/
-public class ZoomSelector {
+public final class ZoomSelector {
 
+	/** private constructor. **/
+	private ZoomSelector() {
+
+	}
+
+	/**
+	 * 
+	 * @param zoomlevel
+	 *            The zoomlevel for which we want to get the graph.
+	 * @return Returns the correct graph.
+	 */
 	public static String getGraph(final int zoomlevel) {
 		String level;
 		switch (zoomlevel) {
@@ -16,7 +27,7 @@ public class ZoomSelector {
 			level = "zoomout 1";
 			break;
 		default:
-			level = "oops";
+			level = "special";
 			break;
 		}
 		return level;
