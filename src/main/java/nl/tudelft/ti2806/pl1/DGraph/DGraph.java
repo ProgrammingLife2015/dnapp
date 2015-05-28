@@ -103,7 +103,7 @@ public class DGraph {
 	 *            The node to be added
 	 * @return A boolean indicating of the operation succeeded
 	 */
-	public final boolean addDNode(final DNode node) {
+	public boolean addDNode(final DNode node) {
 		if (nodes.containsKey(node.getId())) {
 			return false;
 		}
@@ -127,7 +127,7 @@ public class DGraph {
 	 *            The node to be removed
 	 * @return A boolean indicating of the operation succeeded
 	 */
-	public final boolean removeDNode(final DNode node) {
+	public boolean removeDNode(final DNode node) {
 		if (!nodes.containsKey(node.getId())) {
 			return false;
 		}
@@ -141,7 +141,7 @@ public class DGraph {
 	 *            The node id to be removed
 	 * @return A boolean indicating of the operation succeeded
 	 */
-	public final boolean removeDNode(final int n) {
+	public boolean removeDNode(final int n) {
 		if (!nodes.containsKey(n)) {
 			return false;
 		}
@@ -168,7 +168,7 @@ public class DGraph {
 	 *            The edge to be added
 	 * @return A boolean indicating of the operation succeeded
 	 */
-	public final boolean addDEdge(final DEdge edge) {
+	public boolean addDEdge(final DEdge edge) {
 		if (!nodes.containsKey(edge.getStartNode().getId())
 				|| !nodes.containsKey(edge.getEndNode().getId())) {
 			return false;
@@ -189,7 +189,7 @@ public class DGraph {
 	 *            The edge to be removed
 	 * @return A boolean indicating of the operation succeeded
 	 */
-	public final boolean removeDEdge(final DEdge edge) {
+	public boolean removeDEdge(final DEdge edge) {
 		if (!nodes.containsKey(edge.getStartNode().getId())
 				|| !nodes.containsKey(edge.getEndNode().getId())) {
 			return false;
@@ -210,7 +210,7 @@ public class DGraph {
 	 *            The id of the node
 	 * @return The node in the graph
 	 */
-	public final DNode getDNode(final int n) {
+	public DNode getDNode(final int n) {
 		return nodes.get(n);
 	}
 
@@ -219,7 +219,7 @@ public class DGraph {
 	 * 
 	 * @return The amount of nodes in the graph
 	 */
-	public final int getNodeCount() {
+	public int getNodeCount() {
 		return nodes.size();
 	}
 
@@ -241,7 +241,7 @@ public class DGraph {
 	/**
 	 * @return the end.
 	 */
-	public final DNode getEnd() {
+	public DNode getEnd() {
 		return end;
 	}
 
