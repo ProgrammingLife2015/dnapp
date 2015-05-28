@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
@@ -128,6 +129,18 @@ public abstract class BinaryTree extends JButton {
 		this.gridCoordinates = new Point(x, y);
 	}
 
+	/**
+	 * Gets the coordinates of the center.
+	 * 
+	 * @return A Point with the coordinates.
+	 */
+	public final Point getCenter() {
+		Rectangle rect = this.getBounds();
+		double x = (rect.getMinX() + rect.getMaxX()) / 2;
+		double y = (rect.getMinY() + rect.getMaxY()) / 2;
+		return new Point((int) x, (int) y);
+	}
+
 	@Override
 	public final String toString() {
 		return toStringHelper("");
@@ -253,7 +266,7 @@ public abstract class BinaryTree extends JButton {
 	 * 
 	 * @return
 	 */
-	public PhyloPanel getPhyloPanel() {
+	public final PhyloPanel getPhyloPanel() {
 		return phyloPanel;
 	}
 

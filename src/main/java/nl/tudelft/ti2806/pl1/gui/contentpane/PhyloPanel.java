@@ -14,7 +14,6 @@ import java.io.IOException;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
-import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -28,28 +27,20 @@ public class PhyloPanel extends JScrollPane {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
 
-	/** The window this panel is part of. */
-	private Window window;
-
 	/**
-	 * 
+	 * The tree that this panel will show.
 	 */
 	private BinaryTree tree;
 
 	/**
-	 * 
+	 * The path to the nwk file.
 	 */
 	private String newickSource;
 
 	/**
-	 * 
+	 * The scrollpanel.
 	 */
 	private ScrollablePanel treePanel;
-
-	/**
-	 * 
-	 */
-	private int maxX = 0, maxY = 0;
 
 	/**
 	 * The space inbetween the nodes.
@@ -65,14 +56,61 @@ public class PhyloPanel extends JScrollPane {
 	 * @param w
 	 *            The window this panel is part of.
 	 */
-	public PhyloPanel(final Window w) {
-		this.window = w;
-		treePanel = new ScrollablePanel();
+	public PhyloPanel() {
+		treePanel = new ScrollablePanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 118748767146413611L;
+
+			@Override
+			protected final void paintComponent(final Graphics g) {
+				super.paintComponent(g);
+				if (tree != null) {
+					drawLines(g, tree);
+				}
+				System.out.println("Drawn!");
+			}
+		};
 		treePanel.setLayout(null);
 		setViewportView(treePanel);
+
 	}
 
 	/**
+	 * Draws lines from the current tree to its children.
+	 * 
+	 * @param g
+	 *            The graphics object.
+	 * @param bintree
+	 *            The current tree
+	 */
+	private void drawLines(final Graphics g, final BinaryTree bintree) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.BLACK);
+		g2.setStroke(new BasicStroke(2));
+		if (!bintree.isCollapsed()) {
+			BinaryTree[] children = bintree.getChildren();
+			int x = (int) bintree.getCenter().getX();
+			int y = (int) bintree.getCenter().getY();
+			for (BinaryTree child : children) {
+				int childX = (int) child.getCenter().getX();
+				int childY = (int) child.getCenter().getY();
+				if (childY == y) {
+					g2.drawLine(x, y, childX, y);
+					System.out.println("Drawn direct line");
+				} else {
+					g2.drawLine(x, y, x, childY);
+					g2.drawLine(x, childY, childX, childY);
+					System.out.println("Drawn two lines");
+				}
+				drawLines(g, child);
+			}
+		}
+	}
+
+	/**
+	 * Loads a newick file.
 	 * 
 	 * @param newick
 	 *            The Newick file to load.
@@ -94,7 +132,7 @@ public class PhyloPanel extends JScrollPane {
 	}
 
 	/**
-	 * 
+	 * Plots the tree as a button.
 	 */
 	public final void plotTree() {
 		removeTree();
@@ -116,22 +154,23 @@ public class PhyloPanel extends JScrollPane {
 	}
 
 	/**
+	 * Adds the current tree and all its children if it is not collapsed.
 	 * 
-	 * @param tree
+	 * @param bintree
+	 *            The current tree
 	 */
-	private void addNode(final BinaryTree tree) {
+	private void addNode(final BinaryTree bintree) {
 		// treePanel.remove(tree);
-		int x = (int) tree.getGridCoordinates().getX();
-		int y = (int) tree.getGridCoordinates().getY();
-		maxX = Math.max(maxX, x);
-		maxY = Math.max(maxY, y);
-		tree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y
+		int x = (int) bintree.getGridCoordinates().getX();
+		int y = (int) bintree.getGridCoordinates().getY();
+		bintree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y
 				* (NODE_HEIGHT + INSETS.top) + INSETS.top, NODE_WIDTH,
 				NODE_HEIGHT);
-		tree.setText(tree.getID());
-		treePanel.add(tree);
-		if (!tree.isCollapsed()) {
-			for (BinaryTree t : tree.getChildren()) {
+		bintree.setText(bintree.getID());
+
+		treePanel.add(bintree);
+		if (!bintree.isCollapsed()) {
+			for (BinaryTree t : bintree.getChildren()) {
 				addNode(t);
 			}
 		}
@@ -158,26 +197,4 @@ public class PhyloPanel extends JScrollPane {
 
 		return buff.toString();
 	}
-
-	@Override
-	protected final void paintComponent(final Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g.setColor(Color.PINK);
-		g2.setColor(Color.PINK);
-		g2.setStroke(new BasicStroke(3));
-		g2.fillRect(20, 20, 200, 200);
-		g.fillRect(150, 100, 300, 300);
-		if (tree != null) {
-
-			g2.drawLine((int) (tree.getX() + 0.5 * tree.getWidth()),
-					(int) (tree.getY() + 0.5 * tree.getHeight()), (int) (tree
-							.getX() + 0.5 * tree.getWidth()), (int) (tree
-							.getRight().getY() + 0.5 * tree.getRight()
-							.getHeight()));
-		}
-
-		System.out.println("Drawn!");
-	}
-
 }
