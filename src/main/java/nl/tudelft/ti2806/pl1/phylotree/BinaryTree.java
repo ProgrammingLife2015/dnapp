@@ -2,6 +2,9 @@ package nl.tudelft.ti2806.pl1.phylotree;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
@@ -21,6 +24,14 @@ public abstract class BinaryTree extends JButton {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -7580501984360893313L;
 
+	/**
+	 * The number of significant digits of the evolutionary distance to the
+	 * parent node to show.
+	 * 
+	 * @see BinaryTree#pathLength
+	 */
+	private static final int PATH_LENGTH_ROUND_TO_N = 5;
+
 	/** The parent container. */
 	private final PhyloPanel phyloPanel;
 
@@ -30,14 +41,10 @@ public abstract class BinaryTree extends JButton {
 	/** The name label of the node. */
 	private final String id;
 
-	/**
-	 * 
-	 */
+	/** Whether the ancestors of this node are collapsed 'into' this node. */
 	private boolean collapsed = false;
 
-	/**
-	 * 
-	 */
+	/** The placement of this node in the tree grid. */
 	private Point gridCoordinates = new Point(0, 0);
 
 	/**
@@ -63,9 +70,14 @@ public abstract class BinaryTree extends JButton {
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
-		if (!nameIn.isEmpty()) {
-			this.setToolTipText(nameIn);
+		if (nameIn.isEmpty()) {
+			setToolTipText(String.valueOf(roundN(pathLength,
+					PATH_LENGTH_ROUND_TO_N)));
+		} else {
+			setToolTipText(nameIn + "\n"
+					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N));
 		}
+		addMouseListener(new NodeMouseListener());
 	}
 
 	/** @return the path length. */
@@ -106,7 +118,7 @@ public abstract class BinaryTree extends JButton {
 	public abstract BinaryTree getRight();
 
 	/** @return an array of the children of this node. */
-	public abstract BinaryTree[] getChildren();
+	public abstract List<BinaryTree> getChildren();
 
 	/**
 	 * @param x
@@ -217,6 +229,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
+	 * Extracts a double value from a String array.
 	 * 
 	 * @param array
 	 *            The array to extract the double from.
@@ -255,7 +268,7 @@ public abstract class BinaryTree extends JButton {
 	 *            the value to round
 	 * @param n
 	 *            the number of decimal places to round on
-	 * @return the value x rounded to n decimal places
+	 * @return the value <code>x</code> rounded to <code>n</code> decimal places
 	 */
 	private static double roundN(final double x, final int n) {
 		final int base = 10;
@@ -263,8 +276,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return The phylo panel this node is part of.
 	 */
 	public final PhyloPanel getPhyloPanel() {
 		return phyloPanel;
@@ -278,11 +290,74 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @param collapsed
+	 * @param b
 	 *            the collapsed to set
 	 */
-	public final void setCollapsed(final boolean collapsed) {
-		this.collapsed = collapsed;
+	public final void setCollapsed(final boolean b) {
+		this.collapsed = b;
+	}
+
+	/**
+	 * Note: don't use keyword selected! superclass has methods isSelected and
+	 * setSelected.
+	 * 
+	 * @return true iff this node is selected.
+	 */
+	public abstract boolean isChosen();
+
+	/*
+	 * Note: don't use keyword selected! superclass has methods isSelected and
+	 * setSelected.
+	 */
+	/**
+	 * Decides what to do when the node gets selected or deselected.
+	 * 
+	 * @param b
+	 *            whether this node is selected.
+	 */
+	public abstract void setChosen(final boolean b);
+
+	/**
+	 * 
+	 * @author Maarten, Justin
+	 * @since 27-5-2015
+	 * @version 1.0
+	 *
+	 */
+	class NodeMouseListener implements MouseListener {
+
+		/** {@inheritDoc} */
+		public void mouseClicked(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mousePressed(final MouseEvent e) {
+			switch (e.getButton()) {
+			case MouseEvent.BUTTON1:
+				setChosen(!isChosen());
+				System.out.println("Node " + id + " set chosen=" + isChosen());
+				getPhyloPanel().plotTree();
+				break;
+			case MouseEvent.BUTTON3:
+				setCollapsed(!isCollapsed());
+				getPhyloPanel().plotTree();
+				break;
+			default:
+			}
+		}
+
+		/** {@inheritDoc} */
+		public void mouseReleased(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mouseEntered(final MouseEvent e) {
+		}
+
+		/** {@inheritDoc} */
+		public void mouseExited(final MouseEvent e) {
+		}
+
 	}
 
 }

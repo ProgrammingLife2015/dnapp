@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 
@@ -27,44 +28,52 @@ public class PhyloPanel extends JScrollPane {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
 
-	/**
-	 * The tree that this panel will show.
-	 */
-	private BinaryTree tree;
-
-	public BinaryTree getTree() {
-		return tree;
-	}
-
-	/**
-	 * The path to the nwk file.
-	 */
-	private String newickSource;
-
-	/**
-	 * The scrollpanel.
-	 */
-	private ScrollablePanel treePanel;
-
-	/**
-	 * The space inbetween the nodes.
-	 */
-	private static final Insets INSETS = new Insets(3, 10, 0, 0);
-
 	/** The size of the nodes. */
 	private static final int NODE_WIDTH = 100, NODE_HEIGHT = 25;
 
+	/** The width of the edges connecting the nodes. */
+	private static final float EDGE_WIDTH = 2;
+
+	/** The color of a chosen/selected node. */
+	public static final Color NODE_SELECTED_COLOR = Color.ORANGE;
+
+	/** The color of an edge between two chosen/selected nodes. */
+	public static final Color EDGE_BETWEEN_SELECTED_COLOR = Color.ORANGE;
+
+	/** The color of a collapsed inner node. */
+	public static final Color INNER_NODE_COLLAPSED = Color.RED;
+
+	/** The color of a normal (not collapsed) inner node. */
+	public static final Color INNER_NODE_NORMAL = Color.GREEN;
+
+	/** The default color to use. */
+	public static final Color DEFAULT_COLOR = Color.BLACK;
+
+	/** The tree that this panel will show. */
+	private BinaryTree tree;
+
+	/**
+	 * @return the tree
+	 */
+	public final BinaryTree getTree() {
+		return tree;
+	}
+
+	/** The Newick formatted input string. */
+	private String newickSource;
+
+	/** The scroll panel. */
+	private ScrollablePanel treePanel;
+
+	/** The space in between the nodes. */
+	private static final Insets INSETS = new Insets(3, 10, 0, 0);
+
 	/**
 	 * Initializes the panel.
-	 * 
-	 * @param w
-	 *            The window this panel is part of.
 	 */
 	public PhyloPanel() {
 		treePanel = new ScrollablePanel() {
-			/**
-			 * 
-			 */
+			/** The serial version UID */
 			private static final long serialVersionUID = 118748767146413611L;
 
 			@Override
@@ -73,7 +82,6 @@ public class PhyloPanel extends JScrollPane {
 				if (tree != null) {
 					drawLines(g, tree);
 				}
-				System.out.println("Drawn!");
 			}
 		};
 		treePanel.setLayout(null);
@@ -91,26 +99,44 @@ public class PhyloPanel extends JScrollPane {
 	 */
 	private void drawLines(final Graphics g, final BinaryTree bintree) {
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.BLACK);
-		g2.setStroke(new BasicStroke(2));
+		g2.setStroke(new BasicStroke(EDGE_WIDTH));
 		if (!bintree.isCollapsed()) {
-			BinaryTree[] children = bintree.getChildren();
+			List<BinaryTree> children = bintree.getChildren();
 			int x = (int) bintree.getCenter().getX();
 			int y = (int) bintree.getCenter().getY();
 			for (BinaryTree child : children) {
+				g2.setColor(getLineColor(bintree, child));
 				int childX = (int) child.getCenter().getX();
 				int childY = (int) child.getCenter().getY();
 				if (childY == y) {
 					g2.drawLine(x, y, childX, y);
-					System.out.println("Drawn direct line");
 				} else {
 					g2.drawLine(x, y, x, childY);
 					g2.drawLine(x, childY, childX, childY);
-					System.out.println("Drawn two lines");
 				}
+				g2.setColor(DEFAULT_COLOR);
 				drawLines(g, child);
 			}
 		}
+	}
+
+	/**
+	 * Determines the color to draw the connecting line between two connected
+	 * nodes with.
+	 * 
+	 * @param parent
+	 *            The parent node.
+	 * @param child
+	 *            The child node.
+	 * @return The appropriate line color to connect the <code>parent</code> to
+	 *         the <code>child</code> with.
+	 */
+	private Color getLineColor(final BinaryTree parent, final BinaryTree child) {
+		if (parent.getChildren().contains(child) && parent.isChosen()
+				&& child.isChosen()) {
+			return EDGE_BETWEEN_SELECTED_COLOR;
+		}
+		return DEFAULT_COLOR;
 	}
 
 	/**
@@ -148,6 +174,7 @@ public class PhyloPanel extends JScrollPane {
 				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)
 				* (NODE_HEIGHT + INSETS.top) + INSETS.top));
 		repaint();
+		revalidate();
 	}
 
 	/**
@@ -171,7 +198,6 @@ public class PhyloPanel extends JScrollPane {
 				* (NODE_HEIGHT + INSETS.top) + INSETS.top, NODE_WIDTH,
 				NODE_HEIGHT);
 		bintree.setText(bintree.getID());
-
 		treePanel.add(bintree);
 		if (!bintree.isCollapsed()) {
 			for (BinaryTree t : bintree.getChildren()) {
