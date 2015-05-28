@@ -20,7 +20,7 @@ public class ImportDialog extends JFileChooser {
 	private static final long serialVersionUID = -3764514151291068712L;
 
 	/** The type of files this dialog will be able to load. */
-	private static ImportType filterType;
+	private ImportType filterType;
 
 	/**
 	 * Initialize the import dialog.
