@@ -183,7 +183,9 @@ public class InnerNode extends BinaryTree {
 				return false;
 			}
 		}
+
 		return getChildren().size() > 0;
+
 	}
 
 	@Override
