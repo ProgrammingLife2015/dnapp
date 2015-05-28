@@ -87,7 +87,7 @@ public enum Event implements ActionListener {
 					return;
 				}
 			}
-			statusBarError("An error occured during the loading of the file(s)");
+			dialogCanceled();
 		}
 	},
 
@@ -100,12 +100,11 @@ public enum Event implements ActionListener {
 		 */
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
-			if (fcPhylo.showDialog(window, "Load phylogenetic tree") == JFileChooser.APPROVE_OPTION) {
+			if (fcPhylo.showDialog(window, "Load Newick") == JFileChooser.APPROVE_OPTION) {
 				final File newick = fcPhylo.getSelectedFile();
 				window.content().loadTree(newick);
 			} else {
-				System.out.println("JA DIT IS HIER");
-				statusBarError("An error occured during the loading of the file(s)");
+				dialogCanceled();
 			}
 		}
 
@@ -131,7 +130,7 @@ public enum Event implements ActionListener {
 				window.content().writeGraph(writePath);
 				statusBarInfo("Graph file written to " + writePath);
 			} else {
-				statusBarError("No folder selected!");
+				dialogCanceled();
 			}
 		}
 	};
@@ -147,6 +146,15 @@ public enum Event implements ActionListener {
 	 */
 	public static void setWindow(final Window w) {
 		window = w;
+	}
+
+	/**
+	 * Called when the user closes a file chooser dialog box without specifying
+	 * a file to load or to save.
+	 */
+	private static void dialogCanceled() {
+		System.out
+				.println("User closed file chooser dialog without choosing a file.");
 	}
 
 	/**
