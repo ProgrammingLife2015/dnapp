@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.reader;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -18,10 +19,12 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
  */
 public final class NodePlacer {
 
-	private static final int SIZEMULTIPLIER = 10;
+	/** The distance between each node. */
+	private static final int X_MULTIPLIER = 30, Y_MULTIPLIER = 30;
 
 	/** Vertical space over which we will spread the nodes. */
 	private static int height;
+
 	/** Horizontal space over which we will spread the nodes. */
 	private static int width;
 
@@ -42,14 +45,15 @@ public final class NodePlacer {
 	 * nodes.
 	 * 
 	 * @param graph
-	 *            The Graph for which the Nodes are set
+	 *            The DGraph for which the Nodes are set
 	 * @throws InvalidNodePlacementException
 	 *             Placing node at invalid place.
+	 * @return The dimensions of the graph
 	 */
-	public static void place(final DGraph graph)
+	public static Dimension place(final DGraph graph)
 			throws InvalidNodePlacementException {
 		if (graph.getNodeCount() == 0) {
-			return;
+			return new Dimension(0, 0);
 		}
 		nodesAtDepth = new ArrayList<Integer>();
 		nodesAtDepth.add(graph.getNodeCount());
@@ -59,8 +63,8 @@ public final class NodePlacer {
 		que.add(first);
 		depthLevel(que);
 
-		width = nodesAtDepth.size() * SIZEMULTIPLIER;
-		height = Collections.max(nodesAtDepth) * SIZEMULTIPLIER * 2;
+		width = nodesAtDepth.size() * X_MULTIPLIER;
+		height = Collections.max(nodesAtDepth) * Y_MULTIPLIER;
 
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
@@ -68,6 +72,7 @@ public final class NodePlacer {
 			node.setX(getWidth(width, node.getDepth(), nodesAtDepth.size()));
 			node.setY(getHeight(node.getDepth(), hdiff, nodesAtDepth, height));
 		}
+		return new Dimension(width, height);
 	}
 
 	/**

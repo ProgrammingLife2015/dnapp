@@ -49,10 +49,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	private static final int DEFAULT_DIVIDER_LOC = 300;
 
-	/**
-	 * TODO the temp hard coded size of the view.
-	 */
-	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
+	// /**
+	// * TODO the temp hard coded size of the view.
+	// */
+	// private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
 
 	/**
 	 * The list of node selection observers.
@@ -78,6 +78,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	/** The graph's view panel. */
 	private ViewPanel view;
+
+	/** The size of the view panel. */
+	private Dimension viewSize;
 
 	/** The graph's view pipe. Used to listen for node click events. */
 	private ViewerPipe vp;
@@ -165,7 +168,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		try {
 			DGraph dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
-			NodePlacer.place(dgraph);
+			viewSize = NodePlacer.place(dgraph);
 			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -179,7 +182,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = viewer.addDefaultView(false);
-		view.setPreferredSize(VIEW_SIZE);
+		view.setPreferredSize(viewSize);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());

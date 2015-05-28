@@ -9,7 +9,6 @@ import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
-import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
  * A panel representing the content pane of the main window. Contains a tabbed
@@ -99,14 +98,6 @@ public class Content extends JPanel {
 	public final void loadGraph(final File nodePath, final File edgePath)
 			throws InvalidNodePlacementException {
 		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
-	}
-
-	/**
-	 * @param args
-	 *            jwz
-	 */
-	public static void main(final String[] args) {
-		Start.main(args);
 	}
 
 	@Override
