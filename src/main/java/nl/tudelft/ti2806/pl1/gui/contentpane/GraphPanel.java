@@ -88,6 +88,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/** The text area where node content will be shown. */
 	private JTextArea text;
 
+	private Scrolling scroll;
+
 	/**
 	 * Initialize a graph panel.
 	 * 
@@ -197,7 +199,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
-		view.addMouseWheelListener(new Scrolling());
+		scroll = new Scrolling();
+		view.addMouseWheelListener(scroll);
 		return ret;
 	}
 
@@ -216,6 +219,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
+		view.getCamera().setViewPercent(scroll.getZoomPercentage());
+
 		view.addMouseListener(new ViewMouseListener());
 		graphPane.setViewportView(view);
 		window.revalidate();
@@ -223,8 +228,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
-		view.addMouseWheelListener(new Scrolling());
-
+		scroll = new Scrolling();
+		view.addMouseWheelListener(scroll);
 	}
 
 	/**
@@ -326,7 +331,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		private static final int NEWLEVEL = 10;
 
 		/** How far one scroll zooms in. **/
-		private final double ZOOMPERCENTAGE = 1.1;
+		private static final double ZOOMPERCENTAGE = 1.1;
 
 		/**
 		 * This method decides what to do when the mouse is scrolled.
@@ -335,20 +340,26 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 *            MouseWheelEvent for which is being handled.
 		 */
 		public void mouseWheelMoved(final MouseWheelEvent e) {
-			int rotation = e.getWheelRotation();
-			count += rotation;
+			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
 				upZoomlevel();
-				// TODO define which zoomlevel does what and get the new graph
+				ZoomSelector.getGraph(zoomlevel);
 			} else if (count < -NEWLEVEL) {
 				downZoomlevel();
-				// TODO define which zoomlevel does what and get the new graph
+				ZoomSelector.getGraph(zoomlevel);
 			} else if (rotation > 0) {
 				zoomIn(ZOOMPERCENTAGE);
 			} else if (rotation < 0) {
 				zoomOut(ZOOMPERCENTAGE);
 			}
+		}
 
+		/**
+		 * 
+		 * @return How much the
+		 */
+		public double getZoomPercentage() {
+			return view.getCamera().getViewPercent();
 		}
 
 		/**
@@ -369,7 +380,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			count++;
 			Point3 curcenter = view.getCamera().getViewCenter();
 			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() * percentage);
+					view.getCamera().getViewPercent() / percentage);
 			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
 					curcenter.z);
 		}
@@ -384,7 +395,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			count--;
 			Point3 curcenter = view.getCamera().getViewCenter();
 			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() / percentage);
+					view.getCamera().getViewPercent() * percentage);
 			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
 					curcenter.z);
 		}
