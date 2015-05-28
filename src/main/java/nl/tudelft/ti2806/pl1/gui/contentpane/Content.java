@@ -70,7 +70,7 @@ public class Content extends JPanel {
 		setLayout(new BorderLayout());
 
 		graphPanel = new GraphPanel(window);
-		phyloPanel = new PhyloPanel(window);
+		phyloPanel = new PhyloPanel();
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addTab("Phylogenetic tree", phyloPanel);
