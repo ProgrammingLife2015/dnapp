@@ -2,7 +2,6 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -29,9 +28,8 @@ public final class EdgeReader {
 	 * @return ArrayList of all Edges.
 	 * @throws IOException
 	 */
-	public static ArrayList<DEdge> readEdges(final BufferedReader reader,
-			final DGraph graph) throws IOException {
-		ArrayList<DEdge> edges = new ArrayList<DEdge>();
+	public static void readEdges(final BufferedReader reader, final DGraph graph)
+			throws IOException {
 		String line;
 		while ((line = reader.readLine()) != null) {
 			String[] nodes = line.split("\\s");
@@ -54,9 +52,8 @@ public final class EdgeReader {
 				throw new InvalidFileFormatException("The id's shoould exist");
 			}
 			DEdge edge = new DEdge(src, tar);
-			edges.add(edge);
+			graph.addDEdge(edge);
 		}
 		reader.close();
-		return edges;
 	}
 }

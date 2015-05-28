@@ -10,8 +10,9 @@ public class test {
 	public static void main(final String[] args) throws ClassNotFoundException,
 			IOException {
 		long time = System.currentTimeMillis();
-		DGraph graph = Reader.read("src/main/resources/big-graph.graph",
-				"src/main/resources/big-edge.graph");
+		DGraph graph = Reader.read(
+				"src/main/resources/simple_graph.node.graph",
+				"src/main/resources/simple_graph.edge.graph");
 		long end = System.currentTimeMillis() - time;
 		System.out.println("Reading the 100 strains graph took: " + end
 				+ " milliseconds");

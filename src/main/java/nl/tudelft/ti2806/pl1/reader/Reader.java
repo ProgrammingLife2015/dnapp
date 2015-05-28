@@ -46,14 +46,10 @@ public final class Reader {
 	public static DGraph read(final String nodes, final String edges)
 			throws IOException {
 		DGraph graph = new DGraph();
-		for (DNode node : readNodes(nodes)) {
-			graph.addDNode(node);
-		}
-		for (DEdge edge : readEdges(edges, graph)) {
-			graph.addDEdge(edge);
-		}
+		readNodes(nodes, graph);
+		readEdges(edges, graph);
 		addStartEndNode(graph);
-
+		addStartEndNode(graph);
 		return graph;
 	}
 
@@ -65,10 +61,10 @@ public final class Reader {
 	 * @return A list with the nodes
 	 * @throws IOException
 	 */
-	private static ArrayList<DNode> readNodes(final String nodesPath)
+	private static void readNodes(final String nodesPath, final DGraph graph)
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(nodesPath));
-		return NodeReader.readNodes(reader);
+		NodeReader.readNodes(reader, graph);
 	}
 
 	/**
@@ -80,10 +76,10 @@ public final class Reader {
 	 *            The DGraph for which the edges will be added
 	 * @throws IOException
 	 */
-	private static ArrayList<DEdge> readEdges(final String edgesPath,
-			final DGraph graph) throws IOException {
+	private static void readEdges(final String edgesPath, final DGraph graph)
+			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(edgesPath));
-		return EdgeReader.readEdges(reader, graph);
+		EdgeReader.readEdges(reader, graph);
 	}
 
 	/**
