@@ -10,7 +10,6 @@ import javax.swing.UIManager;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
 import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
-import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
  * @author Maarten
@@ -170,14 +169,6 @@ public class Window extends JFrame implements Observer {
 	 */
 	public final StatusBar statusBar() {
 		return statusBar;
-	}
-
-	/**
-	 * @param args
-	 *            jwz
-	 */
-	public static void main(final String[] args) {
-		Start.main(args);
 	}
 
 	@Override

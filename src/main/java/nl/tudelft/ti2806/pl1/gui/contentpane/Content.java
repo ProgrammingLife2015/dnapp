@@ -8,7 +8,6 @@ import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
-import nl.tudelft.ti2806.pl1.main.Start;
 
 /**
  * A panel representing the content pane of the main window. Contains a tabbed
@@ -112,14 +111,6 @@ public class Content extends JPanel {
 	 */
 	public final void loadTree(final File newick) {
 		treeLoaded = phyloPanel.loadTree(newick);
-	}
-
-	/**
-	 * @param args
-	 *            jwz
-	 */
-	public static void main(final String[] args) {
-		Start.main(args);
 	}
 
 	@Override
