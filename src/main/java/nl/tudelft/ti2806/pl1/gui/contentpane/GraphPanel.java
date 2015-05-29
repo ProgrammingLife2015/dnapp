@@ -10,6 +10,7 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -120,17 +121,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		text = new JTextArea();
 		text.setLineWrap(true);
 		infoPane = new JScrollPane(text);
-		// infoPane.setAutoscrolls(false);
 
 		setTopComponent(graphPane);
 		setBottomComponent(infoPane);
 
-		// SwingUtilities.invokeLater(new Runnable() {
-		// public void run() {
 		setDividerLocation(DEFAULT_DIVIDER_LOC);
 		setResizeWeight(1);
-		// }
-		// });
+
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
@@ -144,8 +141,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 *            Target path for exporting the file.
 	 */
 	public final void writeGraph(final String filePath) {
-		// new Thread(new Runnable() {
-		// public void run() {
 		try {
 			graph.write(filePath);
 			Event.statusBarInfo("Exported graph to: " + filePath);
@@ -154,8 +149,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 					+ e.getMessage() + ")");
 			e.printStackTrace();
 		}
-		// }
-		// });
 	}
 
 	/**
@@ -174,13 +167,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		ProgressDialog pd = new ProgressDialog(window, "Importing graph", true);
 		pd.start();
 		boolean ret = true;
-		// Thread t = new Thread(new Runnable() {
-		// public void run() {
-		// try {
-		// Thread.sleep(500);
-		// } catch (InterruptedException e1) {
-		// e1.printStackTrace();
-		// }
 		try {
 			dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
@@ -190,6 +176,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			e.printStackTrace();
 			ret = false;
 			Event.statusBarError(e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		graph.addAttribute("ui.stylesheet",
 				"url('src/main/resources/stylesheet.css')");
@@ -206,8 +194,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 		view.addMouseListener(new ViewMouseListener());
 		graphPane.setViewportView(view);
-		// graphPane.setMinimumSize(new Dimension(50, 50));
-		// graphPane.setPreferredSize(new Dimension(50, 50));
 		window.revalidate();
 		pd.end();
 		graphPane.getVerticalScrollBar().setValue(
@@ -285,11 +271,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	public final void update(final DNode newSelectedNode) {
 		text.setText(newSelectedNode.getContent());
-
-		// infoPane.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-		// JViewport jv = infoPane.getViewport();
-		// jv.setViewPosition(new Point(0, 0));
-
 		// TODO change strings to constants (still have to decide in which class
 		// to define them)
 
@@ -363,8 +344,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @since 27-05-2015
 	 */
 	class Scrolling implements MouseWheelListener {
+
 		/** How far we're zoomed in on the current level. **/
 		private int count = 0;
+
 		/** Which zoomlevel we're on. **/
 		private int zoomlevel = 0;
 
