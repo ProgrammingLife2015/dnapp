@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
@@ -17,19 +18,19 @@ import com.horstmann.corejava.GBC;
  */
 public class ProgressDialog extends JDialog {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -4522422165647753236L;
 
-	/**
-	 * 
-	 */
+	/** The default dialog title. */
 	private static final String DEFAULT_TITLE = "Progress...";
 
-	/**
-	 * 
-	 */
+	/** The size of the dialog. */
+	private static final Dimension SIZE = new Dimension(400, 100);
+
+	/** The size of the progress bar. */
+	private static final Dimension BAR_SIZE = new Dimension(350, 20);
+
+	/** The progress bar. */
 	private JProgressBar jpb;
 
 	/**
@@ -58,12 +59,13 @@ public class ProgressDialog extends JDialog {
 			final boolean modal) {
 		super(owner, title, modal);
 		setLocationRelativeTo(owner);
-		setSize(new Dimension(400, 200));
+		setSize(SIZE);
+		setBackground(Color.ORANGE);
 		setResizable(false);
 		setLayout(new GridBagLayout());
 		jpb = new JProgressBar();
 		jpb.setIndeterminate(true);
-		jpb.setPreferredSize(new Dimension(300, 30));
+		jpb.setPreferredSize(BAR_SIZE);
 		add(jpb, new GBC(0, 0));
 		revalidate();
 	}
@@ -71,41 +73,16 @@ public class ProgressDialog extends JDialog {
 	/**
 	 * Shows the progress dialog.
 	 */
-	public final void start() {
-		start(this);
+	public void start() {
+		setVisible(true);
 	}
 
 	/**
-	 * Shows the progress dialog.
-	 */
-	private void start(final ProgressDialog me) {
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				setVisible(true);
-				while (true) {
-					try {
-						Thread.sleep(1);
-						// me.repaint();
-						// me.revalidate();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		t.start();
-	}
-
-	/**
-	 * Hides the progress dialog.
+	 * Hides and disposes the progress dialog.
 	 */
 	public final void end() {
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				setVisible(false);
-			}
-		});
-		t.start();
+		setVisible(false);
+		dispose();
 	}
 
 }
