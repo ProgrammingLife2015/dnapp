@@ -126,16 +126,18 @@ public final class PointGraphConverter {
 				removeNode(g, nd, end);
 			} else {
 				HashMap<String, String> content = new HashMap<String, String>();
+				StringBuilder sb = new StringBuilder();
 				String newId = "collapsed:";
+				sb.append(newId);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					Collection<String> sources = nd.getAttribute("sources");
 					for (String source : sources) {
 						content.put(source, (String) nd.getAttribute("content"));
 					}
-					newId += " " + id;
+					sb.append(" " + id);
 				}
-				addNewCollapsedNode(newId, g, nodegroup, content, end);
+				addNewCollapsedNode(sb.toString(), g, nodegroup, content, end);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					removeNode(g, nd);
