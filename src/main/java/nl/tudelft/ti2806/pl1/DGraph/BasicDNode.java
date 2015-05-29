@@ -43,6 +43,7 @@ public class BasicDNode extends ContentDNode {
 		this.content = contentIn;
 		this.percUnknown = percentageUnknown(contentIn);
 		setPercUnknownMap(contentIn);
+		setContentMap(contentIn);
 	}
 
 	/** {@inheritDoc} */
@@ -54,10 +55,6 @@ public class BasicDNode extends ContentDNode {
 	/** {@inheritDoc} */
 	@Override
 	public final HashMap<String, String> getContentMap() {
-		HashMap<String, String> contentMap = new HashMap<String, String>();
-		for (String source : this.getSources()) {
-			contentMap.put(source, this.content);
-		}
 		return contentMap;
 	}
 
@@ -65,6 +62,31 @@ public class BasicDNode extends ContentDNode {
 	@Override
 	public final HashMap<String, Double> getPercUnknownMap() {
 		return percUnknownMap;
+	}
+
+	/**
+	 * Makes the hashmap for the content for each source.
+	 * 
+	 * @param contentIn
+	 *            Content of the node.
+	 * @return Hashmap with for each source the content.
+	 */
+	public final HashMap<String, String> makeContentMap(final String contentIn) {
+		HashMap<String, String> tempContentMap = new HashMap<String, String>();
+		for (String source : this.getSources()) {
+			tempContentMap.put(source, this.content);
+		}
+		return tempContentMap;
+	}
+
+	/**
+	 * Sets the content hashmap.
+	 * 
+	 * @param contentIn
+	 *            Content of the node.
+	 */
+	public final void setContentMap(final String contentIn) {
+		this.contentMap = makeContentMap(contentIn);
 	}
 
 	/**
@@ -80,7 +102,7 @@ public class BasicDNode extends ContentDNode {
 			final String contentIn) {
 		HashMap<String, Double> percMap = new HashMap<String, Double>();
 		for (String source : this.getSources()) {
-			percMap.put(source, this.percUnknown);
+			percMap.put(source, this.getPercUnknown());
 		}
 		return percMap;
 	}
@@ -96,8 +118,7 @@ public class BasicDNode extends ContentDNode {
 	}
 
 	/**
-	 * Returns the percentage
-	 * nucleotides unknown.
+	 * Returns the percentage nucleotides unknown.
 	 * 
 	 * @return percentage of nucleotides unknown.
 	 */
