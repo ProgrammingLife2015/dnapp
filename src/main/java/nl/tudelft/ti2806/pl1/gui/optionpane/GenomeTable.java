@@ -216,7 +216,7 @@ public class GenomeTable extends JScrollPane {
 	 * @author Maarten
 	 * 
 	 */
-	class GenomeTableModel extends AbstractTableModel {
+	static class GenomeTableModel extends AbstractTableModel {
 
 		/**
 		 * The serial version UID.
