@@ -347,6 +347,7 @@ public abstract class BinaryTree extends JButton {
 				getPhyloPanel().plotTree();
 				break;
 			default:
+				break;
 			}
 		}
 
