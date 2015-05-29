@@ -74,8 +74,8 @@ public abstract class BinaryTree extends JButton {
 			setToolTipText(String.valueOf(roundN(pathLength,
 					PATH_LENGTH_ROUND_TO_N)));
 		} else {
-			setToolTipText(nameIn + "\n"
-					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N));
+			setToolTipText("<html>" + nameIn + "<br>"
+					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N) + "</html>");
 		}
 		addMouseListener(new NodeMouseListener());
 	}
