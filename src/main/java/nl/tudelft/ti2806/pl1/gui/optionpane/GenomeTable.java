@@ -266,7 +266,7 @@ public class GenomeTable extends JScrollPane {
 
 		@Override
 		public boolean isCellEditable(final int row, final int col) {
-			return (col == 1 || col == 2);
+			return col == 1 || col == 2;
 		}
 
 		@Override

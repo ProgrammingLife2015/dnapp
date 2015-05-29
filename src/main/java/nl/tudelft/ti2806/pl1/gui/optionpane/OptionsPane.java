@@ -140,7 +140,7 @@ public class OptionsPane extends JScrollPane {
 		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
 		this.tblGenomes = new GenomeTable();
-		this.grpSelectedNode = new SelectedNodeGroup(this);
+		this.grpSelectedNode = new SelectedNodeGroup();
 		this.grpSelectedGenome = new SelectedGenomeGroup(this);
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
