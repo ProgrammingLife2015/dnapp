@@ -12,6 +12,12 @@ import org.graphstream.graph.implementations.SingleGraph;
 public final class ConvertDGraph {
 
 	/**
+	 * When this threshold is surpassed, the length instead of the label will be
+	 * shown.
+	 */
+	private static final int LABEL_LENGTH_THRESHOLD = 10;
+
+	/**
 	 * 
 	 */
 	private ConvertDGraph() {
@@ -56,7 +62,7 @@ public final class ConvertDGraph {
 	 */
 	private static String checkLabelLength(final String label) {
 		int l = label.length();
-		if (l > 10) {
+		if (l > LABEL_LENGTH_THRESHOLD) {
 			return String.valueOf(l);
 		}
 		return label;
