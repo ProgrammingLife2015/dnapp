@@ -16,7 +16,22 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
 public final class NodeReader {
 
 	/**
-	 * 
+	 * The location of the starting point in the text format.
+	 */
+	public static final int STARTLOCATION = 2;
+
+	/**
+	 * The location of the ending point in the text format.
+	 */
+	public static final int ENDLOCATION = 3;
+
+	/**
+	 * The amount of information pieces in the format.
+	 */
+	public static final int AMOUNTOFINFORMATION = 4;
+
+	/**
+	 * cannot instantiate this class.
 	 */
 	private NodeReader() {
 	}
@@ -34,7 +49,7 @@ public final class NodeReader {
 			if (nextnode.charAt(0) == '>') {
 				nextnode = nextnode.substring(1);
 				String[] data = nextnode.split("\\s\\|\\s");
-				if (data.length != 4) {
+				if (data.length != AMOUNTOFINFORMATION) {
 					throw new InvalidFileFormatException(
 							"Missing some information to create this node");
 				}
@@ -49,8 +64,8 @@ public final class NodeReader {
 							"The id should be an integer");
 				}
 				try {
-					start = Integer.parseInt(data[2]);
-					end = Integer.parseInt(data[3]);
+					start = Integer.parseInt(data[STARTLOCATION]);
+					end = Integer.parseInt(data[ENDLOCATION]);
 				} catch (Exception e) {
 					throw new InvalidFileFormatException(
 							"The start and end reference should be integers");

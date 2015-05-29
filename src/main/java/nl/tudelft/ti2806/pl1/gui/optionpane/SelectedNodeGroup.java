@@ -44,13 +44,8 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/** The simple bar chart showing the distribution of nucleotides. */
 	private NodeContentBar nodeChart;
 
-	/**
-	 * Initialize the group layout panel.
-	 * 
-	 * @param op
-	 *            The parent option panel.
-	 */
-	public SelectedNodeGroup(final OptionsPane op) {
+	/** Initialize the group layout panel. */
+	public SelectedNodeGroup() {
 		super();
 		setLayout(new GridBagLayout());
 		setMaximumSize(SIZE);
@@ -63,7 +58,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.weightx = 0;
 		add(new JLabel("ID:"), gbc);
 		gbc.gridx = 1;
-		gbc.weightx = 10;
+		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
 		add(lblID, gbc);
 
 		gbc.gridy = 1;
@@ -71,29 +66,37 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.weightx = 1;
 		add(new JLabel("Length:"), gbc);
 		gbc.gridx = 1;
-		gbc.weightx = 10;
+		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
 		add(lblContentLength, gbc);
 
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
 		add(new JLabel("Sources:"), gbc);
-		gbc.gridy = 3;
+		gbc.gridy = OptionsPane.GBC_GRIDY_3;
 		gbc.gridwidth = 2;
 		gbc.weightx = 2.0;
 		add(lblSources, gbc);
 
-		nodeChart = new NodeContentBar(10, 160);
+		nodeChart = new NodeContentBar(OptionsPane.NBC_WIDTH,
+				OptionsPane.NBC_HEIGHT);
 
 		gbc.fill = GridBagConstraints.NONE;
-		gbc.gridy = 4;
+		gbc.gridy = OptionsPane.GBC_GRIDY_4;
 		gbc.gridwidth = 2;
 		add(nodeChart, gbc);
 
-		gbc.weighty = 100;
+		gbc.weighty = OptionsPane.GBC_WEIGHT_Y;
 		add(Box.createVerticalGlue());
 	}
 
+	/**
+	 * Makes a label with the input text.
+	 * 
+	 * @param text
+	 *            Input text.
+	 * @return JLabel object with the input text.
+	 */
 	private JLabel mkLabel(final String text) {
 		JLabel ret = new JLabel(text);
 		ret.setAlignmentX(LEFT_ALIGNMENT);

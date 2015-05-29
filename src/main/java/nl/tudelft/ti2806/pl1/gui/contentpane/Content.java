@@ -28,16 +28,23 @@ public class Content extends JPanel {
 	private boolean graphLoaded = false;
 
 	/**
+	 * @return true iff there is a graph loaded
+	 */
+	public final boolean isGraphLoaded() {
+		return graphLoaded;
+	}
+
+	/**
 	 * Flag to indicate whether a phylo tree has been loaded into the phylo
 	 * panel.
 	 */
 	private boolean treeLoaded = false;
 
 	/**
-	 * @return true iff there is a graph loaded
+	 * @return true iff there is a phylogenetic tree loaded
 	 */
-	public final boolean isGraphLoaded() {
-		return graphLoaded;
+	public final boolean isTreLoaded() {
+		return treeLoaded;
 	}
 
 	/** The window this content pane is part of. */
@@ -94,9 +101,9 @@ public class Content extends JPanel {
 	 * the graph panel.
 	 * 
 	 * @param nodePath
-	 *            The path to the node file.
+	 *            The node file.
 	 * @param edgePath
-	 *            The path to the edge file.
+	 *            The edge file.
 	 * @throws InvalidNodePlacementException
 	 *             Placing node at invalid place.
 	 */
@@ -106,8 +113,11 @@ public class Content extends JPanel {
 	}
 
 	/**
+	 * Loads a graph into the graph tab. Directly calls the load graph method of
+	 * the graph panel.
 	 * 
 	 * @param newick
+	 *            The Newick tree file to load
 	 */
 	public final void loadTree(final File newick) {
 		treeLoaded = phyloPanel.loadTree(newick);

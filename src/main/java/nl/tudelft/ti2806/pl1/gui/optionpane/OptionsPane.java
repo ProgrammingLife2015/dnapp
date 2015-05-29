@@ -8,12 +8,9 @@ import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.Window;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -62,6 +59,26 @@ public class OptionsPane extends JScrollPane {
 	 */
 	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS,
 			VER_INSETS, HOR_INSETS);
+
+	/**
+	 * 
+	 */
+	public static final int GBC_WEIGHT_Y = 100;
+
+	/** */
+	public static final int GBC_WEIGHT_X = 10;
+
+	/** */
+	public static final int NBC_WIDTH = 10;
+
+	/** */
+	public static final int NBC_HEIGHT = 160;
+
+	/** */
+	public static final int GBC_GRIDY_4 = 4;
+
+	/** */
+	public static final int GBC_GRIDY_3 = 3;
 
 	// ***** Fields ***** //
 
@@ -123,7 +140,7 @@ public class OptionsPane extends JScrollPane {
 		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
 		this.tblGenomes = new GenomeTable();
-		this.grpSelectedNode = new SelectedNodeGroup(this);
+		this.grpSelectedNode = new SelectedNodeGroup();
 		this.grpSelectedGenome = new SelectedGenomeGroup(this);
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
@@ -155,7 +172,7 @@ public class OptionsPane extends JScrollPane {
 		place(grpSelectedGenome);
 		place(grpSelectedNode);
 
-		gbc.weighty = 100;
+		gbc.weighty = GBC_WEIGHT_Y;
 		place(Box.createGlue());
 	}
 
@@ -188,53 +205,6 @@ public class OptionsPane extends JScrollPane {
 	public final void fillGenomeList(final List<String> genomeIds,
 			final boolean empty, final boolean selected) {
 		tblGenomes.fill(genomeIds, empty, selected);
-	}
-
-	/**
-	 * Creates a button element.
-	 * 
-	 * @param text
-	 *            File name of the image icon.
-	 * @param action
-	 *            Action id.
-	 * @param toolTipText
-	 *            Tool tip text.
-	 * 
-	 * @see Event
-	 * 
-	 * @return The button created.
-	 */
-	private JButton makeButton(final String text, final Event action,
-			final String toolTipText) {
-		JButton button = new JButton();
-		button.setText(text);
-		button.setToolTipText(toolTipText);
-		button.addActionListener(action);
-		button.setAlignmentX(Component.CENTER_ALIGNMENT);
-		return button;
-	}
-
-	/**
-	 * Creates a check box element.
-	 * 
-	 * @param text
-	 *            Text to show.
-	 * @param action
-	 *            Action id.
-	 * @param toolTipText
-	 *            Tool tip text.
-	 * 
-	 * @see Event
-	 * 
-	 * @return The button created.
-	 */
-	private JCheckBox makeCheckBox(final String text, final Event action,
-			final String toolTipText) {
-		JCheckBox cbox = new JCheckBox();
-		cbox.setText(text);
-		cbox.setToolTipText(toolTipText);
-		cbox.addActionListener(action);
-		return cbox;
 	}
 
 	/**

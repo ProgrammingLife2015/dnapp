@@ -297,7 +297,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 		// STRETCH sizing, use the greater of the panel or viewport width
 
 		if (getParent() instanceof JViewport) {
-			return (((JViewport) getParent()).getWidth() > getPreferredSize().width);
+			return ((JViewport) getParent()).getWidth() > getPreferredSize().width;
 		}
 
 		return false;
@@ -313,7 +313,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 		// STRETCH sizing, use the greater of the panel or viewport height
 
 		if (getParent() instanceof JViewport) {
-			return (((JViewport) getParent()).getHeight() > getPreferredSize().height);
+			return ((JViewport) getParent()).getHeight() > getPreferredSize().height;
 		}
 
 		return false;

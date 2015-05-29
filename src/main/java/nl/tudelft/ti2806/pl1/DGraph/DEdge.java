@@ -10,6 +10,16 @@ package nl.tudelft.ti2806.pl1.DGraph;
 public class DEdge {
 
 	/**
+	 * To ensure the hashcodes are unique, prime numbers must be used.
+	 */
+	private static final int PRIME_17 = 17;
+
+	/**
+	 * To ensure the hashcodes are unique, prime numbers must be used.
+	 */
+	private static final int PRIME_37 = 37;
+
+	/**
 	 * The starting node of the edge.
 	 */
 	private DNode startNode;
@@ -96,9 +106,9 @@ public class DEdge {
 	 */
 	@Override
 	public int hashCode() {
-		int result = 17;
-		result += 37 * result + getStartNode().getId();
-		result += 37 * result + getEndNode().getId();
+		int result = PRIME_17;
+		result += PRIME_37 * result + getStartNode().getId();
+		result += PRIME_37 * result + getEndNode().getId();
 		return result;
 	}
 }

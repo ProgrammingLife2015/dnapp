@@ -46,12 +46,7 @@ public class GenomeTable extends JScrollPane {
 	private static final Dimension SIZE = new Dimension(
 			OptionsPane.MAX_CHILD_WIDTH, 120);
 
-	/**
-	 * Initializes the genome table.
-	 * 
-	 * @param width
-	 *            The width of the the scroll container.
-	 */
+	/** Initializes the genome table. */
 	public GenomeTable() {
 		super();
 		setMinimumSize(SIZE);
@@ -221,7 +216,7 @@ public class GenomeTable extends JScrollPane {
 	 * @author Maarten
 	 * 
 	 */
-	class GenomeTableModel extends AbstractTableModel {
+	static class GenomeTableModel extends AbstractTableModel {
 
 		/**
 		 * The serial version UID.
@@ -271,7 +266,7 @@ public class GenomeTable extends JScrollPane {
 
 		@Override
 		public boolean isCellEditable(final int row, final int col) {
-			return (col == 1 || col == 2);
+			return col == 1 || col == 2;
 		}
 
 		@Override

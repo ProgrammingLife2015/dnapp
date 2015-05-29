@@ -67,7 +67,7 @@ public final class PointGraphConverter {
 			if (muts.size() > 1) {
 				HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(
 						muts, g);
-				collapseNodes(nodegroups, g, q);
+				collapseNodes(nodegroups, g);
 			}
 		}
 		return g;
@@ -108,12 +108,9 @@ public final class PointGraphConverter {
 	 *            The nodegroups
 	 * @param g
 	 *            The graph we want to collapse on.
-	 * @param q
-	 *            The nodes we still want to check for.
 	 */
 	private static void collapseNodes(
-			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g,
-			final Queue<Node> q) {
+			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
 		for (Node end : nodegroups.keySet()) {
 			ArrayList<String> nodegroup = nodegroups.get(end);
 			if (nodegroup.size() == 1) {
@@ -129,16 +126,18 @@ public final class PointGraphConverter {
 				removeNode(g, nd, end);
 			} else {
 				HashMap<String, String> content = new HashMap<String, String>();
+				StringBuilder sb = new StringBuilder();
 				String newId = "collapsed:";
+				sb.append(newId);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					Collection<String> sources = nd.getAttribute("sources");
 					for (String source : sources) {
 						content.put(source, (String) nd.getAttribute("content"));
 					}
-					newId += " " + id;
+					sb.append(" " + id);
 				}
-				addNewCollapsedNode(newId, g, nodegroup, content, end, q);
+				addNewCollapsedNode(sb.toString(), g, nodegroup, content, end);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					removeNode(g, nd);
@@ -160,13 +159,10 @@ public final class PointGraphConverter {
 	 *            The content of the new node.
 	 * @param end
 	 *            The node which this group is going to.
-	 * @param q
-	 *            The nodes we still want to check collapse for.
 	 */
 	private static void addNewCollapsedNode(final String newId, final Graph g,
 			final ArrayList<String> nodegroup,
-			final HashMap<String, String> content, final Node end,
-			final Queue<Node> q) {
+			final HashMap<String, String> content, final Node end) {
 		g.addNode(newId);
 		String temp = nodegroup.get(0);
 		Node tempnode = g.getNode(temp);

@@ -59,7 +59,7 @@ public class Window extends JFrame implements Observer {
 		}
 		// UIManager.put("swing.boldMetal", Boolean.FALSE);
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
 		setWindowSettings(wSettings);

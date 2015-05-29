@@ -179,6 +179,8 @@ public abstract class BinaryTree extends JButton {
 	 * 
 	 * @param s
 	 *            the string to parse
+	 * @param panel
+	 *            The parent container.
 	 * @return a phylogenetic tree
 	 */
 	public static BinaryTree parseNewick(final String s, final PhyloPanel panel) {
@@ -190,6 +192,8 @@ public abstract class BinaryTree extends JButton {
 	 * 
 	 * @param st
 	 *            A string tokenizer.
+	 * @param panel
+	 *            The parent container.
 	 * @return a phylogenetic tree
 	 */
 	private static BinaryTree parseNewick(final StringTokenizer st,
@@ -343,6 +347,7 @@ public abstract class BinaryTree extends JButton {
 				getPhyloPanel().plotTree();
 				break;
 			default:
+				break;
 			}
 		}
 

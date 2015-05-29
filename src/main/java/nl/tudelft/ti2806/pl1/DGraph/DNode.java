@@ -116,7 +116,7 @@ public class DNode {
 				counter++;
 			}
 		}
-		return ((double) counter / contentIn.length());
+		return (double) counter / contentIn.length();
 	}
 
 	/**
@@ -124,6 +124,7 @@ public class DNode {
 	 * 
 	 * @param edge
 	 *            The edge added to the node
+	 * @return true iff the ID of the edge is not already in use.
 	 */
 	public final boolean addEdge(final DEdge edge) {
 		if (edge.getStartNode().getId() == id && !getOutEdges().contains(edge)) {
