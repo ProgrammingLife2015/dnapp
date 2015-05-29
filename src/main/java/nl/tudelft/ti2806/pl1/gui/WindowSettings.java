@@ -98,11 +98,11 @@ public class WindowSettings extends Observable {
 	}
 
 	/**
-	 * @param size
+	 * @param newSize
 	 *            the size to set
 	 */
-	public final void setSize(final Dimension size) {
-		this.size = size;
+	public final void setSize(final Dimension newSize) {
+		this.size = newSize;
 	}
 
 	/**

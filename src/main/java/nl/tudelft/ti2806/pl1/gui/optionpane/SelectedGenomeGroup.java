@@ -64,23 +64,23 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 		gbc.weightx = 1;
 		add(new JLabel("ID:"), gbc);
 		gbc.gridx = 1;
-		gbc.weightx = 10;
+		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
 		add(gID, gbc);
 		gbc.gridy = 1;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
 		add(new JLabel("Show:"), gbc);
 		gbc.gridx = 1;
-		gbc.weightx = 10;
+		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
 		add(gShow, gbc);
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
 		add(new JLabel("Highlight:"), gbc);
 		gbc.gridx = 1;
-		gbc.weightx = 10;
+		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
 		add(gHigh, gbc);
-		gbc.weighty = 100;
+		gbc.weighty = OptionsPane.GBC_WEIGHT_Y;
 		add(Box.createVerticalGlue());
 	}
 

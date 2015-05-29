@@ -231,11 +231,11 @@ public class DGraph {
 	}
 
 	/**
-	 * @param start
+	 * @param s
 	 *            the start to set.
 	 */
-	public final void setStart(final DNode start) {
-		this.start = start;
+	public final void setStart(final DNode s) {
+		this.start = s;
 	}
 
 	/**
@@ -246,11 +246,11 @@ public class DGraph {
 	}
 
 	/**
-	 * @param end
+	 * @param e
 	 *            the end to set.
 	 */
-	public final void setEnd(final DNode end) {
-		this.end = end;
+	public final void setEnd(final DNode e) {
+		this.end = e;
 	}
 
 }

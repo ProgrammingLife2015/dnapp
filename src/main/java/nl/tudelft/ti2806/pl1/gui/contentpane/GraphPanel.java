@@ -56,9 +56,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	private static final int DEFAULT_DIVIDER_LOC = 300;
 
 	/**
-	 * TODO the temp hard coded size of the view.
+	 * The horizontal scroll increment value.
 	 */
-	private static final Dimension VIEW_SIZE = new Dimension(100000, 500);
+	private static final int HOR_SCROLL_INCR = 500;
 
 	/**
 	 * The list of node selection observers.
@@ -94,6 +94,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/** The text area where node content will be shown. */
 	private JTextArea text;
 
+	/** The scroll behaviour. */
 	private Scrolling scroll;
 
 	/** The DGraph data storage. */
@@ -132,7 +133,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		// });
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
-		graphPane.getHorizontalScrollBar().setUnitIncrement(1000);
+		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
 		highlightedGenomes = new HashSet<String>();
 	}
 
@@ -225,12 +226,14 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param newgraph
 	 *            The graph you want to draw.
 	 */
+	@SuppressWarnings("unused")
+	// Fixed in other branch.
 	private void drawNewGraph(final Graph newgraph) {
 		Viewer viewer = new Viewer(newgraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = viewer.addDefaultView(false);
-		view.setPreferredSize(VIEW_SIZE);
+		view.setPreferredSize(viewSize);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
