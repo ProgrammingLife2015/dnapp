@@ -44,13 +44,8 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/** The simple bar chart showing the distribution of nucleotides. */
 	private NodeContentBar nodeChart;
 
-	/**
-	 * Initialize the group layout panel.
-	 * 
-	 * @param op
-	 *            The parent option panel.
-	 */
-	public SelectedNodeGroup(final OptionsPane op) {
+	/** Initialize the group layout panel. */
+	public SelectedNodeGroup() {
 		super();
 		setLayout(new GridBagLayout());
 		setMaximumSize(SIZE);
