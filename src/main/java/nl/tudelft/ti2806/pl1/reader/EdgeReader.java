@@ -16,15 +16,18 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
 public final class EdgeReader {
 
 	/**
-	 * 
+	 * Avoid the instantiation of the edge reader.
 	 */
 	private EdgeReader() {
 	}
 
 	/**
+	 * Reads the edges, and returns an arrayList with the edges.
 	 * 
 	 * @param sc
 	 *            Scanner from which the edge information will be read.
+	 * @param graph
+	 *            The graph which is used to extract the nodes
 	 * @return ArrayList of all Edges.
 	 */
 	public static ArrayList<DEdge> readEdges(final Scanner sc,

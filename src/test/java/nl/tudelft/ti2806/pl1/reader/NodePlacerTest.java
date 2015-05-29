@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -22,7 +23,7 @@ public class NodePlacerTest {
 
 	@Before
 	public void startUp() throws FileNotFoundException,
-			InvalidNodePlacementException {
+			InvalidNodePlacementException, UnsupportedEncodingException {
 		nodesatdepth = new ArrayList<Integer>();
 		nodesatdepth.add(3);
 		nodesatdepth.add(1);

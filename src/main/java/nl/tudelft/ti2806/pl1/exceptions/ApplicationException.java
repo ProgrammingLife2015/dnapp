@@ -1,7 +1,5 @@
 package nl.tudelft.ti2806.pl1.exceptions;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
-
 /**
  * @author Maarten
  * @since 29-5-2015
@@ -18,7 +16,8 @@ public class ApplicationException extends RuntimeException {
 	 */
 	public ApplicationException(final String message) {
 		super(message);
-		Event.statusBarError(message);
+		// Event.statusBarError(message); TODO no initialisation throws a
+		// nullpointer.
 	}
 
 }
