@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.graphImporter.GraphImporter;
 import nl.tudelft.ti2806.pl1.graphWriter.GraphWriter;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
@@ -23,7 +24,14 @@ public class test {
 		time = System.currentTimeMillis();
 		GraphWriter.write("test.db", graph);
 		end = System.currentTimeMillis() - time;
-		System.out.println("Writing to a database took: " + end
-				+ " milliseconds");
+		System.out.println("Writing the 100 strains graph to a database took: "
+				+ end + " milliseconds");
+		time = System.currentTimeMillis();
+		GraphImporter.importDGraph("test.db");
+		end = System.currentTimeMillis() - time;
+		System.out
+				.println("importing the 100 strains graph from a database took: "
+						+ end + " milliseconds");
+
 	}
 }

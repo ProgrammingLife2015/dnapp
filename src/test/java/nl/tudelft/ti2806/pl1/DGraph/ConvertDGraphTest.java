@@ -65,22 +65,22 @@ public class ConvertDGraphTest {
 
 	@Test
 	public void correctXNode1Test() {
-		assertEquals(gsGraph.getNode(0).getAttribute("x"), 0);
+		assertEquals(gsGraph.getNode(0).getAttribute("x"), new Integer(0));
 	}
 
 	@Test
 	public void correctYNode1Test() {
-		assertEquals(gsGraph.getNode(0).getAttribute("y"), 0);
+		assertEquals(gsGraph.getNode(0).getAttribute("y"), new Integer(0));
 	}
 
 	@Test
 	public void correctXNode2Test() {
-		assertEquals(gsGraph.getNode(1).getAttribute("x"), 20);
+		assertEquals(gsGraph.getNode(1).getAttribute("x"), new Integer(20));
 	}
 
 	@Test
 	public void correctYNode2Test() {
-		assertEquals(gsGraph.getNode(1).getAttribute("y"), 0);
+		assertEquals(gsGraph.getNode(1).getAttribute("y"), new Integer(0));
 	}
 
 	@Test

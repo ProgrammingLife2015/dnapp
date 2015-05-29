@@ -21,7 +21,7 @@ public class DGraph {
 	/**
 	 * A map storing a collection nodes per genome reference.
 	 */
-	private HashMap<String, Collection<DNode>> references;
+	private HashMap<String, Collection<DNode>> sources;
 
 	/**
 	 * The edges in the graph.
@@ -39,25 +39,25 @@ public class DGraph {
 	public DGraph() {
 		nodes = new HashMap<Integer, DNode>();
 		edges = new ArrayList<DEdge>();
-		references = new HashMap<String, Collection<DNode>>();
+		sources = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
 	}
 
 	/**
-	 * @return the references
+	 * @return the sources
 	 */
-	public Map<String, Collection<DNode>> getReferences() {
-		return references;
+	public Map<String, Collection<DNode>> getSources() {
+		return sources;
 	}
 
 	/**
-	 * @param newReferences
-	 *            the references to set
+	 * @param newSources
+	 *            the sources to set
 	 */
-	protected void setReferences(
-			final HashMap<String, Collection<DNode>> newReferences) {
-		this.references = newReferences;
+	protected void setSources(
+			final HashMap<String, Collection<DNode>> newSources) {
+		this.sources = newSources;
 	}
 
 	/**
@@ -68,10 +68,10 @@ public class DGraph {
 	 * @return A collection which contain
 	 */
 	public Collection<DNode> getReference(final String s) {
-		if (!references.containsKey(s)) {
+		if (!sources.containsKey(s)) {
 			return new ArrayList<DNode>();
 		}
-		return references.get(s);
+		return sources.get(s);
 	}
 
 	/**
@@ -108,12 +108,12 @@ public class DGraph {
 			return false;
 		}
 		for (String s : node.getSources()) {
-			if (!references.containsKey(s)) {
+			if (!sources.containsKey(s)) {
 				ArrayList<DNode> temp = new ArrayList<DNode>();
 				temp.add(node);
-				references.put(s, temp);
+				sources.put(s, temp);
 			} else {
-				references.get(s).add(node);
+				sources.get(s).add(node);
 			}
 		}
 		nodes.put(node.getId(), node);
@@ -152,9 +152,9 @@ public class DGraph {
 			edges.remove(edge);
 		}
 		for (String s : removeNode.getSources()) {
-			references.get(s).remove(removeNode);
-			if (references.get(s).isEmpty()) {
-				references.remove(s);
+			sources.get(s).remove(removeNode);
+			if (sources.get(s).isEmpty()) {
+				sources.remove(s);
 			}
 		}
 		nodes.remove(n);
@@ -236,6 +236,28 @@ public class DGraph {
 	 */
 	public final void setStart(final DNode start) {
 		this.start = start;
+	}
+
+	/**
+	 * Adds a source to a node.
+	 * 
+	 * @param id
+	 *            The id of the node from which the source is added
+	 * @param source
+	 *            The source which is added
+	 * @return True if the source is added, false otherwise
+	 */
+	public boolean addSource(final int id, final String source) {
+		if (!nodes.containsKey(id)) {
+			return false;
+		}
+		if (!sources.containsKey(source)) {
+			ArrayList<DNode> node = new ArrayList<DNode>();
+			sources.put(source, node);
+		}
+		nodes.get(id).addSource(source);
+		sources.get(source).add(nodes.get(id));
+		return true;
 	}
 
 	/**

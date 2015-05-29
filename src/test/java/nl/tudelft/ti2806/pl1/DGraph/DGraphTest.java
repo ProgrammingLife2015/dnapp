@@ -207,27 +207,27 @@ public class DGraphTest {
 	@Test
 	public void referencesAreAddedTest1() {
 		graph.addDNode(node1);
-		assertTrue(graph.getReferences().get("tkk-1").contains(node1));
+		assertTrue(graph.getSources().get("tkk-1").contains(node1));
 	}
 
 	@Test
 	public void referencesAreAddedTest2() {
 		graph.addDNode(node1);
-		assertTrue(graph.getReferences().size() == 1);
+		assertTrue(graph.getSources().size() == 1);
 	}
 
 	@Test
 	public void referencesAreAddedTest3() {
 		graph.addDNode(node1);
 		graph.addDNode(node2);
-		assertTrue(graph.getReferences().get("tkk-1").size() == 2);
+		assertTrue(graph.getSources().get("tkk-1").size() == 2);
 	}
 
 	@Test
 	public void removeReferenceNodeTest() {
 		graph.addDNode(node1);
 		graph.removeDNode(node1);
-		assertTrue(graph.getReferences().size() == 0);
+		assertTrue(graph.getSources().size() == 0);
 	}
 
 	@Test

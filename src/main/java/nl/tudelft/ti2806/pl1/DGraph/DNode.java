@@ -220,6 +220,18 @@ public class DNode {
 	}
 
 	/**
+	 * Adds a source to a node.
+	 * 
+	 * @param s
+	 *            The source to be added
+	 */
+	public void addSource(final String s) {
+		if (!sources.contains(s)) {
+			sources.add(s);
+		}
+	}
+
+	/**
 	 * Get the starting point of the reference genome.
 	 * 
 	 * @return The starting point on the reference genome
@@ -356,5 +368,13 @@ public class DNode {
 	@Override
 	public int hashCode() {
 		return getId();
+	}
+
+	/**
+	 * The tostring method of the dnode.
+	 */
+	@Override
+	public String toString() {
+		return "Dnode: " + id;
 	}
 }

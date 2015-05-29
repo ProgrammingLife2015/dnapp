@@ -20,12 +20,10 @@ import nl.tudelft.ti2806.pl1.DGraph.DNode;
 public final class GraphWriter {
 
 	/**
-	 * 
+	 * Private constructor.
 	 */
 	private GraphWriter() {
 	}
-
-	static int x = 0;
 
 	/**
 	 * The timeout.
@@ -57,11 +55,11 @@ public final class GraphWriter {
 			statement.executeUpdate("DROP TABLE IF EXISTS sources");
 			statement
 					.executeUpdate("CREATE TABLE nodes (id integer, start integer, end integer,"
-							+ " x integer, y integer, depth integer)");
+							+ " x integer, y integer, depth integer, content string)");
 			statement
 					.executeUpdate("CREATE TABLE edges (startId integer, endId integer)");
 			statement
-					.executeUpdate("CREATE TABLE sources (nodeId integer, reference string)");
+					.executeUpdate("CREATE TABLE sources (id integer, source string)");
 
 			// TODO Assumed that start and end node are in the graph
 			StringBuilder nodes = new StringBuilder();
@@ -75,7 +73,8 @@ public final class GraphWriter {
 			for (DNode node : graph.getNodes().values()) {
 				nodes.append("(" + node.getId() + ", " + node.getStart() + ", "
 						+ node.getEnd() + ", " + node.getX() + ", "
-						+ node.getY() + ", " + node.getDepth() + "),");
+						+ node.getY() + ", " + node.getDepth() + ",\""
+						+ node.getContent() + "\"),");
 
 				for (String s : node.getSources()) {
 					sources.append("(" + node.getId() + ", \"" + s + "\"),");
@@ -95,8 +94,9 @@ public final class GraphWriter {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (connection != null)
+				if (connection != null) {
 					connection.close();
+				}
 			} catch (SQLException e) {
 				// connection close failed.
 				System.err.println(e);
