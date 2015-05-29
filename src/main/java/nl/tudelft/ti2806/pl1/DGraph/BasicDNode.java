@@ -20,6 +20,9 @@ public class BasicDNode extends ContentDNode {
 	/** Percentage of unknown nucleotides in the content. */
 	private double percUnknown;
 
+	private HashMap<String, String> contentMap;
+	private HashMap<String, Double> percUnknownMap;
+
 	/**
 	 * Constructor for the basic DNode with content.
 	 * 
@@ -39,6 +42,7 @@ public class BasicDNode extends ContentDNode {
 		super(idIn, sourcesIn, startIn, endIn);
 		this.content = contentIn;
 		this.percUnknown = percentageUnknown(contentIn);
+		setPercUnknownMap(contentIn);
 	}
 
 	/** {@inheritDoc} */
@@ -60,11 +64,35 @@ public class BasicDNode extends ContentDNode {
 	/** {@inheritDoc} */
 	@Override
 	public final HashMap<String, Double> getPercUnknownMap() {
+		return percUnknownMap;
+	}
+
+	/**
+	 * Makes the hashmap for the percentage of unknown nucleotides for each
+	 * source.
+	 * 
+	 * @param contentIn
+	 *            Content of the node.
+	 * @return Returns a hashmap with the percentage of unknown nucleotides for
+	 *         each source.
+	 */
+	public final HashMap<String, Double> makePercUnknownMap(
+			final String contentIn) {
 		HashMap<String, Double> percMap = new HashMap<String, Double>();
 		for (String source : this.getSources()) {
 			percMap.put(source, this.percUnknown);
 		}
 		return percMap;
+	}
+
+	/**
+	 * Sets the percentage unknown nucleotides hashmap.
+	 * 
+	 * @param contentIn
+	 *            Content of the node.
+	 */
+	public final void setPercUnknownMap(final String contentIn) {
+		this.percUnknownMap = makePercUnknownMap(contentIn);
 	}
 
 	/**
