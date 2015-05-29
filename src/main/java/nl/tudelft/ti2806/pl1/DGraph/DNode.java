@@ -42,9 +42,7 @@ public class DNode {
 	 */
 	private String content;
 
-	/**
-	 * The x and y coordinates.
-	 */
+	/** The coordinate of the node in the graph. */
 	private int x, y;
 
 	/**
@@ -124,17 +122,19 @@ public class DNode {
 	 * 
 	 * @param edge
 	 *            The edge added to the node
+	 * @return true iff edge was successfully added.
 	 */
 	public final boolean addEdge(final DEdge edge) {
 		if (edge.getStartNode().getId() == id && !getOutEdges().contains(edge)) {
 			outEdges.add(edge);
 			return true;
-		} else if (edge.getEndNode().id == id && !getInEdges().contains(edge)) {
+		} else if (edge.getEndNode().getId() == id
+				&& !getInEdges().contains(edge)) {
 			getInEdges().add(edge);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
+
 	}
 
 	/**

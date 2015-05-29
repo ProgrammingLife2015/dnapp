@@ -64,7 +64,8 @@ public enum Event implements ActionListener {
 		 */
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
-			System.exit(0);
+			// window.setVisible(false);
+			window.dispose();
 		}
 
 	},

@@ -6,20 +6,12 @@ package nl.tudelft.ti2806.pl1.exceptions;
  * @author Marissa, Mark
  * @since 25-04-2015
  */
-public class InvalidFileFormatException extends RuntimeException {
+public class InvalidFileFormatException extends ApplicationException {
 
 	/**
 	 * The serial version of this exception.
 	 */
 	private static final long serialVersionUID = -3175084850174905842L;
-
-	/**
-	 * Throw this exception when the file format is not not correct (as an
-	 * example, a string as id instead of an int should throw this exception).
-	 */
-	public InvalidFileFormatException() {
-		super();
-	}
 
 	/**
 	 * Throw this exception when the file format is incorrect and you want to
