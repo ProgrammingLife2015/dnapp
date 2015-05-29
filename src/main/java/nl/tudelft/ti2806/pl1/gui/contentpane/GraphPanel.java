@@ -23,10 +23,7 @@ import javax.swing.JTextArea;
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
-<<<<<<< HEAD
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
-=======
->>>>>>> 4f3506fc9cf39eca3cbec913594861f57334a328
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -97,11 +94,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/** The text area where node content will be shown. */
 	private JTextArea text;
 
-<<<<<<< HEAD
 	private Scrolling scroll;
 
-=======
->>>>>>> 4f3506fc9cf39eca3cbec913594861f57334a328
 	/** The DGraph data storage. */
 	private DGraph dgraph;
 
@@ -219,11 +213,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
-<<<<<<< HEAD
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
-=======
->>>>>>> 4f3506fc9cf39eca3cbec913594861f57334a328
 		window.optionPanel().getGenomes()
 				.fill(dgraph.getReferences().keySet(), false, true);
 		return ret;
