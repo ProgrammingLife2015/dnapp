@@ -23,13 +23,15 @@ public class DGraph {
 	private GraphDatabaseService graphDb;
 
 	private static enum RelTypes implements RelationshipType {
-		NEXT
+		NEXT;
+		SOURCE;
 	}
 
 	public DGraph(final String db_path) {
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(db_path);
 		addUniqueConstraint();
-		createIndex();
+		createIndexNodes();
+		createIndexSources();
 	}
 
 	protected void addUniqueConstraint() {
@@ -38,9 +40,14 @@ public class DGraph {
 					.assertPropertyIsUnique("id").create();
 			tx.success();
 		}
+		try (Transaction tx = graphDb.beginTx()) {
+			graphDb.schema().constraintFor(DynamicLabel.label("Sources"))
+					.assertPropertyIsUnique("source").create();
+			tx.success();
+		}
 	}
 
-	protected void createIndex() {
+	protected void createIndexNodes() {
 		IndexDefinition indexDefinition;
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
@@ -51,14 +58,30 @@ public class DGraph {
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
 			schema.awaitIndexOnline(indexDefinition, 10, TimeUnit.SECONDS);
+			tx.success();
+		}
+	}
+
+	protected void createIndexSources() {
+		IndexDefinition indexDefinition;
+		try (Transaction tx = graphDb.beginTx()) {
+			Schema schema = graphDb.schema();
+			indexDefinition = schema.indexFor(DynamicLabel.label("Sources"))
+					.on("source").create();
+			tx.success();
+		}
+		try (Transaction tx = graphDb.beginTx()) {
+			Schema schema = graphDb.schema();
+			schema.awaitIndexOnline(indexDefinition, 10, TimeUnit.SECONDS);
+			tx.success();
 		}
 	}
 
 	public void addNode(final int id, final int start, final int end,
 			final String content, final int x, final int y, final int depth,
 			final String[] sources) {
+		Label label = DynamicLabel.label("Nodes");
 		try (Transaction tx = graphDb.beginTx()) {
-			Label label = DynamicLabel.label("Nodes");
 			Node addNode = graphDb.createNode(label);
 			addNode.setProperty("id", id);
 			addNode.setProperty("start", start);
@@ -67,8 +90,37 @@ public class DGraph {
 			addNode.setProperty("x", x);
 			addNode.setProperty("y", y);
 			addNode.setProperty("dpeth", depth);
-			addNode.setProperty("sources", sources);
+			tx.success();
 		}
+		label = DynamicLabel.label("Sources");
+		for (String s : sources) {
+			try (Transaction tx = graphDb.beginTx()) {
+				if (graphDb.findNode(label, "source", s) == null) {
+					Node src = graphDb.createNode(label);
+					src.setProperty("source", s);
+				}
+				tx.success();
+			}
+		}
+		addSources(id, sources);
+	}
+
+	protected void addSources(final int nodeId, final String[] sources) {
+		Node node = getNode(nodeId);
+		for (String s : sources) {
+			Node source = getSource(s);
+			node.createRelationshipTo(source, type)
+		}
+	}
+
+	protected Node getSource(final String s) {
+		Label label = DynamicLabel.label("Sources");
+		Node node = null;
+		try (Transaction tx = graphDb.beginTx()) {
+			node = graphDb.findNode(label, "source", s);
+			tx.success();
+		}
+		return node;
 	}
 
 	public Node getNode(final int id) {
