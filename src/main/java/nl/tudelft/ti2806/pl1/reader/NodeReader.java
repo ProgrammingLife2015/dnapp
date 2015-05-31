@@ -36,10 +36,10 @@ public final class NodeReader {
 	}
 
 	/**
-	 * 
+	 * @param graph
+	 *            The graph on which the Nodes will be added.
 	 * @param sc
 	 *            Scanner from which contains the Node information.
-	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 */
 	public static void readNodes(final DGraph graph, final Scanner sc) {
 		while (sc.hasNextLine()) {

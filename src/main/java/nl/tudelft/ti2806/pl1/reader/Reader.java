@@ -53,7 +53,7 @@ public final class Reader {
 			throws FileNotFoundException, UnsupportedEncodingException {
 		DGraph graph = new DGraph("src/main/resources/database/");
 		readNodes(graph, nodes);
-		readEdges(edges);
+		readEdges(graph, edges);
 		//
 		// for (DNode node : readNodes(nodes)) {
 		// graph.addNode(node);
@@ -69,9 +69,10 @@ public final class Reader {
 	/**
 	 * Reads the nodes from the given node file path.
 	 * 
+	 * @param graph
+	 *            The graph on which the nodes will be added.
 	 * @param nodesPath
 	 *            The path for the file containing the nodes
-	 * @return A list with the nodes
 	 * @throws FileNotFoundException
 	 *             Throws an exception when the file isn't found
 	 * @throws UnsupportedEncodingException
@@ -81,29 +82,28 @@ public final class Reader {
 			throws FileNotFoundException, UnsupportedEncodingException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(nodesPath), "UTF-8"));
-		Scanner sc = new Scanner(nodesPath);
+		Scanner sc = new Scanner(reader);
 		NodeReader.readNodes(graph, sc);
 	}
 
 	/**
 	 * Reads the edges from the given node file path.
 	 * 
-	 * @param edgesPath
-	 *            The path for the file containing the edges
 	 * @param graph
 	 *            The DGraph for which the edges will be added
-	 * @return ArrayList with the edges
+	 * @param edgesPath
+	 *            The path for the file containing the edges
 	 * @throws FileNotFoundException
 	 *             hrows an exception when the file isn't found
 	 * @throws UnsupportedEncodingException
 	 *             When the encoding is not supported (UTF-8)
 	 */
-	private static void readEdges(final String edgesPath, final DGraph graph)
+	private static void readEdges(final DGraph graph, final String edgesPath)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(edgesPath), "UTF-8"));
 		Scanner sc = new Scanner(reader);
-		EdgeReader.readEdges(sc, graph);
+		EdgeReader.readEdges(graph, sc);
 	}
 
 	/**
