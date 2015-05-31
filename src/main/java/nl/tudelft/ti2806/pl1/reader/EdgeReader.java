@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+
+import org.neo4j.graphdb.Node;
 
 /**
  * 
@@ -49,13 +50,12 @@ public final class EdgeReader {
 				throw new InvalidFileFormatException(
 						"The id's should be integers");
 			}
-			DNode src = graph.getDNode(start);
-			DNode tar = graph.getDNode(end);
+			Node src = graph.getNode(start);
+			Node tar = graph.getNode(end);
 			if (src == null || tar == null) {
 				throw new InvalidFileFormatException("The id's shoould exist");
 			}
-			DEdge edge = new DEdge(src, tar);
-			edges.add(edge);
+			graph.addEdge(src, tar);
 		}
 		return edges;
 	}
