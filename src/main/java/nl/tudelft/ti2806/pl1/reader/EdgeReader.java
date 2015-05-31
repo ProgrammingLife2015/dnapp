@@ -1,9 +1,7 @@
 package nl.tudelft.ti2806.pl1.reader;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
 
@@ -25,15 +23,12 @@ public final class EdgeReader {
 	/**
 	 * Reads the edges, and returns an arrayList with the edges.
 	 * 
-	 * @param sc
-	 *            Scanner from which the edge information will be read.
 	 * @param graph
 	 *            The graph which is used to extract the nodes
-	 * @return ArrayList of all Edges.
+	 * @param sc
+	 *            Scanner from which the edge information will be read.
 	 */
-	public static ArrayList<DEdge> readEdges(final Scanner sc,
-			final DGraph graph) {
-		ArrayList<DEdge> edges = new ArrayList<DEdge>();
+	public static void readEdges(final DGraph graph, final Scanner sc) {
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			String[] nodes = line.split("\\s");
@@ -57,6 +52,5 @@ public final class EdgeReader {
 			}
 			graph.addEdge(src, tar);
 		}
-		return edges;
 	}
 }
