@@ -51,13 +51,16 @@ public final class Reader {
 	 */
 	public static DGraph read(final String nodes, final String edges)
 			throws FileNotFoundException, UnsupportedEncodingException {
-		DGraph graph = new DGraph();
-		for (DNode node : readNodes(nodes)) {
-			graph.addDNode(node);
-		}
-		for (DEdge edge : readEdges(edges, graph)) {
-			graph.addDEdge(edge);
-		}
+		DGraph graph = new DGraph("src/main/resources/database/");
+		readNodes(graph, nodes);
+		readEdges(edges);
+		//
+		// for (DNode node : readNodes(nodes)) {
+		// graph.addNode(node);
+		// }
+		// for (DEdge edge : readEdges(edges, graph)) {
+		// graph.addEdge(edge);
+		// }
 		addStartEndNode(graph);
 
 		return graph;
@@ -74,12 +77,12 @@ public final class Reader {
 	 * @throws UnsupportedEncodingException
 	 *             When the encoding is not supported (UTF-8)
 	 */
-	private static ArrayList<DNode> readNodes(final String nodesPath)
+	private static void readNodes(final DGraph graph, final String nodesPath)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(nodesPath), "UTF-8"));
-		Scanner sc = new Scanner(reader);
-		return NodeReader.readNodes(sc);
+		Scanner sc = new Scanner(nodesPath);
+		NodeReader.readNodes(graph, sc);
 	}
 
 	/**
@@ -95,13 +98,12 @@ public final class Reader {
 	 * @throws UnsupportedEncodingException
 	 *             When the encoding is not supported (UTF-8)
 	 */
-	private static ArrayList<DEdge> readEdges(final String edgesPath,
-			final DGraph graph) throws FileNotFoundException,
-			UnsupportedEncodingException {
+	private static void readEdges(final String edgesPath, final DGraph graph)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(edgesPath), "UTF-8"));
 		Scanner sc = new Scanner(reader);
-		return EdgeReader.readEdges(sc, graph);
+		EdgeReader.readEdges(sc, graph);
 	}
 
 	/**
@@ -111,6 +113,7 @@ public final class Reader {
 	 * @param graph
 	 *            The graph to which the nodes are added
 	 */
+	// TODO this needs to be fixed
 	private static void addStartEndNode(final DGraph graph) {
 		ArrayList<DNode> startNodes = new ArrayList<DNode>();
 		ArrayList<DNode> endNodes = new ArrayList<DNode>();

@@ -81,6 +81,10 @@ public class DGraph {
 		return node;
 	}
 
+	public void addEdge(final Node node1, final Node node2) {
+		node1.createRelationshipTo(node2, RelTypes.NEXT);
+	}
+
 	public void addEdge(final int nodeId1, final int nodeId2) {
 		Node n1 = getNode(nodeId1);
 		Node n2 = getNode(nodeId2);
