@@ -28,10 +28,19 @@ public class DGraph {
 
 	public DGraph(final String db_path) {
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(db_path);
+		addUniqueConstraint();
 		createIndex();
 	}
 
-	public void createIndex() {
+	protected void addUniqueConstraint() {
+		try (Transaction tx = graphDb.beginTx()) {
+			graphDb.schema().constraintFor(DynamicLabel.label("Nodes"))
+					.assertPropertyIsUnique("id").create();
+			tx.success();
+		}
+	}
+
+	protected void createIndex() {
 		IndexDefinition indexDefinition;
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
@@ -47,7 +56,7 @@ public class DGraph {
 
 	public void addNode(final int id, final int start, final int end,
 			final String content, final int x, final int y, final int depth,
-			final String... sources) {
+			final String[] sources) {
 		try (Transaction tx = graphDb.beginTx()) {
 			Label label = DynamicLabel.label("Nodes");
 			Node addNode = graphDb.createNode(label);
@@ -60,5 +69,21 @@ public class DGraph {
 			addNode.setProperty("dpeth", depth);
 			addNode.setProperty("sources", sources);
 		}
+	}
+
+	public Node getNode(final int id) {
+		Label label = DynamicLabel.label("Nodes");
+		Node node = null;
+		try (Transaction tx = graphDb.beginTx()) {
+			node = graphDb.findNode(label, "id", id);
+			tx.success();
+		}
+		return node;
+	}
+
+	public void addEdge(final int nodeId1, final int nodeId2) {
+		Node n1 = getNode(nodeId1);
+		Node n2 = getNode(nodeId2);
+		n1.createRelationshipTo(n2, RelTypes.NEXT);
 	}
 }
