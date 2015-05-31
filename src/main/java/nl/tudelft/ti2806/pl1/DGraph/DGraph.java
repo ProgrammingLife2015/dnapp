@@ -1,9 +1,16 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.schema.IndexDefinition;
+import org.neo4j.graphdb.schema.Schema;
 
 /**
  * The DGraph class for representing our data.
@@ -13,244 +20,45 @@ import java.util.Map;
  */
 public class DGraph {
 
-	/**
-	 * The nodes in the graph.
-	 */
-	private final Map<Integer, DNode> nodes;
+	private GraphDatabaseService graphDb;
 
-	/**
-	 * A map storing a collection nodes per genome reference.
-	 */
-	private HashMap<String, Collection<DNode>> references;
-
-	/**
-	 * The edges in the graph.
-	 */
-	private Collection<DEdge> edges;
-
-	/**
-	 * The start node and end node of the graph.
-	 */
-	private DNode start, end;
-
-	/**
-	 * Creates a new DGraph.
-	 */
-	public DGraph() {
-		nodes = new HashMap<Integer, DNode>();
-		edges = new ArrayList<DEdge>();
-		references = new HashMap<String, Collection<DNode>>();
-		start = null;
-		end = null;
+	private static enum RelTypes implements RelationshipType {
+		NEXT
 	}
 
-	/**
-	 * @return the references
-	 */
-	public Map<String, Collection<DNode>> getReferences() {
-		return references;
+	public DGraph(final String db_path) {
+		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(db_path);
+		createIndex();
 	}
 
-	/**
-	 * @param newReferences
-	 *            the references to set
-	 */
-	protected void setReferences(
-			final HashMap<String, Collection<DNode>> newReferences) {
-		this.references = newReferences;
-	}
-
-	/**
-	 * Returns all the nodes which contain a specific reference.
-	 * 
-	 * @param s
-	 *            The reference from which we want to gain the nodes
-	 * @return A collection which contain
-	 */
-	public Collection<DNode> getReference(final String s) {
-		if (!references.containsKey(s)) {
-			return new ArrayList<DNode>();
+	public void createIndex() {
+		IndexDefinition indexDefinition;
+		try (Transaction tx = graphDb.beginTx()) {
+			Schema schema = graphDb.schema();
+			indexDefinition = schema.indexFor(DynamicLabel.label("Nodes"))
+					.on("id").create();
+			tx.success();
 		}
-		return references.get(s);
-	}
-
-	/**
-	 * @return the edges
-	 */
-	public Collection<DEdge> getEdges() {
-		return edges;
-	}
-
-	/**
-	 * @param newEdges
-	 *            the edges to set
-	 */
-	protected final void setEdges(final Collection<DEdge> newEdges) {
-		this.edges = newEdges;
-	}
-
-	/**
-	 * @return the nodes
-	 */
-	public Map<Integer, DNode> getNodes() {
-		return nodes;
-	}
-
-	/**
-	 * Adds a node to the graph.
-	 * 
-	 * @param node
-	 *            The node to be added
-	 * @return A boolean indicating of the operation succeeded
-	 */
-	public boolean addDNode(final DNode node) {
-		if (nodes.containsKey(node.getId())) {
-			return false;
+		try (Transaction tx = graphDb.beginTx()) {
+			Schema schema = graphDb.schema();
+			schema.awaitIndexOnline(indexDefinition, 10, TimeUnit.SECONDS);
 		}
-		for (String s : node.getSources()) {
-			if (!references.containsKey(s)) {
-				ArrayList<DNode> temp = new ArrayList<DNode>();
-				temp.add(node);
-				references.put(s, temp);
-			} else {
-				references.get(s).add(node);
-			}
+	}
+
+	public void addNode(final int id, final int start, final int end,
+			final String content, final int x, final int y, final int depth,
+			final String... sources) {
+		try (Transaction tx = graphDb.beginTx()) {
+			Label label = DynamicLabel.label("Nodes");
+			Node addNode = graphDb.createNode(label);
+			addNode.setProperty("id", id);
+			addNode.setProperty("start", start);
+			addNode.setProperty("end", end);
+			addNode.setProperty("content", content);
+			addNode.setProperty("x", x);
+			addNode.setProperty("y", y);
+			addNode.setProperty("dpeth", depth);
+			addNode.setProperty("sources", sources);
 		}
-		nodes.put(node.getId(), node);
-		return true;
 	}
-
-	/**
-	 * Removes a node from the graph.
-	 * 
-	 * @param node
-	 *            The node to be removed
-	 * @return A boolean indicating of the operation succeeded
-	 */
-	public boolean removeDNode(final DNode node) {
-		if (!nodes.containsKey(node.getId())) {
-			return false;
-		}
-		return removeDNode(node.getId());
-	}
-
-	/**
-	 * Removes a node from the graph.
-	 * 
-	 * @param n
-	 *            The node id to be removed
-	 * @return A boolean indicating of the operation succeeded
-	 */
-	public boolean removeDNode(final int n) {
-		if (!nodes.containsKey(n)) {
-			return false;
-		}
-		DNode removeNode = nodes.get(n);
-		for (DEdge edge : removeNode.getAllEdges()) {
-			edge.getStartNode().deleteEdge(edge);
-			edge.getEndNode().deleteEdge(edge);
-			edges.remove(edge);
-		}
-		for (String s : removeNode.getSources()) {
-			references.get(s).remove(removeNode);
-			if (references.get(s).isEmpty()) {
-				references.remove(s);
-			}
-		}
-		nodes.remove(n);
-		return true;
-	}
-
-	/**
-	 * Adds an edge to the graph.
-	 * 
-	 * @param edge
-	 *            The edge to be added
-	 * @return A boolean indicating of the operation succeeded
-	 */
-	public boolean addDEdge(final DEdge edge) {
-		if (!nodes.containsKey(edge.getStartNode().getId())
-				|| !nodes.containsKey(edge.getEndNode().getId())) {
-			return false;
-		}
-		if (edges.contains(edge)) {
-			return false;
-		}
-		nodes.get(edge.getStartNode().getId()).addEdge(edge);
-		nodes.get(edge.getEndNode().getId()).addEdge(edge);
-		edges.add(edge);
-		return true;
-	}
-
-	/**
-	 * Removes an edge from the graph.
-	 * 
-	 * @param edge
-	 *            The edge to be removed
-	 * @return A boolean indicating of the operation succeeded
-	 */
-	public boolean removeDEdge(final DEdge edge) {
-		if (!nodes.containsKey(edge.getStartNode().getId())
-				|| !nodes.containsKey(edge.getEndNode().getId())) {
-			return false;
-		}
-		if (!edges.contains(edge)) {
-			return false;
-		}
-		nodes.get(edge.getStartNode().getId()).deleteEdge(edge);
-		nodes.get(edge.getEndNode().getId()).deleteEdge(edge);
-		edges.remove(edge);
-		return true;
-	}
-
-	/**
-	 * Gets a node from the graph.
-	 * 
-	 * @param n
-	 *            The id of the node
-	 * @return The node in the graph
-	 */
-	public DNode getDNode(final int n) {
-		return nodes.get(n);
-	}
-
-	/**
-	 * Get the size of the amount of nodes.
-	 * 
-	 * @return The amount of nodes in the graph
-	 */
-	public int getNodeCount() {
-		return nodes.size();
-	}
-
-	/**
-	 * @return the start.
-	 */
-	public DNode getStart() {
-		return start;
-	}
-
-	/**
-	 * @param s
-	 *            the start to set.
-	 */
-	public final void setStart(final DNode s) {
-		this.start = s;
-	}
-
-	/**
-	 * @return the end.
-	 */
-	public DNode getEnd() {
-		return end;
-	}
-
-	/**
-	 * @param e
-	 *            the end to set.
-	 */
-	public final void setEnd(final DNode e) {
-		this.end = e;
-	}
-
 }
