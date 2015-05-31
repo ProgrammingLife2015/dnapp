@@ -1,11 +1,10 @@
 package nl.tudelft.ti2806.pl1.reader;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
 
 /**
@@ -42,8 +41,7 @@ public final class NodeReader {
 	 *            Scanner from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 */
-	public static ArrayList<DNode> readNodes(final Scanner sc) {
-		ArrayList<DNode> nodes = new ArrayList<DNode>();
+	public static void readNodes(final DGraph graph, final Scanner sc) {
 		while (sc.hasNextLine()) {
 			String nextnode = sc.nextLine();
 			if (nextnode.charAt(0) == '>') {
@@ -76,13 +74,12 @@ public final class NodeReader {
 				}
 				HashSet<String> sources = new HashSet<String>(
 						Arrays.asList(data[1].split(",")));
-				DNode node = new DNode(id, sources, start, end, content);
-				nodes.add(node);
+				// TODO sources???
+				graph.addNode(id, start, end, content, 0, 0, 0, sources);
 			} else {
 				throw new InvalidFileFormatException(
 						"Every new node line should start with >");
 			}
 		}
-		return nodes;
 	}
 }
