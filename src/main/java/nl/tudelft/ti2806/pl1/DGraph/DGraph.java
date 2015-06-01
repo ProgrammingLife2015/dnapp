@@ -3,7 +3,6 @@ package nl.tudelft.ti2806.pl1.DGraph;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.graphdb.DynamicLabel;
@@ -11,6 +10,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
@@ -19,24 +19,44 @@ import org.neo4j.graphdb.schema.Schema;
 /**
  * The DGraph class for representing our data.
  * 
- * @author Mark
- *
+ * @author Marissa, Mark
+ * @since 27-05-15
  */
 public class DGraph {
 
+	/** The neo4j database. **/
 	private GraphDatabaseService graphDb;
 
+	/** How long it calculates the index before stopping. **/
+	private static final int TIMEOUT = 10;
+
+	/**
+	 * Defines the possible relationships.
+	 * 
+	 * @author Mark
+	 *
+	 */
 	private static enum RelTypes implements RelationshipType {
+		/** The relationshiptypes. **/
 		NEXT, SOURCE;
 	}
 
-	public DGraph(final String db_path) {
-		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(db_path);
+	/**
+	 * Retrieve the neo4j graph on the given location.
+	 * 
+	 * @param dbPath
+	 *            Location of the neo4j graph.
+	 */
+	public DGraph(final String dbPath) {
+		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
 		addUniqueConstraint();
 		createIndexNodes();
 		createIndexSources();
 	}
 
+	/**
+	 * Make sure the id of the node is unique.
+	 */
 	protected void addUniqueConstraint() {
 		try (Transaction tx = graphDb.beginTx()) {
 			graphDb.schema().constraintFor(DynamicLabel.label("Nodes"))
@@ -50,6 +70,9 @@ public class DGraph {
 		}
 	}
 
+	/**
+	 * Add index on id.
+	 */
 	protected void createIndexNodes() {
 		IndexDefinition indexDefinition;
 		try (Transaction tx = graphDb.beginTx()) {
@@ -60,11 +83,14 @@ public class DGraph {
 		}
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
-			schema.awaitIndexOnline(indexDefinition, 10, TimeUnit.SECONDS);
+			schema.awaitIndexOnline(indexDefinition, TIMEOUT, TimeUnit.SECONDS);
 			tx.success();
 		}
 	}
 
+	/**
+	 * Add index on sources.
+	 */
 	protected void createIndexSources() {
 		IndexDefinition indexDefinition;
 		try (Transaction tx = graphDb.beginTx()) {
@@ -75,7 +101,7 @@ public class DGraph {
 		}
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
-			schema.awaitIndexOnline(indexDefinition, 10, TimeUnit.SECONDS);
+			schema.awaitIndexOnline(indexDefinition, TIMEOUT, TimeUnit.SECONDS);
 			tx.success();
 		}
 	}
@@ -125,14 +151,30 @@ public class DGraph {
 		addSources(id, sources);
 	}
 
+	/**
+	 * Adds sources to the Node.
+	 * 
+	 * @param nodeId
+	 *            Id of the node we want to add a source to.
+	 * @param sources
+	 *            Sources we want to add to the Node.
+	 */
 	protected void addSources(final int nodeId, final String[] sources) {
 		Node node = getNode(nodeId);
 		for (String s : sources) {
 			Node source = getSource(s);
-			node.createRelationshipTo(source, type)
+			node.createRelationshipTo(source, RelTypes.SOURCE);
 		}
 	}
 
+	/**
+	 * A node containing the source, having an incoming edge with all of its
+	 * nodes.
+	 * 
+	 * @param s
+	 *            The source we want to get the node from.
+	 * @return Node containing the source.
+	 */
 	protected Node getSource(final String s) {
 		Label label = DynamicLabel.label("Sources");
 		Node node = null;
@@ -143,6 +185,13 @@ public class DGraph {
 		return node;
 	}
 
+	/**
+	 * Get a Node from the graph.
+	 * 
+	 * @param id
+	 *            Id of the Node we want to get.
+	 * @return Node in the graph.
+	 */
 	public Node getNode(final int id) {
 		Label label = DynamicLabel.label("Nodes");
 		Node node = null;
@@ -153,10 +202,16 @@ public class DGraph {
 		return node;
 	}
 
+	/**
+	 * Get all Nodes in the graph.
+	 * 
+	 * @return All the Nodes in the Graph.
+	 */
 	public Collection<Node> getNodes() {
 		Collection<Node> nodes = new ArrayList<Node>();
 		try (Transaction tx = graphDb.beginTx()) {
-			Iterator<Node> it = graphDb.getAllNodes().iterator();
+			ResourceIterator<Node> it = graphDb.findNodes(DynamicLabel
+					.label("Nodes"));
 			while (it.hasNext()) {
 				nodes.add(it.next());
 			}
@@ -164,10 +219,26 @@ public class DGraph {
 		return nodes;
 	}
 
+	/**
+	 * Add an edge from node1 to node2.
+	 * 
+	 * @param node1
+	 *            The Node we want to add an edge to.
+	 * @param node2
+	 *            The Node the edge is going to.
+	 */
 	public void addEdge(final Node node1, final Node node2) {
 		node1.createRelationshipTo(node2, RelTypes.NEXT);
 	}
 
+	/**
+	 * Add edge from node with nodeId1 to node with nodeId2.
+	 * 
+	 * @param nodeId1
+	 *            Id of the node to which we want to add the node.
+	 * @param nodeId2
+	 *            Id of the node the edge is going to.
+	 */
 	public void addEdge(final int nodeId1, final int nodeId2) {
 		Node n1 = getNode(nodeId1);
 		Node n2 = getNode(nodeId2);
