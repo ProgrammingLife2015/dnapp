@@ -1,6 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import org.neo4j.graphdb.Node;
 
 /**
  * @author Maarten
@@ -13,9 +13,9 @@ public interface NodeSelectionObserver {
 	/**
 	 * Called when a node in the graph is clicked.
 	 * 
-	 * @param selectedNode
+	 * @param node
 	 *            The node selected in the graph view.
 	 */
-	void update(DNode selectedNode);
+	void update(Node node);
 
 }

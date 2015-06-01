@@ -239,6 +239,17 @@ public class DGraph {
 		while (it.hasNext()) {
 			nodes.add(it.next().getEndNode());
 		}
+		return nodes;
+	}
+
+	/**
+	 * Takes a list of nodes, and sorts them according to their start property.
+	 * 
+	 * @param nodes
+	 *            List of nodes to sort.
+	 * @return Sorted nodes.
+	 */
+	public List<Node> sortNodes(final List<Node> nodes) {
 		nodes.sort(new Comparator<Node>() {
 			@Override
 			public int compare(final Node n1, final Node n2) {

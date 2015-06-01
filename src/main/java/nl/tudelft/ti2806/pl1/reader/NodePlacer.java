@@ -52,11 +52,11 @@ public final class NodePlacer {
 	 */
 	public static Dimension place(final DGraph graph)
 			throws InvalidNodePlacementException {
-		if (graph.getNodeCount() == 0) {
+		if (graph.getNodes().size() == 0) {
 			return new Dimension(0, 0);
 		}
 		nodesAtDepth = new ArrayList<Integer>();
-		nodesAtDepth.add(graph.getNodeCount());
+		nodesAtDepth.add(graph.getNodes().size());
 		DNode first = graph.getStart();
 
 		Queue<DNode> que = new LinkedList<DNode>();
