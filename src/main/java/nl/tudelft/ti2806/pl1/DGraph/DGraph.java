@@ -3,12 +3,16 @@ package nl.tudelft.ti2806.pl1.DGraph;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
@@ -183,6 +187,67 @@ public class DGraph {
 			tx.success();
 		}
 		return node;
+	}
+
+	/**
+	 * Lets us get sources from a given node.
+	 * 
+	 * @param node
+	 *            Node we want to get the sources from.
+	 * @return Sources from this node.
+	 */
+	public Collection<Node> getSources(final Node node) {
+		Label label = DynamicLabel.label("Sources");
+		Collection<Node> nodes = new ArrayList<Node>();
+		try (Transaction tx = graphDb.beginTx()) {
+			ResourceIterator<Node> it = graphDb.findNodes(label);
+			while (it.hasNext()) {
+				nodes.add(it.next());
+			}
+		}
+		return nodes;
+	}
+
+	/**
+	 * Get all the nodes pointing to sources.
+	 * 
+	 * @return Source nodes for all the nodes.
+	 */
+	public Collection<Node> getSources() {
+		Label label = DynamicLabel.label("Sources");
+		Collection<Node> nodes = new ArrayList<Node>();
+		try (Transaction tx = graphDb.beginTx()) {
+			ResourceIterator<Node> it = graphDb.findNodes(label);
+			while (it.hasNext()) {
+				nodes.add(it.next());
+			}
+		}
+		return nodes;
+	}
+
+	/**
+	 * List of nodes with a given source.
+	 * 
+	 * @param source
+	 *            The source of which we want to get the nodes
+	 * @return List of nodes with the given source.
+	 */
+	public List<Node> getNodes(final String source) {
+		Node sourcenode = getSource(source);
+		List<Node> nodes = new ArrayList<Node>();
+		Iterator<Relationship> it = sourcenode.getRelationships().iterator();
+		while (it.hasNext()) {
+			nodes.add(it.next().getEndNode());
+		}
+		nodes.sort(new Comparator<Node>() {
+			@Override
+			public int compare(final Node n1, final Node n2) {
+				int start1 = (int) n1.getProperty("start");
+				int start2 = (int) n2.getProperty("start");
+				return start1 - start2;
+			}
+		});
+		return nodes;
 	}
 
 	/**
