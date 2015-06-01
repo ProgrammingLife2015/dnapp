@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -79,8 +80,25 @@ public class DGraph {
 		}
 	}
 
+	/**
+	 * 
+	 * @param id
+	 *            The id of the Node.
+	 * @param start
+	 *            The place of the reference of the first base in the node.
+	 * @param end
+	 *            The place of the reference of the last base in the node.
+	 * @param content
+	 *            The content of the Node.
+	 * @param coords
+	 *            The coordinates of the Node in the graph.
+	 * @param depth
+	 *            The depth of the Node in the graph.
+	 * @param sources
+	 *            The sources of the Node.
+	 */
 	public void addNode(final int id, final int start, final int end,
-			final String content, final int x, final int y, final int depth,
+			final String content, final Point coords, final int depth,
 			final String[] sources) {
 		Label label = DynamicLabel.label("Nodes");
 		try (Transaction tx = graphDb.beginTx()) {
@@ -89,8 +107,8 @@ public class DGraph {
 			addNode.setProperty("start", start);
 			addNode.setProperty("end", end);
 			addNode.setProperty("content", content);
-			addNode.setProperty("x", x);
-			addNode.setProperty("y", y);
+			addNode.setProperty("x", coords.x);
+			addNode.setProperty("y", coords.y);
 			addNode.setProperty("dpeth", depth);
 			tx.success();
 		}

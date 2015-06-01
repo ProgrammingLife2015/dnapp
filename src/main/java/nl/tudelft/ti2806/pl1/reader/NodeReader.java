@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.reader;
 
+import java.awt.Point;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -71,7 +72,8 @@ public final class NodeReader {
 							"Size of Node content doesn't match with its reference size");
 				}
 				String[] sources = data[1].split(",");
-				graph.addNode(id, start, end, content, 0, 0, 0, sources);
+				graph.addNode(id, start, end, content, new Point(0, 0), 0,
+						sources);
 			} else {
 				throw new InvalidFileFormatException(
 						"Every new node line should start with >");
