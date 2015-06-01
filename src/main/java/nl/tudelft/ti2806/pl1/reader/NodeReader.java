@@ -1,7 +1,5 @@
 package nl.tudelft.ti2806.pl1.reader;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -72,9 +70,7 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"Size of Node content doesn't match with its reference size");
 				}
-				HashSet<String> sources = new HashSet<String>(
-						Arrays.asList(data[1].split(",")));
-				// TODO sources???
+				String[] sources = data[1].split(",");
 				graph.addNode(id, start, end, content, 0, 0, 0, sources);
 			} else {
 				throw new InvalidFileFormatException(
