@@ -1,5 +1,8 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.graphdb.DynamicLabel;
@@ -23,8 +26,7 @@ public class DGraph {
 	private GraphDatabaseService graphDb;
 
 	private static enum RelTypes implements RelationshipType {
-		NEXT;
-		SOURCE;
+		NEXT, SOURCE;
 	}
 
 	public DGraph(final String db_path) {
@@ -131,6 +133,17 @@ public class DGraph {
 			tx.success();
 		}
 		return node;
+	}
+
+	public Collection<Node> getNodes() {
+		Collection<Node> nodes = new ArrayList<Node>();
+		try (Transaction tx = graphDb.beginTx()) {
+			Iterator<Node> it = graphDb.getAllNodes().iterator();
+			while (it.hasNext()) {
+				nodes.add(it.next());
+			}
+		}
+		return nodes;
 	}
 
 	public void addEdge(final Node node1, final Node node2) {
