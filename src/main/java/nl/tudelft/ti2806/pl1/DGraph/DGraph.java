@@ -138,7 +138,9 @@ public class DGraph {
 				tx.success();
 			}
 		}
-		addSources(id, sources);
+		try (Transaction tx = graphDb.beginTx()) {
+			addSources(id, sources);
+		}
 	}
 
 	/**
@@ -190,6 +192,7 @@ public class DGraph {
 			while (it.hasNext()) {
 				nodes.add(it.next().getEndNode());
 			}
+			tx.success();
 		}
 		return nodes;
 	}
@@ -207,6 +210,7 @@ public class DGraph {
 			while (it.hasNext()) {
 				nodes.add(it.next());
 			}
+			tx.success();
 		}
 		return nodes;
 	}
