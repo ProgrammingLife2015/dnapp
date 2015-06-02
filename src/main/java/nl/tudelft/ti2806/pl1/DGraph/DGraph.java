@@ -313,8 +313,7 @@ public class DGraph {
 	 * 
 	 * @param graphDb
 	 */
-	@SuppressWarnings("unused")
-	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
+	public void registerShutdownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
