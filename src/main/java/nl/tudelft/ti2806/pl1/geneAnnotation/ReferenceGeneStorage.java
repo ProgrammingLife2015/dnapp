@@ -7,8 +7,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashSet;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 /**
  * Storage location of all the genes of the TKK_REF with their information
@@ -33,7 +33,7 @@ public class ReferenceGeneStorage {
 	private static final String GFF_FILE = "src/main/resources/decorationV5_20130412.gff";
 
 	/** All the genes and information extracted from the information file. */
-	private HashSet<ReferenceGene> referenceGenes;
+	private TreeSet<ReferenceGene> referenceGenes;
 
 	/**
 	 * Constructor reading the gff3 gene files, extracting all the possible
@@ -51,8 +51,9 @@ public class ReferenceGeneStorage {
 	 *            File from which gene information to be extracted.
 	 * @return HashSet containing all the genes for the reference genome.
 	 */
-	private HashSet<ReferenceGene> extractReferenceGenes(final String file) {
-		HashSet<ReferenceGene> ret = new HashSet<ReferenceGene>();
+	private TreeSet<ReferenceGene> extractReferenceGenes(final String file) {
+		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
+				new RefGeneCompare());
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(
 					file)));
@@ -79,7 +80,44 @@ public class ReferenceGeneStorage {
 	}
 
 	/** @return the name genes. */
-	public HashSet<ReferenceGene> getReferenceGenes() {
+	public TreeSet<ReferenceGene> getReferenceGenes() {
 		return referenceGenes;
+	}
+
+	/**
+	 * Checks for the given position whether it falls into a intragenic region.
+	 * 
+	 * @param index
+	 *            Index of the position to be checked.
+	 * @return Whether the index is in a intragenic region.
+	 */
+	public boolean isIntragenic(final int index) {
+		for (ReferenceGene rg : getReferenceGenes()) {
+			if (index >= rg.getStart()) {
+				if (index <= rg.getEnd()) {
+					return true;
+				}
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * main.
+	 * 
+	 * @param args
+	 *            args
+	 */
+	public static void main(final String[] args) {
+		ReferenceGeneStorage rgs = new ReferenceGeneStorage();
+		for (ReferenceGene rg : rgs.getReferenceGenes()) {
+			System.out.println(rg.toString());
+		}
+		System.out.println(rgs.isIntragenic(4410963));
+		System.out.println(rgs.isIntragenic(4410962));
+
+		System.out.println(rgs.isIntragenic(4411107));
 	}
 }
