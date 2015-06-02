@@ -42,42 +42,32 @@ public class DGraph {
 	 */
 	public DGraph(final String dbPath) {
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
-		addUniqueConstraint();
 		createIndexNodes();
 		createIndexSources();
-	}
-
-	/**
-	 * Make sure the id of the node is unique.
-	 */
-	protected void addUniqueConstraint() {
-		try (Transaction tx = graphDb.beginTx()) {
-			graphDb.schema().constraintFor(DynamicLabel.label("Nodes"))
-					.assertPropertyIsUnique("id").create();
-			tx.success();
-		}
-		try (Transaction tx = graphDb.beginTx()) {
-			graphDb.schema().constraintFor(DynamicLabel.label("Sources"))
-					.assertPropertyIsUnique("source").create();
-			tx.success();
-		}
 	}
 
 	/**
 	 * Add index on id.
 	 */
 	protected void createIndexNodes() {
-		IndexDefinition indexDefinition;
+		IndexDefinition indexDefinition = null;
+		Label label = DynamicLabel.label("Nodes");
+		boolean containsIndex = false;
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
-			indexDefinition = schema.indexFor(DynamicLabel.label("Nodes"))
-					.on("id").create();
+			containsIndex = schema.getIndexes(label).iterator().hasNext();
+			if (!containsIndex) {
+				indexDefinition = schema.indexFor(label).on("id").create();
+			}
 			tx.success();
 		}
-		try (Transaction tx = graphDb.beginTx()) {
-			Schema schema = graphDb.schema();
-			schema.awaitIndexOnline(indexDefinition, TIMEOUT, TimeUnit.SECONDS);
-			tx.success();
+		if (!containsIndex) {
+			try (Transaction tx = graphDb.beginTx()) {
+				Schema schema = graphDb.schema();
+				schema.awaitIndexOnline(indexDefinition, TIMEOUT,
+						TimeUnit.SECONDS);
+				tx.success();
+			}
 		}
 	}
 
@@ -85,17 +75,24 @@ public class DGraph {
 	 * Add index on sources.
 	 */
 	protected void createIndexSources() {
-		IndexDefinition indexDefinition;
+		IndexDefinition indexDefinition = null;
+		Label label = DynamicLabel.label("Sources");
+		boolean containsIndex = false;
 		try (Transaction tx = graphDb.beginTx()) {
 			Schema schema = graphDb.schema();
-			indexDefinition = schema.indexFor(DynamicLabel.label("Sources"))
-					.on("source").create();
+			containsIndex = schema.getIndexes(label).iterator().hasNext();
+			if (!containsIndex) {
+				indexDefinition = schema.indexFor(label).on("source").create();
+			}
 			tx.success();
 		}
-		try (Transaction tx = graphDb.beginTx()) {
-			Schema schema = graphDb.schema();
-			schema.awaitIndexOnline(indexDefinition, TIMEOUT, TimeUnit.SECONDS);
-			tx.success();
+		if (!containsIndex) {
+			try (Transaction tx = graphDb.beginTx()) {
+				Schema schema = graphDb.schema();
+				schema.awaitIndexOnline(indexDefinition, TIMEOUT,
+						TimeUnit.SECONDS);
+				tx.success();
+			}
 		}
 	}
 
@@ -308,5 +305,21 @@ public class DGraph {
 		Node n1 = getNode(nodeId1);
 		Node n2 = getNode(nodeId2);
 		n1.createRelationshipTo(n2, RelTypes.NEXT);
+	}
+
+	/**
+	 * Registers a shutdown hook for the Neo4j instance so that it shuts down
+	 * nicely when the VM exits (even if you "Ctrl-C" the running application).
+	 * 
+	 * @param graphDb
+	 */
+	@SuppressWarnings("unused")
+	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				graphDb.shutdown();
+			}
+		});
 	}
 }
