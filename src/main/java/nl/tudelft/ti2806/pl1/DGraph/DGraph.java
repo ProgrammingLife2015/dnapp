@@ -19,6 +19,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
+import org.neo4j.tooling.GlobalGraphOperations;
 
 /**
  * The DGraph class for representing our data.
@@ -324,5 +325,16 @@ public class DGraph {
 				graphDb.shutdown();
 			}
 		});
+	}
+
+	/**
+	 * Empties the graph.
+	 */
+	protected void emptygraph() {
+		for (Node node : GlobalGraphOperations.at(graphDb).getAllNodes()) {
+			for (Relationship ship : node.getRelationships()) {
+				ship.delete();
+			}
+		}
 	}
 }
