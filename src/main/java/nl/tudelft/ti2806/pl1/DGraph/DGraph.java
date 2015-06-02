@@ -331,9 +331,12 @@ public class DGraph {
 	 * Empties the graph.
 	 */
 	protected void emptygraph() {
-		for (Node node : GlobalGraphOperations.at(graphDb).getAllNodes()) {
-			for (Relationship ship : node.getRelationships()) {
-				ship.delete();
+		try (Transaction tx = graphDb.beginTx()) {
+			for (Node node : GlobalGraphOperations.at(graphDb).getAllNodes()) {
+				for (Relationship ship : node.getRelationships()) {
+					ship.delete();
+				}
+				node.delete();
 			}
 		}
 	}
