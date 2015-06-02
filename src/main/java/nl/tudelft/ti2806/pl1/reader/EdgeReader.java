@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.reader;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -27,10 +28,12 @@ public final class EdgeReader {
 	 *            The graph which is used to extract the nodes
 	 * @param sc
 	 *            Scanner from which the edge information will be read.
+	 * @throws IOException
 	 */
-	public static void readEdges(final DGraph graph, final Scanner sc) {
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
+	public static void readEdges(final DGraph graph, final BufferedReader reader)
+			throws IOException {
+		String line;
+		while ((line = reader.readLine()) != null) {
 			String[] nodes = line.split("\\s");
 			if (nodes.length != 2) {
 				throw new InvalidFileFormatException(

@@ -1,7 +1,8 @@
 package nl.tudelft.ti2806.pl1.reader;
 
 import java.awt.Point;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -39,10 +40,12 @@ public final class NodeReader {
 	 *            The graph on which the Nodes will be added.
 	 * @param sc
 	 *            Scanner from which contains the Node information.
+	 * @throws IOException
 	 */
-	public static void readNodes(final DGraph graph, final Scanner sc) {
-		while (sc.hasNextLine()) {
-			String nextnode = sc.nextLine();
+	public static void readNodes(final DGraph graph, final BufferedReader reader)
+			throws IOException {
+		String nextnode;
+		while ((nextnode = reader.readLine()) != null) {
 			if (nextnode.charAt(0) == '>') {
 				nextnode = nextnode.substring(1);
 				String[] data = nextnode.split("\\s\\|\\s");
@@ -50,7 +53,7 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"Missing some information to create this node");
 				}
-				String content = sc.nextLine();
+				String content = reader.readLine();
 				int id;
 				int start;
 				int end;
