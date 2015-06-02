@@ -23,7 +23,6 @@ import javax.swing.JTextArea;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
@@ -202,8 +201,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getValue() / 2);
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
-		window.optionPanel().getGenomes()
-				.fill(dgraph.getReferences().keySet(), false, true);
+		Set<String> genomes = new HashSet<String>();
+		for (org.neo4j.graphdb.Node node : dgraph.getSources()) {
+			genomes.add((String) node.getProperty("source"));
+		}
+		window.optionPanel().getGenomes().fill(genomes, false, true);
 		return ret;
 	}
 
@@ -257,23 +259,22 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	/**
 	 * 
-	 * @param selectedNodeIn
+	 * @param node
 	 *            The node clicked on by the user
 	 */
-	private void notifyObservers(final DNode selectedNodeIn) {
+	private void notifyObservers(final org.neo4j.graphdb.Node node) {
 		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selectedNodeIn);
+			sgo.update(node);
 		}
 	}
 
 	/**
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
-	public final void update(final DNode newSelectedNode) {
-		text.setText(newSelectedNode.getContent());
-		// TODO change strings to constants (still have to decide in which class
-		// to define them)
 
+	@Override
+	public void update(final org.neo4j.graphdb.Node newSelectedNode) {
+		text.setText((String) newSelectedNode.getProperty("content"));
 	}
 
 	/**
@@ -305,9 +306,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 *            Id of the genome to be highlighted.
 	 */
 	public final void highlight(final String genomeId) {
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
-			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-					"highlight");
+		for (org.neo4j.graphdb.Node n : dgraph.getNodes(genomeId)) {
+			graph.getNode(String.valueOf(n.getProperty("id"))).setAttribute(
+					"ui.class", "highlight");
 		}
 		highlightedGenomes.add(genomeId);
 	}
@@ -320,14 +321,16 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	public final void unHighlight(final String genomeId) {
 		highlightedGenomes.remove(genomeId);
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
+		for (org.neo4j.graphdb.Node n : dgraph.getNodes(genomeId)) {
 			boolean contains = false;
-			for (String source : n.getSources()) {
-				contains = contains || highlightedGenomes.contains(source);
-			}
-			if (!contains) {
-				graph.getNode(String.valueOf(n.getId())).setAttribute(
-						"ui.class", "common");
+			for (org.neo4j.graphdb.Node source : dgraph.getSources(n)) {
+				contains = contains
+						|| highlightedGenomes.contains(source
+								.getProperty("source"));
+				if (!contains) {
+					graph.getNode(String.valueOf(n.getProperty("id")))
+							.setAttribute("ui.class", "common");
+				}
 			}
 		}
 	}
@@ -363,6 +366,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * @param e
 		 *            MouseWheelEvent for which is being handled.
 		 */
+		@Override
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
@@ -472,6 +476,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
 			int type = e.getAdjustmentType();
 			if (type == AdjustmentEvent.BLOCK_DECREMENT) {
@@ -511,6 +516,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
@@ -541,20 +547,23 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void viewClosed(final String viewName) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
-			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
+			notifyObservers(dgraph.getNode(Integer.valueOf(id)));
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
 		}
@@ -575,24 +584,29 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	class ViewMouseListener implements MouseListener {
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
 

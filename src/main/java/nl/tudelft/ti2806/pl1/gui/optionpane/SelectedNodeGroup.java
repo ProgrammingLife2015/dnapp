@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
 
+import org.neo4j.graphdb.Node;
+
 /**
  * @author Maarten
  * @since 18-5-2015
@@ -120,6 +122,13 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 */
 	public final void setTitle(final String newTitle) {
 		setBorder(BorderFactory.createTitledBorder(newTitle));
+	}
+
+	@Override
+	public void update(final Node node) {
+		lblID.setText((String) node.getProperty("id"));
+		lblContentLength.setText(String.valueOf(((String) node
+				.getProperty("content")).length()));
 	}
 
 	/**
