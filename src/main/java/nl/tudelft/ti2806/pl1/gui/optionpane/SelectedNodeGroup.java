@@ -4,16 +4,20 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.DGraph.RelTypes;
 import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
 
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 /**
  * @author Maarten
@@ -124,30 +128,26 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setBorder(BorderFactory.createTitledBorder(newTitle));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void update(final Node node) {
 		lblID.setText((String) node.getProperty("id"));
 		lblContentLength.setText(String.valueOf(((String) node
 				.getProperty("content")).length()));
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public final void update(final DNode selectedNode) {
-		lblID.setText(String.valueOf(selectedNode.getId()));
-		lblContentLength.setText(String.valueOf(selectedNode.getContent()
-				.length())); // TODO
-		// lblContentLength.setText(String.valueOf(((String) selectedNode
-		// .getAttribute("content")).length()));
+		ArrayList<String> nodes = new ArrayList<String>();
+		Iterator<Relationship> it = node.getRelationships(Direction.OUTGOING,
+				RelTypes.SOURCE).iterator();
+		while (it.hasNext()) {
+			nodes.add((String) it.next().getEndNode().getProperty("source"));
+		}
+		lblSources.setText(nodes.toString());
 
-		lblSources.setText(selectedNode.getSources().toString()); // TODO
-		// lblSources.setText(selectedNode.getAttribute("sources").toString());
-		nodeChart.analyseString(selectedNode.getContent().toString());
-		// TODO
+		nodeChart.analyseString((String) node.getProperty("content"));
 		nodeChart.repaint();
-		// System.out.println("Update SelNodeGrp called "
-		// + selectedNode.getAttribute("content").toString());
+		// lblSources.setText();
 	}
 
 	@Override

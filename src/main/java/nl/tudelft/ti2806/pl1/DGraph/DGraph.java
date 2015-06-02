@@ -8,12 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -33,17 +33,6 @@ public class DGraph {
 
 	/** How long it calculates the index before stopping. **/
 	private static final int TIMEOUT = 10;
-
-	/**
-	 * Defines the possible relationships.
-	 * 
-	 * @author Mark
-	 *
-	 */
-	private static enum RelTypes implements RelationshipType {
-		/** The relationshiptypes. **/
-		NEXT, SOURCE;
-	}
 
 	/**
 	 * Retrieve the neo4j graph on the given location.
@@ -197,12 +186,12 @@ public class DGraph {
 	 * @return Sources from this node.
 	 */
 	public Collection<Node> getSources(final Node node) {
-		Label label = DynamicLabel.label("Sources");
 		Collection<Node> nodes = new ArrayList<Node>();
 		try (Transaction tx = graphDb.beginTx()) {
-			ResourceIterator<Node> it = graphDb.findNodes(label);
+			Iterator<Relationship> it = node.getRelationships(
+					Direction.OUTGOING, RelTypes.SOURCE).iterator();
 			while (it.hasNext()) {
-				nodes.add(it.next());
+				nodes.add(it.next().getEndNode());
 			}
 		}
 		return nodes;
