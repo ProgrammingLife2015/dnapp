@@ -201,7 +201,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getValue() / 2);
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
-		// TODO or make a getReferences?
 		Set<String> genomes = new HashSet<String>();
 		for (org.neo4j.graphdb.Node node : dgraph.getSources()) {
 			genomes.add((String) node.getProperty("source"));
@@ -275,7 +274,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	@Override
 	public void update(final org.neo4j.graphdb.Node newSelectedNode) {
-		text.setText(dgraph.getNode(newSelectedNode).getProperty("content"));
+		text.setText((String) newSelectedNode.getProperty("content"));
 	}
 
 	/**
