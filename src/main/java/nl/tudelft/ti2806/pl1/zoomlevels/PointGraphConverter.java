@@ -23,10 +23,8 @@ import org.graphstream.graph.implementations.Graphs;
 public final class PointGraphConverter {
 
 	/**
-	 * 
 	 */
 	private PointGraphConverter() {
-
 	}
 
 	/**
@@ -54,7 +52,7 @@ public final class PointGraphConverter {
 			while (leaving.hasNext()) {
 				Edge out = leaving.next();
 				Node outnode = out.getNode1();
-				String content;
+				String content; // outnode.getAttribute("content").toString();
 				if (outnode.getAttribute("content") instanceof HashMap<?, ?>) {
 					content = outnode.getAttribute("content").toString();
 				} else {
