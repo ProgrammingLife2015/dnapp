@@ -1,6 +1,8 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -19,6 +21,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
+import org.neo4j.io.fs.FileUtils;
 import org.neo4j.tooling.GlobalGraphOperations;
 
 /**
@@ -40,8 +43,10 @@ public class DGraph {
 	 * 
 	 * @param dbPath
 	 *            Location of the neo4j graph.
+	 * @throws IOException
 	 */
-	public DGraph(final String dbPath) {
+	public DGraph(final String dbPath) throws IOException {
+		FileUtils.deleteRecursively(new File(dbPath));
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
 		createIndexNodes();
 		createIndexSources();
