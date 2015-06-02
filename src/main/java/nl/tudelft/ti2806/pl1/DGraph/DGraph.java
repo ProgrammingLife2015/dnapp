@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
+
 /**
  * The DGraph class for representing our data.
  * 
@@ -33,6 +35,9 @@ public class DGraph {
 	 */
 	private DNode start, end;
 
+	/** Storage of all the genes in the reference genome. */
+	private ReferenceGeneStorage RGS;
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -42,6 +47,7 @@ public class DGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
+		RGS = new ReferenceGeneStorage();
 	}
 
 	/**
