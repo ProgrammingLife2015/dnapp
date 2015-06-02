@@ -177,6 +177,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			Event.statusBarError(e.getMessage());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		graph.addAttribute("ui.stylesheet",
 				"url('src/main/resources/stylesheet.css')");
