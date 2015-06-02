@@ -202,8 +202,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				graphPane.getVerticalScrollBar().getValue() / 2);
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
-		window.optionPanel().getGenomes()
-				.fill(dgraph.getReferences().keySet(), false, true);
+		window.optionPanel().fillGenomeList(dgraph.getReferences().keySet(),
+				false, true);
 		return ret;
 	}
 

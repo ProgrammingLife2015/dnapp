@@ -141,7 +141,8 @@ public class GenomeTable extends JScrollPane {
 	 *            If true, the list will first be emptied before filled with the
 	 *            new rows.
 	 */
-	private void fill(final List<GenomeRow> genomeRows, final boolean empty) {
+	private void fill(final Collection<GenomeRow> genomeRows,
+			final boolean empty) {
 		if (empty) {
 			gtm.data.clear();
 		}
