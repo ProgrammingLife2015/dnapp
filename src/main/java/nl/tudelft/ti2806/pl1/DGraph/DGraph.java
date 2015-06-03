@@ -38,6 +38,9 @@ public class DGraph {
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage RGS;
 
+	/** File with all the gene information regarding the reference genome. */
+	private static final String GFF_FILE = "src/main/resources/decorationV5_20130412.gff";
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -47,7 +50,7 @@ public class DGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
-		RGS = new ReferenceGeneStorage();
+		RGS = new ReferenceGeneStorage(GFF_FILE);
 	}
 
 	/**
