@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.RelTypes;
+
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
 
 /**
  * 
@@ -17,12 +22,12 @@ public final class Reader {
 	/**
 	 * The start id of the start node in the graph.
 	 */
-	private static final int STARTID = -2;
+	private static int startid;
 
 	/**
 	 * The end id of the end node in the graph.
 	 */
-	private static final int ENDID = -1;
+	private static int endid;
 
 	/**
 	 * 
@@ -39,6 +44,7 @@ public final class Reader {
 	 *            File location of the Edges data.
 	 * @return Graph with this processed information.
 	 * @throws IOException
+	 *             Location cannot be found.
 	 */
 	public static DGraph read(final String nodes, final String edges)
 			throws IOException {
@@ -81,39 +87,26 @@ public final class Reader {
 		EdgeReader.readEdges(graph, reader);
 	}
 
-	// /**
-	// * This method adds a start and end node, with id of STARTID and ENDID
-	// * respectively.
-	// *
-	// * @param graph
-	// * The graph to which the nodes are added
-	// */
-	// // TODO this needs to be fixed
-	// private static void addStartEndNode(final DGraph graph) {
-	// ArrayList<DNode> startNodes = new ArrayList<DNode>();
-	// ArrayList<DNode> endNodes = new ArrayList<DNode>();
-	// HashSet<String> sources = new HashSet<String>();
-	// for (DNode node : graph.getNodes().values()) {
-	// sources.addAll(node.getSources());
-	// if (node.getInEdges().size() == 0) {
-	// startNodes.add(node);
-	// } else if (node.getOutEdges().size() == 0) {
-	// endNodes.add(node);
-	// }
-	// }
-	// DNode start = new DNode(STARTID, sources, 0, 0, "");
-	// DNode end = new DNode(ENDID, sources, 0, 0, "");
-	// graph.addDNode(start);
-	// graph.addDNode(end);
-	// for (DNode n : startNodes) {
-	// DEdge edge = new DEdge(start, n);
-	// graph.addDEdge(edge);
-	// }
-	// for (DNode n : endNodes) {
-	// DEdge edge = new DEdge(n, end);
-	// graph.addDEdge(edge);
-	// }
-	// graph.setStart(start);
-	// graph.setEnd(end);
-	// }
+	/**
+	 * 
+	 * @param graph
+	 *            Graph we want to get the start and end node for.
+	 */
+	private static void addStartEndNode(final DGraph graph) {
+		Iterator<Node> it = graph.getNodes().iterator();
+		int start = -1;
+		int end = -1;
+		while (it.hasNext()) {
+			Node node = it.next();
+			if ((int) node.getProperty("start") == 0) {
+				start = (int) node.getProperty("id");
+			}
+			if (!node.hasRelationship(Direction.OUTGOING, RelTypes.NEXT)) {
+				end = (int) node.getProperty("id");
+			}
+
+		}
+		graph.setStart(start);
+		graph.setEnd(end);
+	}
 }

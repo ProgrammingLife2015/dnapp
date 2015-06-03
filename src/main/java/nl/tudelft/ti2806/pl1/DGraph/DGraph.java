@@ -38,6 +38,12 @@ public class DGraph {
 	/** How long it calculates the index before stopping. **/
 	private static final int TIMEOUT = 10;
 
+	/** Id of the first node of the graph. **/
+	private int startid;
+
+	/** Id of the last node of the graph. **/
+	private int endid;
+
 	/**
 	 * Retrieve the neo4j graph on the given location.
 	 * 
@@ -330,6 +336,44 @@ public class DGraph {
 				graphDb.shutdown();
 			}
 		});
+	}
+
+	/**
+	 * Change id of the startnode.
+	 * 
+	 * @param id
+	 *            New id of the startnode.
+	 */
+	public void setStart(final int id) {
+		startid = id;
+	}
+
+	/**
+	 * Change id of the endnode.
+	 * 
+	 * @param id
+	 *            New id of the endnode.
+	 */
+	public void setEnd(final int id) {
+		endid = id;
+	}
+
+	/**
+	 * Get id of the startnode.
+	 * 
+	 * @return id of startnode
+	 */
+	public int getStart() {
+		return startid;
+	}
+
+	/**
+	 * Get id of the endnode.
+	 * 
+	 * @return id of endnode
+	 */
+	public int getEnd() {
+		return endid;
 	}
 
 	/**
