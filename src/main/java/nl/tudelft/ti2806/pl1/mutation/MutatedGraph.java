@@ -1,4 +1,4 @@
-package mutation;
+package nl.tudelft.ti2806.pl1.mutation;
 
 import java.util.Collection;
 
@@ -16,5 +16,10 @@ public interface MutatedGraph {
 	 * @return A collection of all the point mutations in the graph.
 	 */
 	Collection<PointMutation> getAllPointMutations();
+
+	/**
+	 * @return A collection of all the InDel mutations in the graph.
+	 */
+	Collection<PointMutation> getAllInDelMutations();
 
 }
