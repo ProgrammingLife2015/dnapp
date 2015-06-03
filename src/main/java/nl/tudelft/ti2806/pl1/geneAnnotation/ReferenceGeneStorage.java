@@ -29,8 +29,6 @@ public class ReferenceGeneStorage {
 	private static final int INDEX_STRAND = 6;
 	/** Index for the attributes in the file. */
 	private static final int INDEX_ATTRIBUTES = 8;
-	/** File with all the gene information regarding the reference genome. */
-	private static final String GFF_FILE = "src/main/resources/decorationV5_20130412.gff";
 
 	/** All the genes and information extracted from the information file. */
 	private TreeSet<ReferenceGene> referenceGenes;
@@ -38,13 +36,16 @@ public class ReferenceGeneStorage {
 	/**
 	 * Constructor reading the gff3 gene files, extracting all the possible
 	 * genes in the reference genome.
+	 * 
+	 * @param filePath
+	 *            Path to the file from which information should be extracted.
 	 */
-	public ReferenceGeneStorage() {
-		this.referenceGenes = extractReferenceGenes(GFF_FILE);
+	public ReferenceGeneStorage(final String filePath) {
+		this.referenceGenes = extractReferenceGenes(filePath);
 	}
 
 	/**
-	 * Extracts all the references genes from the decorationV5_20130412.gff
+	 * Extracts all the r eferences genes from the decorationV5_20130412.gff
 	 * file.
 	 * 
 	 * @param file
@@ -104,20 +105,4 @@ public class ReferenceGeneStorage {
 		return false;
 	}
 
-	/**
-	 * main.
-	 * 
-	 * @param args
-	 *            args
-	 */
-	public static void main(final String[] args) {
-		ReferenceGeneStorage rgs = new ReferenceGeneStorage();
-		for (ReferenceGene rg : rgs.getReferenceGenes()) {
-			System.out.println(rg.toString());
-		}
-		System.out.println(rgs.isIntragenic(4410963));
-		System.out.println(rgs.isIntragenic(4410962));
-
-		System.out.println(rgs.isIntragenic(4411107));
-	}
 }
