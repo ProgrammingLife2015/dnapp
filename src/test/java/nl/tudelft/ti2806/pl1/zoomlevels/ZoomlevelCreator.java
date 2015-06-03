@@ -3,9 +3,9 @@ package nl.tudelft.ti2806.pl1.zoomlevels;
 import java.util.Collection;
 import java.util.Set;
 
-import mutation.MutatedGraph;
-import mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 /**
  * @author Maarten, Justin
