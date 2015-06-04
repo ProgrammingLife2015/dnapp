@@ -179,8 +179,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		graph.addAttribute("ui.stylesheet",
-				"url('src/main/resources/stylesheet.css')");
+		graph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 		// System.setProperty("org.graphstream.ui.renderer",
 		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		Viewer viewer = new Viewer(graph,
@@ -269,6 +268,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
+	@Override
 	public final void update(final DNode newSelectedNode) {
 		text.setText(newSelectedNode.getContent());
 		// TODO change strings to constants (still have to decide in which class
@@ -363,6 +363,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * @param e
 		 *            MouseWheelEvent for which is being handled.
 		 */
+		@Override
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
@@ -472,23 +473,25 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
-			int type = e.getAdjustmentType();
-			if (type == AdjustmentEvent.BLOCK_DECREMENT) {
-				System.out.println("Scroll block decr");
-			} else if (type == AdjustmentEvent.BLOCK_INCREMENT) {
-				System.out.println("Scroll block incr");
-			} else if (type == AdjustmentEvent.UNIT_DECREMENT) {
-				System.out.println("Scroll unit incr");
-			} else if (type == AdjustmentEvent.UNIT_INCREMENT) {
-				System.out.println("Scroll unit incr");
-			} else if (type == AdjustmentEvent.TRACK) {
-				System.out.println("Scroll track");
-				System.out.println("e.getValue() == " + e.getValue());
-				// TODO (use this for genome location plotting?)
-				// seems to always have this adjustment event type :$
-				// http://examples.javacodegeeks.com/desktop-java/awt/event/adjustmentlistener-example
-			}
+			// int type = e.getAdjustmentType();
+			// if (type == AdjustmentEvent.BLOCK_DECREMENT) {
+			// System.out.println("Scroll block decr");
+			// } else if (type == AdjustmentEvent.BLOCK_INCREMENT) {
+			// System.out.println("Scroll block incr");
+			// } else if (type == AdjustmentEvent.UNIT_DECREMENT) {
+			// System.out.println("Scroll unit incr");
+			// } else if (type == AdjustmentEvent.UNIT_INCREMENT) {
+			// System.out.println("Scroll unit incr");
+			// } else if (type == AdjustmentEvent.TRACK) {
+			// System.out.println("Scroll track");
+			// System.out.println("e.getValue() == " + e.getValue());
+			// // TODO (use this for genome location plotting?)
+			// // seems to always have this adjustment event type :$
+			// //
+			// http://examples.javacodegeeks.com/desktop-java/awt/event/adjustmentlistener-example
+			// }
 		}
 
 	}
@@ -511,6 +514,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
@@ -541,12 +545,14 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void viewClosed(final String viewName) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
 			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
@@ -555,6 +561,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
 		}
@@ -575,24 +582,29 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	class ViewMouseListener implements MouseListener {
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
 
