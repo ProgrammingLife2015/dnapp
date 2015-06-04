@@ -205,9 +205,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
 		Set<String> genomes = new HashSet<String>();
-		for (org.neo4j.graphdb.Node node : dgraph.getSources()) {
-			genomes.add((String) node.getProperty("source"));
-		}
+		// TODO fix this!!
+		// for (org.neo4j.graphdb.Node node : dgraph.getSources()) {
+		// genomes.add((String) dgraph.getProperty(node, "source"));
+		// }
+		genomes.add("Hoi");
 		window.optionPanel().getGenomes().fill(genomes, false, true);
 		return ret;
 	}

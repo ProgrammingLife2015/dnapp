@@ -57,20 +57,24 @@ public final class NodePlacer {
 		}
 		nodesAtDepth = new ArrayList<Integer>();
 		nodesAtDepth.add(graph.getNodes().size());
-		DNode first = graph.getStart();
+		DNode first = graph.getDNode(graph.getStart());
 
 		Queue<DNode> que = new LinkedList<DNode>();
 		que.add(first);
-		depthLevel(que);
+		depthLevel(graph, que);
 
 		width = nodesAtDepth.size() * X_MULTIPLIER;
 		height = Collections.max(nodesAtDepth) * Y_MULTIPLIER;
 
 		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 
-		for (DNode node : graph.getNodes().values()) {
-			node.setX(getWidth(width, node.getDepth(), nodesAtDepth.size()));
-			node.setY(getHeight(node.getDepth(), hdiff, nodesAtDepth, height));
+		for (DNode node : graph.getDNodes()) {
+			// TODO maybe think of another way to do this then set property
+			// method
+			graph.setProperty(graph.getNode(node.getId()), "y",
+					getWidth(width, node.getDepth(), nodesAtDepth.size()));
+			graph.setProperty(graph.getNode(node.getId()), "x",
+					getHeight(node.getDepth(), hdiff, nodesAtDepth, height));
 		}
 		return new Dimension(width, height);
 	}
@@ -82,11 +86,11 @@ public final class NodePlacer {
 	 * @param que
 	 *            The queue in which we store the unvisited edges
 	 */
-	private static void depthLevel(final Queue<DNode> que) {
+	private static void depthLevel(final DGraph graph, final Queue<DNode> que) {
 		while (!que.isEmpty()) {
 			DNode src = que.remove();
 			for (DEdge edge : src.getOutEdges()) {
-				DNode tar = edge.getEndNode();
+				DNode tar = graph.getDNode(edge.getEndNode());
 				int odepth = tar.getDepth();
 				int ndepth = src.getDepth() + 1;
 				if (ndepth > odepth) {
@@ -96,8 +100,13 @@ public final class NodePlacer {
 					} else {
 						nodesAtDepth.add(1);
 					}
-					tar.setDepth(ndepth);
-					que.add(tar);
+					// TODO maybe think of another way to do this then set
+					// property method
+					graph.setProperty(graph.getNode(tar.getId()), "depth",
+							ndepth);
+					if (!que.contains(tar)) {
+						que.add(tar);
+					}
 				}
 			}
 		}

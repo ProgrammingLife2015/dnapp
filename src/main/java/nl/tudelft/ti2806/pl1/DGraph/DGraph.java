@@ -258,7 +258,7 @@ public class DGraph {
 			addNode.setProperty("content", content);
 			addNode.setProperty("x", coords.x);
 			addNode.setProperty("y", coords.y);
-			addNode.setProperty("dpeth", depth);
+			addNode.setProperty("depth", depth);
 			tx.success();
 		}
 		label = DynamicLabel.label("Sources");
@@ -570,6 +570,25 @@ public class DGraph {
 			}
 			tx.success();
 		}
+	}
+
+	// TODO does this stay?
+	public void setProperty(final Node node, final String property,
+			final Object value) {
+		try (Transaction tx = graphDb.beginTx()) {
+			node.setProperty(property, value);
+			tx.success();
+		}
+	}
+
+	// TODO does this stay?
+	public Object getProperty(final Node node, final String property) {
+		Object ret;
+		try (Transaction tx = graphDb.beginTx()) {
+			ret = node.getProperty(property);
+			tx.success();
+		}
+		return ret;
 	}
 
 	/**
