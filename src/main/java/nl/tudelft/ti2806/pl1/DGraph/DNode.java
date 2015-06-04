@@ -127,10 +127,10 @@ public class DNode {
 	 * @return true iff the ID of the edge is not already in use.
 	 */
 	public final boolean addEdge(final DEdge edge) {
-		if (edge.getStartNode().getId() == id && !getOutEdges().contains(edge)) {
+		if (edge.getStartNode() == id && !getOutEdges().contains(edge)) {
 			outEdges.add(edge);
 			return true;
-		} else if (edge.getEndNode().id == id && !getInEdges().contains(edge)) {
+		} else if (edge.getEndNode() == id && !getInEdges().contains(edge)) {
 			getInEdges().add(edge);
 			return true;
 		} else {
@@ -327,12 +327,12 @@ public class DNode {
 	}
 
 	/**
-	 * This method returns all the nodes which have an edge to this node.
+	 * This method returns all the node id's which have an edge to this node.
 	 * 
-	 * @return All the nodes which have an edge to this node
+	 * @return All the node id's which have an edge to this node
 	 */
-	public Collection<DNode> getPreviousNodes() {
-		ArrayList<DNode> previous = new ArrayList<DNode>();
+	public Collection<Integer> getPreviousNodes() {
+		ArrayList<Integer> previous = new ArrayList<Integer>();
 		for (DEdge edge : getInEdges()) {
 			previous.add(edge.getStartNode());
 		}
@@ -340,12 +340,12 @@ public class DNode {
 	}
 
 	/**
-	 * This method returns all the nodes to which this node has an edge.
+	 * This method returns all the nodes id's to which this node has an edge.
 	 * 
 	 * @return All the nodes to which this node has an edge
 	 */
-	public Collection<DNode> getNextNodes() {
-		ArrayList<DNode> next = new ArrayList<DNode>();
+	public Collection<Integer> getNextNodes() {
+		ArrayList<Integer> next = new ArrayList<Integer>();
 		for (DEdge edge : getOutEdges()) {
 			next.add(edge.getEndNode());
 		}
