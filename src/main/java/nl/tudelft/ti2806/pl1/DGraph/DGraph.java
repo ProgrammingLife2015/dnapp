@@ -363,6 +363,18 @@ public class DGraph {
 		return nodes;
 	}
 
+	public List<DNode> getDNodes() {
+		List<DNode> nodes = new ArrayList<DNode>();
+		try (Transaction tx = graphDb.beginTx()) {
+			ResourceIterator<Node> it = graphDb.findNodes(DynamicLabel
+					.label("Nodes"));
+			while (it.hasNext()) {
+				nodes.add(convertNodeDNode(it.next()));
+			}
+		}
+		return nodes;
+	}
+
 	/**
 	 * Takes a list of nodes, and sorts them according to their start property.
 	 * 
