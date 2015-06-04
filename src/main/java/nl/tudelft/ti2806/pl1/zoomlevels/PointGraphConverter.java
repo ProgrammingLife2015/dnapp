@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -37,10 +36,11 @@ public final class PointGraphConverter {
 	 */
 	public static Graph collapsePointMutations(final Graph graph) {
 		Graph g = Graphs.merge(graph);
-		Node start = getStart(g);
-		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
+		// Node start = getStart(g);
+		// BreadthFirstIterator<Node> it = new
+		// BreadthFirstIterator<Node>(start);
+		Iterator<Node> it = graph.getNodeIterator();
 		Queue<Node> q = new LinkedList<Node>();
-		q.add(start);
 		while (it.hasNext()) {
 			Node node = it.next();
 			q.add(node);
@@ -52,8 +52,14 @@ public final class PointGraphConverter {
 			while (leaving.hasNext()) {
 				Edge out = leaving.next();
 				Node outnode = out.getNode1();
-				String content = outnode.getAttribute("content").toString();
-				if (content.length() == 1) {
+				String content = outnode.getAttribute("ui.label").toString();
+				int length;
+				if (content.matches("\\d+")) {
+					length = Integer.parseInt(content);
+				} else {
+					length = content.length();
+				}
+				if (length == 1) {
 					muts.add(outnode.getId());
 				}
 			}
@@ -134,14 +140,14 @@ public final class PointGraphConverter {
 			// }
 			// removeNode(g, nd, end);
 			// } else {
-			if (nodegroup.size() == 1) {
+			if (nodegroup.size() > 1) {
 				HashMap<String, String> content = new HashMap<String, String>();
 				StringBuilder sb = new StringBuilder();
 				String newId = "collapsed:";
 				sb.append(newId);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
-					Collection<String> sources = nd.getAttribute("sources");
+					// Collection<String> sources = nd.getAttribute("sources");
 
 					sb.append(" " + id);
 				}
