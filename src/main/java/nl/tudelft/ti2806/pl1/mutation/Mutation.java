@@ -10,7 +10,7 @@ public abstract class Mutation {
 	/**
 	 * The IDs of the nodes before and after the mutation.
 	 */
-	private int preNode, postNode;
+	private final int preNode, postNode;
 
 	/**
 	 * 

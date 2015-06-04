@@ -5,13 +5,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
+
 /**
  * The DGraph class for representing our data.
  * 
  * @author Mark
  *
  */
-public class DGraph {
+public class DGraph implements MutatedGraph, DynamicGraph {
 
 	/**
 	 * The nodes in the graph.
@@ -253,4 +257,26 @@ public class DGraph {
 		this.end = e;
 	}
 
+	/** {@inheritDoc} */
+	public Collection<PointMutation> getAllPointMutations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	public Collection<PointMutation> getAllInDelMutations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	public Collection<DNode> getDNodes(final ViewArea va) {
+		ArrayList<DNode> ret = new ArrayList<DNode>();
+		for (DNode n : getNodes().values()) {
+			if (va.isContained(n)) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
 }

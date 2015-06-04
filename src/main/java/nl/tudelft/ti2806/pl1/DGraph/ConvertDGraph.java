@@ -1,6 +1,12 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
@@ -18,32 +24,33 @@ public final class ConvertDGraph {
 	private static final int LABEL_LENGTH_THRESHOLD = 10;
 
 	/**
-	 * 
 	 */
 	private ConvertDGraph() {
-
 	}
 
 	/**
-	 * Converts a DGraph into a graphstream graph.
+	 * Converts a data graph into a graphstream graph.
 	 * 
 	 * @param dgraph
-	 *            The dgraph to be converted
-	 * @return Graphstream graph
+	 *            The data graph to be converted
+	 * @param va
+	 *            The area of the graph to convert.
+	 * @return a visual graph
 	 */
-	public static Graph convert(final DGraph dgraph) {
-		Graph graph = new SingleGraph("DNApp");
-		for (DNode n : dgraph.getNodes().values()) {
+	public static Graph convert(final DynamicGraph dgraph, final ViewArea va) {
+		Graph graph = new SingleGraph("");
+		Set<DEdge> edges = new HashSet<DEdge>();
+		for (DNode n : dgraph.getDNodes(va)) {
+			edges.addAll(n.getAllEdges());
 			String id = String.valueOf(n.getId());
-			graph.addNode(id);
-			graph.getNode(id).addAttribute("x", n.getX());
-			graph.getNode(id).addAttribute("y", n.getY());
-			graph.getNode(id).addAttribute("ui.label",
-					checkLabelLength(n.getContent()));
-			graph.getNode(id).addAttribute("ui.class", "common");
-			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
+			Node gn = graph.addNode(id);
+			gn.addAttribute("x", n.getX());
+			gn.addAttribute("y", n.getY());
+			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
+			gn.addAttribute("ui.class", "common");
+			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
-		for (DEdge edge : dgraph.getEdges()) {
+		for (DEdge edge : edges) {
 			String src = String.valueOf(edge.getStartNode().getId());
 			String target = String.valueOf(edge.getEndNode().getId());
 			graph.addEdge(src + target, src, target, true);
