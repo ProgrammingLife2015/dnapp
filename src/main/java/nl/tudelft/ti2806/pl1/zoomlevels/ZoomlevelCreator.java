@@ -7,22 +7,37 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
+
 /**
  * @author Maarten, Justin
  * @since 2-6-2015
  */
-public class ZoomlevelCreator {
+public final class ZoomlevelCreator {
 
-	private ZoomlevelCreator() {
+	/**
+	 * 
+	 */
+	private DGraph dGraph;
+
+	/**
+	 * 
+	 * @param graph
+	 *            The data graph.
+	 */
+	public ZoomlevelCreator(final DGraph graph) {
+		this.dGraph = graph;
 	}
 
 	/**
 	 * 
 	 * @param graph
-	 * @return
+	 *            The graph.
+	 * @return A graph with its synonymous point mutations collapsed.
 	 */
-	public static DGraph RemoveSYN_SNP(final MutatedGraph graph) {
-		DGraph ret = new DGraph();
+	public Graph removeSYN(final MutatedGraph graph) {
+		Graph ret = new SingleGraph("");
 		Collection<PointMutation> mutations = graph.getAllPointMutations();
 		for (PointMutation mut : mutations) {
 			if (mut.isSynonymous()) {

@@ -32,6 +32,7 @@ import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
+import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -60,6 +61,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * The horizontal scroll increment value.
 	 */
 	private static final int HOR_SCROLL_INCR = 500;
+
+	/**
+	 * The zoom level creator.
+	 */
+	private ZoomlevelCreator zlc;
 
 	/**
 	 * The list of node selection observers.
@@ -170,6 +176,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		try {
 			dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
+			zlc = new ZoomlevelCreator(dgraph);
 			viewSize = NodePlacer.place(dgraph);
 			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
