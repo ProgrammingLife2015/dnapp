@@ -52,12 +52,7 @@ public final class PointGraphConverter {
 			while (leaving.hasNext()) {
 				Edge out = leaving.next();
 				Node outnode = out.getNode1();
-				String content;
-				if (outnode.getAttribute("content") instanceof HashMap<?, ?>) {
-					content = outnode.getAttribute("content").toString();
-				} else {
-					content = (String) outnode.getAttribute("content");
-				}
+				String content = outnode.getAttribute("content").toString();
 				if (content.length() == 1) {
 					muts.add(outnode.getId());
 				}
@@ -72,6 +67,22 @@ public final class PointGraphConverter {
 	}
 
 	/**
+	 * 
+	 * @param graph
+	 *            The initial graph of the original zoom level.
+	 * @param muts
+	 *            The mutated nodes, which are to be grouped
+	 * @return The graph with collapsed point mutations.
+	 */
+	public static Graph collapsePointMutations(final Graph graph,
+			final Collection<String> muts) {
+		Graph g = Graphs.merge(graph);
+		HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(muts, g);
+		collapseNodes(nodegroups, g);
+		return g;
+	}
+
+	/**
 	 * Makes a HashMap of groups of nodes where the keys are the end nodes and
 	 * the values are the grouped nodes.
 	 * 
@@ -82,7 +93,7 @@ public final class PointGraphConverter {
 	 * @return The grouped nodes
 	 */
 	private static HashMap<Node, ArrayList<String>> makeNodeGroups(
-			final ArrayList<String> muts, final Graph g) {
+			final Collection<String> muts, final Graph g) {
 		HashMap<Node, ArrayList<String>> nodegroups = new HashMap<Node, ArrayList<String>>();
 		for (String n : muts) {
 			ArrayList<Node> ns = getNextNodes(g, n);
@@ -100,10 +111,10 @@ public final class PointGraphConverter {
 	}
 
 	/**
-	 * Collapses the nodegroups in the graph.
+	 * Collapses the node groups in the graph.
 	 * 
 	 * @param nodegroups
-	 *            The nodegroups
+	 *            The node groups
 	 * @param g
 	 *            The graph we want to collapse on.
 	 */
@@ -111,18 +122,19 @@ public final class PointGraphConverter {
 			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g) {
 		for (Node end : nodegroups.keySet()) {
 			ArrayList<String> nodegroup = nodegroups.get(end);
+			// if (nodegroup.size() == 1) {
+			// Node nd = g.getNode(nodegroup.get(0));
+			// String mutcontent = nd.getAttribute("content");
+			// String endcontent = end.getAttribute("content");
+			// end.addAttribute("content", mutcontent + endcontent);
+			// for (Edge edge : nd.getEnteringEdgeSet()) {
+			// Node in = edge.getNode0();
+			// g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
+			// in, end);
+			// }
+			// removeNode(g, nd, end);
+			// } else {
 			if (nodegroup.size() == 1) {
-				Node nd = g.getNode(nodegroup.get(0));
-				String mutcontent = nd.getAttribute("content");
-				String endcontent = end.getAttribute("content");
-				end.addAttribute("content", mutcontent + endcontent);
-				for (Edge edge : nd.getEnteringEdgeSet()) {
-					Node in = edge.getNode0();
-					g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
-							in, end);
-				}
-				removeNode(g, nd, end);
-			} else {
 				HashMap<String, String> content = new HashMap<String, String>();
 				StringBuilder sb = new StringBuilder();
 				String newId = "collapsed:";
@@ -130,12 +142,10 @@ public final class PointGraphConverter {
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					Collection<String> sources = nd.getAttribute("sources");
-					for (String source : sources) {
-						content.put(source, (String) nd.getAttribute("content"));
-					}
+
 					sb.append(" " + id);
 				}
-				addNewCollapsedNode(sb.toString(), g, nodegroup, content, end);
+				addNewCollapsedNode(sb.toString(), g, nodegroup, end);
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
 					removeNode(g, nd);
@@ -152,26 +162,21 @@ public final class PointGraphConverter {
 	 * @param g
 	 *            The graph we want to collapse on.
 	 * @param nodegroup
-	 *            The nodegroup that is collapsed into the new node.
-	 * @param content
-	 *            The content of the new node.
+	 *            The node group that is collapsed into the new node.
 	 * @param end
 	 *            The node which this group is going to.
 	 */
 	private static void addNewCollapsedNode(final String newId, final Graph g,
-			final ArrayList<String> nodegroup,
-			final HashMap<String, String> content, final Node end) {
+			final ArrayList<String> nodegroup, final Node end) {
 		g.addNode(newId);
-		String temp = nodegroup.get(0);
-		Node tempnode = g.getNode(temp);
+		Node tempnode = g.getNode(nodegroup.get(0));
 		Node collapsednode = g.getNode(newId);
 		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
 		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
 		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
-		collapsednode.addAttribute("content", content);
-		collapsednode.addAttribute("sources", "hoi");
-		collapseEdges(g, newId, nodegroup, end);
+		collapsednode.addAttribute("type", "collapsed");
 
+		collapseEdges(g, newId, nodegroup, end);
 	}
 
 	/**

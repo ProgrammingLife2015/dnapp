@@ -8,15 +8,11 @@ import java.util.Set;
  */
 public class PointMutation extends Mutation {
 
-	/**
-	 * True iff the mutation affects the amino acid structure.
-	 */
-	private boolean synonymous;
+	/** Whether the mutation affects the amino acid structure. */
+	private final boolean synonymous;
 
-	/**
-	 * 
-	 */
-	private Set<Integer> nodes;
+	/** The nodes involved in the point mutation. */
+	private final Set<String> nodes;
 
 	/**
 	 * 
@@ -26,10 +22,14 @@ public class PointMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param nodesIn
 	 *            The nodes directly involved in the mutation.
+	 * @param syn
+	 *            Whether the mutation affects the amino acid structure
+	 *            (synonymous mutation)
 	 */
 	public PointMutation(final int pre, final int post,
-			final Set<Integer> nodesIn) {
+			final Set<String> nodesIn, final boolean syn) {
 		super(pre, post);
+		this.synonymous = syn;
 		this.nodes = nodesIn;
 	}
 
@@ -41,26 +41,10 @@ public class PointMutation extends Mutation {
 	}
 
 	/**
-	 * @param syn
-	 *            the synonymous to set
-	 */
-	public final void setSynonymous(final boolean syn) {
-		this.synonymous = syn;
-	}
-
-	/**
 	 * @return the nodes
 	 */
-	public final Set<Integer> getNodes() {
+	public final Set<String> getNodes() {
 		return nodes;
-	}
-
-	/**
-	 * @param ns
-	 *            the nodes to set
-	 */
-	public final void setNodes(final Set<Integer> ns) {
-		this.nodes = ns;
 	}
 
 }
