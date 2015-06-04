@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +75,77 @@ public class DGraph {
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
 		createIndexNodes();
 		createIndexSources();
+	}
+
+	/**
+	 * Convert a Node into a DNode.
+	 * 
+	 * @param noteid
+	 *            Id of the node you want to get a DNode for.
+	 * @return A Dnode.
+	 */
+	public DNode getDNode(final int noteid) {
+		Node node = getNode(noteid);
+		return convertNodeDNode(node);
+	}
+
+	/**
+	 * Convert a Node into a DNode.
+	 * 
+	 * @param node
+	 *            Node you want to convert to DNode.
+	 * @return A DNode.
+	 */
+	public DNode convertNodeDNode(final Node node) {
+		Collection<Node> sources = getSources(node);
+		HashSet<String> dnodesources = new HashSet<String>();
+		int id = 0;
+		int start = 0;
+		int end = 0;
+		int x, y, z;
+		String content = null;
+		List<DEdge> edges = new ArrayList<DEdge>();
+		try (Transaction tx = graphDb.beginTx()) {
+			for (Node source : sources) {
+				dnodesources.add((String) source.getProperty("source"));
+			}
+			id = (int) node.getProperty("id");
+			start = (int) node.getProperty("start");
+			end = (int) node.getProperty("end");
+			content = (String) node.getProperty("content");
+			edges = getEdges(node);
+			x = (int) node.getProperty("x");
+			y = (int) node.getProperty("y");
+			z = (int) node.getProperty("depth");
+			tx.success();
+		}
+		DNode dnode = new DNode(id, dnodesources, start, end, content);
+		for (DEdge edge : edges) {
+			dnode.addEdge(edge);
+		}
+		dnode.setX(x);
+		dnode.setY(y);
+		dnode.setDepth(z);
+		return dnode;
+	}
+
+	/**
+	 * Get InNodes for Node.
+	 * 
+	 * @param node
+	 *            Node you want to get the InEdges for
+	 * @return InNodes
+	 */
+	protected List<DEdge> getEdges(final Node node) {
+		List<DEdge> edges = new ArrayList<DEdge>();
+		Iterator<Relationship> it = node.getRelationships(RelTypes.NEXT)
+				.iterator();
+		while (it.hasNext()) {
+			Relationship edge = it.next();
+			edges.add(new DEdge((int) edge.getStartNode().getProperty("id"),
+					(int) edge.getEndNode().getProperty("id")));
+		}
+		return edges;
 	}
 
 	/**
@@ -284,9 +356,9 @@ public class DGraph {
 		Iterator<Relationship> it;
 		try (Transaction tx = graphDb.beginTx()) {
 			it = sourcenode.getRelationships().iterator();
-		}
-		while (it.hasNext()) {
-			nodes.add(it.next().getEndNode());
+			while (it.hasNext()) {
+				nodes.add(it.next().getStartNode());
+			}
 		}
 		return nodes;
 	}
