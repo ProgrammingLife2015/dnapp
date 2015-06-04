@@ -1,30 +1,32 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
-import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -32,12 +34,10 @@ import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
-import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
 import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
@@ -53,20 +53,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	private static final long serialVersionUID = -3581428828970208653L;
 
 	/**
-	 * The default location for the divider between the graph view and the text
-	 * area.
+	 * The default location for the divider between the graph view and the
+	 * content text area.
 	 */
 	private static final int DEFAULT_DIVIDER_LOC = 300;
 
-	/**
-	 * The horizontal scroll increment value.
-	 */
-	private static final int HOR_SCROLL_INCR = 500;
-
-	/**
-	 * The zoom level creator.
-	 */
-	private ZoomlevelCreator zlc;
+	/** The horizontal scroll increment value. */
+	private static final int HOR_SCROLL_INCR = 400;
 
 	/**
 	 * The list of node selection observers.
@@ -101,6 +94,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 
 	/** The text area where node content will be shown. */
 	private JTextArea text;
+
+	/** The zoom level creator. */
+	private ZoomlevelCreator zlc;
 
 	/** The scroll behaviour. */
 	private Scrolling scroll;
@@ -152,7 +148,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			graph.write(filePath);
 			Event.statusBarInfo("Exported graph to: " + filePath);
 		} catch (IOException e) {
-			Event.statusBarError("Writing the graph went wrong ("
+			Event.statusBarError("Exporting the graph went wrong ("
 					+ e.getMessage() + ")");
 			e.printStackTrace();
 		}
@@ -166,66 +162,94 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * @param edges
 	 *            The path to the edge file.
 	 * @return true iff the graph was loaded successfully.
-	 * @throws InvalidNodePlacementException
-	 *             Placing node at invalid place.
 	 */
-	public final boolean loadGraph(final File nodes, final File edges)
-			throws InvalidNodePlacementException {
-		ProgressDialog pd = new ProgressDialog(window, "Importing graph", true);
-		pd.start();
+	public final boolean loadGraph(final File nodes, final File edges) {
 		boolean ret = true;
+		final ProgressDialog pd = new ProgressDialog(window, "Importing", true);
+		GraphLoadWorker pw = new GraphLoadWorker(nodes, edges, pd);
+		pw.execute();
+		pd.start();
 		try {
-			dgraph = Reader.read(nodes.getAbsolutePath(),
-					edges.getAbsolutePath());
-			zlc = new ZoomlevelCreator(dgraph);
-			viewSize = NodePlacer.place(dgraph);
-			graph = ConvertDGraph.convert(dgraph, new ViewArea(0, 2000)); // TODO
-			graph = PointGraphConverter.collapsePointMutations(graph);
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			this.graph = pw.get();
+		} catch (InterruptedException | ExecutionException e1) {
+			e1.printStackTrace();
 			ret = false;
-			Event.statusBarError(e.getMessage());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
-		graph.addAttribute("ui.stylesheet",
-				"url('src/main/resources/stylesheet.css')");
 		// System.setProperty("org.graphstream.ui.renderer",
 		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		Viewer viewer = new Viewer(graph,
-				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-		viewer.disableAutoLayout();
-		view = viewer.addDefaultView(false);
-		view.setPreferredSize(viewSize);
-
-		vp = viewer.newViewerPipe();
-		vp.addViewerListener(new NodeClickListener());
-
-		view.addMouseListener(new ViewMouseListener());
-		graphPane.setViewportView(view);
-		window.revalidate();
-		pd.end();
-		graphPane.getVerticalScrollBar().setValue(
-				graphPane.getVerticalScrollBar().getMaximum());
-		graphPane.getVerticalScrollBar().setValue(
-				graphPane.getVerticalScrollBar().getValue() / 2);
-		scroll = new Scrolling();
-		view.addMouseWheelListener(scroll);
-		window.optionPanel().fillGenomeList(dgraph.getReferences().keySet(),
-				false, true);
+		visualizeGraph(graph);
 		return ret;
 	}
 
 	/**
-	 * 
-	 * @param newgraph
-	 *            The graph you want to draw.
+	 * @author Maarten
+	 * @since 4-6-2015
 	 */
-	@SuppressWarnings("unused")
-	// Fixed in other branch.
-	private void drawNewGraph(final Graph newgraph) {
-		Viewer viewer = new Viewer(newgraph,
+	class GraphLoadWorker extends SwingWorker<Graph, Void> {
+
+		/** The files used in the background task. */
+		private File nodes, edges;
+
+		/**
+		 * Initialize the graph loader.
+		 * 
+		 * @param nodesIn
+		 *            The node file.
+		 * @param edgesIn
+		 *            The edge file.
+		 * @param pd
+		 *            The progress bar dialog to end once the task has been
+		 *            finished.
+		 */
+		public GraphLoadWorker(final File nodesIn, final File edgesIn,
+				final ProgressDialog pd) {
+			this.nodes = nodesIn;
+			this.edges = edgesIn;
+
+			this.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(final PropertyChangeEvent evt) {
+					if (evt.getPropertyName().equals("state")) {
+						if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
+							pd.end();
+						}
+					} else if (evt.getPropertyName().equals("progress")) {
+						pd.repaint();
+					}
+				}
+			});
+		}
+
+		@Override
+		protected Graph doInBackground() throws Exception {
+			try {
+				dgraph = Reader.read(nodes.getAbsolutePath(),
+						edges.getAbsolutePath());
+				zlc = new ZoomlevelCreator(dgraph);
+				viewSize = NodePlacer.place(dgraph);
+				graph = ConvertDGraph.convert(dgraph); // TODO
+				// graph = ConvertDGraph.convert(dgraph,
+				// getCurrentViewArea()); TODO
+				// graph =
+				// PointGraphConverter.collapsePointMutations(graph);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Event.statusBarError(e.getMessage());
+			}
+			graph.addAttribute("ui.stylesheet",
+					"url('src/main/resources/stylesheet.css')");
+			return graph;
+		}
+	}
+
+	/**
+	 * Takes the virtual (GraphStream) graph and shows it in the panel.
+	 * 
+	 * @param vGraph
+	 *            The visual graph to draw
+	 */
+	private void visualizeGraph(final Graph vGraph) {
+		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = viewer.addDefaultView(false);
@@ -234,20 +258,28 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
-		view.getCamera().setViewPercent(scroll.getZoomPercentage());
-
+		// view.getCamera().setViewPercent(scroll.getZoomPercentage());
+		scroll = new Scrolling();
+		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
+
 		graphPane.setViewportView(view);
 		window.revalidate();
+		centerVertical();
+	}
+
+	/**
+	 * Vertically centers the scroll pane scroll bar.
+	 */
+	private void centerVertical() {
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getMaximum());
 		graphPane.getVerticalScrollBar().setValue(
 				graphPane.getVerticalScrollBar().getValue() / 2);
-		scroll = new Scrolling();
-		view.addMouseWheelListener(scroll);
 	}
 
 	/**
+	 * Register a new node selection observer.
 	 * 
 	 * @param o
 	 *            The observer to add.
@@ -257,6 +289,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
+	 * Unregistrer a node selection observer.
 	 * 
 	 * @param o
 	 *            The observer to delete.
@@ -266,6 +299,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
+	 * Notifies the node selection observers.
 	 * 
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user
@@ -277,14 +311,30 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	}
 
 	/**
-	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
+	 * Loads or reloads a specific part of the view panel.
+	 * 
+	 * @param va
+	 *            The view area to (re)load
 	 */
-	@Override
-	public final void update(final DNode newSelectedNode) {
-		text.setText(newSelectedNode.getContent());
-		// TODO change strings to constants (still have to decide in which class
-		// to define them)
+	public void loadViewArea(final ViewArea va) {
+		ConvertDGraph.convert(dgraph, va);
+	}
 
+	/**
+	 * Loads or reloads the part of the view panel currently on the screen.
+	 * 
+	 * @see JScrollPane#getViewport()
+	 */
+	public void loadCurrentViewArea() {
+		loadViewArea(getCurrentViewArea());
+	}
+
+	/**
+	 * @return The current view area of the scrollable graph pane.
+	 */
+	public ViewArea getCurrentViewArea() {
+		Rectangle visible = graphPane.getViewport().getBounds();
+		return new ViewArea(visible.getMinX(), visible.getMaxX());
 	}
 
 	/**
@@ -307,6 +357,16 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		selectedNode.setAttribute("oldclass",
 				selectedNode.getAttribute("ui.class"));
 		selectedNode.addAttribute("ui.class", "selected");
+	}
+
+	/**
+	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
+	 */
+	@Override
+	public final void update(final DNode newSelectedNode) {
+		text.setText(newSelectedNode.getContent());
+		// TODO change strings to constants (still have to decide in which class
+		// to define them) << I really don't know what this is anymore...
 	}
 
 	/**
@@ -343,6 +403,22 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 	}
 
+	/**
+	 * 
+	 * @param newZoomLevel
+	 *            The zoom level to apply.
+	 */
+	public void applyZoomLevel(final int newZoomLevel) {
+		switch (newZoomLevel) {
+		case 1:
+			visualizeGraph(zlc.removeAllPMs(graph));
+			// visualizeGraph(zlc.removeSYN(getCurrentViewArea()));
+			break;
+		default:
+			Event.statusBarError("There is no zoom level further from the current level");
+		}
+	}
+
 	@Override
 	public final String toString() {
 		return this.getClass().getName();
@@ -359,8 +435,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/** How far we're zoomed in on the current level. **/
 		private int count = 0;
 
-		/** Which zoomlevel we're on. **/
-		private int zoomlevel = 0;
+		/** Which zoom level is currently shown. **/
+		private int zoomLevel = 0;
 
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
 		private static final int NEWLEVEL = 10;
@@ -380,10 +456,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
 				upZoomlevel();
-				ZoomSelector.getGraph(zoomlevel);
+				ZoomSelector.getGraph(zoomLevel);
 			} else if (count < -NEWLEVEL) {
 				downZoomlevel();
-				ZoomSelector.getGraph(zoomlevel);
+				ZoomSelector.getGraph(zoomLevel);
 			} else if (rotation > 0) {
 				zoomIn(ZOOMPERCENTAGE);
 			} else if (rotation < 0) {
@@ -392,18 +468,17 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/**
-		 * 
-		 * @return How much the
+		 * @return The geographical zoom value.
 		 */
 		public double getZoomPercentage() {
 			return view.getCamera().getViewPercent();
 		}
 
 		/**
-		 * Resets zoompercentage to 1.
+		 * Resets zoom percentage to 1.
 		 */
 		public void resetZoom() {
-			view.getCamera().setViewPercent(1);
+			view.getCamera().setViewPercent(1.0);
 			count = 0;
 		}
 
@@ -415,11 +490,16 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void zoomIn(final double percentage) {
 			count++;
-			Point3 curcenter = view.getCamera().getViewCenter();
+			Rectangle viewRect = graphPane.getViewport().getViewRect();
 			view.getCamera().setViewPercent(
 					view.getCamera().getViewPercent() / percentage);
-			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
-					curcenter.z);
+			view.getCamera().setViewCenter(viewRect.getCenterY(),
+					view.getCamera().getViewCenter().y,
+					view.getCamera().getViewCenter().z);
+			// System.out.println("\nIN VP = "
+			// + graphPane.getViewport().getViewRect());
+			// System.out.println("IN CAMERA = "
+			// + view.getCamera().getViewCenter());
 		}
 
 		/**
@@ -430,11 +510,17 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void zoomOut(final double percentage) {
 			count--;
-			Point3 curcenter = view.getCamera().getViewCenter();
+			Rectangle viewRect = graphPane.getViewport().getViewRect();
 			view.getCamera().setViewPercent(
 					view.getCamera().getViewPercent() * percentage);
-			view.getCamera().setViewCenter(curcenter.x, curcenter.y,
-					curcenter.z);
+			view.getCamera().setViewCenter(viewRect.getCenterY(),
+					view.getCamera().getViewCenter().y,
+					view.getCamera().getViewCenter().z);
+			// System.out.println("\nOUT VP = "
+			// + graphPane.getViewport().getViewRect());
+			// System.out.println("OUT CAMERA = "
+			// + view.getCamera().getViewCenter());
+			// System.out.println(graph.getNodeSet());
 		}
 
 		/**
@@ -442,7 +528,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void upZoomlevel() {
 			count = 0;
-			zoomlevel++;
+			zoomLevel++;
+			System.out.println("Zoom level up to = " + zoomLevel);
+			Event.statusBarInfo("Zoom level up to = " + zoomLevel);
+			setZoomlevel(zoomLevel);
 		}
 
 		/**
@@ -450,22 +539,27 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 */
 		public void downZoomlevel() {
 			count = 0;
-			zoomlevel--;
+			zoomLevel--;
+			System.out.println("Zoom level down to = " + zoomLevel);
+			Event.statusBarInfo("Zoom level down to = " + zoomLevel);
+			setZoomlevel(zoomLevel);
 		}
 
 		/**
-		 * Lets you go to a new zoomlevel.
+		 * Lets you go to a new zoom level.
 		 * 
-		 * @param newzoomlevel
-		 *            The new zoomlevel
+		 * @param newZoomLevel
+		 *            The new zoom level.
 		 */
-		public void setZoomlevel(final int newzoomlevel) {
+		public void setZoomlevel(final int newZoomLevel) {
 			count = 0;
-			zoomlevel = newzoomlevel;
+			zoomLevel = newZoomLevel;
+			applyZoomLevel(newZoomLevel);
 		}
 	}
 
 	/**
+	 * A Listener for the scroll bars of a scroll panel.
 	 * 
 	 * @author Maarten
 	 * @since 22-5-2015
@@ -485,25 +579,12 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
-			int type = e.getAdjustmentType();
-			if (type == AdjustmentEvent.BLOCK_DECREMENT) {
-				System.out.println("Scroll block decr");
-			} else if (type == AdjustmentEvent.BLOCK_INCREMENT) {
-				System.out.println("Scroll block incr");
-			} else if (type == AdjustmentEvent.UNIT_DECREMENT) {
-				System.out.println("Scroll unit incr");
-			} else if (type == AdjustmentEvent.UNIT_INCREMENT) {
-				System.out.println("Scroll unit incr");
-			} else if (type == AdjustmentEvent.TRACK) {
-				System.out.println("Scroll track");
-				System.out.println("e.getValue() == " + e.getValue());
-				// TODO (use this for genome location plotting?)
-				// seems to always have this adjustment event type :$
-				// http://examples.javacodegeeks.com/desktop-java/awt/event/adjustmentlistener-example
-			}
+			// int type = e.getAdjustmentType();
+			// Seems to always have the same adjustment event type (TRACK).
+			// TODO: use this for genome location plotting?
+			// http://examples.javacodegeeks.com/desktop-java/awt/event/adjustmentlistener-example
 		}
 
 	}
@@ -526,7 +607,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
@@ -555,28 +635,19 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 */
 	class NodeClickListener implements ViewerListener {
 
-		/**
-		 * {@inheritDoc}
-		 */
-
+		/** {@inheritDoc} */
 		@Override
 		public void viewClosed(final String viewName) {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
-
+		/** {@inheritDoc} */
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
 			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
-
+		/** {@inheritDoc} */
 		@Override
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
@@ -598,36 +669,32 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	class ViewMouseListener implements MouseListener {
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
-
 		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
 
 	}
+
 }
