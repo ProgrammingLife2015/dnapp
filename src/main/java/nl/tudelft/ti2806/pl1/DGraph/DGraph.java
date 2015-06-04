@@ -97,28 +97,38 @@ public class DGraph {
 	 * @return A DNode.
 	 */
 	public DNode convertNodeDNode(final Node node) {
-		Collection<Node> sources = getSources(node);
-		HashSet<String> dnodesources = new HashSet<String>();
-		int id = 0;
-		int start = 0;
-		int end = 0;
-		int x, y, z;
-		String content = null;
-		List<DEdge> edges = new ArrayList<DEdge>();
+		DNode dnode = null;
 		try (Transaction tx = graphDb.beginTx()) {
-			for (Node source : sources) {
-				dnodesources.add((String) source.getProperty("source"));
-			}
-			id = (int) node.getProperty("id");
-			start = (int) node.getProperty("start");
-			end = (int) node.getProperty("end");
-			content = (String) node.getProperty("content");
-			edges = getEdges(node);
-			x = (int) node.getProperty("x");
-			y = (int) node.getProperty("y");
-			z = (int) node.getProperty("depth");
+			dnode = convertNodeDNodeNoTransaction(node);
 			tx.success();
 		}
+		return dnode;
+	}
+
+	/**
+	 * Converts a node to a dnode. This method assumes that it's called in a
+	 * transaction.
+	 * 
+	 * @param node
+	 *            The node to be converted to a dnode
+	 * @return A converted node
+	 */
+	protected DNode convertNodeDNodeNoTransaction(final Node node) {
+		Collection<Node> sources = getSources(node);
+		HashSet<String> dnodesources = new HashSet<String>();
+		String content = null;
+		List<DEdge> edges = new ArrayList<DEdge>();
+		for (Node source : sources) {
+			dnodesources.add((String) source.getProperty("source"));
+		}
+		int id = (int) node.getProperty("id");
+		int start = (int) node.getProperty("start");
+		int end = (int) node.getProperty("end");
+		content = (String) node.getProperty("content");
+		edges = getEdges(node);
+		int x = (int) node.getProperty("x");
+		int y = (int) node.getProperty("y");
+		int z = (int) node.getProperty("depth");
 		DNode dnode = new DNode(id, dnodesources, start, end, content);
 		for (DEdge edge : edges) {
 			dnode.addEdge(edge);
@@ -363,6 +373,11 @@ public class DGraph {
 		return nodes;
 	}
 
+	/**
+	 * Converts all Nodes to a DNode.
+	 * 
+	 * @return A list of all nodes converted to a DNode
+	 */
 	public List<DNode> getDNodes() {
 		List<DNode> nodes = new ArrayList<DNode>();
 		try (Transaction tx = graphDb.beginTx()) {
@@ -373,6 +388,10 @@ public class DGraph {
 			}
 		}
 		return nodes;
+	}
+
+	public List<DNode> getDNodes(final int x1, final int x2) {
+
 	}
 
 	/**
