@@ -68,7 +68,7 @@ public final class Reader {
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(nodesPath), "UTF-8"));
-		NodeReader.readNodes(graph, reader);
+		graph.readNodes(reader);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public final class Reader {
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(edgesPath), "UTF-8"));
-		EdgeReader.readEdges(graph, reader);
+		graph.readEdges(reader);
 	}
 
 	/**

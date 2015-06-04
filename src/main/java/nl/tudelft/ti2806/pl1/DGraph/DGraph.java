@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicLabel;
@@ -34,6 +37,21 @@ public class DGraph {
 
 	/** The neo4j database. **/
 	private GraphDatabaseService graphDb;
+
+	/**
+	 * The location of the starting point in the text format.
+	 */
+	public static final int STARTLOCATION = 2;
+
+	/**
+	 * The location of the ending point in the text format.
+	 */
+	public static final int ENDLOCATION = 3;
+
+	/**
+	 * The amount of information pieces in the format.
+	 */
+	public static final int AMOUNTOFINFORMATION = 4;
 
 	/** How long it calculates the index before stopping. **/
 	private static final int TIMEOUT = 10;
@@ -109,6 +127,9 @@ public class DGraph {
 	}
 
 	/**
+	 * Adds a node to the graphDb, this method will be used instead of the
+	 * private one because this method is safe to use since it starts a new
+	 * transaction.
 	 * 
 	 * @param id
 	 *            The id of the Node.
@@ -128,6 +149,34 @@ public class DGraph {
 	public void addNode(final int id, final int start, final int end,
 			final String content, final Point coords, final int depth,
 			final String[] sources) {
+		try (Transaction tx = graphDb.beginTx()) {
+			addNodeWithoutTransaction(id, start, end, content, coords, depth,
+					sources);
+		}
+	}
+
+	/**
+	 * Adds a node to the graphDb, this method does not start a transaction
+	 * since it's assumed that the transaction is started in another method.
+	 * 
+	 * @param id
+	 *            The id of the Node.
+	 * @param start
+	 *            The place of the reference of the first base in the node.
+	 * @param end
+	 *            The place of the reference of the last base in the node.
+	 * @param content
+	 *            The content of the Node.
+	 * @param coords
+	 *            The coordinates of the Node in the graph.
+	 * @param depth
+	 *            The depth of the Node in the graph.
+	 * @param sources
+	 *            The sources of the Node.
+	 */
+	private void addNodeWithoutTransaction(final int id, final int start,
+			final int end, final String content, final Point coords,
+			final int depth, final String[] sources) {
 		Label label = DynamicLabel.label("Nodes");
 		try (Transaction tx = graphDb.beginTx()) {
 			Node addNode = graphDb.createNode(label);
@@ -142,17 +191,12 @@ public class DGraph {
 		}
 		label = DynamicLabel.label("Sources");
 		for (String s : sources) {
-			try (Transaction tx = graphDb.beginTx()) {
-				if (graphDb.findNode(label, "source", s) == null) {
-					Node src = graphDb.createNode(label);
-					src.setProperty("source", s);
-				}
-				tx.success();
+			if (graphDb.findNode(label, "source", s) == null) {
+				Node src = graphDb.createNode(label);
+				src.setProperty("source", s);
 			}
 		}
-		try (Transaction tx = graphDb.beginTx()) {
-			addSources(id, sources);
-		}
+		addSources(id, sources);
 	}
 
 	/**
@@ -237,7 +281,10 @@ public class DGraph {
 	public List<Node> getNodes(final String source) {
 		Node sourcenode = getSource(source);
 		List<Node> nodes = new ArrayList<Node>();
-		Iterator<Relationship> it = sourcenode.getRelationships().iterator();
+		Iterator<Relationship> it;
+		try (Transaction tx = graphDb.beginTx()) {
+			it = sourcenode.getRelationships().iterator();
+		}
 		while (it.hasNext()) {
 			nodes.add(it.next().getEndNode());
 		}
@@ -387,6 +434,95 @@ public class DGraph {
 				}
 				node.delete();
 			}
+		}
+	}
+
+	/**
+	 * Reads the node from the bufferedreader.
+	 * 
+	 * @param reader
+	 *            The reader which reads the nodes file
+	 * @throws IOException
+	 */
+	public void readNodes(final BufferedReader reader) throws IOException {
+		try (Transaction tx = graphDb.beginTx()) {
+			String nextnode;
+			while ((nextnode = reader.readLine()) != null) {
+				if (nextnode.charAt(0) == '>') {
+					nextnode = nextnode.substring(1);
+					String[] data = nextnode.split("\\s\\|\\s");
+					if (data.length != AMOUNTOFINFORMATION) {
+						throw new InvalidFileFormatException(
+								"Missing some information to create this node");
+					}
+					String content = reader.readLine();
+					int id;
+					int start;
+					int end;
+					try {
+						id = Integer.parseInt(data[0]);
+					} catch (Exception e) {
+						throw new InvalidFileFormatException(
+								"The id should be an integer");
+					}
+					try {
+						start = Integer.parseInt(data[STARTLOCATION]);
+						end = Integer.parseInt(data[ENDLOCATION]);
+					} catch (Exception e) {
+						throw new InvalidFileFormatException(
+								"The start and end reference should be integers");
+					}
+					if (end - start != content.length()) {
+						throw new InvalidFileFormatException(
+								"Size of Node content doesn't match with its reference size");
+					}
+					String[] sources = data[1].split(",");
+					addNodeWithoutTransaction(id, start, end, content,
+							new Point(0, 0), 0, sources);
+				} else {
+					throw new InvalidFileFormatException(
+							"Every new node line should start with >");
+				}
+			}
+			tx.success();
+		}
+	}
+
+	/**
+	 * Reads the edges from the file.
+	 * 
+	 * @param reader
+	 *            The reader used for reading the edges
+	 * @throws IOException
+	 */
+	public void readEdges(final BufferedReader reader) throws IOException {
+		String line;
+		Label label = DynamicLabel.label("Nodes");
+		try (Transaction tx = graphDb.beginTx()) {
+			while ((line = reader.readLine()) != null) {
+				String[] nodes = line.split("\\s");
+				if (nodes.length != 2) {
+					throw new InvalidFileFormatException(
+							"There should be 2 node id's seperated by spaces in the edge file");
+				}
+				int start;
+				int end;
+				try {
+					start = Integer.parseInt(nodes[0]);
+					end = Integer.parseInt(nodes[1]);
+				} catch (Exception e) {
+					throw new InvalidFileFormatException(
+							"The id's should be integers");
+				}
+				Node src = graphDb.findNode(label, "id", start);
+				Node tar = graphDb.findNode(label, "id", end);
+				if (src == null || tar == null) {
+					throw new InvalidFileFormatException(
+							"The id's shoould exist");
+				}
+				addEdge(src, tar);
+			}
+			tx.success();
 		}
 	}
 }
