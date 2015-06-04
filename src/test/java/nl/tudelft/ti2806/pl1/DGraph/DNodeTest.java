@@ -37,14 +37,14 @@ public class DNodeTest {
 		node4 = new DNode(1, new HashSet<String>(), 0, 0, "");
 		node5 = new DNode(1, new HashSet<String>(), 0, 0, "");
 
-		when(edge1.getStartNode()).thenReturn(node1);
-		when(edge1.getEndNode()).thenReturn(node2);
+		when(edge1.getStartNode()).thenReturn(1);
+		when(edge1.getEndNode()).thenReturn(2);
 
-		when(edge2.getStartNode()).thenReturn(node2);
-		when(edge2.getEndNode()).thenReturn(node3);
+		when(edge2.getStartNode()).thenReturn(2);
+		when(edge2.getEndNode()).thenReturn(3);
 
-		when(edge3.getStartNode()).thenReturn(node1);
-		when(edge3.getEndNode()).thenReturn(node2);
+		when(edge3.getStartNode()).thenReturn(1);
+		when(edge3.getEndNode()).thenReturn(2);
 	}
 
 	@After
@@ -135,14 +135,14 @@ public class DNodeTest {
 	@Test
 	public void getNextNodesTest() {
 		node2.addEdge(edge2);
-		assertTrue(node2.getNextNodes().contains(node3));
+		assertTrue(node2.getNextNodes().contains(node3.getId()));
 		assertEquals(node2.getNextNodes().size(), 1);
 	}
 
 	@Test
 	public void getPreviousNodesTest() {
 		node2.addEdge(edge1);
-		assertTrue(node2.getPreviousNodes().contains(node1));
+		assertTrue(node2.getPreviousNodes().contains(node1.getId()));
 		assertEquals(node2.getPreviousNodes().size(), 1);
 	}
 
