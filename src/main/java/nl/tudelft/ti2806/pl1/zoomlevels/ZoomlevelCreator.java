@@ -35,7 +35,7 @@ public final class ZoomlevelCreator {
 	 *            The graph.
 	 * @return A graph with its synonymous point mutations collapsed.
 	 */
-	public Graph removeSYN(final DGraph graph, final ViewArea va) {
+	public static Graph removeSYN(final DGraph graph, final ViewArea va) {
 		Graph ret = null;
 		Collection<PointMutation> mutations = graph.getAllPointMutations();
 		for (PointMutation mut : mutations) {

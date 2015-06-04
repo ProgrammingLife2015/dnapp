@@ -53,7 +53,9 @@ public final class ConvertDGraph {
 		for (DEdge edge : edges) {
 			String src = String.valueOf(edge.getStartNode().getId());
 			String target = String.valueOf(edge.getEndNode().getId());
-			graph.addEdge(src + target, src, target, true);
+			if (graph.getNode(src) != null && graph.getNode(target) != null) {
+				graph.addEdge(src + target, src, target, true);
+			}
 		}
 		return graph;
 	}
