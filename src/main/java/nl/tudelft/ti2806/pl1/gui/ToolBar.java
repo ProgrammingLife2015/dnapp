@@ -21,10 +21,19 @@ public class ToolBar extends JToolBar {
 	private JButton btnImport = makeButton("Import", null, Event.IMPORT_FILE,
 			"Click to load a graph from .node.graph and .edge.graph files.");
 
-	/** The import phylo tree button. */
+	/** The import phylogenetic tree button. */
 	private JButton btnImportPhylo = makeButton("Import phylo", null,
 			Event.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
+
+	/** The reload graph button. */
+	private JButton btnReload = makeButton("(ReLoad visible part", null,
+			Event.RELOAD_GRAPH,
+			"Loads or reloads the part of the graph currently in the view port.");
+
+	/** The (temp) button to collapse point mutations. */
+	private JButton btnCollapsePMs = makeButton("Collapse SNPs", null,
+			Event.COLLAPSE_SNPS, null);
 
 	/**
 	 * Initializes the tool bar.
@@ -38,6 +47,9 @@ public class ToolBar extends JToolBar {
 	private void addButtons() {
 		add(btnImport);
 		add(btnImportPhylo);
+		addSeparator();
+		add(btnReload);
+		add(btnCollapsePMs);
 		addSeparator();
 	}
 

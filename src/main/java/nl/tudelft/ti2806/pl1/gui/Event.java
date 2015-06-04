@@ -24,6 +24,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Event NONE fired.");
 		}
@@ -36,6 +37,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			window.toolBar().setVisible(true);
 		}
@@ -49,6 +51,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			window.toolBar().setVisible(false);
 		}
@@ -62,6 +65,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
 			// window.setVisible(false);
@@ -77,6 +81,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
 			if (fsNode.showDialog(window, "Load nodes") == JFileChooser.APPROVE_OPTION) {
@@ -104,6 +109,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
 			if (fcPhylo.showDialog(window, "Load Newick") == JFileChooser.APPROVE_OPTION) {
@@ -123,6 +129,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			ExportDialog fs = new ExportDialog();
 			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -138,6 +145,26 @@ public enum Event implements ActionListener {
 			} else {
 				dialogCanceled();
 			}
+		}
+	},
+
+	/**
+	 * 
+	 */
+	RELOAD_GRAPH {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.content().getGraphPanel().loadCurrentViewArea();
+		}
+	},
+
+	/**
+	 * 
+	 */
+	COLLAPSE_SNPS {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.content().getGraphPanel().applyZoomLevel(1);
 		}
 	};
 

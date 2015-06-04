@@ -17,25 +17,26 @@ import org.graphstream.graph.Graph;
 public final class ZoomlevelCreator {
 
 	/**
-	 * 
+	 * The data graph from which the zoom levels will be created.
 	 */
-	private DGraph dGraph;
+	private DGraph graph;
 
 	/**
-	 * 
-	 * @param graph
-	 *            The data graph.
+	 * @param dataGraph
+	 *            The data graph from which the zoom levels will be created.
 	 */
-	public ZoomlevelCreator(final DGraph graph) {
-		this.dGraph = graph;
+	public ZoomlevelCreator(final DGraph dataGraph) {
+		this.graph = dataGraph;
 	}
 
 	/**
-	 * @param graph
-	 *            The graph.
+	 * A zoom level that will collapse synonymous point mutations.
+	 * 
+	 * @param va
+	 *            The view area.
 	 * @return A graph with its synonymous point mutations collapsed.
 	 */
-	public static Graph removeSYN(final DGraph graph, final ViewArea va) {
+	public Graph removeSYN(final ViewArea va) {
 		Graph ret = null;
 		Collection<PointMutation> mutations = graph.getAllPointMutations();
 		for (PointMutation mut : mutations) {
@@ -46,6 +47,15 @@ public final class ZoomlevelCreator {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * @param vg
+	 *            The original graph.
+	 * @return A graph in which all point mutations are collapsed.
+	 */
+	public Graph removeAllPMs(final Graph vg) {
+		return PointGraphConverter.collapsePointMutations(vg);
 	}
 
 }

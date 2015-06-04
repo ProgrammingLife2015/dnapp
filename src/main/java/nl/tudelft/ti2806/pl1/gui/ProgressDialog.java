@@ -25,10 +25,10 @@ public class ProgressDialog extends JDialog {
 	private static final String DEFAULT_TITLE = "Progress...";
 
 	/** The size of the dialog. */
-	private static final Dimension SIZE = new Dimension(400, 100);
+	private static final Dimension SIZE = new Dimension(400, 120);
 
 	/** The size of the progress bar. */
-	private static final Dimension BAR_SIZE = new Dimension(350, 20);
+	private static final Dimension BAR_SIZE = new Dimension(350, 25);
 
 	/** The progress bar. */
 	private JProgressBar jpb;
@@ -81,7 +81,7 @@ public class ProgressDialog extends JDialog {
 	 * Hides and disposes the progress dialog.
 	 */
 	public final void end() {
-		setVisible(false);
+		// setVisible(false);
 		dispose();
 	}
 

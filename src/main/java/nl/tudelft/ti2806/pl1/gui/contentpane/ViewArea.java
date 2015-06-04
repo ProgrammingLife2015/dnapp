@@ -45,6 +45,17 @@ public class ViewArea {
 
 	/**
 	 * 
+	 * @param xl
+	 *            The left boundary.
+	 * @param xr
+	 *            The right boundary.
+	 */
+	public ViewArea(final double xl, final double xr) {
+		this((int) xl, (int) xr);
+	}
+
+	/**
+	 * 
 	 * @param node
 	 *            The node to check
 	 * @return True iff the given node is positioned in this view area.
