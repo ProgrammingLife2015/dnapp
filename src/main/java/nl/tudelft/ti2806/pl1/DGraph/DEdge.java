@@ -22,62 +22,62 @@ public class DEdge {
 	/**
 	 * The starting node of the edge.
 	 */
-	private DNode startNode;
+	private int startNode;
 
 	/**
 	 * The ending node of the edge.
 	 */
-	private DNode endNode;
+	private int endNode;
 
 	/**
 	 * The constructor for the edge, which creates a new edge starting at start
 	 * and ending at end.
 	 * 
 	 * @param start
-	 *            The starting node of the edge.
+	 *            The starting node id of the edge.
 	 * @param end
-	 *            The ending node of the edge.
+	 *            The ending node id of the edge.
 	 */
-	public DEdge(final DNode start, final DNode end) {
+	public DEdge(final int start, final int end) {
 		startNode = start;
 		endNode = end;
 	}
 
 	/**
-	 * The getter for the starting node.
+	 * The getter for the starting node id.
 	 * 
 	 * @return the starting node of the edge
 	 */
-	public DNode getStartNode() {
+	public int getStartNode() {
 		return startNode;
 	}
 
 	/**
-	 * The setter of the starting node.
+	 * The setter of the starting node id.
 	 * 
 	 * @param startNodeIn
 	 *            The new starting node of the edge.
 	 */
-	public final void setStartNode(final DNode startNodeIn) {
+	public final void setStartNode(final int startNodeIn) {
 		this.startNode = startNodeIn;
 	}
 
 	/**
-	 * The getter of the ending node.
+	 * The getter of the ending node id.
 	 * 
 	 * @return the ending node of the edge.
 	 */
-	public DNode getEndNode() {
+	public int getEndNode() {
 		return endNode;
 	}
 
 	/**
-	 * The setter of the ending node.
+	 * The setter of the ending node id.
 	 * 
 	 * @param endNodeIn
 	 *            The new ending node of the edge.
 	 */
-	public final void setEndNode(final DNode endNodeIn) {
+	public final void setEndNode(final int endNodeIn) {
 		this.endNode = endNodeIn;
 	}
 
@@ -95,8 +95,8 @@ public class DEdge {
 		}
 		if (object instanceof DEdge) {
 			DEdge edge = (DEdge) object;
-			return edge.getStartNode().getId() == getStartNode().getId()
-					&& edge.getEndNode().getId() == getEndNode().getId();
+			return edge.getStartNode() == getStartNode()
+					&& edge.getEndNode() == getEndNode();
 		}
 		return false;
 	}
@@ -107,8 +107,8 @@ public class DEdge {
 	@Override
 	public int hashCode() {
 		int result = PRIME_17;
-		result += PRIME_37 * result + getStartNode().getId();
-		result += PRIME_37 * result + getEndNode().getId();
+		result += PRIME_37 * result + getStartNode();
+		result += PRIME_37 * result + getEndNode();
 		return result;
 	}
 }
