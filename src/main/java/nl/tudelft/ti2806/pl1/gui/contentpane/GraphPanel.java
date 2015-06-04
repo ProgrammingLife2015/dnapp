@@ -32,6 +32,7 @@ import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
+import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -60,6 +61,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	 * The horizontal scroll increment value.
 	 */
 	private static final int HOR_SCROLL_INCR = 500;
+
+	/**
+	 * The zoom level creator.
+	 */
+	private ZoomlevelCreator zlc;
 
 	/**
 	 * The list of node selection observers.
@@ -170,6 +176,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		try {
 			dgraph = Reader.read(nodes.getAbsolutePath(),
 					edges.getAbsolutePath());
+			zlc = new ZoomlevelCreator(dgraph);
 			viewSize = NodePlacer.place(dgraph);
 			graph = ConvertDGraph.convert(dgraph);
 		} catch (FileNotFoundException e) {
@@ -269,6 +276,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
+	@Override
 	public final void update(final DNode newSelectedNode) {
 		text.setText(newSelectedNode.getContent());
 		// TODO change strings to constants (still have to decide in which class
@@ -363,6 +371,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		 * @param e
 		 *            MouseWheelEvent for which is being handled.
 		 */
+		@Override
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
@@ -472,6 +481,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
 			int type = e.getAdjustmentType();
 			if (type == AdjustmentEvent.BLOCK_DECREMENT) {
@@ -511,6 +521,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
@@ -541,12 +552,14 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void viewClosed(final String viewName) {
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
 			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
@@ -555,6 +568,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
 		}
@@ -575,24 +589,29 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	class ViewMouseListener implements MouseListener {
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
 
