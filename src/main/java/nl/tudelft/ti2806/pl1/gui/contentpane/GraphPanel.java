@@ -228,6 +228,8 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph); // TODO
+				window.optionPanel().fillGenomeList(
+						dgraph.getReferences().keySet(), true, true);
 				// graph = ConvertDGraph.convert(dgraph,
 				// getCurrentViewArea()); TODO
 				// graph =
