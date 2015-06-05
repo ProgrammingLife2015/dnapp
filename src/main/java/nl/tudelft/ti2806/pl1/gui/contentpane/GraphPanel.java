@@ -658,13 +658,13 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid("Selected node: " + id);
-			selectNode(graph.getNode(id));
 			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void buttonPushed(final String id) {
+			selectNode(graph.getNode(id));
 		}
 	}
 
