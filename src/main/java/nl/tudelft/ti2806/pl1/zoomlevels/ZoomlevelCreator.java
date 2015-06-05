@@ -1,14 +1,11 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
-import java.util.Collection;
-import java.util.Set;
-
-import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
-import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
+import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 
 /**
  * @author Maarten, Justin
@@ -38,14 +35,14 @@ public final class ZoomlevelCreator {
 	 */
 	public Graph removeSYN(final ViewArea va) {
 		Graph ret = null;
-		Collection<PointMutation> mutations = graph.getAllPointMutations();
-		for (PointMutation mut : mutations) {
-			if (mut.isSynonymous()) {
-				Set<String> muts = mut.getNodes();
-				ret = PointGraphConverter.collapsePointMutations(
-						ConvertDGraph.convert(graph, va), muts);
-			}
-		}
+		// Collection<PointMutation> mutations = graph.getAllPointMutations();
+		// for (PointMutation mut : mutations) {
+		// if (mut.isSynonymous()) {
+		// Set<String> muts = mut.getNodes();
+		// ret = PointGraphConverter.collapsePointMutations(
+		// ConvertDGraph.convert(graph, va), muts);
+		// }
+		// }
 		return ret;
 	}
 
@@ -55,7 +52,13 @@ public final class ZoomlevelCreator {
 	 * @return A graph in which all point mutations are collapsed.
 	 */
 	public Graph removeAllPMs(final Graph vg) {
-		return PointGraphConverter.collapsePointMutations(vg);
+		Graph g = PointGraphConverter.collapsePointMutations(vg);
+		BreadthFirstIterator<Node> iter = new BreadthFirstIterator<Node>(
+				g.getNode("-2"));
+		while (iter.hasNext()) {
+			System.out.println(iter.next().getEdgeSet().size());
+		}
+		return g;
 	}
 
 }

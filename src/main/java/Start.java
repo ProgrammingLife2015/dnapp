@@ -1,4 +1,3 @@
-
 import javax.swing.SwingUtilities;
 
 import nl.tudelft.ti2806.pl1.gui.Window;
