@@ -40,17 +40,7 @@ public class ToolBar extends JToolBar {
 	 */
 	public ToolBar() {
 		super("DN/App toolbar", JToolBar.HORIZONTAL);
-		addButtons();
-	}
-
-	/** Adds the control elements to the tool bar. */
-	private void addButtons() {
-		add(btnImport);
-		add(btnImportPhylo);
-		addSeparator();
-		add(btnReload);
-		add(btnCollapsePMs);
-		addSeparator();
+		addGeneralButtons();
 	}
 
 	/**
@@ -81,6 +71,40 @@ public class ToolBar extends JToolBar {
 			}
 		}
 		return button;
+	}
+
+	/**
+	 * @param context
+	 *            The view context.
+	 * @see ViewContext
+	 */
+	public void setContext(final ViewContext context) {
+		this.removeAll();
+		addGeneralButtons();
+		context.addButtons(this);
+	}
+
+	/** Adds the control elements to the tool bar. */
+	private void addGeneralButtons() {
+		this.removeAll();
+		add(btnImport);
+		addSeparator();
+		addSeparator();
+	}
+
+	/**
+	 * Adds the graph context buttons.
+	 */
+	public void addGraphButtons() {
+		add(btnReload);
+		add(btnCollapsePMs);
+	}
+
+	/**
+	 * Adds the phylotree context buttons.
+	 */
+	public void addPhyloButtons() {
+		add(btnImportPhylo);
 	}
 
 }

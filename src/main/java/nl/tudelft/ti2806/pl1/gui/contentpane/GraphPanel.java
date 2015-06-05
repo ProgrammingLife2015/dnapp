@@ -29,6 +29,7 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
+import nl.tudelft.ti2806.pl1.gui.ViewContext;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
@@ -47,7 +48,8 @@ import org.graphstream.ui.view.ViewerPipe;
  * @author Maarten
  * 
  */
-public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
+public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
+		DNAppTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -137,6 +139,11 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 		highlightedGenomes = new HashSet<String>();
 	}
 
+	@Override
+	public ViewContext getTabContext() {
+		return ViewContext.GRAPH;
+	}
+
 	/**
 	 * Write the visual graph representation to a file.
 	 * 
@@ -146,10 +153,10 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 	public final void writeGraph(final String filePath) {
 		try {
 			graph.write(filePath);
-			Event.statusBarInfo("Exported graph to: " + filePath);
+			Event.statusBarInfo("Exported graph representation to: " + filePath);
 		} catch (IOException e) {
-			Event.statusBarError("Exporting the graph went wrong ("
-					+ e.getMessage() + ")");
+			Event.statusBarError("Error during visual graph export: "
+					+ e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -255,7 +262,9 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = viewer.addDefaultView(false);
+		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
+		view.setMaximumSize(viewSize);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());

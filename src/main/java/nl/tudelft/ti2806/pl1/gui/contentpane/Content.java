@@ -5,6 +5,8 @@ import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -81,7 +83,16 @@ public class Content extends JPanel {
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addTab("Phylogenetic tree", phyloPanel);
-
+		tabs.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(final ChangeEvent e) {
+				System.out.println(window);
+				System.out.println("tab=" + tabs.getSelectedIndex());
+				window.toolBar().setContext(
+						(((DNAppTab) tabs.getSelectedComponent())
+								.getTabContext()));
+			}
+		});
 		add(tabs, BorderLayout.CENTER);
 	}
 
