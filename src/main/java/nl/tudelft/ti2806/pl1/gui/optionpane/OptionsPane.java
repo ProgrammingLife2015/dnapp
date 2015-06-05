@@ -158,7 +158,7 @@ public class OptionsPane extends JScrollPane {
 	 * @see Window#Window()
 	 */
 	public final void componentsLoaded() {
-		window.content().getGraphPanel().registerObserver(grpSelectedNode);
+		window.getContent().getGraphPanel().registerObserver(grpSelectedNode);
 	}
 
 	/**

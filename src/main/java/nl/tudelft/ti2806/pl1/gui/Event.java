@@ -39,7 +39,7 @@ public enum Event implements ActionListener {
 		 */
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.toolBar().setVisible(true);
+			window.getToolBar().setVisible(true);
 		}
 
 	},
@@ -53,7 +53,7 @@ public enum Event implements ActionListener {
 		 */
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.toolBar().setVisible(false);
+			window.getToolBar().setVisible(false);
 		}
 
 	},
@@ -91,7 +91,7 @@ public enum Event implements ActionListener {
 				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
 					final File edges = fsEdge.getSelectedFile();
 					try {
-						window.content().loadGraph(nodes, edges);
+						window.getContent().loadGraph(nodes, edges);
 					} catch (InvalidNodePlacementException e1) {
 						e1.printStackTrace();
 					}
@@ -114,7 +114,7 @@ public enum Event implements ActionListener {
 			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
 			if (fcPhylo.showDialog(window, "Load Newick") == JFileChooser.APPROVE_OPTION) {
 				final File newick = fcPhylo.getSelectedFile();
-				window.content().loadTree(newick);
+				window.getContent().loadTree(newick);
 			} else {
 				dialogCanceled();
 			}
@@ -140,7 +140,7 @@ public enum Event implements ActionListener {
 					writePath += ".dgs";
 					statusBarInfo("Appended file extension .dgs");
 				}
-				window.content().writeGraph(writePath);
+				window.getContent().writeGraph(writePath);
 				statusBarInfo("Graph file written to " + writePath);
 			} else {
 				dialogCanceled();
@@ -154,7 +154,7 @@ public enum Event implements ActionListener {
 	RELOAD_GRAPH {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.content().getGraphPanel().loadCurrentViewArea();
+			window.getContent().getGraphPanel().loadCurrentViewArea();
 		}
 	},
 
@@ -164,7 +164,7 @@ public enum Event implements ActionListener {
 	COLLAPSE_SNPS {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.content().getGraphPanel().applyZoomLevel(1);
+			window.getContent().getGraphPanel().applyZoomLevel(1);
 		}
 	},
 
@@ -220,7 +220,7 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarInfo(final String message) {
-		window.statusBar().main(message, StatusBar.MessageType.INFO);
+		window.getStatusBar().main(message, StatusBar.MessageType.INFO);
 	}
 
 	/**
@@ -232,7 +232,7 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarError(final String message) {
-		window.statusBar().main(message, StatusBar.MessageType.ERROR);
+		window.getStatusBar().main(message, StatusBar.MessageType.ERROR);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#right(String)
 	 */
 	public static void statusBarRight(final String message) {
-		window.statusBar().right(message);
+		window.getStatusBar().right(message);
 	}
 
 	/**
@@ -257,7 +257,7 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#mid(String)
 	 */
 	public static void statusBarMid(final String message) {
-		window.statusBar().mid(message);
+		window.getStatusBar().mid(message);
 	}
 
 }

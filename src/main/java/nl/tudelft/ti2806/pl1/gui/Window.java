@@ -6,15 +6,17 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
+import nl.tudelft.ti2806.pl1.gui.contentpane.ContentLoadedObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 
 /**
  * @author Maarten
  *
  */
-public class Window extends JFrame implements Observer {
+public class Window extends JFrame implements Observer, ContentLoadedObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2702972120954333899L;
@@ -53,7 +55,8 @@ public class Window extends JFrame implements Observer {
 	public Window(final WindowSettings wSettings) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 		// UIManager.put("swing.boldMetal", Boolean.FALSE);
@@ -68,9 +71,6 @@ public class Window extends JFrame implements Observer {
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
 
-		// ((BasicToolBarUI) toolBar.getUI()).setFloating(true,
-		// new Point(100, 100));
-
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
 
@@ -79,6 +79,8 @@ public class Window extends JFrame implements Observer {
 		add(optionPanel, BorderLayout.WEST);
 
 		content = new Content(this);
+		content.setVisible(false);
+		content.registerObserver(this);
 		add(content, BorderLayout.CENTER);
 
 		menuBar = new MenuBar(this);
@@ -134,6 +136,17 @@ public class Window extends JFrame implements Observer {
 		applyWindowSettings();
 	}
 
+	@Override
+	public void phyloLoaded() {
+		content.setVisible(true);
+	}
+
+	@Override
+	public void graphLoaded() {
+		content.setVisible(true);
+		optionPanel.setVisible(true);
+	}
+
 	/**
 	 * Gets called from the windows events class when the window is resized.
 	 */
@@ -147,28 +160,28 @@ public class Window extends JFrame implements Observer {
 	/**
 	 * @return the optionPanel
 	 */
-	public final OptionsPane optionPanel() {
+	public final OptionsPane getOptionPanel() {
 		return optionPanel;
 	}
 
 	/**
 	 * @return the content
 	 */
-	public final Content content() {
+	public final Content getContent() {
 		return content;
 	}
 
 	/**
 	 * @return the toolBar
 	 */
-	public final ToolBar toolBar() {
+	public final ToolBar getToolBar() {
 		return toolBar;
 	}
 
 	/**
 	 * @return the statusBar
 	 */
-	public final StatusBar statusBar() {
+	public final StatusBar getStatusBar() {
 		return statusBar;
 	}
 

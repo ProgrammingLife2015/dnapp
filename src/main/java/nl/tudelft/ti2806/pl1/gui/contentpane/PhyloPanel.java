@@ -10,12 +10,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
-import nl.tudelft.ti2806.pl1.gui.ViewContext;
+import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -24,7 +26,7 @@ import com.wordpress.tips4java.ScrollablePanel;
  * @author Maarten
  *
  */
-public class PhyloPanel extends JScrollPane implements DNAppTab {
+public class PhyloPanel extends JScrollPane implements ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -54,7 +56,7 @@ public class PhyloPanel extends JScrollPane implements DNAppTab {
 	private BinaryTree tree;
 
 	/**
-	 * @return the tree
+	 * @return The loaded tree.
 	 */
 	public final BinaryTree getTree() {
 		return tree;
@@ -90,8 +92,11 @@ public class PhyloPanel extends JScrollPane implements DNAppTab {
 	}
 
 	@Override
-	public ViewContext getTabContext() {
-		return ViewContext.PHYLOTREE;
+	public List<JComponent> getToolBarControls() {
+		List<JComponent> ret = new ArrayList<JComponent>(2);
+		ret.add(ToolBar.makeButton("Highlight selection", null, null, null));
+		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		return ret;
 	}
 
 	/**
