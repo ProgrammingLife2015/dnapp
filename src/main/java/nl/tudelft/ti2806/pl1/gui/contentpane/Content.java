@@ -145,6 +145,8 @@ public class Content extends JPanel {
 		for (ContentLoadedObserver clo : observers) {
 			clo.graphLoaded();
 		}
+		window.getToolBar().viewContextChanged(
+				(ContentTab) tabs.getSelectedComponent());
 	}
 
 	/**
