@@ -2,6 +2,8 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -19,12 +21,14 @@ import nl.tudelft.ti2806.pl1.gui.Window;
  * @see PhyloPanel
  * 
  * @author Maarten
- *
  */
 public class Content extends JPanel {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -518196843048978296L;
+
+	/** The list of content loaded observers. */
+	private List<ContentLoadedObserver> observers = new ArrayList<ContentLoadedObserver>();
 
 	/** Flag to indicate whether a graph has been loaded into the graph panel. */
 	private boolean graphLoaded = false;
@@ -37,16 +41,36 @@ public class Content extends JPanel {
 	}
 
 	/**
-	 * Flag to indicate whether a phylo tree has been loaded into the phylo
-	 * panel.
+	 * Flag to indicate whether a phylogenetic tree has been loaded into the
+	 * phylo panel.
 	 */
 	private boolean treeLoaded = false;
 
 	/**
 	 * @return true iff there is a phylogenetic tree loaded
 	 */
-	public final boolean isTreLoaded() {
+	public final boolean isTreeLoaded() {
 		return treeLoaded;
+	}
+
+	/**
+	 * Register a new content loaded observer.
+	 * 
+	 * @param o
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ContentLoadedObserver o) {
+		observers.add(o);
+	}
+
+	/**
+	 * Unregistrer a content loaded observer.
+	 * 
+	 * @param o
+	 *            The observer to delete.
+	 */
+	public final void unregisterObserver(final ContentLoadedObserver o) {
+		observers.remove(o);
 	}
 
 	/** The window this content pane is part of. */
@@ -86,11 +110,8 @@ public class Content extends JPanel {
 		tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
-				System.out.println(window);
-				System.out.println("tab=" + tabs.getSelectedIndex());
-				window.toolBar().setContext(
-						(((DNAppTab) tabs.getSelectedComponent())
-								.getTabContext()));
+				window.getToolBar().viewContextChanged(
+						(ContentTab) tabs.getSelectedComponent());
 			}
 		});
 		add(tabs, BorderLayout.CENTER);
@@ -121,6 +142,9 @@ public class Content extends JPanel {
 	public final void loadGraph(final File nodePath, final File edgePath)
 			throws InvalidNodePlacementException {
 		graphLoaded = graphPanel.loadGraph(nodePath, edgePath);
+		for (ContentLoadedObserver clo : observers) {
+			clo.graphLoaded();
+		}
 	}
 
 	/**
@@ -132,6 +156,9 @@ public class Content extends JPanel {
 	 */
 	public final void loadTree(final File newick) {
 		treeLoaded = phyloPanel.loadTree(newick);
+		for (ContentLoadedObserver clo : observers) {
+			clo.phyloLoaded();
+		}
 	}
 
 	@Override

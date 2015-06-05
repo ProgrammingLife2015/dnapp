@@ -58,7 +58,7 @@ public class MenuBar extends JMenuBar {
 
 			@Override
 			public boolean isEnabled() {
-				return window.content().isGraphLoaded();
+				return window.getContent().isGraphLoaded();
 			}
 		};
 		export.setMnemonic('E');
@@ -93,7 +93,7 @@ public class MenuBar extends JMenuBar {
 		showToolBar.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
-				window.toolBar().setVisible(showToolBar.isSelected());
+				window.getToolBar().setVisible(showToolBar.isSelected());
 				window.revalidate();
 			}
 		});
@@ -106,13 +106,13 @@ public class MenuBar extends JMenuBar {
 
 			@Override
 			public boolean isEnabled() {
-				return window.content().isGraphLoaded();
+				return window.getContent().isGraphLoaded();
 			}
 		};
 		showOptionPane.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
-				window.optionPanel().setVisible(showOptionPane.isSelected());
+				window.getOptionPanel().setVisible(showOptionPane.isSelected());
 				window.revalidate();
 			}
 		});

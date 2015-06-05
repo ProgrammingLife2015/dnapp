@@ -1,10 +1,14 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JToolBar;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.ContentTab;
 
 /**
  * The main tool bar of the application showing at the top of the window (right
@@ -18,7 +22,8 @@ public class ToolBar extends JToolBar {
 	private static final long serialVersionUID = 7980283436568336682L;
 
 	/** The import button. */
-	private JButton btnImport = makeButton("Import", null, Event.IMPORT_FILE,
+	private JButton btnImport = makeButton("Import graph", null,
+			Event.IMPORT_FILE,
 			"Click to load a graph from .node.graph and .edge.graph files.");
 
 	/** The import phylogenetic tree button. */
@@ -26,20 +31,12 @@ public class ToolBar extends JToolBar {
 			Event.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
 
-	/** The reload graph button. */
-	private JButton btnReload = makeButton("(ReLoad visible part", null,
-			Event.RELOAD_GRAPH,
-			"Loads or reloads the part of the graph currently in the view port.");
-
-	/** The (temp) button to collapse point mutations. */
-	private JButton btnCollapsePMs = makeButton("Collapse SNPs", null,
-			Event.COLLAPSE_SNPS, null);
-
 	/**
 	 * Initializes the tool bar.
 	 */
 	public ToolBar() {
 		super("DN/App toolbar", JToolBar.HORIZONTAL);
+		setRollover(true);
 		addGeneralButtons();
 	}
 
@@ -55,8 +52,8 @@ public class ToolBar extends JToolBar {
 	 *            Tool tip text.
 	 * @return The created button.
 	 */
-	private JButton makeButton(final String text, final String imageName,
-			final Event action, final String toolTipText) {
+	public static JButton makeButton(final String text, final String imageName,
+			final ActionListener action, final String toolTipText) {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);
@@ -73,38 +70,24 @@ public class ToolBar extends JToolBar {
 		return button;
 	}
 
-	/**
-	 * @param context
-	 *            The view context.
-	 * @see ViewContext
-	 */
-	public void setContext(final ViewContext context) {
-		this.removeAll();
-		addGeneralButtons();
-		context.addButtons(this);
-	}
-
 	/** Adds the control elements to the tool bar. */
 	private void addGeneralButtons() {
 		this.removeAll();
 		add(btnImport);
-		addSeparator();
-		addSeparator();
-	}
-
-	/**
-	 * Adds the graph context buttons.
-	 */
-	public void addGraphButtons() {
-		add(btnReload);
-		add(btnCollapsePMs);
-	}
-
-	/**
-	 * Adds the phylotree context buttons.
-	 */
-	public void addPhyloButtons() {
 		add(btnImportPhylo);
+		addSeparator();
+	}
+
+	/**
+	 * @param contentTab
+	 *            The content tab which tool bar buttons should now be shown.
+	 */
+	public void viewContextChanged(final ContentTab contentTab) {
+		removeAll();
+		addGeneralButtons();
+		for (JComponent c : contentTab.getToolBarControls()) {
+			add(c);
+		}
 	}
 
 }

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -29,7 +30,7 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
-import nl.tudelft.ti2806.pl1.gui.ViewContext;
+import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
@@ -49,7 +50,7 @@ import org.graphstream.ui.view.ViewerPipe;
  * 
  */
 public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
-		DNAppTab {
+		ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -140,8 +141,14 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 	}
 
 	@Override
-	public ViewContext getTabContext() {
-		return ViewContext.GRAPH;
+	public List<JComponent> getToolBarControls() {
+		List<JComponent> ret = new ArrayList<JComponent>(2);
+		ret.add(ToolBar
+				.makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
+						"Loads or reloads the part of the graph currently in the view port."));
+		ret.add(ToolBar.makeButton("Collapse SNPs", null, Event.COLLAPSE_SNPS,
+				null));
+		return ret;
 	}
 
 	/**
@@ -235,7 +242,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph); // TODO
-				window.optionPanel().fillGenomeList(
+				window.getOptionPanel().fillGenomeList(
 						dgraph.getReferences().keySet(), true, true);
 				// graph = ConvertDGraph.convert(dgraph,
 				// getCurrentViewArea()); TODO
@@ -614,7 +621,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 		 * panel.
 		 */
 		public GenomeHighlight() {
-			window.optionPanel().getGenomes().registerObserver(this);
+			window.getOptionPanel().getGenomes().registerObserver(this);
 		}
 
 		/** {@inheritDoc} */
