@@ -50,8 +50,9 @@ public class ReferenceGeneStorage {
 		this.referenceGenes = extractReferenceGenes(genePath);
 		if (mutationPath != null) {
 			drugResMuts = extractMutations(mutationPath);
+			connectGeneMutations();
 		}
-		System.out.println(this.getDrugResistanceMutations());
+		// System.out.println(this.toString());
 	}
 
 	/**
@@ -147,12 +148,42 @@ public class ReferenceGeneStorage {
 		return res;
 	}
 
+	/** Connect the mutations with each referenceGene object. */
+	private void connectGeneMutations() {
+		for (ReferenceGene rg : this.getReferenceGenes()) {
+			for (Integer key : this.getDrugResistanceMutations().keySet()) {
+				if (rg.isIntragenic(key)) {
+					rg.addMutation(key,
+							this.getDrugResistanceMutations().get(key));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks for the given position whether it is a mutation resulting in a
+	 * change of gene.
+	 * 
+	 * @param index
+	 *            Inedx of the position to be checked.
+	 * @return Whether the index results in a change of gene.
+	 */
+	public boolean isNonSynonymous(final int index) {
+		for (ReferenceGene rg : this.getReferenceGenes()) {
+			if (rg.getMutations().keySet().contains(index)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** @return the hashmap containing the know drug resistance mutations. */
 	public HashMap<Integer, String> getDrugResistanceMutations() {
 		return drugResMuts;
 	}
 
-	public static void main(final String[] args) {
-		ReferenceGeneStorage RGS = new ReferenceGeneStorage(
-				"decorationV5_20130412.gff", "resistanceCausingMutations.txt");
-	}
+	// public static void main(final String[] args) {
+	// ReferenceGeneStorage RGS = new ReferenceGeneStorage(
+	// "decorationV5_20130412.gff", "resistanceCausingMutations.tsv");
+	// }
 }

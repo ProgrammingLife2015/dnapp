@@ -124,6 +124,6 @@ public class ReferenceGene {
 	@Override
 	public String toString() {
 		return "[" + start + ", " + end + ", " + score + ", " + strand + ", "
-				+ name + "]";
+				+ name + "," + this.getMutations().toString() + "]";
 	}
 }

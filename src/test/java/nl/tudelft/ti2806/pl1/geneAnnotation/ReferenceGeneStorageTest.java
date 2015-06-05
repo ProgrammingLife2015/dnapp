@@ -9,8 +9,10 @@ public class ReferenceGeneStorageTest {
 
 	private static final String GFF_TEST_FILE = "ReferenceGeneStorageTestGenes.gff";
 
+	private static final String TSV_TEST_FILE = "resistanceCausingMutationsTesting.tsv";
+
 	private ReferenceGeneStorage RGS = new ReferenceGeneStorage(GFF_TEST_FILE,
-			null);
+			TSV_TEST_FILE);
 
 	@Test
 	public void testInitialisation() {
@@ -40,5 +42,30 @@ public class ReferenceGeneStorageTest {
 	@Test
 	public void testIntergenicPositionMIN() {
 		assertFalse(RGS.isIntragenic(Integer.MIN_VALUE));
+	}
+
+	@Test
+	public void testNSYmutationCorrect() {
+		assertTrue(RGS.isNonSynonymous(959526));
+	}
+
+	@Test
+	public void testNSYmutationInFileButNotCorrect() {
+		assertFalse(RGS.isNonSynonymous(1825895));
+	}
+
+	@Test
+	public void testNSYmutationCorrect2() {
+		assertTrue(RGS.isNonSynonymous(3255895));
+	}
+
+	@Test
+	public void testNSYmutationMIN() {
+		assertFalse(RGS.isNonSynonymous(Integer.MIN_VALUE));
+	}
+
+	@Test
+	public void testNSYmutationMAX() {
+		assertFalse(RGS.isNonSynonymous(Integer.MAX_VALUE));
 	}
 }
