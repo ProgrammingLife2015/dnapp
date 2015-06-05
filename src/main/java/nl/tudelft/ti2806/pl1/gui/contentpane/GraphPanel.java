@@ -252,8 +252,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 				e.printStackTrace();
 				Event.statusBarError(e.getMessage());
 			}
-			graph.addAttribute("ui.stylesheet",
-					"url('src/main/resources/stylesheet.css')");
+			graph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 			return graph;
 		}
 	}
