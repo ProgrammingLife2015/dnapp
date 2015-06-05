@@ -125,7 +125,7 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	WRITE_FILE {
+	WRITE_TO_DGS {
 		/**
 		 * {@inheritDoc}
 		 */
@@ -165,6 +165,15 @@ public enum Event implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			window.content().getGraphPanel().applyZoomLevel(1);
+		}
+	},
+
+	/**
+	 * 
+	 */
+	OPEN_GRAPH_DB {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
 		}
 	};
 

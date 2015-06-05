@@ -44,7 +44,7 @@ public class GenomeTable extends JScrollPane {
 
 	/** The size of the table. */
 	private static final Dimension SIZE = new Dimension(
-			OptionsPane.MAX_CHILD_WIDTH, 120);
+			OptionsPane.MAX_CHILD_WIDTH, 200);
 
 	/** Initializes the genome table. */
 	public GenomeTable() {
@@ -60,6 +60,7 @@ public class GenomeTable extends JScrollPane {
 		// table.getColumnModel().getColumn(1).setPreferredWidth(50);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
+			@Override
 			public void tableChanged(final TableModelEvent e) {
 				notifyObservers(e.getColumn() == GenomeRow.COL_SHOW,
 						e.getColumn() == GenomeRow.COL_HIGHLIGHT);
@@ -69,6 +70,7 @@ public class GenomeTable extends JScrollPane {
 		ListSelectionModel lsm = table.getSelectionModel();
 		lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsm.addListSelectionListener(new ListSelectionListener() {
+			@Override
 			public void valueChanged(final ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
 					notifyObservers(false, false);
@@ -237,6 +239,7 @@ public class GenomeTable extends JScrollPane {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
@@ -244,6 +247,7 @@ public class GenomeTable extends JScrollPane {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public int getRowCount() {
 			return data.size();
 		}
@@ -256,6 +260,7 @@ public class GenomeTable extends JScrollPane {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Object getValueAt(final int row, final int col) {
 			return data.get(row).getCol(col);
 		}

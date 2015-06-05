@@ -5,7 +5,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
@@ -24,7 +23,7 @@ public class Window extends JFrame implements Observer {
 	private WindowSettings settings;
 
 	/** The menu bar of the window. */
-	private JMenuBar menuBar;
+	private MenuBar menuBar;
 
 	/** The tool bar of the window. */
 	private ToolBar toolBar;
@@ -66,9 +65,6 @@ public class Window extends JFrame implements Observer {
 
 		Event.setWindow(this);
 
-		menuBar = new MenuBar(this);
-		setJMenuBar(menuBar);
-
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
 
@@ -79,10 +75,14 @@ public class Window extends JFrame implements Observer {
 		add(statusBar, BorderLayout.SOUTH);
 
 		optionPanel = new OptionsPane(this);
+		optionPanel.setVisible(false);
 		add(optionPanel, BorderLayout.WEST);
 
 		content = new Content(this);
 		add(content, BorderLayout.CENTER);
+
+		menuBar = new MenuBar(this);
+		setJMenuBar(menuBar);
 
 		// now let's call all cross dependent things.
 		callAfterInitialization();
@@ -129,6 +129,7 @@ public class Window extends JFrame implements Observer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();
 	}

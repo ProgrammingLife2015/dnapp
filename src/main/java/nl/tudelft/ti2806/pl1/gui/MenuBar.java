@@ -27,11 +27,6 @@ public class MenuBar extends JMenuBar {
 	private Window window;
 
 	/**
-	 * The menus.
-	 */
-	private JMenu file = fileMenu(), edit = editMenu(), view = viewMenu();
-
-	/**
 	 * Initializes the menu bar.
 	 * 
 	 * @param w
@@ -39,24 +34,39 @@ public class MenuBar extends JMenuBar {
 	 */
 	public MenuBar(final Window w) {
 		this.window = w;
-		this.add(file);
-		this.add(edit);
-		this.add(view);
+		this.add(fileMenu());
+		this.add(editMenu());
+		this.add(viewMenu());
 	}
 
 	/**
-	 * Creates and fulls the file menu.
+	 * Creates and fills the file menu.
 	 * 
 	 * @return the file menu
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		ret.add(makeMI("Import", null, 'I', "Import a graph file.",
+		ret.add(makeMI("Import", null, 'I',
+				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE));
-		JMenu export = new JMenu("Export as");
-		export.add(makeMI("DGS", null, 'X', null, Event.WRITE_FILE));
+		ret.add(makeMI("Open database", null, 'O',
+				"Open a graph database file", Event.OPEN_GRAPH_DB));
+
+		JMenu export = new JMenu("Export graph layout as...") {
+			/** The serial version UID. */
+			private static final long serialVersionUID = 6733151149511110189L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.content().isGraphLoaded();
+			}
+		};
+		export.setMnemonic('E');
+		JMenuItem exportDGS = makeMI("DGS format", null, 'D', null,
+				Event.WRITE_TO_DGS);
+		export.add(exportDGS);
 		ret.add(export);
-		ret.add(makeMI("Exit", null, 'E', "Exit the program.", Event.EXIT_APP));
+		ret.add(makeMI("Exit", null, 'E', "Exit the program", Event.EXIT_APP));
 		return ret;
 	}
 
@@ -80,21 +90,32 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("View");
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
-		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
-				"Show option panel", true);
 		showToolBar.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(final ChangeEvent e) {
 				window.toolBar().setVisible(showToolBar.isSelected());
 				window.revalidate();
 			}
 		});
+		ret.add(showToolBar);
+
+		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
+				"Show option panel", false) {
+			/** The serial version UID. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.content().isGraphLoaded();
+			}
+		};
 		showOptionPane.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(final ChangeEvent e) {
 				window.optionPanel().setVisible(showOptionPane.isSelected());
 				window.revalidate();
 			}
 		});
-		ret.add(showToolBar);
 		ret.add(showOptionPane);
 		return ret;
 	}
@@ -103,11 +124,11 @@ public class MenuBar extends JMenuBar {
 	 * Creates and sets up a menu item.
 	 * 
 	 * @param text
-	 *            The text to show.
+	 *            The text to show on the menu item.
 	 * @param iconName
-	 *            The name of the icon file.
+	 *            The name of the icon file in the resources/images folder
 	 * @param mnemonic
-	 *            The mnemonic (key)
+	 *            The mnemonic (fast key)
 	 * @param toolTipText
 	 *            The tool tip.
 	 * @param action
@@ -118,21 +139,20 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenuItem makeMI(final String text, final String iconName,
 			final char mnemonic, final String toolTipText, final Event action) {
-		JMenuItem mi = new JMenuItem();
-		mi.setText(text);
-		mi.setMnemonic(mnemonic);
-		mi.setToolTipText(toolTipText);
-		mi.addActionListener(action);
-
+		JMenuItem ret = new JMenuItem();
+		ret.setText(text);
+		ret.setMnemonic(mnemonic);
+		ret.setToolTipText(toolTipText);
+		ret.addActionListener(action);
 		if (iconName != null) {
 			String imgLocation = "images/" + iconName;
 			URL imageURL = ToolBar.class.getResource(imgLocation);
 			if (imageURL != null) {
-				mi.setIcon(new ImageIcon(imageURL, text));
+				ret.setIcon(new ImageIcon(imageURL, text));
 			} else {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
-		return mi;
+		return ret;
 	}
 }
