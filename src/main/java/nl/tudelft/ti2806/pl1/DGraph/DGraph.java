@@ -44,7 +44,7 @@ public class DGraph {
 	/**
 	 * The amount of read nodes and edges we allow per transaction.
 	 */
-	private static final int BATCH = 500;
+	private static final int BATCH = 2500;
 
 	/**
 	 * The location of the starting point in the text format.
@@ -564,9 +564,20 @@ public class DGraph {
 	 * @throws IOException
 	 */
 	public void readNodes(final BufferedReader reader) throws IOException {
+		boolean done = false;
+		while (!done) {
+			done = readNodesInBatch(reader);
+		}
+		reader.close();
+	}
+
+	protected boolean readNodesInBatch(final BufferedReader reader)
+			throws IOException {
+		Boolean done = false;
+		int readNodes = 0;
 		try (Transaction tx = graphDb.beginTx()) {
-			String nextnode;
-			while ((nextnode = reader.readLine()) != null) {
+			String nextnode = "";
+			while (readNodes < BATCH && (nextnode = reader.readLine()) != null) {
 				if (nextnode.charAt(0) == '>') {
 					nextnode = nextnode.substring(1);
 					String[] data = nextnode.split("\\s\\|\\s");
@@ -598,13 +609,16 @@ public class DGraph {
 					String[] sources = data[1].split(",");
 					addNodeWithoutTransaction(id, start, end, content,
 							new Point(0, 0), 0, sources);
+					readNodes += 1;
 				} else {
 					throw new InvalidFileFormatException(
 							"Every new node line should start with >");
 				}
 			}
+			done = nextnode == null;
 			tx.success();
 		}
+		return done;
 	}
 
 	/**
@@ -615,11 +629,21 @@ public class DGraph {
 	 * @throws IOException
 	 */
 	public void readEdges(final BufferedReader reader) throws IOException {
-		String line;
+		boolean done = false;
+		while (!done) {
+			done = readEdgesInBatch(reader);
+		}
+		reader.close();
+	}
+
+	protected boolean readEdgesInBatch(final BufferedReader reader)
+			throws IOException {
+		boolean done = false;
+		int readEdges = 0;
 		Label label = DynamicLabel.label("Nodes");
 		try (Transaction tx = graphDb.beginTx()) {
-			while ((line = reader.readLine()) != null) {
-
+			String line = "";
+			while (readEdges < BATCH && (line = reader.readLine()) != null) {
 				String[] nodes = line.split("\\s");
 				if (nodes.length != 2) {
 					throw new InvalidFileFormatException(
@@ -641,8 +665,11 @@ public class DGraph {
 							"The id's shoould exist");
 				}
 				addEdge(src, tar);
+				readEdges += 1;
 			}
+			done = line == null;
 			tx.success();
 		}
+		return done;
 	}
 }
