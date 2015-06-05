@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -21,6 +22,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
@@ -38,6 +40,11 @@ public class DGraph {
 
 	/** The neo4j database. **/
 	private GraphDatabaseService graphDb;
+
+	/**
+	 * The amount of read nodes and edges we allow per transaction.
+	 */
+	private static final int BATCH = 500;
 
 	/**
 	 * The location of the starting point in the text format.
@@ -97,28 +104,38 @@ public class DGraph {
 	 * @return A DNode.
 	 */
 	public DNode convertNodeDNode(final Node node) {
-		Collection<Node> sources = getSources(node);
-		HashSet<String> dnodesources = new HashSet<String>();
-		int id = 0;
-		int start = 0;
-		int end = 0;
-		int x, y, z;
-		String content = null;
-		List<DEdge> edges = new ArrayList<DEdge>();
+		DNode dnode = null;
 		try (Transaction tx = graphDb.beginTx()) {
-			for (Node source : sources) {
-				dnodesources.add((String) source.getProperty("source"));
-			}
-			id = (int) node.getProperty("id");
-			start = (int) node.getProperty("start");
-			end = (int) node.getProperty("end");
-			content = (String) node.getProperty("content");
-			edges = getEdges(node);
-			x = (int) node.getProperty("x");
-			y = (int) node.getProperty("y");
-			z = (int) node.getProperty("depth");
+			dnode = convertNodeDNodeNoTransaction(node);
 			tx.success();
 		}
+		return dnode;
+	}
+
+	/**
+	 * Converts a node to a dnode. This method assumes that it's called in a
+	 * transaction.
+	 * 
+	 * @param node
+	 *            The node to be converted to a dnode
+	 * @return A converted node
+	 */
+	protected DNode convertNodeDNodeNoTransaction(final Node node) {
+		Collection<Node> sources = getSources(node);
+		HashSet<String> dnodesources = new HashSet<String>();
+		String content = null;
+		List<DEdge> edges = new ArrayList<DEdge>();
+		for (Node source : sources) {
+			dnodesources.add((String) source.getProperty("source"));
+		}
+		int id = (int) node.getProperty("id");
+		int start = (int) node.getProperty("start");
+		int end = (int) node.getProperty("end");
+		content = (String) node.getProperty("content");
+		edges = getEdges(node);
+		int x = (int) node.getProperty("x");
+		int y = (int) node.getProperty("y");
+		int z = (int) node.getProperty("depth");
 		DNode dnode = new DNode(id, dnodesources, start, end, content);
 		for (DEdge edge : edges) {
 			dnode.addEdge(edge);
@@ -363,6 +380,11 @@ public class DGraph {
 		return nodes;
 	}
 
+	/**
+	 * Converts all Nodes to a DNode.
+	 * 
+	 * @return A list of all nodes converted to a DNode
+	 */
 	public List<DNode> getDNodes() {
 		List<DNode> nodes = new ArrayList<DNode>();
 		try (Transaction tx = graphDb.beginTx()) {
@@ -370,6 +392,19 @@ public class DGraph {
 					.label("Nodes"));
 			while (it.hasNext()) {
 				nodes.add(convertNodeDNode(it.next()));
+			}
+		}
+		return nodes;
+	}
+
+	public List<DNode> getDNodes(final int xl, final int xr) {
+		List<DNode> nodes = new ArrayList<DNode>();
+		try (Transaction tx = graphDb.beginTx()) {
+			Result rs = graphDb.execute("MATCH (n:Nodes) WHERE (n.x >= " + xl
+					+ " AND n.x <= " + xr + ") RETURN n");
+			while (rs.hasNext()) {
+				Map<String, Object> row = rs.next();
+				nodes.add(convertNodeDNodeNoTransaction((Node) row.get("n")));
 			}
 		}
 		return nodes;
@@ -603,6 +638,7 @@ public class DGraph {
 		Label label = DynamicLabel.label("Nodes");
 		try (Transaction tx = graphDb.beginTx()) {
 			while ((line = reader.readLine()) != null) {
+
 				String[] nodes = line.split("\\s");
 				if (nodes.length != 2) {
 					throw new InvalidFileFormatException(
