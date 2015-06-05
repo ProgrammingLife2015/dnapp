@@ -33,7 +33,7 @@ public final class ConvertDGraph {
 	 */
 	public static Graph convert(final DGraph dgraph) {
 		Graph graph = new SingleGraph("DNApp");
-		for (DNode n : dgraph.getNodes().values()) {
+		for (DNode n : dgraph.getDNodes()) {
 			String id = String.valueOf(n.getId());
 			graph.addNode(id);
 			graph.getNode(id).addAttribute("x", n.getX());
@@ -43,11 +43,12 @@ public final class ConvertDGraph {
 			graph.getNode(id).addAttribute("ui.class", "common");
 			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
-		for (DEdge edge : dgraph.getEdges()) {
-			String src = String.valueOf(edge.getStartNode().getId());
-			String target = String.valueOf(edge.getEndNode().getId());
-			graph.addEdge(src + target, src, target, true);
-		}
+		// TODO need to add edges
+		// for (DEdge edge : dgraph.getEdges()) {
+		// String src = String.valueOf(edge.getStartNode().getId());
+		// String target = String.valueOf(edge.getEndNode().getId());
+		// graph.addEdge(src + target, src, target, true);
+		// }
 		return graph;
 	}
 

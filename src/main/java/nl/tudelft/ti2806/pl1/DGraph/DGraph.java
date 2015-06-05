@@ -621,6 +621,25 @@ public class DGraph {
 		return done;
 	}
 
+	// TODO does this stay?
+	public void setProperty(final Node node, final String property,
+			final Object value) {
+		try (Transaction tx = graphDb.beginTx()) {
+			node.setProperty(property, value);
+			tx.success();
+		}
+	}
+
+	// TODO does this stay?
+	public Object getProperty(final Node node, final String property) {
+		Object ret;
+		try (Transaction tx = graphDb.beginTx()) {
+			ret = node.getProperty(property);
+			tx.success();
+		}
+		return ret;
+	}
+
 	/**
 	 * Reads the edges from the file.
 	 * 
