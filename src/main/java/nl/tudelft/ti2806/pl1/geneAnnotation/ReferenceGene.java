@@ -3,6 +3,8 @@
  */
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
+import java.util.HashMap;
+
 /**
  * Storage location for information about a gene.
  * 
@@ -26,6 +28,9 @@ public class ReferenceGene {
 	/** Name of the feature. */
 	private String name;
 
+	/** Indices where mutation causes a drug resistance. */
+	private HashMap<Integer, String> mutations;
+
 	/**
 	 * Constructor for storing all the needed information about a gene.
 	 * 
@@ -47,6 +52,21 @@ public class ReferenceGene {
 		this.score = scoreIn;
 		this.strand = strandIn;
 		this.name = nameIn;
+		this.mutations = new HashMap<Integer, String>();
+	}
+
+	/**
+	 * Checks for the given position whether it falls into the gene's region.
+	 * 
+	 * @param index
+	 *            Index of the position to be checked.
+	 * @return Whether the index is in the gene's region.
+	 */
+	public boolean isIntragenic(final int index) {
+		if (index >= this.getStart() && index <= this.getEnd()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -82,6 +102,23 @@ public class ReferenceGene {
 	 */
 	public final String getName() {
 		return name;
+	}
+
+	/** @return The mutations in this gene. */
+	public final HashMap<Integer, String> getMutations() {
+		return mutations;
+	}
+
+	/**
+	 * Adds the mutation to the list of mutations of this gene.
+	 * 
+	 * @param location
+	 *            Location of the mutation.
+	 * @param mutName
+	 *            Name of the mutation.
+	 */
+	public final void addMutation(final int location, final String mutName) {
+		this.getMutations().put(location, mutName);
 	}
 
 	@Override

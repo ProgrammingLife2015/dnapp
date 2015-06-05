@@ -39,7 +39,10 @@ public class DGraph {
 	private ReferenceGeneStorage RGS;
 
 	/** File with all the gene information regarding the reference genome. */
-	private static final String GFF_FILE = "src/main/resources/decorationV5_20130412.gff";
+	private static final String GFF_FILE = "decorationV5_20130412.gff";
+
+	/** File with all the drug resistance causing mutations. */
+	private static final String MUTATION_FILE = "resistanceCausingMutations.txt";
 
 	/**
 	 * Creates a new DGraph.
@@ -50,7 +53,7 @@ public class DGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
-		RGS = new ReferenceGeneStorage(GFF_FILE);
+		RGS = new ReferenceGeneStorage(GFF_FILE, MUTATION_FILE);
 	}
 
 	/**

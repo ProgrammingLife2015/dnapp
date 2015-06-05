@@ -7,9 +7,10 @@ import org.junit.Test;
 
 public class ReferenceGeneStorageTest {
 
-	private static final String GFF_TEST_FILE = "src/test/resources/ReferenceGeneStorageTestGenes.gff";
+	private static final String GFF_TEST_FILE = "ReferenceGeneStorageTestGenes.gff";
 
-	private ReferenceGeneStorage RGS = new ReferenceGeneStorage(GFF_TEST_FILE);
+	private ReferenceGeneStorage RGS = new ReferenceGeneStorage(GFF_TEST_FILE,
+			null);
 
 	@Test
 	public void testInitialisation() {
@@ -23,7 +24,7 @@ public class ReferenceGeneStorageTest {
 
 	@Test
 	public void testIntragenicPositionMinus() {
-		assertTrue(RGS.isIntragenic(-1));
+		assertFalse(RGS.isIntragenic(-1));
 	}
 
 	@Test

@@ -3,10 +3,7 @@
  */
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -29,23 +26,61 @@ public class ReferenceGeneStorage {
 	private static final int INDEX_STRAND = 6;
 	/** Index for the attributes in the file. */
 	private static final int INDEX_ATTRIBUTES = 8;
+	/** Index for the index of the mutation in the file. */
+	private static final int MUTATION_INDEX = 3;
+	/** Index for the name of the mutation in the file. */
+	private static final int MUTATION_NAME = 0;
 
 	/** All the genes and information extracted from the information file. */
 	private TreeSet<ReferenceGene> referenceGenes;
+
+	/** All the known drug resistance mutations. */
+	private HashMap<Integer, String> drugResMuts;
 
 	/**
 	 * Constructor reading the gff3 gene files, extracting all the possible
 	 * genes in the reference genome.
 	 * 
-	 * @param filePath
+	 * @param genePath
 	 *            Path to the file from which information should be extracted.
+	 * @param mutationPath
+	 *            Path to the file containing the drug resistance mutations.
 	 */
-	public ReferenceGeneStorage(final String filePath) {
-		this.referenceGenes = extractReferenceGenes(filePath);
+	public ReferenceGeneStorage(final String genePath, final String mutationPath) {
+		this.referenceGenes = extractReferenceGenes(genePath);
+		if (mutationPath != null) {
+			drugResMuts = extractMutations(mutationPath);
+		}
+		System.out.println(this.getDrugResistanceMutations());
 	}
 
 	/**
-	 * Extracts all the r eferences genes from the decorationV5_20130412.gff
+	 * Extracts all the mutation information given file.
+	 * 
+	 * @param mutationPath
+	 *            Path to the file containing the drug resistance mutations.
+	 * @return Returns a hashmap containing the names of the mutations.
+	 */
+	private HashMap<Integer, String> extractMutations(final String mutationPath) {
+		HashMap<Integer, String> temp = new HashMap<Integer, String>();
+		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
+				.getResourceAsStream(mutationPath));
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if (!line.contains("##")) {
+				String[] columns = line.split("\\t");
+				String[] linesplit = columns[0].split(":");
+				String[] info = linesplit[1].split(",");
+				temp.put(Integer.valueOf(info[MUTATION_INDEX]),
+						info[MUTATION_NAME]);
+			}
+		}
+		sc.close();
+		return temp;
+	}
+
+	/**
+	 * Extracts all the references genes from the decorationV5_20130412.gff
 	 * file.
 	 * 
 	 * @param file
@@ -56,9 +91,11 @@ public class ReferenceGeneStorage {
 		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
 				new RefGeneCompare());
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(
-					file)));
-			Scanner sc = new Scanner(reader);
+			// Scanner sc = new Scanner(new BufferedReader(new FileReader(
+			// new File(ReferenceGene.class.getClassLoader()
+			// .getResource(file).getPath()))));
+			Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
+					.getResourceAsStream(file));
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				if (line.contains("CDS")) {
@@ -73,7 +110,7 @@ public class ReferenceGeneStorage {
 				}
 			}
 			sc.close();
-		} catch (FileNotFoundException e) {
+		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -94,15 +131,28 @@ public class ReferenceGeneStorage {
 	 */
 	public boolean isIntragenic(final int index) {
 		for (ReferenceGene rg : getReferenceGenes()) {
-			if (index >= rg.getStart()) {
-				if (index <= rg.getEnd()) {
-					return true;
-				}
-			} else {
-				return false;
+			if (rg.isIntragenic(index)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		String res = "";
+		for (ReferenceGene rg : getReferenceGenes()) {
+			res += rg.toString() + "\n";
+		}
+		return res;
+	}
+
+	public HashMap<Integer, String> getDrugResistanceMutations() {
+		return drugResMuts;
+	}
+
+	public static void main(final String[] args) {
+		ReferenceGeneStorage RGS = new ReferenceGeneStorage(
+				"decorationV5_20130412.gff", "resistanceCausingMutations.txt");
+	}
 }
