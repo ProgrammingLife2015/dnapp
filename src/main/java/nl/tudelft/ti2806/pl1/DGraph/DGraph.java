@@ -42,7 +42,7 @@ public class DGraph {
 	private static final String GFF_FILE = "decorationV5_20130412.gff";
 
 	/** File with all the drug resistance causing mutations. */
-	private static final String MUTATION_FILE = "resistanceCausingMutations.txt";
+	private static final String MUTATION_FILE = "resistanceCausingMutations.tsv";
 
 	/**
 	 * Creates a new DGraph.
