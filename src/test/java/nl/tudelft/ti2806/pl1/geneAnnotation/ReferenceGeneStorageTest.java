@@ -9,7 +9,7 @@ public class ReferenceGeneStorageTest {
 
 	private static final String GFF_TEST_FILE = "ReferenceGeneStorageTestGenes.gff";
 
-	private static final String TSV_TEST_FILE = "resistanceCausingMutationsTesting.tsv";
+	private static final String TSV_TEST_FILE = "resistanceCausingMutationsTesting.txt";
 
 	private ReferenceGeneStorage RGS = new ReferenceGeneStorage(GFF_TEST_FILE,
 			TSV_TEST_FILE);
