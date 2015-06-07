@@ -26,10 +26,7 @@ public final class ConvertDGraph {
 	 */
 	public static Graph convert(final DGraph dgraph) {
 		Graph graph = new SingleGraph("DNApp");
-		String s = "";
 		for (DNode n : dgraph.getNodes().values()) {
-			if (n.getSources().contains("TKK_REF"))
-				s += n.getContent();
 			String id = String.valueOf(n.getId());
 			graph.addNode(id);
 			graph.getNode(id).addAttribute("x", n.getX());
@@ -44,7 +41,6 @@ public final class ConvertDGraph {
 			String target = String.valueOf(edge.getEndNode().getId());
 			graph.addEdge(src + target, src, target, true);
 		}
-		System.out.println(s);
 		return graph;
 	}
 
