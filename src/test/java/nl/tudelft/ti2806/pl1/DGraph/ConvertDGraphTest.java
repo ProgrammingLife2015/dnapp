@@ -7,7 +7,10 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +26,8 @@ public class ConvertDGraphTest {
 
 	Graph gsGraph;
 
+	ViewArea va;
+
 	@Before
 	public void setup() {
 		graph = mock(DGraph.class);
@@ -31,18 +36,21 @@ public class ConvertDGraphTest {
 		node2 = mock(DNode.class);
 
 		edge = mock(DEdge.class);
+		va = mock(ViewArea.class);
 
 		when(node1.getId()).thenReturn(1);
 		when(node1.getX()).thenReturn(0);
 		when(node1.getY()).thenReturn(0);
 		when(node1.getPercUnknown()).thenReturn(1.0);
 		when(node1.getContent()).thenReturn("CATG");
+		when(node1.getAllEdges()).thenReturn(Arrays.asList(edge));
 
 		when(node2.getId()).thenReturn(2);
 		when(node2.getX()).thenReturn(20);
 		when(node2.getY()).thenReturn(0);
 		when(node2.getPercUnknown()).thenReturn(1.0);
 		when(node2.getContent()).thenReturn("CATG");
+		when(node2.getAllEdges()).thenReturn(Arrays.asList(edge));
 
 		when(edge.getStartNode()).thenReturn(node1);
 		when(edge.getEndNode()).thenReturn(node2);
@@ -54,8 +62,9 @@ public class ConvertDGraphTest {
 		when(graph.getNodes()).thenReturn(map);
 		when(graph.getEdges()).thenReturn(Arrays.asList(edge));
 		when(graph.getStart()).thenReturn(node1);
+		when(graph.getDNodes(va)).thenReturn(map.values());
 
-		gsGraph = ConvertDGraph.convert(graph);
+		gsGraph = ConvertDGraph.convert(graph, va);
 	}
 
 	@After
@@ -74,7 +83,8 @@ public class ConvertDGraphTest {
 
 	@Test
 	public void correctYNode1Test() {
-		assertEquals(gsGraph.getNode(0).getAttribute("y"), new Integer(0));
+		Node n = gsGraph.getNode(0);
+		assertEquals(n.getAttribute("y"), new Integer(0));
 	}
 
 	@Test

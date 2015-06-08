@@ -10,11 +10,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -23,7 +26,7 @@ import com.wordpress.tips4java.ScrollablePanel;
  * @author Maarten
  *
  */
-public class PhyloPanel extends JScrollPane {
+public class PhyloPanel extends JScrollPane implements ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -53,7 +56,7 @@ public class PhyloPanel extends JScrollPane {
 	private BinaryTree tree;
 
 	/**
-	 * @return the tree
+	 * @return The loaded tree.
 	 */
 	public final BinaryTree getTree() {
 		return tree;
@@ -86,26 +89,33 @@ public class PhyloPanel extends JScrollPane {
 		};
 		treePanel.setLayout(null);
 		setViewportView(treePanel);
+	}
 
+	@Override
+	public List<JComponent> getToolBarControls() {
+		List<JComponent> ret = new ArrayList<JComponent>(2);
+		ret.add(ToolBar.makeButton("Highlight selection", null, null, null));
+		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		return ret;
 	}
 
 	/**
-	 * Draws lines from the current tree to its children.
+	 * Draws all the lines from given node and its children recursively.
 	 * 
 	 * @param g
 	 *            The graphics object.
-	 * @param bintree
-	 *            The current tree
+	 * @param node
+	 *            The root of the tree to draw lines in.
 	 */
-	private void drawLines(final Graphics g, final BinaryTree bintree) {
+	private void drawLines(final Graphics g, final BinaryTree node) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(EDGE_WIDTH));
-		if (!bintree.isCollapsed()) {
-			List<BinaryTree> children = bintree.getChildren();
-			int x = (int) bintree.getCenter().getX();
-			int y = (int) bintree.getCenter().getY();
+		if (!node.isCollapsed()) {
+			List<BinaryTree> children = node.getChildren();
+			int x = (int) node.getCenter().getX();
+			int y = (int) node.getCenter().getY();
 			for (BinaryTree child : children) {
-				g2.setColor(getLineColor(bintree, child));
+				g2.setColor(getLineColor(node, child));
 				int childX = (int) child.getCenter().getX();
 				int childY = (int) child.getCenter().getY();
 				if (childY == y) {

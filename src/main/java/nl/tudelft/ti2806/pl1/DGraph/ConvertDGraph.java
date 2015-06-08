@@ -1,54 +1,104 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
- * Converts a DGraph into a graphstream graph.
+ * Contains methods to create a visual graph from a data graph.
  * 
- * @author mark
+ * @author Mark, Maarten, Justin
  * 
+ * @see Graph
+ * @see DGraph
  */
 public final class ConvertDGraph {
 
 	/**
-	 * When this threshold is surpassed, the length instead of the label will be
-	 * shown.
+	 * When this threshold is surpassed, the length instead of the content of a
+	 * node will be displayed on or next to the node.
 	 */
 	private static final int LABEL_LENGTH_THRESHOLD = 10;
 
 	/**
-	 * 
 	 */
 	private ConvertDGraph() {
-
 	}
 
 	/**
-	 * Converts a DGraph into a graphstream graph.
+	 * Converts a data graph into a visual graph.
 	 * 
 	 * @param dgraph
-	 *            The dgraph to be converted
-	 * @return Graphstream graph
+	 *            The data graph to convert.
+	 * @return The visual graph containing all the nodes from the data graph.
 	 */
 	public static Graph convert(final DGraph dgraph) {
-		Graph graph = new SingleGraph("DNApp");
-		for (DNode n : dgraph.getNodes().values()) {
+		return convert(dgraph, new ViewArea(Integer.MIN_VALUE,
+				Integer.MAX_VALUE));
+	}
+
+	/**
+	 * Converts a part of a data graph into a visual graph.
+	 * 
+	 * @param dgraph
+	 *            The data graph to convert.
+	 * @param va
+	 *            The area of the graph to convert.
+	 * @return The visual graph containing the nodes positioned in the given
+	 *         view area of the data graph.
+	 */
+	public static Graph convert(final DGraph dgraph, final ViewArea va) {
+		Graph graph = new SingleGraph("");
+		Set<DEdge> edges = new HashSet<DEdge>();
+		for (DNode n : dgraph.getDNodes(va)) {
+			edges.addAll(n.getAllEdges());
 			String id = String.valueOf(n.getId());
-			graph.addNode(id);
-			graph.getNode(id).addAttribute("x", n.getX());
-			graph.getNode(id).addAttribute("y", n.getY());
-			graph.getNode(id).addAttribute("ui.label",
-					checkLabelLength(n.getContent()));
-			graph.getNode(id).addAttribute("ui.class", "common");
-			graph.getNode(id).addAttribute("ui.color", 1 - n.getPercUnknown());
+			Node gn = graph.addNode(id);
+			gn.addAttribute("x", n.getX());
+			gn.addAttribute("y", n.getY());
+			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
+			gn.addAttribute("ui.class", "common");
+			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 		}
-		for (DEdge edge : dgraph.getEdges()) {
-			String src = String.valueOf(edge.getStartNode().getId());
-			String target = String.valueOf(edge.getEndNode().getId());
-			graph.addEdge(src + target, src, target, true);
+		for (DEdge edge : edges) {
+			String from = String.valueOf(edge.getStartNode().getId());
+			String to = String.valueOf(edge.getEndNode().getId());
+			if (graph.getNode(from) == null) {
+				addNodeToGraph(graph, from, dgraph);
+			} else if (graph.getNode(to) == null) {
+				addNodeToGraph(graph, to, dgraph);
+			}
+			graph.addEdge(from + to, from, to, true);
 		}
 		return graph;
+	}
+
+	/**
+	 * Creates a visual node object, extracts the needed data from a data graph
+	 * and adds it to a visual graph.
+	 * 
+	 * @param g
+	 *            The graph to add the new node to.
+	 * @param id
+	 *            The id for the new node.
+	 * @param dg
+	 *            The data graph where the node is defined.
+	 * @return
+	 */
+	private static void addNodeToGraph(final Graph g, final String id,
+			final DGraph dg) {
+		Node gn = g.addNode(id);
+		DNode n = dg.getDNode(Integer.valueOf(id));
+		gn.addAttribute("x", n.getX());
+		gn.addAttribute("y", n.getY());
+		gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
+		gn.addAttribute("ui.class", "common");
+		gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 	}
 
 	/**

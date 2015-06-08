@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -158,7 +158,7 @@ public class OptionsPane extends JScrollPane {
 	 * @see Window#Window()
 	 */
 	public final void componentsLoaded() {
-		window.content().getGraphPanel().registerObserver(grpSelectedNode);
+		window.getContent().getGraphPanel().registerObserver(grpSelectedNode);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class OptionsPane extends JScrollPane {
 	 * @param selected
 	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fillGenomeList(final List<String> genomeIds,
+	public final void fillGenomeList(final Collection<String> genomeIds,
 			final boolean empty, final boolean selected) {
 		tblGenomes.fill(genomeIds, empty, selected);
 	}

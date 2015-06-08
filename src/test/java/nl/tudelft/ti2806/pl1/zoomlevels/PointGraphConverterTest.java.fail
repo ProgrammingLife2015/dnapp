@@ -3,9 +3,11 @@ package nl.tudelft.ti2806.pl1.zoomlevels;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 
@@ -22,7 +24,7 @@ public class PointGraphConverterTest {
 	String edges2 = "src/test/resources/collapsetest2_edges.txt";
 	String nodes3 = "src/test/resources/collapsetest3_nodes.txt";
 	String edges3 = "src/test/resources/collapsetest3_edges.txt";
-	Graph graph = new SingleGraph("test graph");=
+	Graph graph = new SingleGraph("test graph");
 
 	// @Test
 	// public void testCollapse1() throws FileNotFoundException {
@@ -39,7 +41,8 @@ public class PointGraphConverterTest {
 	// }
 
 	@Test
-	public void testCollapse2() throws FileNotFoundException {
+	public void testCollapse2() throws FileNotFoundException,
+			UnsupportedEncodingException, InvalidNodePlacementException {
 		DGraph dgraph = Reader.read(nodes2, edges2);
 		NodePlacer.place(dgraph);
 		graph = ConvertDGraph.convert(dgraph);

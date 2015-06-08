@@ -5,17 +5,18 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.Content;
+import nl.tudelft.ti2806.pl1.gui.contentpane.ContentLoadedObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 
 /**
  * @author Maarten
  *
  */
-public class Window extends JFrame implements Observer {
+public class Window extends JFrame implements Observer, ContentLoadedObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2702972120954333899L;
@@ -24,7 +25,7 @@ public class Window extends JFrame implements Observer {
 	private WindowSettings settings;
 
 	/** The menu bar of the window. */
-	private JMenuBar menuBar;
+	private MenuBar menuBar;
 
 	/** The tool bar of the window. */
 	private ToolBar toolBar;
@@ -54,7 +55,8 @@ public class Window extends JFrame implements Observer {
 	public Window(final WindowSettings wSettings) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 		// UIManager.put("swing.boldMetal", Boolean.FALSE);
@@ -66,23 +68,23 @@ public class Window extends JFrame implements Observer {
 
 		Event.setWindow(this);
 
-		menuBar = new MenuBar(this);
-		setJMenuBar(menuBar);
-
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
-
-		// ((BasicToolBarUI) toolBar.getUI()).setFloating(true,
-		// new Point(100, 100));
 
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
 
 		optionPanel = new OptionsPane(this);
+		optionPanel.setVisible(false);
 		add(optionPanel, BorderLayout.WEST);
 
 		content = new Content(this);
+		content.setVisible(false);
+		content.registerObserver(this);
 		add(content, BorderLayout.CENTER);
+
+		menuBar = new MenuBar(this);
+		setJMenuBar(menuBar);
 
 		// now let's call all cross dependent things.
 		callAfterInitialization();
@@ -129,8 +131,20 @@ public class Window extends JFrame implements Observer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();
+	}
+
+	@Override
+	public void phyloLoaded() {
+		content.setVisible(true);
+	}
+
+	@Override
+	public void graphLoaded() {
+		content.setVisible(true);
+		optionPanel.setVisible(true);
 	}
 
 	/**
@@ -146,28 +160,28 @@ public class Window extends JFrame implements Observer {
 	/**
 	 * @return the optionPanel
 	 */
-	public final OptionsPane optionPanel() {
+	public final OptionsPane getOptionPanel() {
 		return optionPanel;
 	}
 
 	/**
 	 * @return the content
 	 */
-	public final Content content() {
+	public final Content getContent() {
 		return content;
 	}
 
 	/**
 	 * @return the toolBar
 	 */
-	public final ToolBar toolBar() {
+	public final ToolBar getToolBar() {
 		return toolBar;
 	}
 
 	/**
 	 * @return the statusBar
 	 */
-	public final StatusBar statusBar() {
+	public final StatusBar getStatusBar() {
 		return statusBar;
 	}
 

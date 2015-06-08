@@ -1,22 +1,23 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
-/** Decides which zoomlevel to use. **/
+/**
+ * Decides which zoom level to use.
+ */
 public final class ZoomSelector {
 
-	/** private constructor. **/
+	/** Private constructor. **/
 	private ZoomSelector() {
-
 	}
 
 	/**
 	 * 
-	 * @param zoomlevel
-	 *            The zoomlevel for which we want to get the graph.
+	 * @param zoomLevel
+	 *            The zoom level for which we want to get the graph.
 	 * @return Returns the correct graph.
 	 */
-	public static String getGraph(final int zoomlevel) {
+	public static String getGraph(final int zoomLevel) {
 		String level;
-		switch (zoomlevel) {
+		switch (zoomLevel) {
 		case 0:
 			level = "standard";
 			break;
