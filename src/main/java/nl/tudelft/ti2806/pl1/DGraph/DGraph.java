@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
+
 /**
  * The DGraph class for representing our data.
  * 
@@ -33,6 +35,16 @@ public class DGraph {
 	 */
 	private DNode start, end;
 
+	/** Storage of all the genes in the reference genome. */
+	private ReferenceGeneStorage referenceGeneStorage;
+
+	/** File with all the gene information regarding the reference genome. */
+	private static final String GFF_FILE = "decorationV5_20130412.gff";
+
+	// /** File with all the drug resistance causing mutations. */
+	// private static final String MUTATION_FILE =
+	// "resistanceCausingMutations.txt";
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -42,6 +54,7 @@ public class DGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
+		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, null);
 	}
 
 	/**

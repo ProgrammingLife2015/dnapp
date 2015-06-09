@@ -18,13 +18,6 @@ public final class ConvertDGraph {
 	private static final int LABEL_LENGTH_THRESHOLD = 10;
 
 	/**
-	 * 
-	 */
-	private ConvertDGraph() {
-
-	}
-
-	/**
 	 * Converts a DGraph into a graphstream graph.
 	 * 
 	 * @param dgraph
