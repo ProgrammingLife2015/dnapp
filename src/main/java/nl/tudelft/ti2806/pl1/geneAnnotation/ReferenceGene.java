@@ -70,6 +70,18 @@ public class ReferenceGene {
 	}
 
 	/**
+	 * Checks for the given position whether it is a mutation resulting in a
+	 * change of the current gene.
+	 * 
+	 * @param index
+	 *            Index of the position to be checked
+	 * @return Whether the index results in a change of the current gene.
+	 */
+	public boolean containsMutationIndex(final int index) {
+		return this.getMutations().keySet().contains(index);
+	}
+
+	/**
 	 * @return the start
 	 */
 	public final int getStart() {
@@ -123,7 +135,7 @@ public class ReferenceGene {
 
 	@Override
 	public String toString() {
-		return "[" + start + ", " + end + ", " + score + ", " + strand + ", "
-				+ name + "," + this.getMutations().toString() + "]";
+		return "Gene[" + start + ", " + end + ", " + score + ", " + strand
+				+ ", " + name + "," + this.getMutations().toString() + "]";
 	}
 }

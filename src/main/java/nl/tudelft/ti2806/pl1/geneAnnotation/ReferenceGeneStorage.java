@@ -52,7 +52,6 @@ public class ReferenceGeneStorage {
 			drugResMuts = extractMutations(mutationPath);
 			connectGeneMutations();
 		}
-		// System.out.println(this.toString());
 	}
 
 	/**
@@ -64,19 +63,24 @@ public class ReferenceGeneStorage {
 	 */
 	private HashMap<Integer, String> extractMutations(final String mutationPath) {
 		HashMap<Integer, String> temp = new HashMap<Integer, String>();
-		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-				.getResourceAsStream(mutationPath));
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			if (!line.contains("##")) {
-				String[] columns = line.split("\\t");
-				String[] linesplit = columns[0].split(":");
-				String[] info = linesplit[1].split(",");
-				temp.put(Integer.valueOf(info[MUTATION_INDEX]),
-						info[MUTATION_NAME]);
+		try {
+			Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
+					.getResourceAsStream(mutationPath));
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (!line.contains("##")) {
+					String[] columns = line.split("\\t");
+					String[] linesplit = columns[0].split(":");
+					String[] info = linesplit[1].split(",");
+					temp.put(Integer.valueOf(info[MUTATION_INDEX]),
+							info[MUTATION_NAME]);
+				}
 			}
+			sc.close();
+		} catch (NullPointerException e) {
+			// TODO When no file was found.
+			// e.printStackTrace();
 		}
-		sc.close();
 		return temp;
 	}
 
@@ -112,8 +116,8 @@ public class ReferenceGeneStorage {
 			}
 			sc.close();
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO When no file was found.
+			// e.printStackTrace();
 		}
 		return ret;
 	}
@@ -139,15 +143,6 @@ public class ReferenceGeneStorage {
 		return false;
 	}
 
-	@Override
-	public String toString() {
-		String res = "";
-		for (ReferenceGene rg : getReferenceGenes()) {
-			res += rg.toString() + "\n";
-		}
-		return res;
-	}
-
 	/** Connect the mutations with each referenceGene object. */
 	private void connectGeneMutations() {
 		for (ReferenceGene rg : this.getReferenceGenes()) {
@@ -165,12 +160,12 @@ public class ReferenceGeneStorage {
 	 * change of gene.
 	 * 
 	 * @param index
-	 *            Inedx of the position to be checked.
+	 *            Index of the position to be checked.
 	 * @return Whether the index results in a change of gene.
 	 */
-	public boolean isNonSynonymous(final int index) {
+	public boolean containsMutationIndex(final int index) {
 		for (ReferenceGene rg : this.getReferenceGenes()) {
-			if (rg.getMutations().keySet().contains(index)) {
+			if (rg.containsMutationIndex(index)) {
 				return true;
 			}
 		}
@@ -180,6 +175,15 @@ public class ReferenceGeneStorage {
 	/** @return the hashmap containing the know drug resistance mutations. */
 	public HashMap<Integer, String> getDrugResistanceMutations() {
 		return drugResMuts;
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		for (ReferenceGene rg : getReferenceGenes()) {
+			res += rg.toString() + "\n";
+		}
+		return res;
 	}
 
 	// public static void main(final String[] args) {
