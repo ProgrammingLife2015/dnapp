@@ -22,7 +22,6 @@ import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
@@ -49,8 +48,7 @@ import org.graphstream.ui.view.ViewerPipe;
  * @author Maarten
  * 
  */
-public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
-		ContentTab {
+public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -77,9 +75,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 	/** The top pane showing the graph. */
 	private JScrollPane graphPane;
 
-	/** The bottom pane showing node content. */
-	private JScrollPane infoPane;
-
 	/** The graph loaded into the panel. */
 	private Graph graph;
 
@@ -96,7 +91,7 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 	private ViewerPipe vp;
 
 	/** The text area where node content will be shown. */
-	private JTextArea text;
+	private NodeContentBox infoPane;
 
 	/** The zoom level creator. */
 	private ZoomlevelCreator zlc;
@@ -119,14 +114,12 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 	public GraphPanel(final Window w) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
 		this.window = w;
-		registerObserver(this);
 
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
 
-		text = new JTextArea();
-		text.setLineWrap(true);
-		infoPane = new JScrollPane(text);
+		infoPane = new NodeContentBox();
+		registerObserver(infoPane);
 
 		setTopComponent(graphPane);
 		setBottomComponent(infoPane);
@@ -244,10 +237,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 				graph = ConvertDGraph.convert(dgraph); // TODO
 				window.getOptionPanel().fillGenomeList(
 						dgraph.getReferences().keySet(), true, true);
-				// graph = ConvertDGraph.convert(dgraph,
-				// getCurrentViewArea()); TODO
-				// graph =
-				// PointGraphConverter.collapsePointMutations(graph);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Event.statusBarError(e.getMessage());
@@ -374,16 +363,6 @@ public class GraphPanel extends JSplitPane implements NodeSelectionObserver,
 		selectedNode.setAttribute("oldclass",
 				selectedNode.getAttribute("ui.class"));
 		selectedNode.addAttribute("ui.class", "selected");
-	}
-
-	/**
-	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
-	 */
-	@Override
-	public final void update(final DNode newSelectedNode) {
-		text.setText(newSelectedNode.getContent());
-		// TODO change strings to constants (still have to decide in which class
-		// to define them) << I really don't know what this is anymore...
 	}
 
 	/**

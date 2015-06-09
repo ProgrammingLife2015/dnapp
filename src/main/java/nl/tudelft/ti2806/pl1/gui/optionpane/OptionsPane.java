@@ -137,15 +137,14 @@ public class OptionsPane extends JScrollPane {
 		this.pane = new ScrollablePanel(gridBagLayout);
 		pane.setAlignmentY(TOP_ALIGNMENT);
 		pane.setScrollableWidth(ScrollableSizeHint.FIT);
-		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
+		// pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
 		this.tblGenomes = new GenomeTable();
 		this.grpSelectedNode = new SelectedNodeGroup();
-		this.grpSelectedGenome = new SelectedGenomeGroup(this);
+		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
-
 		setPreferredSize(SIZE);
 		addControls();
 
@@ -162,14 +161,14 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/**
-	 * Adds the control elements to the option pane.
+	 * Adds the elements to the option pane.
 	 */
 	private void addControls() {
 		setupConstraints();
 
 		place(new JLabel("Genomes:"), 0);
 		place(tblGenomes);
-		place(grpSelectedGenome);
+		// place(grpSelectedGenome);
 		place(grpSelectedNode);
 
 		gbc.weighty = GBC_WEIGHT_Y;
