@@ -1,7 +1,9 @@
+## Comment line
 testA:nsy,TEST1,pass,959526	R
 testA:nsy,TEST2,pass,960154	R
 testA:nsy,TEST3,pass,970000	R
 testB:del3bp,TEST4,pass,1122227	R
+## Crash testing
 testB:snp,TEST5,pass,3255895	R
 testB:snp,TEST6,pass,1825894	R
 testC:nsy,TEST7,pass,1825895	R

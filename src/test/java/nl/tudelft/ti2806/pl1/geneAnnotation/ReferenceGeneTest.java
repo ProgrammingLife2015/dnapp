@@ -46,4 +46,10 @@ public class ReferenceGeneTest {
 		assertEquals(strand, rg.getStrand());
 		assertEquals(name, rg.getName());
 	}
+
+	@Test
+	public void testToString() {
+		assertEquals("Gene[1, 2, 0.0, +, hypothetical protein,{}]",
+				rg.toString());
+	}
 }
