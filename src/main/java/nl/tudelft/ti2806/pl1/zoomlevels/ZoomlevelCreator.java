@@ -53,6 +53,7 @@ public final class ZoomlevelCreator {
 	 */
 	public Graph removeAllPMs(final Graph vg) {
 		Graph g = PointGraphConverter.collapsePointMutations(vg);
+		System.out.println(g.getNode("-2"));
 		BreadthFirstIterator<Node> iter = new BreadthFirstIterator<Node>(
 				g.getNode("-2"));
 		while (iter.hasNext()) {

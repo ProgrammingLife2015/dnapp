@@ -71,7 +71,7 @@ public final class PointGraphConverter {
 				collapseNodes(nodegroups, g, q);
 			}
 		}
-		return g;
+		return HorizontalCollapser.horizontalCollapse(g);
 	}
 
 	/**
@@ -172,6 +172,7 @@ public final class PointGraphConverter {
 		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
 		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
 		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
+		collapsednode.addAttribute("x", tempnode.getAttribute("x"));
 		collapsednode.addAttribute("content", content);
 		String uilabel = tempnode.getAttribute("ui.label");
 		if (!uilabel.matches("\\d+")) {
