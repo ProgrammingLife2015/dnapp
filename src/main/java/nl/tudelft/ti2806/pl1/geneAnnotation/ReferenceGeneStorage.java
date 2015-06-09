@@ -177,14 +177,14 @@ public class ReferenceGeneStorage {
 		return drugResMuts;
 	}
 
-	@Override
-	public String toString() {
-		String res = "";
-		for (ReferenceGene rg : getReferenceGenes()) {
-			res += rg.toString() + "\n";
-		}
-		return res;
-	}
+	// @Override
+	// public String toString() {
+	// String res = "";
+	// for (ReferenceGene rg : this.getReferenceGenes()) {
+	// res += rg.toString() + "\n";
+	// }
+	// return res;
+	// }
 
 	// public static void main(final String[] args) {
 	// ReferenceGeneStorage RGS = new ReferenceGeneStorage(
