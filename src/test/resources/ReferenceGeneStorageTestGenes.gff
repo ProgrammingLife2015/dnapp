@@ -1,0 +1,6 @@
+MT_H37RV_BRD_V5	null	CDS	958526	960154	0.0	-	.	calhounClass=Gene;Name=DNA helicase Ercc3;ID=7000008459999918;displayName=RVBD_0861c.5 DNA helicase Ercc3
+MT_H37RV_BRD_V5	null	CDS	974294	975940	0.0	-	.	calhounClass=Gene;Name=transmembrane protein;ID=7000008459999921;displayName=RVBD_0876c.5 transmembrane protein
+MT_H37RV_BRD_V5	null	CDS	1122226	1123602	0.0	-	.	calhounClass=Gene;Name=para-aminobenzoate synthase component I PABD;ID=7000008459999924;displayName=RVBD_1005c.5 para-aminobenzoate synthase component I PABD
+MT_H37RV_BRD_V5	null	CDS	3255695	3262261	0.0	+	.	calhounClass=Gene;Name=phenolpthiocerol synthesis type-I polyketide synthase PpsC;ID=7000008459999927;displayName=RVBD_2933.5 phenolpthiocerol synthesis type-I polyketide synthase PpsC
+MT_H37RV_BRD_V5	null	CDS	1824437	1825894	0.0	-	.	calhounClass=Gene;Name=integral membrane cytochrome D ubiquinol oxidase CydA;ID=7000008460000713;displayName=RVBD_1623c.5 integral membrane cytochrome D ubiquinol oxidase CydA
+MT_H37RV_BRD_V5	null	difference	1824437	1825894	0.0	-	.	calhounClass=Gene;Name=integral membrane cytochrome D ubiquinol oxidase CydA;ID=7000008460000713;displayName=RVBD_1623c.5 integral membrane cytochrome D ubiquinol oxidase CydA

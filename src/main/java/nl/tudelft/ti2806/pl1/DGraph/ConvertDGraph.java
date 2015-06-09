@@ -33,6 +33,7 @@ public final class ConvertDGraph {
 	/**
 	 * Converts a data graph into a visual graph.
 	 * 
+	 * 
 	 * @param dgraph
 	 *            The data graph to convert.
 	 * @return The visual graph containing all the nodes from the data graph.

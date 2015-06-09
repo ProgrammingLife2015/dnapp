@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
@@ -37,6 +38,21 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	private DNode start, end;
 
+	/** Storage of all the genes in the reference genome. */
+	private ReferenceGeneStorage referenceGeneStorage;
+
+	/** File with all the gene information regarding the reference genome. */
+	private static final String GFF_FILE = "decorationV5_20130412.gff";
+
+	/**
+	 * 
+	 */
+	private static final String RES_CAUSE_MUT = "resistanceCausingMutations.tsv";
+
+	// /** File with all the drug resistance causing mutations. */
+	// private static final String MUTATION_FILE =
+	// "resistanceCausingMutations.txt";
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -46,6 +62,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
+		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, RES_CAUSE_MUT);
 	}
 
 	/**
@@ -258,18 +275,21 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Collection<PointMutation> getAllPointMutations() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Collection<PointMutation> getAllInDelMutations() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Collection<DNode> getDNodes(final ViewArea va) {
 		ArrayList<DNode> ret = new ArrayList<DNode>();
 		for (DNode n : getNodes().values()) {

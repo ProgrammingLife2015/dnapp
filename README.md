@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/maartentbm/ContextPL1.svg?branch=master)](https://travis-ci.org/maartentbm/ContextPL1)
+
 # ContextPL1
 | Name	| GitHub username | Gmail | TU-mail | pref-mail |
 | ----- | --------------- | ----- | ------- | --------- |
