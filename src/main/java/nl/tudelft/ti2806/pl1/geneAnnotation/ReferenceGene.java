@@ -133,9 +133,9 @@ public class ReferenceGene {
 		this.getMutations().put(location, mutName);
 	}
 
-	@Override
-	public String toString() {
-		return "Gene[" + start + ", " + end + ", " + score + ", " + strand
-				+ ", " + name + "," + this.getMutations().toString() + "]";
-	}
+	// @Override
+	// public String toString() {
+	// return "Gene[" + start + ", " + end + ", " + score + ", " + strand
+	// + ", " + name + "," + this.getMutations().toString() + "]";
+	// }
 }
