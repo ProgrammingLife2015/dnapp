@@ -52,4 +52,5 @@ public class ReferenceGeneTest {
 	// assertEquals("Gene[1, 2, 0.0, +, hypothetical protein,{}]",
 	// rg.toString());
 	// }
+
 }
