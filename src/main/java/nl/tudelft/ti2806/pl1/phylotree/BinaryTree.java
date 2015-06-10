@@ -373,6 +373,18 @@ public abstract class BinaryTree extends JButton {
 		return 0;
 	}
 
+	public double getDistance(final List<String> sources, final BinaryTree root) {
+		if (root.isLeaf())
+			return 0;
+		boolean containsL = true;
+		boolean containsR = true;
+		for (String s : sources) {
+			containsL = root.contains(s);
+			containsR = root.contains(s);
+		}
+
+	}
+
 	/**
 	 * 
 	 * @author Maarten, Justin
