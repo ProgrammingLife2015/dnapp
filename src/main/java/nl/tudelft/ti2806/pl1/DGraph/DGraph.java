@@ -299,4 +299,9 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		}
 		return ret;
 	}
+
+	@Override
+	public String toString() {
+		return nodes + " " + edges;
+	}
 }

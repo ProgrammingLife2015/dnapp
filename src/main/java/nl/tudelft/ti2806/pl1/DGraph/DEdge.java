@@ -111,4 +111,9 @@ public class DEdge {
 		result += PRIME_37 * result + getEndNode().getId();
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "<Ege[" + startNode + "->" + endNode + "]>";
+	}
 }

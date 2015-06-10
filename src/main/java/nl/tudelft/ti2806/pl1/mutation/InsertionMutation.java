@@ -6,9 +6,7 @@ package nl.tudelft.ti2806.pl1.mutation;
  */
 public class InsertionMutation extends Mutation {
 
-	/**
-	 * The nodes inserted in the graph.
-	 */
+	/** The node(s) inserted in the graph. */
 	private int inNode;
 
 	/**
@@ -26,16 +24,16 @@ public class InsertionMutation extends Mutation {
 	}
 
 	/**
-	 * @return The nodes inserted in the graph.
+	 * @return The node(s) inserted in the graph.
 	 */
-	public int getNode() {
+	public int getInNode() {
 		return inNode;
 	}
 
 	@Override
 	public String toString() {
-		return "prenode: " + getPreNode() + " postnode: " + getPostNode()
-				+ " insertednode: " + this.inNode;
+		return "<InsMut[pre:" + getPreNode() + ",post:" + getPostNode()
+				+ ",ins:" + getInNode() + "]>";
 	}
 
 }

@@ -18,7 +18,7 @@ public class DeletionMutation extends Mutation {
 
 	@Override
 	public String toString() {
-		return "prenode: " + getPreNode() + " postnode: " + getPostNode();
+		return "<DelMut[pre:" + getPreNode() + ",post:" + getPostNode() + "]>";
 	}
 
 }
