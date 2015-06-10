@@ -93,7 +93,7 @@ public class ReferenceGeneStorageTest {
 	// RGS.toString());
 	// }
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testNoGeneFile() {
 		new ReferenceGeneStorage("NonExistingFile.gff", TSV_TEST_FILE);
 	}

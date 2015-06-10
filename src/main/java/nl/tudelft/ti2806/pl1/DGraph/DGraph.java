@@ -62,7 +62,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
-		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, RES_CAUSE_MUT);
+		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, null);
 	}
 
 	/**
