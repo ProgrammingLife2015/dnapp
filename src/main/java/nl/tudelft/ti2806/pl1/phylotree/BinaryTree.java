@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -387,15 +388,28 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	public double getDistance(final List<String> sources, final BinaryTree root) {
-		if (root.isLeaf())
+		if (root.isLeaf()) {
 			return 0;
+		}
 		boolean containsL = true;
 		boolean containsR = true;
-		for (String s : sources) {
-			containsL = root.contains(s);
-			containsR = root.contains(s);
+		Iterator<String> it = sources.iterator();
+		while (it.hasNext() && (containsL || containsR)) {
+			String source = it.next();
+			containsL = root.getLeft().contains(source);
+			containsR = root.getRight().contains(source);
 		}
-
+		if (containsL && containsR) {
+			return 0;
+		} else if (containsL) {
+			return root.getLeft().getPathLength()
+					+ getDistance(sources, root.getLeft());
+		} else if (containsR) {
+			return root.getRight().getPathLength()
+					+ getDistance(sources, root.getRight());
+		} else {
+			return 0;
+		}
 	}
 
 	/**
