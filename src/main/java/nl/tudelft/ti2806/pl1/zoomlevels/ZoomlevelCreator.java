@@ -51,15 +51,15 @@ public final class ZoomlevelCreator {
 	 *            The original graph.
 	 * @return A graph in which all point mutations are collapsed.
 	 */
-	public Graph removeAllPMs(final Graph vg) {
-		Graph g = PointGraphConverter.collapsePointMutations(vg);
-		System.out.println(g.getNode("-2"));
-		BreadthFirstIterator<Node> iter = new BreadthFirstIterator<Node>(
-				g.getNode("-2"));
-		while (iter.hasNext()) {
-			System.out.println(iter.next().getEdgeSet().size());
-		}
-		return g;
-	}
+//	public Graph removeAllPMs(final Graph vg) {
+//		Graph g = PointGraphConverter.collapsePointMutations(vg);
+//		System.out.println(g.getNode("-2"));
+//		BreadthFirstIterator<Node> iter = new BreadthFirstIterator<Node>(
+//				g.getNode("-2"));
+//		while (iter.hasNext()) {
+//			System.out.println(iter.next().getEdgeSet().size());
+//		}
+//		return g;
+//	}
 
 }
