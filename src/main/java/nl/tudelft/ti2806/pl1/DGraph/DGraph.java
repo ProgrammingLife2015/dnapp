@@ -279,8 +279,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
-		// TODO Auto-generated method stub
-		return null;
+		return pointmutations;
 	}
 
 	/** {@inheritDoc} */
