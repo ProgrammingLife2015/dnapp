@@ -8,9 +8,6 @@ import java.util.Set;
  */
 public class PointMutation extends Mutation {
 
-	/** Whether the mutation affects the amino acid structure. */
-	private final boolean synonymous;
-
 	/** The nodes involved in the point mutation. */
 	private final Set<String> nodes;
 
@@ -29,15 +26,7 @@ public class PointMutation extends Mutation {
 	public PointMutation(final int pre, final int post,
 			final Set<String> nodesIn, final boolean syn) {
 		super(pre, post);
-		this.synonymous = syn;
 		this.nodes = nodesIn;
-	}
-
-	/**
-	 * @return true iff the mutation affects the amino acid structure.
-	 */
-	public final boolean isSynonymous() {
-		return synonymous;
 	}
 
 	/**
@@ -45,6 +34,15 @@ public class PointMutation extends Mutation {
 	 */
 	public final Set<String> getNodes() {
 		return nodes;
+	}
+
+	/**
+	 * 
+	 * @return score
+	 */
+	@Override
+	public final double getScore() {
+		return getScore();
 	}
 
 }

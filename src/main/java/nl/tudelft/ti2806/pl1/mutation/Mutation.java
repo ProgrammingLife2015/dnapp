@@ -13,6 +13,11 @@ public abstract class Mutation {
 	private final int preNode, postNode;
 
 	/**
+	 * Score of the mutation.
+	 */
+	private double score;
+
+	/**
 	 * 
 	 * @param pre
 	 *            The ID of the node before the mutation.
@@ -22,6 +27,17 @@ public abstract class Mutation {
 	public Mutation(final int pre, final int post) {
 		this.preNode = pre;
 		this.postNode = post;
+	}
+
+	/**
+	 * 
+	 */
+	protected void calculateScore() {
+
+	}
+
+	public final double getScore() {
+		return score;
 	}
 
 	/**
