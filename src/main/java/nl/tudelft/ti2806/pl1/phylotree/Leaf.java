@@ -128,4 +128,9 @@ public class Leaf extends BinaryTree {
 		return PhyloPanel.DEFAULT_COLOR;
 	}
 
+	@Override
+	public boolean isLeaf() {
+		return true;
+	}
+
 }
