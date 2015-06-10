@@ -36,13 +36,4 @@ public class PointMutation extends Mutation {
 		return nodes;
 	}
 
-	/**
-	 * 
-	 * @return score
-	 */
-	@Override
-	public final double getScore() {
-		return getScore();
-	}
-
 }
