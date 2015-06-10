@@ -41,6 +41,7 @@ public class BinaryTreeTest {
 	private String s1;
 	private String s2;
 	private String s3;
+	private String s4;
 
 	/**
 	 * Set the variables' values.
@@ -53,6 +54,7 @@ public class BinaryTreeTest {
 		s1 = "((a,b)c,(d,e)f)g;";
 		s2 = "((a,b)c,(d,e)f)g;";
 		s3 = "((a,b)z,(d,e)f)g;";
+		s4 = "(A:1,((B:3,C:3)c:2,D:2)b:1)a;";
 	}
 
 	/**
@@ -204,4 +206,33 @@ public class BinaryTreeTest {
 		assertEquals(t.computePlacement(0, 0), 1);
 	}
 
+	@Test
+	public void containsTrueTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.contains("C"));
+	}
+
+	@Test
+	public void containsFalseTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertFalse(tree.getRight().contains("A"));
+	}
+
+	@Test
+	public void distanceTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.getDistance("B", "C", tree) == 3);
+	}
+
+	@Test
+	public void distanceRootLeafTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.getDistance("B", "C", tree.getLeft()) == 0);
+	}
+
+	@Test
+	public void distanceCommonAncestorIsRootTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.getDistance("A", "C", tree) == 0);
+	}
 }

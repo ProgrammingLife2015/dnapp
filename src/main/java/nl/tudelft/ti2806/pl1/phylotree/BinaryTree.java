@@ -335,6 +335,58 @@ public abstract class BinaryTree extends JButton {
 	public abstract void setChosen(final boolean b);
 
 	/**
+	 * Checks if a node is a leaf.
+	 * 
+	 * @return True if the current node is a leaf, false otherwise
+	 */
+	public abstract boolean isLeaf();
+
+	/**
+	 * Checks if a node contains a path to a given source.
+	 * 
+	 * @param source
+	 *            The source to which we search a path
+	 * @return True if there exist a path to the source, false otherwise
+	 */
+	public boolean contains(final String source) {
+		if (this.isLeaf()) {
+			return this.getID().equals(source);
+		}
+		return this.getLeft().contains(source)
+				|| this.getRight().contains(source);
+	}
+
+	/**
+	 * Calculates the distance between the common ancestor and the root of 2
+	 * source strings.
+	 * 
+	 * @param source1
+	 *            The first source
+	 * @param source2
+	 *            The second source
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of 2 sources and the
+	 *         root of the tree
+	 */
+	public double getDistance(final String source1, final String source2,
+			final BinaryTree root) {
+		if (root.isLeaf()) {
+			return 0;
+		}
+		boolean src1L = root.getLeft().contains(source1);
+		boolean src2L = root.getLeft().contains(source2);
+		if (src1L && src2L) {
+			return root.getLeft().getPathLength()
+					+ getDistance(source1, source2, root.getLeft());
+		} else if (!(src1L || src2L)) {
+			return root.getRight().getPathLength()
+					+ getDistance(source1, source2, root.getRight());
+		}
+		return 0;
+	}
+
+	/**
 	 * 
 	 * @author Maarten, Justin
 	 * @since 27-5-2015
@@ -380,7 +432,5 @@ public abstract class BinaryTree extends JButton {
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
-
 	}
-
 }
