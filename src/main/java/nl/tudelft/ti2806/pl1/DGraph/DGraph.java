@@ -53,6 +53,8 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	// private static final String MUTATION_FILE =
 	// "resistanceCausingMutations.txt";
 
+	private Collection<PointMutation> pointmutations;
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -298,5 +300,9 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 			}
 		}
 		return ret;
+	}
+
+	public void addPointMutations(final Collection<PointMutation> pointMutations) {
+		pointmutations = pointMutations;
 	}
 }

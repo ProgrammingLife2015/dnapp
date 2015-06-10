@@ -9,7 +9,7 @@ import java.util.Set;
 public class PointMutation extends Mutation {
 
 	/** The nodes involved in the point mutation. */
-	private final Set<String> nodes;
+	private final Set<Integer> nodes;
 
 	/**
 	 * 
@@ -19,12 +19,9 @@ public class PointMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param nodesIn
 	 *            The nodes directly involved in the mutation.
-	 * @param syn
-	 *            Whether the mutation affects the amino acid structure
-	 *            (synonymous mutation)
 	 */
-	public PointMutation(final int pre, final int post,
-			final Set<String> nodesIn, final boolean syn) {
+	public PointMutation(final int pre, final Set<Integer> nodesIn,
+			final int post) {
 		super(pre, post);
 		this.nodes = nodesIn;
 	}
@@ -32,7 +29,7 @@ public class PointMutation extends Mutation {
 	/**
 	 * @return the nodes
 	 */
-	public final Set<String> getNodes() {
+	public final Set<Integer> getNodes() {
 		return nodes;
 	}
 

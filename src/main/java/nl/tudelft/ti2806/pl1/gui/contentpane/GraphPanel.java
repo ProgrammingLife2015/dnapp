@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,10 @@ import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
+import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
 import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
@@ -232,6 +235,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			try {
 				dgraph = Reader.read(nodes.getAbsolutePath(),
 						edges.getAbsolutePath());
+				long start = System.currentTimeMillis();
+				Collection<PointMutation> pointmuts = PointGraphConverter
+						.getPointMutations(dgraph);
+				long end = System.currentTimeMillis();
+				for (PointMutation pointmut : pointmuts) {
+					System.out.println(pointmut.getNodes());
+				}
+				System.out.println(end - start);
+
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph); // TODO
@@ -406,10 +418,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
 		switch (newZoomLevel) {
-		case 1:
-			visualizeGraph(zlc.removeAllPMs(graph));
-			// visualizeGraph(zlc.removeSYN(getCurrentViewArea()));
-			break;
+		// case 1:
+		// visualizeGraph(zlc.removeAllPMs(graph));
+		// // visualizeGraph(zlc.removeSYN(getCurrentViewArea()));
+		// break;
 		default:
 			Event.statusBarError("There is no zoom level further from the current level");
 		}

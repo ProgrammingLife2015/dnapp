@@ -59,7 +59,6 @@ public final class Reader {
 			graph.addDEdge(edge);
 		}
 		addStartEndNode(graph);
-
 		return graph;
 	}
 
