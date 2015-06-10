@@ -121,8 +121,11 @@ public final class PointGraphConverter {
 				Node nd = g.getNode(nodegroup.get(0));
 				for (Edge edge : nd.getEnteringEdgeSet()) {
 					Node in = edge.getNode0();
-					g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
-							in, end, true);
+					if (!in.hasEdgeBetween(end)) {
+						g.addEdge(
+								"collapsed: " + edge.getId() + " "
+										+ end.getId(), in, end, true);
+					}
 				}
 				removeNode(g, nd, end);
 			} else {
@@ -215,8 +218,11 @@ public final class PointGraphConverter {
 				}
 			}
 		}
-		g.addEdge("collapsed: " + collapsednode.getId() + " " + end.getId(),
-				collapsednode, end, true);
+		if (!collapsednode.hasEdgeBetween(end)) {
+			g.addEdge(
+					"collapsed: " + collapsednode.getId() + " " + end.getId(),
+					collapsednode, end, true);
+		}
 	}
 
 	/**
