@@ -130,11 +130,11 @@ public final class PointGraphConverter {
 				String newId = "collapsed:";
 				for (String id : nodegroup) {
 					Node nd = g.getNode(id);
-					// Collection<String> sources = nd.getAttribute("sources");
-					// for (String source : sources) {
-					// content.put(source, (String) nd.getAttribute("content"));
-					// }
 					newId += " " + id;
+				}
+				newId += " ";
+				while (g.getNode(newId) != null) {
+					newId += 1;
 				}
 				addNewCollapsedNode(newId, g, nodegroup, content, end, q);
 				for (String id : nodegroup) {
