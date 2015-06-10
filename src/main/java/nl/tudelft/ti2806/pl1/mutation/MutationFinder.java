@@ -24,13 +24,13 @@ public final class MutationFinder {
 	}
 
 	/**
-	 * Finds the InDel mutations of a DGraph.
+	 * Finds the simple Insertion mutations of a DGraph.
 	 * 
 	 * @param graph
 	 *            The DGraph.
-	 * @return A collection of the InDel mutations.
+	 * @return A collection of the Insertion mutations.
 	 */
-	public static Collection<InsertionMutation> findInDelMutations(
+	public static Collection<InsertionMutation> findInsertionMutations(
 			final DGraph graph) {
 		ArrayList<InsertionMutation> ins = new ArrayList<InsertionMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
@@ -48,6 +48,41 @@ public final class MutationFinder {
 		}
 
 		return ins;
+	}
+
+	/**
+	 * Finds the simple Deletion mutations of a DGraph.
+	 * 
+	 * @param graph
+	 *            The DGraph.
+	 * @return A collection of the Deletion mutations.
+	 */
+	public static Collection<DeletionMutation> findDeletionMutations(
+			final DGraph graph) {
+		ArrayList<DeletionMutation> dels = new ArrayList<DeletionMutation>();
+		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
+		for (DNode node : nodes) {
+			boolean isDeletion = false;
+			int countRefNodes = 0;
+			int maxdepth = 0;
+			DNode endnode = null;
+			for (DNode next : node.getNextNodes()) {
+				if (next.getDepth() > maxdepth) {
+					maxdepth = next.getDepth();
+					endnode = next;
+				}
+				if (countRefNodes > 1) {
+					isDeletion = true;
+				}
+				if (next.getSources().contains(REFERENCE_GENOME)) {
+					countRefNodes++;
+				}
+			}
+			if (isDeletion) {
+				dels.add(new DeletionMutation(node.getId(), endnode.getId()));
+			}
+		}
+		return dels;
 	}
 
 }
