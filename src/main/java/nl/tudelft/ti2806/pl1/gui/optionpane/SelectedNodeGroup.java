@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -125,20 +126,24 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/**
 	 * {@inheritDoc}
 	 */
-	public final void update(final DNode selectedNode) {
-		lblID.setText(String.valueOf(selectedNode.getId()));
-		lblContentLength.setText(String.valueOf(selectedNode.getContent()
-				.length())); // TODO
-		// lblContentLength.setText(String.valueOf(((String) selectedNode
-		// .getAttribute("content")).length()));
+	@Override
+	public final void update(final HashSet<DNode> selectedNodes) {
+		if (selectedNodes.size() == 1) {
+			DNode selectedNode = selectedNodes.iterator().next();
+			lblID.setText(String.valueOf(selectedNode.getId()));
+			lblContentLength.setText(String.valueOf(selectedNode.getContent()
+					.length())); // TODO
+			// lblContentLength.setText(String.valueOf(((String) selectedNode
+			// .getAttribute("content")).length()));
 
-		lblSources.setText(selectedNode.getSources().toString()); // TODO
-		// lblSources.setText(selectedNode.getAttribute("sources").toString());
-		nodeChart.analyseString(selectedNode.getContent().toString());
-		// TODO
-		nodeChart.repaint();
-		// System.out.println("Update SelNodeGrp called "
-		// + selectedNode.getAttribute("content").toString());
+			lblSources.setText(selectedNode.getSources().toString()); // TODO
+			// lblSources.setText(selectedNode.getAttribute("sources").toString());
+			nodeChart.analyseString(selectedNode.getContent().toString());
+			// TODO
+			nodeChart.repaint();
+			// System.out.println("Update SelNodeGrp called "
+			// + selectedNode.getAttribute("content").toString());
+		}
 	}
 
 	@Override
