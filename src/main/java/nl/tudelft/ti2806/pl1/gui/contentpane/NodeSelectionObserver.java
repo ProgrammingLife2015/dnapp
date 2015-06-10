@@ -1,5 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.util.HashSet;
+
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 
 /**
@@ -15,9 +17,9 @@ public interface NodeSelectionObserver {
 	/**
 	 * Called when a node in the graph is clicked.
 	 * 
-	 * @param selectedNode
-	 *            The node selected in the graph view.
+	 * @param selectedNodes
+	 *            The nodes selected in the graph view.
 	 */
-	void update(DNode selectedNode);
+	void update(HashSet<DNode> selectedNodes);
 
 }

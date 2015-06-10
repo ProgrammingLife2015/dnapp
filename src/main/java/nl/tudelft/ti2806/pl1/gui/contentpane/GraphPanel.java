@@ -323,8 +323,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The node clicked on by the user
 	 */
 	private void notifyObservers(final DNode selectedNodeIn) {
+		HashSet<DNode> selected = new HashSet<DNode>();
+		selected.add(selectedNodeIn);
 		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selectedNodeIn);
+			sgo.update(selected);
 		}
 	}
 
