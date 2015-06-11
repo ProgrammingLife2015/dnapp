@@ -11,6 +11,7 @@ import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 import org.graphstream.graph.Edge;
@@ -59,7 +60,7 @@ public final class PointGraphConverter {
 				HashMap<Integer, Set<Integer>> nodegroups = makeNodeGroups(
 						muts, graph);
 				pointmutations.addAll(createPointMutations(node.getId(),
-						nodegroups));
+						nodegroups, graph.getReferenceGeneStorage()));
 			}
 		}
 		return pointmutations;
@@ -71,15 +72,19 @@ public final class PointGraphConverter {
 	 *            First id.
 	 * @param nodegroups
 	 *            HashMap of end id with pointmutations.
+	 * @param rgs
+	 *            The storage containing all the interesting gene information.
+	 * 
 	 * @return Collection of pointmutations.
 	 */
 	private static Collection<PointMutation> createPointMutations(
-			final int begin, final HashMap<Integer, Set<Integer>> nodegroups) {
+			final int begin, final HashMap<Integer, Set<Integer>> nodegroups,
+			final ReferenceGeneStorage rgs) {
 		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
 		for (int end : nodegroups.keySet()) {
 			Set<Integer> group = nodegroups.get(end);
 			if (group.size() > 1) {
-				pointmutations.add(new PointMutation(begin, group, end));
+				pointmutations.add(new PointMutation(begin, group, end, rgs));
 			}
 		}
 		return pointmutations;
