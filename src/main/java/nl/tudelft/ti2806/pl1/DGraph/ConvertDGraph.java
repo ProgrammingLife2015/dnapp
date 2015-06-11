@@ -8,7 +8,7 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  * Contains methods to create a visual graph from a data graph.
@@ -55,7 +55,7 @@ public final class ConvertDGraph {
 	 *         view area of the data graph.
 	 */
 	public static Graph convert(final DGraph dgraph, final ViewArea va) {
-		Graph graph = new MultiGraph("");
+		Graph graph = new SingleGraph("");
 		Set<DEdge> edges = new HashSet<DEdge>();
 		for (DNode n : dgraph.getDNodes(va)) {
 			edges.addAll(n.getAllEdges());

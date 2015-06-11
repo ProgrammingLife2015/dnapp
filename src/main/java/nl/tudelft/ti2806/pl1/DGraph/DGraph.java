@@ -302,6 +302,11 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		return ret;
 	}
 
+	@Override
+	public String toString() {
+		return nodes + " " + edges;
+	}
+
 	public void addPointMutations(final Collection<PointMutation> pointMutations) {
 		pointmutations = pointMutations;
 	}

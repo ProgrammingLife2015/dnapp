@@ -2,6 +2,8 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
@@ -34,6 +36,7 @@ import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
+import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
@@ -145,8 +148,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		ret.add(ToolBar
 				.makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
 						"Loads or reloads the part of the graph currently in the view port."));
-		ret.add(ToolBar.makeButton("Collapse SNPs", null, Event.COLLAPSE_SNPS,
-				null));
+		ret.add(ToolBar.makeButton("Analyse INDEL", null, new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				System.out.println(MutationFinder.findDeletionMutations(dgraph));
+				System.out.println(MutationFinder
+						.findInsertionMutations(dgraph));
+			}
+		}, "BOE"));
 		return ret;
 	}
 
@@ -684,7 +693,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		/** {@inheritDoc} */
 		@Override
 		public void buttonReleased(final String id) {
-			Event.statusBarMid("Selected node: " + id);
+			Event.statusBarMid(" Selected node: " + id);
 			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
 		}
 

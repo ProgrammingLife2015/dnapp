@@ -193,7 +193,6 @@ public final class PointGraphConverter {
 						}
 					}
 				}
-
 			}
 			newId += nodeid + "/";
 		}

@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -78,11 +79,23 @@ public abstract class BinaryTree extends JButton {
 					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N) + "</html>");
 		}
 		addMouseListener(new NodeMouseListener());
+		this.setBackground(Color.GRAY);
+
 	}
 
 	/** @return the path length. */
 	public final double getPathLength() {
 		return pathLength;
+	}
+
+	/**
+	 * @param n
+	 *            The number of digits to round the path length to.
+	 * @return The path length, rounded to a specified number of decimals
+	 *         places.
+	 */
+	public final String getPathLengthN(final int n) {
+		return String.valueOf(roundN(pathLength, n));
 	}
 
 	/** @return the node name. */
@@ -331,10 +344,12 @@ public abstract class BinaryTree extends JButton {
 	class NodeMouseListener implements MouseListener {
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mousePressed(final MouseEvent e) {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
@@ -352,14 +367,17 @@ public abstract class BinaryTree extends JButton {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseReleased(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/** {@inheritDoc} */
+		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
