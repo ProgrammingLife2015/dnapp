@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -359,32 +360,32 @@ public abstract class BinaryTree extends JButton {
 	 */
 	public double getDistance(final String source1, final String source2,
 			final BinaryTree root) {
-		if (root.isLeaf()) {
-			return 0;
-		}
-		boolean src1L = root.getLeft().contains(source1);
-		boolean src2L = root.getLeft().contains(source2);
-		if (src1L && src2L) {
-			return root.getLeft().getPathLength()
-					+ getDistance(source1, source2, root.getLeft());
-		} else if (!(src1L || src2L)) {
-			return root.getRight().getPathLength()
-					+ getDistance(source1, source2, root.getRight());
-		}
-		return 0;
+		return getDistance(Arrays.asList(source1, source2), root);
 	}
 
+	/**
+	 * Calculates the distance between the common ancestor and the root for a
+	 * list of nodes.
+	 * 
+	 * @param sources
+	 *            The list of sources for which we want to calculate the
+	 *            distance
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of a list of sources and
+	 *         the root node
+	 */
 	public double getDistance(final List<String> sources, final BinaryTree root) {
 		if (root.isLeaf()) {
 			return 0;
 		}
-		boolean containsL = true;
-		boolean containsR = true;
+		boolean containsL = false;
+		boolean containsR = false;
 		Iterator<String> it = sources.iterator();
-		while (it.hasNext() && (containsL || containsR)) {
+		while (it.hasNext() && !(containsL && containsR)) {
 			String source = it.next();
-			containsL = root.getLeft().contains(source);
-			containsR = root.getRight().contains(source);
+			containsL = containsL || root.getLeft().contains(source);
+			containsR = containsR || root.getRight().contains(source);
 		}
 		if (containsL && containsR) {
 			return 0;
