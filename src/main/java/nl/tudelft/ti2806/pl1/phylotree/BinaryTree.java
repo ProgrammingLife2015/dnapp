@@ -363,6 +363,18 @@ public abstract class BinaryTree extends JButton {
 		return getDistance(Arrays.asList(source1, source2), root);
 	}
 
+	/**
+	 * Calculates the distance between the common ancestor and the root for a
+	 * list of nodes.
+	 * 
+	 * @param sources
+	 *            The list of sources for which we want to calculate the
+	 *            distance
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of a list of sources and
+	 *         the root node
+	 */
 	public double getDistance(final List<String> sources, final BinaryTree root) {
 		if (root.isLeaf()) {
 			return 0;

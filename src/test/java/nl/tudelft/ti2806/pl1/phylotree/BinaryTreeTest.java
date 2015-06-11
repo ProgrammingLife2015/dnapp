@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
 
@@ -234,5 +235,11 @@ public class BinaryTreeTest {
 	public void distanceCommonAncestorIsRootTest() {
 		BinaryTree tree = BinaryTree.parseNewick(s4, null);
 		assertTrue(tree.getDistance("A", "C", tree) == 0);
+	}
+
+	@Test
+	public void distanceNonExistingSourceIsZeroTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.getDistance(Arrays.asList("hello world"), tree) == 0);
 	}
 }
