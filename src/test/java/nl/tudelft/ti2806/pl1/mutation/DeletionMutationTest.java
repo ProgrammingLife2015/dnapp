@@ -21,28 +21,28 @@ import org.junit.Test;
 public class DeletionMutationTest {
 
 	DGraph graph;
-	DNode start, end, insertion;
+	DNode start, end, deletion;
 	DEdge si, ie, se;
+	HashSet<String> insertSrc;
+	HashSet<String> sources;
 
 	@Before
 	public void setup() {
-		HashSet<String> sources = new HashSet<String>(Arrays.asList("TKK_REF",
-				"REF1", "REF2"));
-		// HashSet<String> insertSrc = new
-		// HashSet<String>(Arrays.asList("TKK_2"));
+		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
+		insertSrc = new HashSet<String>(Arrays.asList("TKK_2"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);
 		end = new DNode(2, sources, 0, 0, "");
 		end.setDepth(3);
-		insertion = new DNode(3, sources, 0, 0, "");
-		insertion.setDepth(2);
-		si = new DEdge(start, insertion);
-		ie = new DEdge(insertion, end);
+		deletion = new DNode(3, sources, 0, 0, "");
+		deletion.setDepth(2);
+		si = new DEdge(start, deletion);
+		ie = new DEdge(deletion, end);
 		se = new DEdge(start, end);
 		graph = new DGraph();
 		graph.addDNode(start);
-		graph.addDNode(insertion);
+		graph.addDNode(deletion);
 		graph.addDNode(end);
 		graph.addDEdge(si);
 		graph.addDEdge(se);
@@ -55,7 +55,7 @@ public class DeletionMutationTest {
 
 		start = null;
 		end = null;
-		insertion = null;
+		deletion = null;
 
 		si = null;
 		ie = null;
@@ -63,11 +63,92 @@ public class DeletionMutationTest {
 	}
 
 	@Test
-	public void findDeletionTest() {
+	public void simpleDeletionCaseTest() {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
-		expected.add(new DeletionMutation(1, 2));
+		expected.add(new DeletionMutation(start.getId(), end.getId()));
+		assertEquals(expected, muts);
+	}
+
+	@Test
+	public void multipleDeletionsTest() {
+		DNode deletion2 = new DNode(4, sources, 0, 0, "");
+		deletion2.setDepth(4);
+		DNode end2 = new DNode(5, sources, 0, 0, "");
+		end2.setDepth(5);
+		graph.addDNode(deletion2);
+		graph.addDNode(end2);
+		graph.addDEdge(new DEdge(end, deletion2));
+		graph.addDEdge(new DEdge(deletion2, end2));
+		graph.addDEdge(new DEdge(end, end2));
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph);
+		Collection<DeletionMutation> expected = Arrays.asList(
+				new DeletionMutation(start.getId(), end.getId()),
+				new DeletionMutation(end.getId(), end2.getId()));
+		assertEquals(expected, muts);
+	}
+
+	@Test
+	public void DeletionWithSNPTest() {
+		DNode SNP = new DNode(6, insertSrc, 0, 0, "");
+		DNode SNPREF = new DNode(7, sources, 0, 0, "");
+		DNode deletion2 = new DNode(4, sources, 0, 0, "");
+		DNode end2 = new DNode(5, sources, 0, 0, "");
+		DNode end3 = new DNode(8, sources, 0, 0, "");
+		SNP.setDepth(4);
+		SNPREF.setDepth(4);
+		end2.setDepth(5);
+		deletion2.setDepth(6);
+		end3.setDepth(7);
+		graph.addDNode(deletion2);
+		graph.addDNode(end2);
+		graph.addDNode(end3);
+		graph.addDNode(SNP);
+		graph.addDNode(SNPREF);
+
+		graph.addDEdge(new DEdge(end, SNP));
+		graph.addDEdge(new DEdge(end, SNPREF));
+		graph.addDEdge(new DEdge(SNP, end2));
+		graph.addDEdge(new DEdge(SNPREF, end2));
+		graph.addDEdge(new DEdge(end2, end3));
+		graph.addDEdge(new DEdge(end2, deletion2));
+		graph.addDEdge(new DEdge(deletion2, end3));
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph);
+		Collection<DeletionMutation> expected = Arrays.asList(
+				new DeletionMutation(start.getId(), end.getId()),
+				new DeletionMutation(end2.getId(), end3.getId()));
+		assertEquals(expected, muts);
+	}
+
+	@Test
+	public void DeletionWithInsertionTest() {
+		DNode insertion = new DNode(6, insertSrc, 0, 0, "");
+		DNode deletion2 = new DNode(4, sources, 0, 0, "");
+		DNode end2 = new DNode(5, sources, 0, 0, "");
+		DNode end3 = new DNode(8, sources, 0, 0, "");
+		insertion.setDepth(4);
+		end2.setDepth(5);
+		deletion2.setDepth(6);
+		end3.setDepth(7);
+		graph.addDNode(deletion2);
+		graph.addDNode(end2);
+		graph.addDNode(end3);
+		graph.addDNode(insertion);
+
+		graph.addDEdge(new DEdge(end, insertion));
+		graph.addDEdge(new DEdge(end, end2));
+		graph.addDEdge(new DEdge(insertion, end2));
+		graph.addDEdge(new DEdge(end2, end3));
+		graph.addDEdge(new DEdge(end2, deletion2));
+		graph.addDEdge(new DEdge(deletion2, end3));
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph);
+		Collection<DeletionMutation> expected = Arrays.asList(
+				new DeletionMutation(start.getId(), end.getId()),
+				new DeletionMutation(end2.getId(), end3.getId()));
 		assertEquals(expected, muts);
 	}
 
