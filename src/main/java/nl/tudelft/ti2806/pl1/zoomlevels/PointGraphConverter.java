@@ -1,16 +1,22 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Set;
 
-import org.graphstream.graph.BreadthFirstIterator;
+import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DEdge;
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
+
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.Graphs;
 
 /**
  * This class converts the standard graph into a PointGraph.
@@ -36,42 +42,53 @@ public final class PointGraphConverter {
 	 *            The initial graph of the original zoom level.
 	 * @return The graph with collapsed point mutations.
 	 */
-	public static Graph collapsePointMutations(final Graph graph) {
-		Graph g = Graphs.merge(graph);
-		Node start = g.getNode("-2");
-		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
-		Queue<Node> q = new LinkedList<Node>();
-		q.add(start);
-		while (it.hasNext()) {
-			Node node = it.next();
-			q.add(node);
-		}
-		while (!q.isEmpty()) {
-			Node node = q.remove();
-			Iterator<Edge> leaving = node.getEachLeavingEdge().iterator();
-			ArrayList<String> muts = new ArrayList<String>();
+	public static Collection<PointMutation> getPointMutations(final DGraph graph) {
+		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
+		Collection<DNode> dnodes = graph.getNodes().values();
+		for (DNode node : dnodes) {
+			Iterator<DEdge> leaving = node.getOutEdges().iterator();
+			ArrayList<Integer> muts = new ArrayList<Integer>();
 			while (leaving.hasNext()) {
-				Edge out = leaving.next();
-				Node outnode = out.getNode1();
-				String content;
-				content = outnode.getAttribute("ui.label");
-				int length;
-				if (content.matches("\\d+")) {
-					length = Integer.parseInt(content);
-				} else {
-					length = content.length();
-				}
-				if (length == 1) {
+				DEdge out = leaving.next();
+				DNode outnode = out.getEndNode();
+				String content = outnode.getContent();
+				if (content.length() == 1) {
 					muts.add(outnode.getId());
 				}
 			}
 			if (muts.size() > 1) {
-				HashMap<Node, ArrayList<String>> nodegroups = makeNodeGroups(
-						muts, g);
-				collapseNodes(nodegroups, g, q);
+				HashMap<Integer, Set<Integer>> nodegroups = makeNodeGroups(
+						muts, graph);
+				pointmutations.addAll(createPointMutations(node.getId(),
+						nodegroups, graph, graph.getReferenceGeneStorage()));
 			}
 		}
-		return HorizontalCollapser.horizontalCollapse(g);
+		return pointmutations;
+	}
+
+	/**
+	 * 
+	 * @param begin
+	 *            First id.
+	 * @param nodegroups
+	 *            HashMap of end id with pointmutations.
+	 * @param rgs
+	 *            The storage containing all the interesting gene information.
+	 * 
+	 * @return Collection of pointmutations.
+	 */
+	private static Collection<PointMutation> createPointMutations(
+			final int begin, final HashMap<Integer, Set<Integer>> nodegroups,
+			final DGraph graph, final ReferenceGeneStorage rgs) {
+		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
+		for (int end : nodegroups.keySet()) {
+			Set<Integer> group = nodegroups.get(end);
+			if (group.size() > 1) {
+				pointmutations.add(new PointMutation(begin, group, end, graph
+						.getDNode(group.iterator().next()).getStart(), rgs));
+			}
+		}
+		return pointmutations;
 	}
 
 	/**
@@ -84,18 +101,18 @@ public final class PointGraphConverter {
 	 *            The graph we want to collapse
 	 * @return The grouped nodes
 	 */
-	private static HashMap<Node, ArrayList<String>> makeNodeGroups(
-			final ArrayList<String> muts, final Graph g) {
-		HashMap<Node, ArrayList<String>> nodegroups = new HashMap<Node, ArrayList<String>>();
-		for (String n : muts) {
-			ArrayList<Node> ns = getNextNodes(g, n);
-			for (Node nd : ns) {
-				if (!nodegroups.containsKey(nd)) {
-					ArrayList<String> nodegroup = new ArrayList<String>();
+	private static HashMap<Integer, Set<Integer>> makeNodeGroups(
+			final ArrayList<Integer> muts, final DGraph g) {
+		HashMap<Integer, Set<Integer>> nodegroups = new HashMap<Integer, Set<Integer>>();
+		for (Integer n : muts) {
+			ArrayList<Integer> ns = getNextNodes(g, n);
+			for (Integer nd : ns) {
+				if (nodegroups.containsKey(nd)) {
+					nodegroups.get(nd).add(n);
+				} else {
+					Set<Integer> nodegroup = new HashSet<Integer>();
 					nodegroup.add(n);
 					nodegroups.put(nd, nodegroup);
-				} else {
-					nodegroups.get(nd).add(n);
 				}
 			}
 		}
@@ -105,165 +122,92 @@ public final class PointGraphConverter {
 	/**
 	 * Collapses the nodegroups in the graph.
 	 * 
-	 * @param nodegroups
-	 *            The nodegroups
-	 * @param g
+	 * @param dgraph
 	 *            The graph we want to collapse on.
-	 * @param q
-	 *            The nodes we still want to check for.
+	 * @param threshold
+	 *            The threshold for collapsing pointmutations.
+	 * @return The new pointcollapsedgraph.
 	 */
-	private static void collapseNodes(
-			final HashMap<Node, ArrayList<String>> nodegroups, final Graph g,
-			final Queue<Node> q) {
-		for (Node end : nodegroups.keySet()) {
-			ArrayList<String> nodegroup = nodegroups.get(end);
-			if (nodegroup.size() == 1) {
-				Node nd = g.getNode(nodegroup.get(0));
-				for (Edge edge : nd.getEnteringEdgeSet()) {
-					Node in = edge.getNode0();
-					if (!in.hasEdgeBetween(end)) {
-						g.addEdge(
-								"collapsed: " + edge.getId() + " "
-										+ end.getId(), in, end, true);
+	public static Graph collapseNodes(final DGraph dgraph,
+			final double threshold) {
+		Graph gsg = ConvertDGraph.convert(dgraph);
+		Collection<PointMutation> pointmutations = dgraph
+				.getAllPointMutations();
+		for (PointMutation pointmutation : pointmutations) {
+			if (pointmutation.getScore() < threshold) {
+				collapsePointMutation(dgraph, gsg, pointmutation);
+			}
+		}
+		return gsg;
+	}
+
+	/**
+	 * 
+	 * @param graph
+	 *            The DGraph which contains all information.
+	 * @param gsg
+	 *            The Graphstreamgraph which will contain the new
+	 *            representation.
+	 * @param pointmutation
+	 *            The pointmutation we are trying to collapse.
+	 */
+	private static void collapsePointMutation(final DGraph graph,
+			final Graph gsg, final PointMutation pointmutation) {
+		HashSet<Integer> nodeids = new HashSet<Integer>();
+		String newId = "";
+		int x = 0;
+		double y = 0.0;
+		for (int nodeid : pointmutation.getNodes()) {
+			nodeids.add(nodeid);
+			Node node = gsg.getNode(nodeid + "");
+			x = node.getAttribute("x");
+			y += (int) node.getAttribute("y");
+			if (node.getLeavingEdgeSet().size() == 1
+					&& node.getEnteringEdgeSet().size() == 1) {
+				gsg.removeEdge(node.getLeavingEdgeIterator().next());
+				gsg.removeEdge(node.getEnteringEdgeIterator().next());
+				gsg.removeNode(node);
+			} else {
+				if (node.getLeavingEdgeSet().size() > 1) {
+					boolean stop = false;
+					Iterator<Edge> leavingedges = node.getLeavingEdgeIterator();
+					while (leavingedges.hasNext() && !stop) {
+						Edge edge = leavingedges.next();
+						if (edge.getNode1().getId()
+								.equals(pointmutation.getPostNode() + "")) {
+							gsg.removeEdge(edge);
+							stop = true;
+						}
 					}
 				}
-				removeNode(g, nd, end);
-			} else {
-				HashMap<String, String> content = new HashMap<String, String>();
-				String newId = "collapsed:";
-				for (String id : nodegroup) {
-					Node nd = g.getNode(id);
-					newId += " " + id;
-				}
-				newId += " ";
-				while (g.getNode(newId) != null) {
-					newId += 1;
-				}
-				addNewCollapsedNode(newId, g, nodegroup, content, end, q);
-				for (String id : nodegroup) {
-					Node nd = g.getNode(id);
-					removeNode(g, nd);
+				if (node.getEnteringEdgeSet().size() > 1) {
+					boolean stop = false;
+					Iterator<Edge> enteringedges = node
+							.getEnteringEdgeIterator();
+					while (enteringedges.hasNext() && !stop) {
+						Edge edge = enteringedges.next();
+						if (edge.getNode0().getId()
+								.equals(pointmutation.getPreNode() + "")) {
+							gsg.removeEdge(edge);
+							stop = true;
+						}
+					}
 				}
 			}
+			newId += nodeid + "/";
 		}
-	}
-
-	/**
-	 * Adds a new collapsed node to the graph.
-	 * 
-	 * @param newId
-	 *            The ID of the new node.
-	 * @param g
-	 *            The graph we want to collapse on.
-	 * @param nodegroup
-	 *            The nodegroup that is collapsed into the new node.
-	 * @param content
-	 *            The content of the new node.
-	 * @param end
-	 *            The node which this group is going to.
-	 * @param q
-	 *            The nodes we still want to check collapse for.
-	 */
-	private static void addNewCollapsedNode(final String newId, final Graph g,
-			final ArrayList<String> nodegroup,
-			final HashMap<String, String> content, final Node end,
-			final Queue<Node> q) {
-		g.addNode(newId);
-		String temp = nodegroup.get(0);
-		Node tempnode = g.getNode(temp);
-		Node collapsednode = g.getNode(newId);
-		collapsednode.addAttribute("start", tempnode.getAttribute("start"));
-		collapsednode.addAttribute("depth", tempnode.getAttribute("depth"));
-		collapsednode.addAttribute("end", tempnode.getAttribute("end"));
-		collapsednode.addAttribute("x", tempnode.getAttribute("x"));
-		collapsednode.addAttribute("content", content);
-		String uilabel = tempnode.getAttribute("ui.label");
-		if (!uilabel.matches("\\d+")) {
-			uilabel = uilabel.length() + "";
-		}
-		collapsednode.addAttribute("ui.label", uilabel);
-		collapseEdges(g, newId, nodegroup, end);
-
-	}
-
-	/**
-	 * Adds all the edges of a group of nodes onto the collapsed node.
-	 * 
-	 * @param g
-	 *            The graph we want to collapse on.
-	 * @param id
-	 *            The id of the collapsed node.
-	 * @param nodegroup
-	 *            The group of nodes we are collapsing.
-	 * @param end
-	 *            The node which this group is going to.
-	 */
-	private static void collapseEdges(final Graph g, final String id,
-			final ArrayList<String> nodegroup, final Node end) {
-		Node collapsednode = g.getNode(id);
-		for (String old : nodegroup) {
-			Node oldnode = g.getNode(old);
-			Iterator<Edge> enteringedges = oldnode.getEnteringEdgeIterator();
-			while (enteringedges.hasNext()) {
-				Edge cur = enteringedges.next();
-				Node sourcenode = cur.getNode0();
-				if (!sourcenode.hasEdgeBetween(collapsednode)) {
-					g.addEdge("collapsed: " + cur.getId() + sourcenode.getId()
-							+ Math.random(), sourcenode, collapsednode, true);
-				}
-			}
-			for (Edge edge : oldnode.getLeavingEdgeSet()) {
-				if (edge != null && edge.getNode1().equals(end)) {
-					g.removeEdge(edge);
-				}
-			}
-		}
-		if (!collapsednode.hasEdgeBetween(end)) {
-			g.addEdge(
-					"collapsed: " + collapsednode.getId() + " " + end.getId(),
-					collapsednode, end, true);
-		}
-	}
-
-	/**
-	 * Removes a node and all its edges from a graph and connects the previous
-	 * nodes to an end node.
-	 * 
-	 * @param g
-	 *            The graph where we want to collapse.
-	 * @param nd
-	 *            The node to be removed.
-	 * @param end
-	 *            The end node.
-	 */
-	private static void removeNode(final Graph g, final Node nd, final Node end) {
-		for (Edge edge : nd.getLeavingEdgeSet()) {
-			if (edge != null && edge.getNode1().equals(end)) {
-				g.removeEdge(edge);
-			}
-		}
-		if (nd.getLeavingEdgeSet().isEmpty()) {
-			for (Edge edge : nd.getEachEdge()) {
-				g.removeEdge(edge);
-			}
-			g.removeNode(nd);
-		}
-	}
-
-	/**
-	 * 
-	 * @param g
-	 *            The graph we want to collapse on.
-	 * @param node
-	 *            The node to be removed.
-	 */
-	private static void removeNode(final Graph g, final Node node) {
-		if (node.getLeavingEdgeSet().isEmpty()) {
-			for (Edge edge : node.getEachEdge()) {
-				g.removeEdge(edge);
-			}
-			g.removeNode(node);
-		}
+		y /= pointmutation.getNodes().size();
+		Node newnode = gsg.addNode("COLLAPSED_" + newId
+				+ pointmutation.getPostNode());
+		newnode.addAttribute("x", x);
+		newnode.addAttribute("y", y);
+		newnode.addAttribute("ui.class", "collapsed");
+		newnode.addAttribute("collapsed", nodeids);
+		newnode.addAttribute("contentsize", 1);
+		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId,
+				pointmutation.getPreNode() + "", newnode.getId(), true);
+		gsg.addEdge("CEDGE_" + newId + "/" + pointmutation.getPostNode(),
+				newnode.getId(), pointmutation.getPostNode() + "", true);
 	}
 
 	/**
@@ -275,36 +219,15 @@ public final class PointGraphConverter {
 	 *            ID of the node.
 	 * @return The nodes following the given node.
 	 */
-	private static ArrayList<Node> getNextNodes(final Graph graph,
-			final String id) {
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		Node n = graph.getNode(id);
-		Iterator<Edge> edges = n.getLeavingEdgeIterator();
-		Edge next;
+	private static ArrayList<Integer> getNextNodes(final DGraph graph,
+			final int id) {
+		ArrayList<Integer> nodes = new ArrayList<Integer>();
+		DNode n = graph.getDNode(id);
+		Iterator<DEdge> edges = n.getOutEdges().iterator();
 		while (edges.hasNext()) {
-			next = edges.next();
-			nodes.add(next.getNode1());
+			DEdge next = edges.next();
+			nodes.add(next.getEndNode().getId());
 		}
 		return nodes;
-	}
-
-	/**
-	 * Gets the first node of a graph.
-	 * 
-	 * @param g
-	 *            Graph of which we want to get the startnode
-	 * @return Start node
-	 */
-	private static Node getStart(final Graph g) {
-		Node first = null;
-		for (Node n : g.getNodeSet()) {
-			if (first == null) {
-				first = n;
-			} else if ((Integer) n.getAttribute("start") < (Integer) first
-					.getAttribute("start")) {
-				first = n;
-			}
-		}
-		return first;
 	}
 }

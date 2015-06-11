@@ -42,7 +42,8 @@ public final class MutationFinder {
 						DNode endnode = nextnodes.iterator().next();
 						if (node.getNextNodes().contains(endnode)) {
 							ins.add(new InsertionMutation(node.getId(), endnode
-									.getId(), next.getId()));
+									.getId(), next.getId(), graph
+									.getReferenceGeneStorage()));
 						}
 					}
 				}
@@ -80,7 +81,8 @@ public final class MutationFinder {
 				}
 			}
 			if (isDeletion) {
-				dels.add(new DeletionMutation(node.getId(), endnode.getId()));
+				dels.add(new DeletionMutation(node.getId(), endnode.getId(),
+						graph.getReferenceGeneStorage()));
 			}
 		}
 		return dels;

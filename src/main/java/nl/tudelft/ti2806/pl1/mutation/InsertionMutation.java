@@ -1,5 +1,7 @@
 package nl.tudelft.ti2806.pl1.mutation;
 
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
+
 /**
  * @author Maarten, Justin
  * @since 2-6-2015
@@ -16,10 +18,12 @@ public class InsertionMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param insertednode
 	 *            The node inserted in the graph.
+	 * @param rgs
+	 *            The storage containing all the interesting gene information.
 	 */
 	public InsertionMutation(final int pre, final int post,
-			final int insertednode) {
-		super(pre, post);
+			final int insertednode, final ReferenceGeneStorage rgs) {
+		super(pre, post, rgs);
 		this.inNode = insertednode;
 	}
 

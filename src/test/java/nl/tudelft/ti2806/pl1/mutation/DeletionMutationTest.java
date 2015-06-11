@@ -10,6 +10,7 @@ import java.util.HashSet;
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,11 +26,14 @@ public class DeletionMutationTest {
 	DEdge si, ie, se;
 	HashSet<String> insertSrc;
 	HashSet<String> sources;
+	ReferenceGeneStorage rgs;
 
 	@Before
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		insertSrc = new HashSet<String>(Arrays.asList("TKK_2"));
+		rgs = new ReferenceGeneStorage("ReferenceGeneStorageTestGenes.gff",
+				"resistanceCausingMutationsTesting.txt");
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);
@@ -67,7 +71,7 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
-		expected.add(new DeletionMutation(start.getId(), end.getId()));
+		expected.add(new DeletionMutation(start.getId(), end.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -85,8 +89,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId()),
-				new DeletionMutation(end.getId(), end2.getId()));
+				new DeletionMutation(start.getId(), end.getId(), rgs),
+				new DeletionMutation(end.getId(), end2.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -118,8 +122,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId()),
-				new DeletionMutation(end2.getId(), end3.getId()));
+				new DeletionMutation(start.getId(), end.getId(), rgs),
+				new DeletionMutation(end2.getId(), end3.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -147,8 +151,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId()),
-				new DeletionMutation(end2.getId(), end3.getId()));
+				new DeletionMutation(start.getId(), end.getId(), rgs),
+				new DeletionMutation(end2.getId(), end3.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 

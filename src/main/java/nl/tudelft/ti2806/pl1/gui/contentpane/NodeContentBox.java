@@ -6,6 +6,8 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -85,8 +87,13 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
 	@Override
-	public final void update(final DNode newSelectedNode) {
-		text.setText(newSelectedNode.getContent());
+	public final void update(final HashSet<DNode> newSelectedNodes) {
+		Iterator<DNode> it = newSelectedNodes.iterator();
+		String content = it.next().getContent();
+		while (it.hasNext()) {
+			content += "/" + it.next().getContent();
+		}
+		text.setText(content);
 		for (int i = 0; i < text.getDocument().getLength(); i++) {
 			SimpleAttributeSet set = new SimpleAttributeSet();
 			Color nucleoColor = Color.BLACK;
@@ -104,5 +111,4 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 		// TODO change strings to constants (still have to decide in which class
 		// to define them) << I really don't know what this is anymore...
 	}
-
 }

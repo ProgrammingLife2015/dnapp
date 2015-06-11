@@ -9,6 +9,7 @@ import java.util.HashSet;
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,11 +24,14 @@ public class InsertionMutationTest {
 	DNode start, end, insertion;
 	DEdge si, ie, se;
 	HashSet<String> sources;
+	ReferenceGeneStorage rgs;
 
 	@Before
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		HashSet<String> insertSrc = new HashSet<String>(Arrays.asList("REF2"));
+		rgs = new ReferenceGeneStorage("ReferenceGeneStorageTestGenes.gff",
+				"resistanceCausingMutationsTesting.txt");
 
 		start = new DNode(1, sources, 0, 0, "");
 		insertion = new DNode(2, insertSrc, 0, 0, "");
@@ -63,7 +67,7 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays
 				.asList(new InsertionMutation(start.getId(), end.getId(),
-						insertion.getId()));
+						insertion.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -80,9 +84,8 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId()),
-				new InsertionMutation(start.getId(), end.getId(), insertion2
-						.getId()));
+						.getId(), rgs), new InsertionMutation(start.getId(),
+						end.getId(), insertion2.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -103,9 +106,9 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId()),
+						.getId(), rgs),
 				new InsertionMutation(end.getId(), end2.getId(), insertion2
-						.getId()));
+						.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -136,9 +139,8 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId()),
-				new InsertionMutation(end2.getId(), end3.getId(), insertion2
-						.getId()));
+						.getId(), rgs), new InsertionMutation(end2.getId(),
+						end3.getId(), insertion2.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 
@@ -166,9 +168,8 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId()),
-				new InsertionMutation(end2.getId(), end3.getId(), insertion2
-						.getId()));
+						.getId(), rgs), new InsertionMutation(end2.getId(),
+						end3.getId(), insertion2.getId(), rgs));
 		assertEquals(expected, muts);
 	}
 }
