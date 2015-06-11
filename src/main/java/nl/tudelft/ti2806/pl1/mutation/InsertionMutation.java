@@ -36,4 +36,20 @@ public class InsertionMutation extends Mutation {
 				+ ",ins:" + getInNode() + "]>";
 	}
 
+	/**
+	 * Returns true iff that has the same attributes.
+	 */
+	@Override
+	public boolean equals(final Object that) {
+		if (that instanceof InsertionMutation) {
+			return this.toString().equals(that.toString());
+		}
+		return false;
+	}
+
+	@Override
+	public final int hashCode() {
+		return getPreNode();
+	}
+
 }

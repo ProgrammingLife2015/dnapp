@@ -400,6 +400,6 @@ public class DNode {
 
 	@Override
 	public String toString() {
-		return "<Node[" + id + "]";
+		return "<Node[" + id + "]>";
 	}
 }

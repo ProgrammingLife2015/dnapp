@@ -21,4 +21,20 @@ public class DeletionMutation extends Mutation {
 		return "<DelMut[pre:" + getPreNode() + ",post:" + getPostNode() + "]>";
 	}
 
+	/**
+	 * Returns true iff that has the same attributes.
+	 */
+	@Override
+	public boolean equals(final Object that) {
+		if (that instanceof DeletionMutation) {
+			return this.toString().equals(that.toString());
+		}
+		return false;
+	}
+
+	@Override
+	public final int hashCode() {
+		return getPreNode();
+	}
+
 }
