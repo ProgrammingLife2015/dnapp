@@ -25,6 +25,7 @@ public final class ZoomlevelCreator {
 
 	public Graph createGraph(final int threshold) {
 		Graph ret = PointGraphConverter.collapseNodes(graph, threshold);
+		ret = HorizontalCollapser.horizontalCollapse(ret);
 		return ret;
 	}
 }

@@ -65,6 +65,7 @@ public final class ConvertDGraph {
 			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
 			gn.addAttribute("ui.class", "common");
 			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
+			gn.addAttribute("contentsize", n.getContent().length());
 		}
 		for (DEdge edge : edges) {
 			String from = String.valueOf(edge.getStartNode().getId());

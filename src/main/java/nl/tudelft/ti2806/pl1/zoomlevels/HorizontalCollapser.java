@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -93,14 +94,7 @@ public final class HorizontalCollapser {
 	 * @return The size of the content of the node.
 	 */
 	private static int getContentSize(final Node node) {
-		int length = 0;
-		String content = node.getAttribute("ui.label");
-		if (content.matches("\\d+")) {
-			length = Integer.parseInt(content);
-		} else {
-			length = content.length();
-		}
-		return length;
+		return node.getAttribute("contentsize");
 	}
 
 	/**
@@ -116,5 +110,23 @@ public final class HorizontalCollapser {
 		to.setAttribute("start", from.getAttribute("start"));
 		int combinedlength = getContentSize(from) + getContentSize(to);
 		to.setAttribute("ui.label", combinedlength + "");
+		HashSet<Integer> nodeids = getIds(from);
+		nodeids.addAll(getIds(to));
+		to.setAttribute("collapsed", nodeids);
+	}
+
+	/**
+	 * Takes a node and returns all containing nodes as a hashset.
+	 * 
+	 * @param node
+	 *            the node we want to get the ids from.
+	 * @return The ids in the given node.
+	 */
+	private static HashSet<Integer> getIds(final Node node) {
+		if (node.hasAttribute("collapsed")) {
+			return node.getAttribute("collapsed");
+		} else {
+			return new HashSet<Integer>(Integer.valueOf(node.getId()));
+		}
 	}
 }
