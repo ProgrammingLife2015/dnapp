@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.mutation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,8 +36,11 @@ public class DeletionMutationTest {
 		// HashSet<String>(Arrays.asList("TKK_2"));
 
 		start = new DNode(1, sources, 0, 0, "");
+		start.setDepth(1);
 		end = new DNode(2, sources, 0, 0, "");
+		end.setDepth(3);
 		insertion = new DNode(3, sources, 0, 0, "");
+		insertion.setDepth(2);
 		si = new DEdge(start, insertion);
 		ie = new DEdge(insertion, end);
 		se = new DEdge(start, end);
@@ -67,9 +71,9 @@ public class DeletionMutationTest {
 	public void findDeletionTest() {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
-		Collection<DeletionMutation> expected = Arrays
-				.asList(new DeletionMutation(1, 2));
-		assertEquals(expected, muts);
+		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
+		expected.add(new DeletionMutation(1, 2));
+		assertEquals(expected.toString(), muts.toString());
 	}
 
 }

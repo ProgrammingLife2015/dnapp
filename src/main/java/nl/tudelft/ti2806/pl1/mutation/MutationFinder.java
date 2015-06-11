@@ -71,11 +71,11 @@ public final class MutationFinder {
 					maxdepth = next.getDepth();
 					endnode = next;
 				}
-				if (countRefNodes > 1) {
-					isDeletion = true;
-				}
 				if (next.getSources().contains(REFERENCE_GENOME)) {
 					countRefNodes++;
+				}
+				if (countRefNodes > 1) {
+					isDeletion = true;
 				}
 			}
 			if (isDeletion) {

@@ -114,6 +114,6 @@ public class DEdge {
 
 	@Override
 	public String toString() {
-		return "<Ege[" + startNode + "->" + endNode + "]>";
+		return "<Edge[" + startNode + "->" + endNode + "]>";
 	}
 }
