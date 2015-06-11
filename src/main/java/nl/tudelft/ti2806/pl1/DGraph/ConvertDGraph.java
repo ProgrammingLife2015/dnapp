@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,6 +67,8 @@ public final class ConvertDGraph {
 			gn.addAttribute("ui.class", "common");
 			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 			gn.addAttribute("contentsize", n.getContent().length());
+			gn.addAttribute("collapsed",
+					new HashSet<Integer>(Arrays.asList(n.getId())));
 		}
 		for (DEdge edge : edges) {
 			String from = String.valueOf(edge.getStartNode().getId());
