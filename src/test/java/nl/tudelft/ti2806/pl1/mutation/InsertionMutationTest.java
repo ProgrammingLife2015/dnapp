@@ -88,7 +88,7 @@ public class InsertionMutationTest {
 						.getId()),
 				new InsertionMutation(start.getId(), end.getId(), insertion2
 						.getId()));
-		assertEquals(expected.toString(), muts.toString());
+		assertEquals(expected, muts);
 	}
 
 }

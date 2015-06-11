@@ -8,9 +8,7 @@ package nl.tudelft.ti2806.pl1.exceptions;
  */
 public class InvalidNodePlacementException extends Exception {
 
-	/**
-	 * 
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3138127803765645767L;
 
 	/**

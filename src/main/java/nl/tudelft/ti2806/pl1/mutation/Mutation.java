@@ -38,4 +38,19 @@ public abstract class Mutation {
 		return postNode;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Mutation) {
+			Mutation that = (Mutation) obj;
+			return this.preNode == that.preNode
+					&& this.postNode == that.postNode;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }
