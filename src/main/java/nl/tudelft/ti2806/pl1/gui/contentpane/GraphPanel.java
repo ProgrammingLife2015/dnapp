@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,10 @@ import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
+import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
 import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
@@ -61,6 +64,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** The horizontal scroll increment value. */
 	private static final int HOR_SCROLL_INCR = 400;
+
+	/** Which zoom level is currently shown. **/
+	private int zoomLevel = 0;
 
 	/**
 	 * The list of node selection observers.
@@ -232,6 +238,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			try {
 				dgraph = Reader.read(nodes.getAbsolutePath(),
 						edges.getAbsolutePath());
+				Collection<PointMutation> pointmuts = PointGraphConverter
+						.getPointMutations(dgraph);
+				dgraph.addPointMutations(pointmuts);
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph); // TODO
@@ -241,7 +250,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				e.printStackTrace();
 				Event.statusBarError(e.getMessage());
 			}
-			graph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 			return graph;
 		}
 	}
@@ -269,9 +277,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
 
+		int scrollval = graphPane.getHorizontalScrollBar().getValue();
 		graphPane.setViewportView(view);
+		graphPane.getHorizontalScrollBar().setValue(scrollval);
+
 		window.revalidate();
 		centerVertical();
+		this.graph = vGraph;
+		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 	}
 
 	/**
@@ -311,8 +324,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The node clicked on by the user
 	 */
 	private void notifyObservers(final DNode selectedNodeIn) {
+		HashSet<DNode> selected = new HashSet<DNode>();
+		selected.add(selectedNodeIn);
 		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selectedNodeIn);
+			sgo.update(selected);
 		}
 	}
 
@@ -371,11 +386,22 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param genomeId
 	 *            Id of the genome to be highlighted.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void highlight(final String genomeId) {
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
-			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-					"highlight");
+		for (Node n : graph.getEachNode()) {
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
+			for (int id : ids) {
+				if (dgraph.getDNode(id).getSources().contains(genomeId)) {
+					n.setAttribute("ui.class", "highlight");
+				}
+			}
 		}
+		// for (DNode n : dgraph.getReferences().get(genomeId)) {
+		// graph.getNode(String.valueOf(n.getId()));
+		// graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
+		// "highlight");
+		// }
 		highlightedGenomes.add(genomeId);
 	}
 
@@ -385,18 +411,32 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param genomeId
 	 *            Id of the genome to be highlighted.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void unHighlight(final String genomeId) {
 		highlightedGenomes.remove(genomeId);
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
+		for (Node n : graph.getEachNode()) {
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
 			boolean contains = false;
-			for (String source : n.getSources()) {
-				contains = contains || highlightedGenomes.contains(source);
+			for (int id : ids) {
+				for (String source : dgraph.getDNode(id).getSources()) {
+					contains = contains || highlightedGenomes.contains(source);
+				}
 			}
 			if (!contains) {
-				graph.getNode(String.valueOf(n.getId())).setAttribute(
-						"ui.class", "common");
+				graph.getNode(n.getId()).setAttribute("ui.class", "common");
 			}
 		}
+		// for (DNode n : dgraph.getReferences().get(genomeId)) {
+		// boolean contains = false;
+		// for (String source : n.getSources()) {
+		// contains = contains || highlightedGenomes.contains(source);
+		// }
+		// if (!contains) {
+		// graph.getNode(String.valueOf(n.getId())).setAttribute(
+		// "ui.class", "common");
+		// }
+		// }
 	}
 
 	/**
@@ -406,9 +446,20 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
 		switch (newZoomLevel) {
+		case 0:
+			visualizeGraph(ConvertDGraph.convert(dgraph));
+			break;
 		case 1:
-			visualizeGraph(zlc.removeAllPMs(graph));
-			// visualizeGraph(zlc.removeSYN(getCurrentViewArea()));
+			int threshold = 10;
+			visualizeGraph(zlc.createGraph(threshold));
+			break;
+		case 2:
+			threshold = 20;
+			visualizeGraph(zlc.createGraph(threshold));
+			break;
+		case 3:
+			threshold = 90;
+			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		default:
 			Event.statusBarError("There is no zoom level further from the current level");
@@ -431,9 +482,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		/** How far we're zoomed in on the current level. **/
 		private int count = 0;
 
-		/** Which zoom level is currently shown. **/
-		private int zoomLevel = 0;
-
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
 		private static final int NEWLEVEL = 10;
 
@@ -451,15 +499,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = -1 * e.getWheelRotation();
 			if (count > NEWLEVEL) {
+				zoomLevel++;
 				upZoomlevel();
-				ZoomSelector.getGraph(zoomLevel);
 			} else if (count < -NEWLEVEL) {
+				zoomLevel--;
 				downZoomlevel();
-				ZoomSelector.getGraph(zoomLevel);
 			} else if (rotation > 0) {
-				zoomIn(ZOOMPERCENTAGE);
+				count++;
+				// zoomIn(ZOOMPERCENTAGE);
 			} else if (rotation < 0) {
-				zoomOut(ZOOMPERCENTAGE);
+				count--;
+				// zoomOut(ZOOMPERCENTAGE);
 			}
 		}
 
@@ -524,7 +574,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		 */
 		public void upZoomlevel() {
 			count = 0;
-			zoomLevel++;
 			System.out.println("Zoom level up to = " + zoomLevel);
 			Event.statusBarInfo("Zoom level up to = " + zoomLevel);
 			setZoomlevel(zoomLevel);
@@ -535,7 +584,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		 */
 		public void downZoomlevel() {
 			count = 0;
-			zoomLevel--;
 			System.out.println("Zoom level down to = " + zoomLevel);
 			Event.statusBarInfo("Zoom level down to = " + zoomLevel);
 			setZoomlevel(zoomLevel);
