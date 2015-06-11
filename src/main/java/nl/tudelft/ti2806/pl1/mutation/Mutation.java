@@ -15,7 +15,7 @@ public abstract class Mutation {
 	/**
 	 * Score of the mutation.
 	 */
-	private double score;
+	private double score = 10;
 
 	/**
 	 * 
