@@ -24,10 +24,6 @@ public class InsertionMutationTest {
 	DEdge si, ie, se;
 	HashSet<String> sources;
 
-	// DEdge edge;
-	// Graph gsGraph;
-	// ViewArea va;
-
 	@Before
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
@@ -46,7 +42,6 @@ public class InsertionMutationTest {
 		graph.addDEdge(si);
 		graph.addDEdge(se);
 		graph.addDEdge(ie);
-		System.out.println(graph.toString());
 	}
 
 	@After

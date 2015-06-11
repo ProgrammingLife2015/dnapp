@@ -24,10 +24,6 @@ public class DeletionMutationTest {
 	DNode start, end, insertion;
 	DEdge si, ie, se;
 
-	// DEdge edge;
-	// Graph gsGraph;
-	// ViewArea va;
-
 	@Before
 	public void setup() {
 		HashSet<String> sources = new HashSet<String>(Arrays.asList("TKK_REF",
@@ -51,7 +47,6 @@ public class DeletionMutationTest {
 		graph.addDEdge(si);
 		graph.addDEdge(se);
 		graph.addDEdge(ie);
-		System.out.println(graph.toString());
 	}
 
 	@After
