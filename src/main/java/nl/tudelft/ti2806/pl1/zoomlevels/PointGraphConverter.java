@@ -121,49 +121,36 @@ public final class PointGraphConverter {
 	/**
 	 * Collapses the nodegroups in the graph.
 	 * 
-	 * @param g
+	 * @param dgraph
 	 *            The graph we want to collapse on.
+	 * @param threshold
+	 *            The threshold for collapsing pointmutations.
+	 * @return The new pointcollapsedgraph.
 	 */
-	private static void collapseNodes(final DGraph dgraph,
+	public static Graph collapseNodes(final DGraph dgraph,
 			final double threshold) {
 		Graph gsg = ConvertDGraph.convert(dgraph);
 		Collection<PointMutation> pointmutations = dgraph
 				.getAllPointMutations();
+		System.out.println(pointmutations != null);
 		for (PointMutation pointmutation : pointmutations) {
 			if (pointmutation.getScore() < threshold) {
 				collapsePointMutation(dgraph, gsg, pointmutation);
 			}
 		}
-		// for (Node end : nodegroups.keySet()) {
-		// ArrayList<String> nodegroup = nodegroups.get(end);
-		// if (nodegroup.size() == 1) {
-		// Node nd = g.getNode(nodegroup.get(0));
-		// for (Edge edge : nd.getEnteringEdgeSet()) {
-		// Node in = edge.getNode0();
-		// g.addEdge("collapsed: " + edge.getId() + " " + end.getId(),
-		// in, end, true);
-		// }
-		// removeNode(g, nd, end);
-		// } else {
-		// HashMap<String, String> content = new HashMap<String, String>();
-		// String newId = "collapsed:";
-		// for (String id : nodegroup) {
-		// Node nd = g.getNode(id);
-		// newId += " " + id;
-		// }
-		// newId += " ";
-		// while (g.getNode(newId) != null) {
-		// newId += 1;
-		// }
-		// addNewCollapsedNode(newId, g, nodegroup, content, end);
-		// for (String id : nodegroup) {
-		// Node nd = g.getNode(id);
-		// removeNode(g, nd);
-		// }
-		// }
-		// }
+		return gsg;
 	}
 
+	/**
+	 * 
+	 * @param graph
+	 *            The DGraph which contains all information.
+	 * @param gsg
+	 *            The Graphstreamgraph which will contain the new
+	 *            representation.
+	 * @param pointmutation
+	 *            The pointmutation we are trying to collapse.
+	 */
 	private static void collapsePointMutation(final DGraph graph,
 			final Graph gsg, final PointMutation pointmutation) {
 		HashSet<Integer> nodeids = new HashSet<Integer>();
@@ -172,9 +159,9 @@ public final class PointGraphConverter {
 		double y = 0.0;
 		for (int nodeid : pointmutation.getNodes()) {
 			nodeids.add(nodeid);
-			Node node = gsg.getNode(nodeid);
+			Node node = gsg.getNode(nodeid + "");
 			x = node.getAttribute("x");
-			y += (Double) node.getAttribute("y");
+			y += (int) node.getAttribute("y");
 			if (node.getLeavingEdgeSet().size() == 1
 					&& node.getEnteringEdgeSet().size() == 1) {
 				gsg.removeEdge(node.getLeavingEdgeIterator().next());
@@ -218,9 +205,9 @@ public final class PointGraphConverter {
 		newnode.addAttribute("ui.class", "collapsed");
 		newnode.addAttribute("collapsed", nodeids);
 		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId,
-				pointmutation.getPreNode() + "", newnode.getId());
+				pointmutation.getPreNode() + "", newnode.getId(), true);
 		gsg.addEdge("CEDGE_" + newId + "/" + pointmutation.getPostNode(),
-				newnode.getId(), pointmutation.getPostNode() + "");
+				newnode.getId(), pointmutation.getPostNode() + "", true);
 	}
 
 	/**
@@ -242,25 +229,5 @@ public final class PointGraphConverter {
 			nodes.add(next.getEndNode().getId());
 		}
 		return nodes;
-	}
-
-	/**
-	 * Gets the first node of a graph.
-	 * 
-	 * @param g
-	 *            Graph of which we want to get the startnode
-	 * @return Start node
-	 */
-	private static Node getStart(final Graph g) {
-		Node first = null;
-		for (Node n : g.getNodeSet()) {
-			if (first == null) {
-				first = n;
-			} else if ((Integer) n.getAttribute("start") < (Integer) first
-					.getAttribute("start")) {
-				first = n;
-			}
-		}
-		return first;
 	}
 }
