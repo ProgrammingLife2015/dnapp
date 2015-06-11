@@ -450,11 +450,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			visualizeGraph(ConvertDGraph.convert(dgraph));
 			break;
 		case 1:
-			int threshold = 20;
+			int threshold = 10;
 			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		case 2:
-			threshold = 10;
+			threshold = 20;
+			visualizeGraph(zlc.createGraph(threshold));
+			break;
+		case 3:
+			threshold = 90;
 			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		default:

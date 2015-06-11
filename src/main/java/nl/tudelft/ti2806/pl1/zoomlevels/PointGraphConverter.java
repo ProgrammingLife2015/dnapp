@@ -60,7 +60,7 @@ public final class PointGraphConverter {
 				HashMap<Integer, Set<Integer>> nodegroups = makeNodeGroups(
 						muts, graph);
 				pointmutations.addAll(createPointMutations(node.getId(),
-						nodegroups, graph.getReferenceGeneStorage()));
+						nodegroups, graph, graph.getReferenceGeneStorage()));
 			}
 		}
 		return pointmutations;
@@ -79,12 +79,13 @@ public final class PointGraphConverter {
 	 */
 	private static Collection<PointMutation> createPointMutations(
 			final int begin, final HashMap<Integer, Set<Integer>> nodegroups,
-			final ReferenceGeneStorage rgs) {
+			final DGraph graph, final ReferenceGeneStorage rgs) {
 		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
 		for (int end : nodegroups.keySet()) {
 			Set<Integer> group = nodegroups.get(end);
 			if (group.size() > 1) {
-				pointmutations.add(new PointMutation(begin, group, end, rgs));
+				pointmutations.add(new PointMutation(begin, group, end, graph
+						.getDNode(group.iterator().next()).getStart(), rgs));
 			}
 		}
 		return pointmutations;
@@ -132,7 +133,6 @@ public final class PointGraphConverter {
 		Graph gsg = ConvertDGraph.convert(dgraph);
 		Collection<PointMutation> pointmutations = dgraph
 				.getAllPointMutations();
-		System.out.println(pointmutations != null);
 		for (PointMutation pointmutation : pointmutations) {
 			if (pointmutation.getScore() < threshold) {
 				collapsePointMutation(dgraph, gsg, pointmutation);
