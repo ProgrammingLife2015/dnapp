@@ -18,22 +18,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class InDelCollapserTest {
+public class InDelCollapserInsertionsTest {
 
 	DGraph graph;
 	DNode start, end, insertion;
 	DEdge si, ie, se;
 	HashSet<String> sources;
 	Graph gsg;
+	HashSet<String> insertSrc;
 
 	@Before
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
-		HashSet<String> insertSrc = new HashSet<String>(Arrays.asList("REF2"));
+		insertSrc = new HashSet<String>(Arrays.asList("REF2"));
 
 		start = new DNode(1, sources, 0, 0, "");
+		start.setDepth(1);
 		insertion = new DNode(2, insertSrc, 0, 0, "");
+		insertion.setDepth(2);
 		end = new DNode(4, sources, 0, 0, "");
+		end.setDepth(3);
 		si = new DEdge(start, insertion);
 		ie = new DEdge(insertion, end);
 		se = new DEdge(start, end);
