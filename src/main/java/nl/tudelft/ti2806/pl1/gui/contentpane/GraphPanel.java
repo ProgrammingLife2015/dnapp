@@ -261,15 +261,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** Performs all the analyze methods on the DGraph. */
 	private void analyzeDGraph() {
-		long start = System.currentTimeMillis();
 		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
 		dgraph.setDeletionMutations(MutationFinder
 				.findDeletionMutations(dgraph));
 		dgraph.setInsertionmutations(MutationFinder
 				.findInsertionMutations(dgraph));
-		System.out.println(dgraph.getDelmutations());
-		System.out.println(dgraph.getInsmutations());
-		System.out.println(System.currentTimeMillis() - start);
 	}
 
 	/**
