@@ -20,8 +20,9 @@ import org.junit.Test;
 public class InsertionMutationTest {
 
 	DGraph graph;
-	DNode start, end, insertion, insertion2;
-	DEdge si, ie, se, sy, ye;
+	DNode start, end, insertion;
+	DEdge si, ie, se;
+	HashSet<String> sources;
 
 	// DEdge edge;
 	// Graph gsGraph;
@@ -29,8 +30,7 @@ public class InsertionMutationTest {
 
 	@Before
 	public void setup() {
-		HashSet<String> sources = new HashSet<String>(Arrays.asList("TKK_REF",
-				"REF1", "REF2"));
+		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		HashSet<String> insertSrc = new HashSet<String>(Arrays.asList("REF2"));
 
 		start = new DNode(1, sources, 0, 0, "");
@@ -63,7 +63,7 @@ public class InsertionMutationTest {
 	}
 
 	@Test
-	public void findInsertionTest() {
+	public void simpleInsertionCaseTest() {
 		Collection<InsertionMutation> muts = MutationFinder
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays
@@ -73,12 +73,12 @@ public class InsertionMutationTest {
 	}
 
 	@Test
-	public void findInsertionTest2() {
+	public void doubleInsertionTest() {
 		HashSet<String> insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
-		insertion2 = new DNode(3, insertSrc2, 0, 0, "");
+		DNode insertion2 = new DNode(3, insertSrc2, 0, 0, "");
 		graph.addDNode(insertion2);
-		sy = new DEdge(start, insertion2);
-		ye = new DEdge(insertion2, end);
+		DEdge sy = new DEdge(start, insertion2);
+		DEdge ye = new DEdge(insertion2, end);
 		graph.addDEdge(sy);
 		graph.addDEdge(ye);
 		Collection<InsertionMutation> muts = MutationFinder
@@ -91,4 +91,87 @@ public class InsertionMutationTest {
 		assertEquals(expected.toString(), muts.toString());
 	}
 
+	@Test
+	public void multipleInsertionsTest() {
+		HashSet<String> insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
+		DNode insertion2 = new DNode(3, insertSrc2, 0, 0, "");
+		graph.addDNode(insertion2);
+		DNode end2 = new DNode(5, sources, 0, 0, "");
+		graph.addDNode(end2);
+		DEdge sy = new DEdge(end, insertion2);
+		DEdge ye = new DEdge(insertion2, end2);
+		graph.addDEdge(sy);
+		graph.addDEdge(ye);
+		Collection<InsertionMutation> muts = MutationFinder
+				.findInsertionMutations(graph);
+		Collection<InsertionMutation> expected = Arrays.asList(
+				new InsertionMutation(start.getId(), end.getId(), insertion
+						.getId()),
+				new InsertionMutation(end.getId(), end2.getId(), insertion2
+						.getId()));
+		assertEquals(expected, muts);
+	}
+
+	@Test
+	public void InsertionWithSNPTest() {
+		HashSet<String> insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
+		DNode SNP = new DNode(3, insertSrc2, 0, 0, "");
+		DNode SNPREF = new DNode(5, sources, 0, 0, "");
+		DNode end2 = new DNode(6, sources, 0, 0, "");
+		DNode insertion2 = new DNode(7, insertSrc2, 0, 0, "");
+		DNode end3 = new DNode(8, sources, 0, 0, "");
+
+		graph.addDNode(SNPREF);
+		graph.addDNode(SNP);
+		graph.addDNode(end2);
+		graph.addDNode(insertion2);
+		graph.addDNode(end3);
+
+		graph.addDEdge(new DEdge(end, SNP));
+		graph.addDEdge(new DEdge(end, SNPREF));
+		graph.addDEdge(new DEdge(SNP, end2));
+		graph.addDEdge(new DEdge(SNPREF, end2));
+		graph.addDEdge(new DEdge(end2, insertion2));
+		graph.addDEdge(new DEdge(end2, end3));
+		graph.addDEdge(new DEdge(insertion2, end3));
+
+		Collection<InsertionMutation> muts = MutationFinder
+				.findInsertionMutations(graph);
+		Collection<InsertionMutation> expected = Arrays.asList(
+				new InsertionMutation(start.getId(), end.getId(), insertion
+						.getId()),
+				new InsertionMutation(end2.getId(), end3.getId(), insertion2
+						.getId()));
+		assertEquals(expected, muts);
+	}
+
+	@Test
+	public void InsertionWithDeletionTest() {
+		HashSet<String> insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
+		DNode deletion = new DNode(5, sources, 0, 0, "");
+		DNode end2 = new DNode(6, sources, 0, 0, "");
+		DNode insertion2 = new DNode(7, insertSrc2, 0, 0, "");
+		DNode end3 = new DNode(8, sources, 0, 0, "");
+
+		graph.addDNode(deletion);
+		graph.addDNode(end2);
+		graph.addDNode(insertion2);
+		graph.addDNode(end3);
+
+		graph.addDEdge(new DEdge(end, end2));
+		graph.addDEdge(new DEdge(end, deletion));
+		graph.addDEdge(new DEdge(deletion, end2));
+		graph.addDEdge(new DEdge(end2, insertion2));
+		graph.addDEdge(new DEdge(end2, end3));
+		graph.addDEdge(new DEdge(insertion2, end3));
+
+		Collection<InsertionMutation> muts = MutationFinder
+				.findInsertionMutations(graph);
+		Collection<InsertionMutation> expected = Arrays.asList(
+				new InsertionMutation(start.getId(), end.getId(), insertion
+						.getId()),
+				new InsertionMutation(end2.getId(), end3.getId(), insertion2
+						.getId()));
+		assertEquals(expected, muts);
+	}
 }
