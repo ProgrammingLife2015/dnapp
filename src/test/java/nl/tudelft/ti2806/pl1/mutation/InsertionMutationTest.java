@@ -95,13 +95,15 @@ public class InsertionMutationTest {
 	public void multipleInsertionsTest() {
 		HashSet<String> insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
 		DNode insertion2 = new DNode(3, insertSrc2, 0, 0, "");
-		graph.addDNode(insertion2);
 		DNode end2 = new DNode(5, sources, 0, 0, "");
+		graph.addDNode(insertion2);
 		graph.addDNode(end2);
 		DEdge sy = new DEdge(end, insertion2);
 		DEdge ye = new DEdge(insertion2, end2);
+		DEdge ee = new DEdge(end, end2);
 		graph.addDEdge(sy);
 		graph.addDEdge(ye);
+		graph.addDEdge(ee);
 		Collection<InsertionMutation> muts = MutationFinder
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
