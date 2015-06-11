@@ -40,13 +40,12 @@ public final class MutationFinder {
 					Collection<DNode> nextnodes = next.getNextNodes();
 					if (nextnodes.size() == 1) {
 						DNode endnode = nextnodes.iterator().next();
-						ins.add(new InsertionMutation(node.getId(), next
-								.getId(), endnode.getId()));
+						ins.add(new InsertionMutation(node.getId(), endnode
+								.getId(), next.getId()));
 					}
 				}
 			}
 		}
-
 		return ins;
 	}
 

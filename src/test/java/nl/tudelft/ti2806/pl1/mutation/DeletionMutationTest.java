@@ -73,7 +73,7 @@ public class DeletionMutationTest {
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
 		expected.add(new DeletionMutation(1, 2));
-		assertEquals(expected.toString(), muts.toString());
+		assertEquals(expected, muts);
 	}
 
 }
