@@ -283,6 +283,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		window.revalidate();
 		centerVertical();
+		this.graph = vGraph;
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 	}
 
@@ -385,11 +386,22 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param genomeId
 	 *            Id of the genome to be highlighted.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void highlight(final String genomeId) {
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
-			graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-					"highlight");
+		for (Node n : graph.getEachNode()) {
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
+			for (int id : ids) {
+				if (dgraph.getDNode(id).getSources().contains(genomeId)) {
+					n.setAttribute("ui.class", "highlight");
+				}
+			}
 		}
+		// for (DNode n : dgraph.getReferences().get(genomeId)) {
+		// graph.getNode(String.valueOf(n.getId()));
+		// graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
+		// "highlight");
+		// }
 		highlightedGenomes.add(genomeId);
 	}
 
@@ -399,18 +411,32 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param genomeId
 	 *            Id of the genome to be highlighted.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void unHighlight(final String genomeId) {
 		highlightedGenomes.remove(genomeId);
-		for (DNode n : dgraph.getReferences().get(genomeId)) {
+		for (Node n : graph.getEachNode()) {
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
 			boolean contains = false;
-			for (String source : n.getSources()) {
-				contains = contains || highlightedGenomes.contains(source);
+			for (int id : ids) {
+				for (String source : dgraph.getDNode(id).getSources()) {
+					contains = contains || highlightedGenomes.contains(source);
+				}
 			}
 			if (!contains) {
-				graph.getNode(String.valueOf(n.getId())).setAttribute(
-						"ui.class", "common");
+				graph.getNode(n.getId()).setAttribute("ui.class", "common");
 			}
 		}
+		// for (DNode n : dgraph.getReferences().get(genomeId)) {
+		// boolean contains = false;
+		// for (String source : n.getSources()) {
+		// contains = contains || highlightedGenomes.contains(source);
+		// }
+		// if (!contains) {
+		// graph.getNode(String.valueOf(n.getId())).setAttribute(
+		// "ui.class", "common");
+		// }
+		// }
 	}
 
 	/**
