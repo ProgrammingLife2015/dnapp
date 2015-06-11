@@ -45,7 +45,8 @@ public final class InDelCollapser {
 			final Graph graph) {
 		System.out.println("collapse the inserted node: " + ins.getInNode());
 		Node insertedNode = graph.getNode(ins.getInNode());
-		System.out.println("remove inserted node: " + insertedNode.getId());
+		System.out.println("remove inserted node: " + insertedNode.getId()
+				+ " from gs graph");
 		graph.removeNode(insertedNode);
 	}
 }
