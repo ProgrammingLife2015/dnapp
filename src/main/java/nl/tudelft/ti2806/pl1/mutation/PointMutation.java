@@ -13,6 +13,8 @@ public class PointMutation extends Mutation {
 	/** The nodes involved in the point mutation. */
 	private final Set<Integer> nodes;
 
+	private final int position;
+
 	/**
 	 * 
 	 * @param pre
@@ -21,14 +23,17 @@ public class PointMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param nodesIn
 	 *            The nodes directly involved in the mutation.
+	 * @param positionIn
+	 *            Position of the mutation on the reference genome.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
 	 * 
 	 */
 	public PointMutation(final int pre, final Set<Integer> nodesIn,
-			final int post, final ReferenceGeneStorage rgs) {
+			final int post, final int positionIn, final ReferenceGeneStorage rgs) {
 		super(pre, post, rgs);
 		this.nodes = nodesIn;
+		this.position = positionIn;
 		calculateGeneralScore();
 	}
 
@@ -37,11 +42,14 @@ public class PointMutation extends Mutation {
 	 */
 	private void calculateGeneralScore() {
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
-		int index = this.getNodes().iterator().next();
-		if (rgs.isIntragenic(index)) {
-			if (rgs.containsMutationIndex(index)) {
+		if (rgs.isIntragenic(getPosition())) {
+			if (rgs.containsMutationIndex(getPosition())) {
 				this.setScore(80);
+			} else {
+				this.setScore(10);
 			}
+		} else {
+			this.setScore(0);
 		}
 	}
 
@@ -50,6 +58,10 @@ public class PointMutation extends Mutation {
 	 */
 	public final Set<Integer> getNodes() {
 		return nodes;
+	}
+
+	public final int getPosition() {
+		return position;
 	}
 
 }

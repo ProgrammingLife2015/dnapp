@@ -17,7 +17,7 @@ public abstract class Mutation {
 	/**
 	 * Score of the mutation.
 	 */
-	private double score = 10;
+	private double score;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
