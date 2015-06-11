@@ -277,7 +277,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
 
+		int scrollval = graphPane.getHorizontalScrollBar().getValue();
 		graphPane.setViewportView(view);
+		graphPane.getHorizontalScrollBar().setValue(scrollval);
+
 		window.revalidate();
 		centerVertical();
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
