@@ -193,4 +193,9 @@ public class InnerNode extends BinaryTree {
 		}
 	}
 
+	@Override
+	public boolean isLeaf() {
+		return false;
+	}
+
 }
