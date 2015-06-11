@@ -113,6 +113,9 @@ public final class HorizontalCollapser {
 		HashSet<Integer> nodeids = getIds(from);
 		nodeids.addAll(getIds(to));
 		to.setAttribute("collapsed", nodeids);
+		if ((String) from.getAttribute("ui.class") == "collapsed") {
+			to.setAttribute("ui.class", "collapsed");
+		}
 	}
 
 	/**
