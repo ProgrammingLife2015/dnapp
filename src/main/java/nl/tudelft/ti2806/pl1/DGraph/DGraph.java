@@ -7,6 +7,8 @@ import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
+import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
@@ -56,6 +58,12 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** All the point mutations in the graph. */
 	private Collection<PointMutation> pointmutations;
 
+	/** All the deletion mutations in the graph. */
+	private Collection<DeletionMutation> delmutations;
+
+	/** All the insertion mutations in the graph. */
+	private Collection<InsertionMutation> insmutations;
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -65,7 +73,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
 		end = null;
-		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, null);
+		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, RES_CAUSE_MUT);
 	}
 
 	/**
@@ -307,8 +315,42 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		return nodes + " " + edges;
 	}
 
-	public void addPointMutations(final Collection<PointMutation> pointMutations) {
+	/**
+	 * @param pointMutations
+	 *            pointMutations to set.
+	 */
+	public void setPointMutations(final Collection<PointMutation> pointMutations) {
 		pointmutations = pointMutations;
+	}
+
+	/**
+	 * @param deletionMutationsIn
+	 *            deletion mutations to set.
+	 */
+	public void setDeletionMutations(
+			final Collection<DeletionMutation> deletionMutationsIn) {
+		delmutations = deletionMutationsIn;
+	}
+
+	/** @return the deletion mutations. */
+	public Collection<DeletionMutation> getDelmutations() {
+		return delmutations;
+	}
+
+	/**
+	 * @return the insmutations
+	 */
+	public Collection<InsertionMutation> getInsmutations() {
+		return insmutations;
+	}
+
+	/**
+	 * @param insmutationsIn
+	 *            the insmutations to set
+	 */
+	public void setInsertionmutations(
+			final Collection<InsertionMutation> insmutationsIn) {
+		this.insmutations = insmutationsIn;
 	}
 
 	/**

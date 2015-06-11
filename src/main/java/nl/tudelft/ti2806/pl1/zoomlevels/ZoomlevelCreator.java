@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
+import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 
 import org.graphstream.graph.Graph;
@@ -24,7 +25,12 @@ public final class ZoomlevelCreator {
 	}
 
 	public Graph createGraph(final int threshold) {
-		Graph ret = PointGraphConverter.collapseNodes(graph, threshold);
+
+		Graph ret = PointGraphConverter.collapseNodes(
+				graph.getAllPointMutations(), ConvertDGraph.convert(graph),
+				threshold);
+		ret = InDelCollapser.collapseInsertions(graph.getInsmutations(), ret);
+		ret = InDelCollapser.collapseDeletions(graph.getDelmutations(), ret);
 		ret = HorizontalCollapser.horizontalCollapse(ret);
 		return ret;
 	}

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
@@ -128,14 +127,12 @@ public final class PointGraphConverter {
 	 *            The threshold for collapsing pointmutations.
 	 * @return The new pointcollapsedgraph.
 	 */
-	public static Graph collapseNodes(final DGraph dgraph,
+	public static Graph collapseNodes(
+			final Collection<PointMutation> pointmutations, final Graph gsg,
 			final double threshold) {
-		Graph gsg = ConvertDGraph.convert(dgraph);
-		Collection<PointMutation> pointmutations = dgraph
-				.getAllPointMutations();
 		for (PointMutation pointmutation : pointmutations) {
 			if (pointmutation.getScore() < threshold) {
-				collapsePointMutation(dgraph, gsg, pointmutation);
+				collapsePointMutation(gsg, pointmutation);
 			}
 		}
 		return gsg;
@@ -151,8 +148,8 @@ public final class PointGraphConverter {
 	 * @param pointmutation
 	 *            The pointmutation we are trying to collapse.
 	 */
-	private static void collapsePointMutation(final DGraph graph,
-			final Graph gsg, final PointMutation pointmutation) {
+	private static void collapsePointMutation(final Graph gsg,
+			final PointMutation pointmutation) {
 		HashSet<Integer> nodeids = new HashSet<Integer>();
 		String newId = "";
 		int x = 0;

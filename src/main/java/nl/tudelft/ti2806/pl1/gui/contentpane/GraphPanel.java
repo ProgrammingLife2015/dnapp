@@ -15,7 +15,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,6 @@ import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
-import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
 import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
@@ -247,12 +245,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			try {
 				dgraph = Reader.read(nodes.getAbsolutePath(),
 						edges.getAbsolutePath());
-				Collection<PointMutation> pointmuts = PointGraphConverter
-						.getPointMutations(dgraph);
-				dgraph.addPointMutations(pointmuts);
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph); // TODO
+				analyzeDGraph();
 				window.getOptionPanel().fillGenomeList(
 						dgraph.getReferences().keySet(), true, true);
 			} catch (Exception e) {
@@ -261,6 +257,19 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			}
 			return graph;
 		}
+	}
+
+	/** Performs all the analyze methods on the DGraph. */
+	private void analyzeDGraph() {
+		long start = System.currentTimeMillis();
+		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
+		dgraph.setDeletionMutations(MutationFinder
+				.findDeletionMutations(dgraph));
+		dgraph.setInsertionmutations(MutationFinder
+				.findInsertionMutations(dgraph));
+		System.out.println(dgraph.getDelmutations());
+		System.out.println(dgraph.getInsmutations());
+		System.out.println(System.currentTimeMillis() - start);
 	}
 
 	/**
