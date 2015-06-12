@@ -69,7 +69,7 @@ public class ReferenceGeneStorage {
 				String[] columns = line.split("\\t");
 				String[] linesplit = columns[0].split(":");
 				String[] info = linesplit[1].split(",");
-				temp.put(Integer.valueOf(info[MUTATION_INDEX]),
+				temp.put(Integer.parseInt(info[MUTATION_INDEX]),
 						info[MUTATION_NAME]);
 			}
 		}
