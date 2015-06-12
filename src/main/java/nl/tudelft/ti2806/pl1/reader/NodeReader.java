@@ -1,9 +1,10 @@
 package nl.tudelft.ti2806.pl1.reader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -41,11 +42,14 @@ public final class NodeReader {
 	 * @param sc
 	 *            Scanner from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
+	 * @throws IOException
+	 *             When the file can't be read
 	 */
-	public static ArrayList<DNode> readNodes(final Scanner sc) {
+	public static ArrayList<DNode> readNodes(final BufferedReader reader)
+			throws IOException {
 		ArrayList<DNode> nodes = new ArrayList<DNode>();
-		while (sc.hasNextLine()) {
-			String nextnode = sc.nextLine();
+		String nextnode;
+		while ((nextnode = reader.readLine()) != null) {
 			if (nextnode.charAt(0) == '>') {
 				nextnode = nextnode.substring(1);
 				String[] data = nextnode.split("\\s\\|\\s");
@@ -53,7 +57,7 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"Missing some information to create this node");
 				}
-				String content = sc.nextLine();
+				String content = reader.readLine();
 				int id;
 				int start;
 				int end;
