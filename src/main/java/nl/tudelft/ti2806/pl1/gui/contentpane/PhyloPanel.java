@@ -123,13 +123,13 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 				int childY = (int) child.getCenter().getY();
 				if (childY == y) {
 					g2.drawLine(x, y, childX, y);
-					// g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N),
-					// (x + childX) / 2, childY);
+					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N),
+							(x + childX) / 2, childY);
 				} else {
 					g2.drawLine(x, y, x, childY);
 					g2.drawLine(x, childY, childX, childY);
-					// g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), x,
-					// (y + childY) / 2);
+					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), x,
+							(y + childY) / 2);
 				}
 				g2.setColor(DEFAULT_COLOR);
 				drawLines(g, child);

@@ -499,8 +499,8 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
 		private static final int NEWLEVEL = 10;
 
-		/** How far one scroll zooms in. **/
-		private static final double ZOOMPERCENTAGE = 1.1;
+		// /** How far one scroll zooms in. **/
+		// private static final double ZOOMPERCENTAGE = 1.1;
 
 		/**
 		 * This method decides what to do when the mouse is scrolled.

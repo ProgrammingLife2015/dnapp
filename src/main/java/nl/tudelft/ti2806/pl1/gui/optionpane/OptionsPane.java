@@ -112,7 +112,7 @@ public class OptionsPane extends JScrollPane {
 	 * The group of elements showing information about a selected genome in the
 	 * genome table.
 	 */
-	private SelectedGenomeGroup grpSelectedGenome;
+	// private SelectedGenomeGroup grpSelectedGenome;
 
 	/** The group of elements showing information about a selected node. */
 	private SelectedNodeGroup grpSelectedNode;

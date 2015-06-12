@@ -20,24 +20,16 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
  */
 public class DGraph implements MutatedGraph, DynamicGraph {
 
-	/**
-	 * The nodes in the graph.
-	 */
+	/** The nodes in the graph. */
 	private final Map<Integer, DNode> nodes;
 
-	/**
-	 * A map storing a collection nodes per genome reference.
-	 */
+	/** A map storing a collection nodes per genome reference. */
 	private HashMap<String, Collection<DNode>> references;
 
-	/**
-	 * The edges in the graph.
-	 */
+	/** The edges in the graph. */
 	private Collection<DEdge> edges;
 
-	/**
-	 * The start node and end node of the graph.
-	 */
+	/** The start node and end node of the graph. */
 	private DNode start, end;
 
 	/** Storage of all the genes in the reference genome. */
@@ -46,17 +38,12 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** File with all the gene information regarding the reference genome. */
 	private static final String GFF_FILE = "decorationV5_20130412.gff";
 
-	/**
-	 * 
-	 */
-	private static final String RES_CAUSE_MUT = "resistanceCausingMutations.tsv";
-
 	// /** File with all the drug resistance causing mutations. */
 	// private static final String MUTATION_FILE =
 	// "resistanceCausingMutations.txt";
 
 	/** All the point mutations in the graph. */
-	private Collection<PointMutation> pointmutations;
+	private Collection<PointMutation> pointMutations;
 
 	/** All the deletion mutations in the graph. */
 	private Collection<DeletionMutation> delmutations;
@@ -288,14 +275,12 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
-		return pointmutations;
+		return pointMutations;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllInDelMutations() {
-		// TODO Auto-generated method stub
-		return null;
+		return pointMutations;
 	}
 
 	/** {@inheritDoc} */
@@ -316,11 +301,12 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * @param pointMutations
+	 * @param newPointMutations
 	 *            pointMutations to set.
 	 */
-	public void setPointMutations(final Collection<PointMutation> pointMutations) {
-		pointmutations = pointMutations;
+	public void setPointMutations(
+			final Collection<PointMutation> newPointMutations) {
+		this.pointMutations = newPointMutations;
 	}
 
 	/**
