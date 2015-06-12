@@ -24,8 +24,14 @@ public final class ZoomlevelCreator {
 		this.graph = dataGraph;
 	}
 
+	/**
+	 * Creates a graph transformed according to a threshold score.
+	 * 
+	 * @param threshold
+	 *            Threshold score.
+	 * @return Created graph.
+	 */
 	public Graph createGraph(final int threshold) {
-
 		Graph ret = ConvertDGraph.convert(graph);
 		ret = InDelCollapser.collapseInsertions(graph.getInsmutations(), ret);
 		ret = InDelCollapser.collapseDeletions(graph.getDelmutations(), ret);
