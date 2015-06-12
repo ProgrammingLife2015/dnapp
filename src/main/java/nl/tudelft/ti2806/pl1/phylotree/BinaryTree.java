@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -49,7 +51,7 @@ public abstract class BinaryTree extends JButton {
 	private Point gridCoordinates = new Point(0, 0);
 
 	/**
-	 * @return the gridCoordinates
+	 * @return The grid coordinates of this node.
 	 */
 	public final Point getGridCoordinates() {
 		return gridCoordinates;
@@ -113,8 +115,8 @@ public abstract class BinaryTree extends JButton {
 	 * Checks whether two trees are equal.
 	 * 
 	 * @param t2
-	 *            the tree to compare with.
-	 * @return true iff this tree is equal to t2.
+	 *            the tree to compare this tree to.
+	 * @return true iff this tree is equal to <code>t2</code>.
 	 */
 	public abstract boolean equalsTree(final BinaryTree t2);
 
@@ -134,10 +136,13 @@ public abstract class BinaryTree extends JButton {
 	public abstract List<BinaryTree> getChildren();
 
 	/**
+	 * Sets the grid coordinates of the node and computes the children's
+	 * placement.
+	 * 
 	 * @param x
-	 *            The horizontal grid coordinate of the node
+	 *            The horizontal grid coordinate of the node.
 	 * @param y
-	 *            The vertical grid coordinate of the node
+	 *            The vertical grid coordinate of the node.
 	 * @return the width (delta y) of the tree
 	 */
 	public abstract int computePlacement(int x, int y);
@@ -146,9 +151,9 @@ public abstract class BinaryTree extends JButton {
 	 * Sets the grid coordinates.
 	 * 
 	 * @param x
-	 *            The horizontal coordinate
+	 *            The horizontal coordinate.
 	 * @param y
-	 *            The vertical coordinate
+	 *            The vertical coordinate.
 	 */
 	protected final void setGridLoc(final int x, final int y) {
 		this.gridCoordinates = new Point(x, y);
@@ -300,7 +305,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @return the collapsed
+	 * @return true iff this node collapses all its descendants.
 	 */
 	public final boolean isCollapsed() {
 		return collapsed;
@@ -308,16 +313,17 @@ public abstract class BinaryTree extends JButton {
 
 	/**
 	 * @param b
-	 *            the collapsed to set
+	 *            Whether this node should collapse all its descendants.
 	 */
 	public final void setCollapsed(final boolean b) {
 		this.collapsed = b;
 	}
 
-	/**
+	/*
 	 * Note: don't use keyword selected! superclass has methods isSelected and
 	 * setSelected.
-	 * 
+	 */
+	/**
 	 * @return true iff this node is selected.
 	 */
 	public abstract boolean isChosen();
@@ -335,6 +341,84 @@ public abstract class BinaryTree extends JButton {
 	public abstract void setChosen(final boolean b);
 
 	/**
+	 * Checks whether a node is a leaf.
+	 * 
+	 * @return True if the current node is a leaf, false otherwise
+	 */
+	public abstract boolean isLeaf();
+
+	/**
+	 * Checks whether a node contains a path to a given source.
+	 * 
+	 * @param source
+	 *            The source to which we search a path
+	 * @return true iff there exist a path to the source, false otherwise
+	 */
+	public boolean contains(final String source) {
+		if (this.isLeaf()) {
+			return this.getID().equals(source);
+		}
+		return this.getLeft().contains(source)
+				|| this.getRight().contains(source);
+	}
+
+	/**
+	 * Calculates the distance between the common ancestor and the root of 2
+	 * source strings.
+	 * 
+	 * @param source1
+	 *            The first source
+	 * @param source2
+	 *            The second source
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of 2 sources and the
+	 *         root of the tree
+	 */
+	public double getDistance(final String source1, final String source2,
+			final BinaryTree root) {
+		return getDistance(Arrays.asList(source1, source2), root);
+	}
+
+	/**
+	 * Calculates the distance between the common ancestor and the root for a
+	 * list of nodes.
+	 * 
+	 * @param sources
+	 *            The list of sources for which we want to calculate the
+	 *            distance
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of a list of sources and
+	 *         the root node
+	 */
+	public double getDistance(final List<String> sources, final BinaryTree root) {
+		if (root.isLeaf()) {
+			return 0;
+		}
+		boolean containsL = false;
+		boolean containsR = false;
+		Iterator<String> it = sources.iterator();
+		while (it.hasNext() && !(containsL && containsR)) {
+			String source = it.next();
+			containsL = containsL || root.getLeft().contains(source);
+			containsR = containsR || root.getRight().contains(source);
+		}
+		if (containsL && containsR) {
+			return 0;
+		} else if (containsL) {
+			return root.getLeft().getPathLength()
+					+ getDistance(sources, root.getLeft());
+		} else if (containsR) {
+			return root.getRight().getPathLength()
+					+ getDistance(sources, root.getRight());
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * This listener handles the click events on the node button.
 	 * 
 	 * @author Maarten, Justin
 	 * @since 27-5-2015
@@ -343,7 +427,7 @@ public abstract class BinaryTree extends JButton {
 	 */
 	class NodeMouseListener implements MouseListener {
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
@@ -354,7 +438,6 @@ public abstract class BinaryTree extends JButton {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				setChosen(!isChosen());
-				System.out.println("Node " + id + " set chosen=" + isChosen());
 				getPhyloPanel().plotTree();
 				break;
 			case MouseEvent.BUTTON3:
@@ -366,21 +449,19 @@ public abstract class BinaryTree extends JButton {
 			}
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseReleased(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
-
 	}
-
 }

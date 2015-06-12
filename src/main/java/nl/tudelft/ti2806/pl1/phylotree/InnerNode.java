@@ -7,9 +7,7 @@ import java.util.List;
 import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
 
 /**
- * 
  * @author Maarten
- *
  */
 public class InnerNode extends BinaryTree {
 
@@ -58,7 +56,7 @@ public class InnerNode extends BinaryTree {
 	}
 
 	/**
-	 * @return the number of nodes (inner and leaf) in tree.
+	 * @return the size of the subtree with this inner node as root.
 	 */
 	@Override
 	public final int treeSize() {
@@ -149,7 +147,7 @@ public class InnerNode extends BinaryTree {
 		if (hasRight()) {
 			h = Math.max(h, right.height());
 		}
-		return h + 1; // inner: one higher than highest child
+		return h + 1;
 	}
 
 	@Override
@@ -191,6 +189,11 @@ public class InnerNode extends BinaryTree {
 		for (BinaryTree child : getChildren()) {
 			child.setChosen(b);
 		}
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return false;
 	}
 
 }

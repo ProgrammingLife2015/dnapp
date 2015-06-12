@@ -50,7 +50,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	public static final Color INNER_NODE_COLLAPSED = Color.RED;
 
 	/** The color of a normal (not collapsed) inner node. */
-	public static final Color INNER_NODE_NORMAL = Color.GREEN;
+	public static final Color INNER_NODE_NORMAL = Color.BLACK;
 
 	/** The default color to use. */
 	public static final Color DEFAULT_COLOR = Color.BLACK;
