@@ -2,12 +2,10 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -44,13 +42,11 @@ public final class Reader {
 	 * @param edges
 	 *            File location of the Edges data.
 	 * @return Graph with this processed information.
-	 * @throws FileNotFoundException
-	 *             If file is not found.
-	 * @throws UnsupportedEncodingException
-	 *             When the encodig is not supported (UTF-8)
+	 * @throws IOException
+	 *             When the file can't be read
 	 */
 	public static DGraph read(final String nodes, final String edges)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 		DGraph graph = new DGraph();
 		for (DNode node : readNodes(nodes)) {
 			graph.addDNode(node);
@@ -68,17 +64,14 @@ public final class Reader {
 	 * @param nodesPath
 	 *            The path for the file containing the nodes
 	 * @return A list with the nodes
-	 * @throws FileNotFoundException
-	 *             Throws an exception when the file isn't found
-	 * @throws UnsupportedEncodingException
-	 *             When the encoding is not supported (UTF-8)
+	 * @throws IOException
+	 *             When the file can't be read
 	 */
 	private static ArrayList<DNode> readNodes(final String nodesPath)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(nodesPath), "UTF-8"));
-		Scanner sc = new Scanner(reader);
-		return NodeReader.readNodes(sc);
+		return NodeReader.readNodes(reader);
 	}
 
 	/**
@@ -89,18 +82,14 @@ public final class Reader {
 	 * @param graph
 	 *            The DGraph for which the edges will be added
 	 * @return ArrayList with the edges
-	 * @throws FileNotFoundException
-	 *             hrows an exception when the file isn't found
-	 * @throws UnsupportedEncodingException
-	 *             When the encoding is not supported (UTF-8)
+	 * @throws IOException
+	 *             When the file can't be read
 	 */
 	private static ArrayList<DEdge> readEdges(final String edgesPath,
-			final DGraph graph) throws FileNotFoundException,
-			UnsupportedEncodingException {
+			final DGraph graph) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(edgesPath), "UTF-8"));
-		Scanner sc = new Scanner(reader);
-		return EdgeReader.readEdges(sc, graph);
+		return EdgeReader.readEdges(reader, graph);
 	}
 
 	/**

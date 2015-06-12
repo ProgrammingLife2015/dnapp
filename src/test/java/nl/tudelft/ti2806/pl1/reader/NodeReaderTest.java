@@ -2,8 +2,10 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -15,47 +17,49 @@ public class NodeReaderTest {
 	String node = ">0 | TKK-01-0029 | 27 | 28" + "\n" + "A";
 
 	@Test
-	public void readOneNodeTest() {
-		Scanner sc = new Scanner(node);
-		ArrayList<DNode> graph = NodeReader.readNodes(sc);
+	public void readOneNodeTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(node));
+		ArrayList<DNode> graph = NodeReader.readNodes(reader);
 		assertEquals(graph.get(0).getId(), 0);
-		sc.close();
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void wrongFirstSymbolTest() {
-		Scanner sc = new Scanner("a b c");
-		NodeReader.readNodes(sc);
+	public void wrongFirstSymbolTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader("a b c"));
+		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void wrongNumberOfInputTest() {
-		Scanner sc = new Scanner("> | b | c");
-		NodeReader.readNodes(sc);
+	public void wrongNumberOfInputTest() throws IOException {
+		BufferedReader reader = new BufferedReader(
+				new StringReader("> | b | c"));
+		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void wrongIdTest() {
-		Scanner sc = new Scanner(">a | b | c | d" + "\n" + "A");
-		NodeReader.readNodes(sc);
+	public void wrongIdTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">a | b | c | d" + "\n" + "A"));
+		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void nonMatchingRefTest() {
-		Scanner sc = new Scanner(">0 | b | 1 | 2" + "\n" + "AA");
-		NodeReader.readNodes(sc);
+	public void nonMatchingRefTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">0 | b | 1 | 2" + "\n" + "AA"));
+		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void startAndEndNotIntegerTest() {
-		Scanner sc = new Scanner(">0 | b | a | 2" + "\n" + "AA");
-		NodeReader.readNodes(sc);
+	public void startAndEndNotIntegerTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">0 | b | a | 2" + "\n" + "AA"));
+		NodeReader.readNodes(reader);
 	}
 
 	@Test
-	public void returnsOneNodeTest() {
-		Scanner sc = new Scanner(node);
-		ArrayList<DNode> graph = NodeReader.readNodes(sc);
-		assertEquals(graph.size(), 1);
+	public void returnsOneNodeTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(node));
+		ArrayList<DNode> graph = NodeReader.readNodes(reader);
 	}
 }
