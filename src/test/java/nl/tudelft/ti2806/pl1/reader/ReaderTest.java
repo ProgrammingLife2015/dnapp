@@ -2,8 +2,7 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -21,8 +20,7 @@ public class ReaderTest {
 	DGraph graph = new DGraph();
 
 	@Before
-	public void setUp() throws FileNotFoundException,
-			UnsupportedEncodingException {
+	public void setUp() throws IOException {
 		graph = Reader.read(nodes, edges);
 	}
 
