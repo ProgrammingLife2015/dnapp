@@ -71,6 +71,8 @@ public final class PointGraphConverter {
 	 *            First id.
 	 * @param nodegroups
 	 *            HashMap of end id with pointmutations.
+	 * @param graph
+	 *            The graph.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
 	 * 
@@ -121,7 +123,9 @@ public final class PointGraphConverter {
 	/**
 	 * Collapses the nodegroups in the graph.
 	 * 
-	 * @param dgraph
+	 * @param pointmutations
+	 *            The pointmutations in the graph.
+	 * @param gsg
 	 *            The graph we want to collapse on.
 	 * @param threshold
 	 *            The threshold for collapsing pointmutations.
@@ -140,8 +144,6 @@ public final class PointGraphConverter {
 
 	/**
 	 * 
-	 * @param graph
-	 *            The DGraph which contains all information.
 	 * @param gsg
 	 *            The Graphstreamgraph which will contain the new
 	 *            representation.
@@ -162,8 +164,6 @@ public final class PointGraphConverter {
 				y += (int) node.getAttribute("y");
 				if (node.getLeavingEdgeSet().size() == 1
 						&& node.getEnteringEdgeSet().size() == 1) {
-					gsg.removeEdge(node.getLeavingEdgeIterator().next());
-					gsg.removeEdge(node.getEnteringEdgeIterator().next());
 					gsg.removeNode(node);
 				} else {
 					if (node.getLeavingEdgeSet().size() > 1) {
@@ -197,6 +197,28 @@ public final class PointGraphConverter {
 			newId += nodeid + "/";
 		}
 		y /= pointmutation.getNodes().size();
+		makeNewNode(gsg, x, y, newId, pointmutation, nodeids);
+	}
+
+	/**
+	 * Makes a new node in the graph.
+	 * 
+	 * @param gsg
+	 *            The graph.
+	 * @param x
+	 *            The x-coordinate.
+	 * @param y
+	 *            The y-coordinate.
+	 * @param newId
+	 *            The ID of the new node.
+	 * @param pointmutation
+	 *            Contains the nodes that will connect to the new nods.
+	 * @param nodeids
+	 *            The nodes that this new node contains.
+	 */
+	private static void makeNewNode(final Graph gsg, final int x,
+			final double y, final String newId,
+			final PointMutation pointmutation, final HashSet<Integer> nodeids) {
 		Node newnode = gsg.addNode("COLLAPSED_" + newId
 				+ pointmutation.getPostNode());
 		newnode.addAttribute("x", x);

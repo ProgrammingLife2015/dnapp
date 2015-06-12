@@ -129,7 +129,7 @@ public final class HorizontalCollapser {
 		if (node.hasAttribute("collapsed")) {
 			return node.getAttribute("collapsed");
 		} else {
-			return new HashSet<Integer>(Integer.valueOf(node.getId()));
+			return new HashSet<Integer>(Integer.parseInt(node.getId()));
 		}
 	}
 }

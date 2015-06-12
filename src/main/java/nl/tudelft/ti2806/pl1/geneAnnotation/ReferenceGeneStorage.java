@@ -96,7 +96,7 @@ public class ReferenceGeneStorage {
 				String[] info = line.split("\\t");
 				String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
 						"Name=", "");
-				ret.add(new ReferenceGene(Integer.valueOf(info[INDEX_START]),
+				ret.add(new ReferenceGene(Integer.parseInt(info[INDEX_START]),
 						Integer.valueOf(info[INDEX_END]), Double
 								.valueOf(info[INDEX_SCORE]),
 						info[INDEX_STRAND], name));

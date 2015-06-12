@@ -24,8 +24,15 @@ public final class ZoomlevelCreator {
 		this.graph = dataGraph;
 	}
 
+	/**
+	 * Creates a graph with its mutations collapsed according to a score
+	 * threshold.
+	 * 
+	 * @param threshold
+	 *            The score threshold.
+	 * @return The created graph
+	 */
 	public Graph createGraph(final int threshold) {
-
 		Graph ret = ConvertDGraph.convert(graph);
 		ret = InDelCollapser.collapseInsertions(graph.getInsmutations(), ret);
 		ret = InDelCollapser.collapseDeletions(graph.getDelmutations(), ret);

@@ -89,10 +89,12 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	@Override
 	public final void update(final HashSet<DNode> newSelectedNodes) {
 		Iterator<DNode> it = newSelectedNodes.iterator();
-		String content = it.next().getContent();
+		StringBuffer buf = new StringBuffer();
+		buf.append(it.next().getContent());
 		while (it.hasNext()) {
-			content += "/" + it.next().getContent();
+			buf.append("/" + it.next().getContent());
 		}
+		String content = buf.toString();
 		text.setText(content);
 		for (int i = 0; i < text.getDocument().getLength(); i++) {
 			SimpleAttributeSet set = new SimpleAttributeSet();

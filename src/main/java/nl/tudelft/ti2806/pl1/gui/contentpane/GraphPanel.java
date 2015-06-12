@@ -70,6 +70,21 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	private int zoomLevel = 0;
 
 	/**
+	 * Threshold value for first zoom level.
+	 */
+	private static final int THRESHOLD_1 = 10;
+
+	/**
+	 * Threshold value for second zoom level.
+	 */
+	private static final int THRESHOLD_2 = 20;
+
+	/**
+	 * Threshold value for third zoom level.
+	 */
+	private static final int THRESHOLD_3 = 90;
+
+	/**
 	 * The list of node selection observers.
 	 * 
 	 * @see NodeSelectionObserver
@@ -464,15 +479,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			visualizeGraph(ConvertDGraph.convert(dgraph));
 			break;
 		case 1:
-			int threshold = 10;
+			int threshold = THRESHOLD_1;
 			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		case 2:
-			threshold = 20;
+			threshold = THRESHOLD_2;
 			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		case 3:
-			threshold = 90;
+			threshold = THRESHOLD_3;
 			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		default:
@@ -623,7 +638,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @since 22-5-2015
 	 * @version 1.0
 	 */
-	final class ScrollListener implements AdjustmentListener {
+	static final class ScrollListener implements AdjustmentListener {
 
 		/**
 		 * Initialize the scroll listener and make it observe a given scroll
@@ -699,7 +714,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid(" Selected node: " + id);
-			notifyObservers(dgraph.getDNode(Integer.valueOf(id)));
+			notifyObservers(dgraph.getDNode(Integer.parseInt(id)));
 		}
 
 		/** {@inheritDoc} */

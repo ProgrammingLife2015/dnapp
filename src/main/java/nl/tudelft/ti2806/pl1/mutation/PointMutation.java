@@ -13,7 +13,20 @@ public class PointMutation extends Mutation {
 	/** The nodes involved in the point mutation. */
 	private final Set<Integer> nodes;
 
+	/**
+	 * Position of the mutation on the reference genome.
+	 */
 	private final int position;
+
+	/**
+	 * Score for a mutation if it is located on a gene.
+	 */
+	private static final int SCORE_GENE = 80;
+
+	/**
+	 * Score for a mutation if it is not located on a gene.
+	 */
+	private static final int SCORE_NO_GENE = 10;
 
 	/**
 	 * 
@@ -44,9 +57,9 @@ public class PointMutation extends Mutation {
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
 		if (rgs.isIntragenic(getPosition())) {
 			if (rgs.containsMutationIndex(getPosition())) {
-				this.setScore(80);
+				this.setScore(SCORE_GENE);
 			} else {
-				this.setScore(10);
+				this.setScore(SCORE_NO_GENE);
 			}
 		} else {
 			this.setScore(0);
@@ -60,6 +73,9 @@ public class PointMutation extends Mutation {
 		return nodes;
 	}
 
+	/**
+	 * @return Position of the mutation on the reference genome.
+	 */
 	public final int getPosition() {
 		return position;
 	}

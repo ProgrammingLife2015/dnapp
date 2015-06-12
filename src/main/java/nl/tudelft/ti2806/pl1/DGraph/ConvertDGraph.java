@@ -98,7 +98,7 @@ public final class ConvertDGraph {
 	private static void addNodeToGraph(final Graph g, final String id,
 			final DGraph dg) {
 		Node gn = g.addNode(id);
-		DNode n = dg.getDNode(Integer.valueOf(id));
+		DNode n = dg.getDNode(Integer.parseInt(id));
 		gn.addAttribute("x", n.getX());
 		gn.addAttribute("y", n.getY());
 		gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
