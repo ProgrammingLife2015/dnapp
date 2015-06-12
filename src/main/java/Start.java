@@ -1,5 +1,3 @@
-
-
 import javax.swing.SwingUtilities;
 
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -22,6 +20,7 @@ public final class Start {
 	 */
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				new Window();
 			}

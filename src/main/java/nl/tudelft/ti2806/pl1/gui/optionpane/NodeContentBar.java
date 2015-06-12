@@ -7,6 +7,9 @@ import java.awt.Graphics;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.NucleoBase;
+
 /**
  * 
  * @author Maarten
@@ -16,40 +19,24 @@ import javax.swing.JPanel;
  */
 public class NodeContentBar extends JPanel {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -1358753355960431280L;
 
-	/**
-	 * The bar fill color.
-	 */
-	private static final Color COLOR_A = Color.RED, COLOR_T = Color.BLUE,
-			COLOR_C = Color.YELLOW, COLOR_G = Color.GREEN,
-			COLOR_N = Color.GRAY;
-
-	/**
-	 * The width of the bar.
-	 */
+	/** The width of the bar. */
 	private int width;
 
-	/**
-	 * The length of the bar.
-	 */
+	/** The length of the bar. */
 	private int length;
 
-	/**
-	 * The length of all nucleotides types, including the unknown ones.
-	 */
+	/** The length of all nucleotides types, including the unknown ones. */
 	private int lenA, lenC, lenT, lenG, lenN;
 
-	/**
-	 * The total length of the string.
-	 */
+	/** The total length of the analyzed string. */
 	private int totalLen;
 
 	/**
-	 * 
+	 * Whether a string has already been analyzed and so the bar is able to be
+	 * shown.
 	 */
 	private boolean calculated;
 
@@ -78,8 +65,6 @@ public class NodeContentBar extends JPanel {
 	 *            The sequence to analyze.
 	 */
 	public final void analyseString(final String newSequence) {
-		// System.out.println("Analyze: " + newSequence);
-		// System.out.println("Analyze Total length set = " + totalLen);
 		lenA = 0;
 		lenC = 0;
 		lenT = 0;
@@ -104,46 +89,37 @@ public class NodeContentBar extends JPanel {
 				lenN++;
 				break;
 			default:
+				Event.statusBarError("invalid nucleo base \'" + c
+						+ "\' found in selected node.");
 				System.out.println("ERROR: Invalid nucleotide found (" + c
 						+ ") in string: " + newSequence);
 			}
 		}
-		// System.out.println("Analyze " + lenA + " " + lenC + " " + lenT + " "
-		// + lenG + " " + lenN);
 		calculated = true;
-		// revalidate();
 		repaint();
 	}
 
 	@Override
 	protected final void paintComponent(final Graphics g) {
 		super.paintComponent(g);
-		// System.out.println("paint comp calc=" + calculated);
 		if (calculated && totalLen > 0) {
-			// System.out.println("paint totallen=" + totalLen);
 			int dLenA = length * lenA / totalLen;
 			int dLenC = length * lenC / totalLen;
 			int dLenT = length * lenT / totalLen;
 			int dLenG = length * lenG / totalLen;
 			int dLenN = length * lenN / totalLen;
-			g.setColor(COLOR_A);
+			g.setColor(NucleoBase.A.getColor());
 			g.fillRect(0, 0, dLenA, width);
-			g.setColor(COLOR_T);
+			g.setColor(NucleoBase.T.getColor());
 			g.fillRect(dLenA, 0, dLenT, width);
-			g.setColor(COLOR_C);
+			g.setColor(NucleoBase.C.getColor());
 			g.fillRect(dLenA + dLenT, 0, dLenC, width);
-			g.setColor(COLOR_G);
+			g.setColor(NucleoBase.G.getColor());
 			g.fillRect(dLenA + dLenT + dLenC, 0, dLenG, width);
-			g.setColor(COLOR_N);
+			g.setColor(NucleoBase.N.getColor());
 			g.fillRect(dLenA + dLenT + dLenC + dLenG, 0, dLenN, width);
 			g.setColor(Color.BLACK);
-			// System.out.println("Paint comp " + dLenA + " " + dLenC + " "
-			// + dLenT + " " + dLenG + " " + dLenN);
 		}
-		// Graphics2D g2 = (Graphics2D) g;
-		// g2.setStroke(new BasicStroke(1));
-		// // System.out.println("Rect len=" + length + " wid=" + width);
-		// g2.drawRect(0, 0, length, width);
 	}
 
 }

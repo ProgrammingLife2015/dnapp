@@ -397,4 +397,9 @@ public class DNode {
 	public final int hashCode() {
 		return getId();
 	}
+
+	@Override
+	public String toString() {
+		return "<Node[" + id + "]>";
+	}
 }

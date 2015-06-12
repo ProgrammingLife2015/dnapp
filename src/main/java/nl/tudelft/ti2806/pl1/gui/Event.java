@@ -24,6 +24,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Event NONE fired.");
 		}
@@ -36,8 +37,9 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.toolBar().setVisible(true);
+			window.getToolBar().setVisible(true);
 		}
 
 	},
@@ -49,8 +51,9 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.toolBar().setVisible(false);
+			window.getToolBar().setVisible(false);
 		}
 
 	},
@@ -62,6 +65,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
 			// window.setVisible(false);
@@ -77,6 +81,7 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
 			if (fsNode.showDialog(window, "Load nodes") == JFileChooser.APPROVE_OPTION) {
@@ -86,7 +91,7 @@ public enum Event implements ActionListener {
 				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
 					final File edges = fsEdge.getSelectedFile();
 					try {
-						window.content().loadGraph(nodes, edges);
+						window.getContent().loadGraph(nodes, edges);
 					} catch (InvalidNodePlacementException e1) {
 						e1.printStackTrace();
 					}
@@ -104,11 +109,12 @@ public enum Event implements ActionListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
 			if (fcPhylo.showDialog(window, "Load Newick") == JFileChooser.APPROVE_OPTION) {
 				final File newick = fcPhylo.getSelectedFile();
-				window.content().loadTree(newick);
+				window.getContent().loadTree(newick);
 			} else {
 				dialogCanceled();
 			}
@@ -119,10 +125,11 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	WRITE_FILE {
+	WRITE_TO_DGS {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void actionPerformed(final ActionEvent e) {
 			ExportDialog fs = new ExportDialog();
 			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -133,11 +140,40 @@ public enum Event implements ActionListener {
 					writePath += ".dgs";
 					statusBarInfo("Appended file extension .dgs");
 				}
-				window.content().writeGraph(writePath);
+				window.getContent().writeGraph(writePath);
 				statusBarInfo("Graph file written to " + writePath);
 			} else {
 				dialogCanceled();
 			}
+		}
+	},
+
+	/**
+	 * 
+	 */
+	RELOAD_GRAPH {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent().getGraphPanel().loadCurrentViewArea();
+		}
+	},
+
+	/**
+	 * 
+	 */
+	COLLAPSE_SNPS {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent().getGraphPanel().applyZoomLevel(1);
+		}
+	},
+
+	/**
+	 * 
+	 */
+	OPEN_GRAPH_DB {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
 		}
 	};
 
@@ -184,7 +220,7 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarInfo(final String message) {
-		window.statusBar().main(message, StatusBar.MessageType.INFO);
+		window.getStatusBar().main(message, StatusBar.MessageType.INFO);
 	}
 
 	/**
@@ -196,7 +232,7 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarError(final String message) {
-		window.statusBar().main(message, StatusBar.MessageType.ERROR);
+		window.getStatusBar().main(message, StatusBar.MessageType.ERROR);
 	}
 
 	/**
@@ -208,7 +244,7 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#right(String)
 	 */
 	public static void statusBarRight(final String message) {
-		window.statusBar().right(message);
+		window.getStatusBar().right(message);
 	}
 
 	/**
@@ -221,7 +257,7 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#mid(String)
 	 */
 	public static void statusBarMid(final String message) {
-		window.statusBar().mid(message);
+		window.getStatusBar().mid(message);
 	}
 
 }

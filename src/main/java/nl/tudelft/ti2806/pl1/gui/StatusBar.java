@@ -1,10 +1,9 @@
 package nl.tudelft.ti2806.pl1.gui;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -34,14 +33,12 @@ public class StatusBar extends JPanel {
 	 * Initializes the status bar.
 	 */
 	public StatusBar() {
+		setLayout(new BorderLayout());
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		mainLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		midLabel.setAlignmentX(CENTER_ALIGNMENT);
-		add(mainLabel);
-		add(midLabel);
-		add(Box.createHorizontalGlue());
-		add(rightLabel);
+		add(mainLabel, BorderLayout.WEST);
+		add(midLabel, BorderLayout.CENTER);
+		add(rightLabel, BorderLayout.EAST);
 	}
 
 	// /**

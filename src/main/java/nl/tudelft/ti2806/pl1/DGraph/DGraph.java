@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
+import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
+import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 /**
  * The DGraph class for representing our data.
@@ -13,26 +18,18 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  * @author Mark
  *
  */
-public class DGraph {
+public class DGraph implements MutatedGraph, DynamicGraph {
 
-	/**
-	 * The nodes in the graph.
-	 */
+	/** The nodes in the graph. */
 	private final Map<Integer, DNode> nodes;
 
-	/**
-	 * A map storing a collection nodes per genome reference.
-	 */
+	/** A map storing a collection nodes per genome reference. */
 	private HashMap<String, Collection<DNode>> references;
 
-	/**
-	 * The edges in the graph.
-	 */
+	/** The edges in the graph. */
 	private Collection<DEdge> edges;
 
-	/**
-	 * The start node and end node of the graph.
-	 */
+	/** The start node and end node of the graph. */
 	private DNode start, end;
 
 	/** Storage of all the genes in the reference genome. */
@@ -44,6 +41,15 @@ public class DGraph {
 	// /** File with all the drug resistance causing mutations. */
 	// private static final String MUTATION_FILE =
 	// "resistanceCausingMutations.txt";
+
+	/** All the point mutations in the graph. */
+	private Collection<PointMutation> pointMutations;
+
+	/** All the deletion mutations in the graph. */
+	private Collection<DeletionMutation> delmutations;
+
+	/** All the insertion mutations in the graph. */
+	private Collection<InsertionMutation> insmutations;
 
 	/**
 	 * Creates a new DGraph.
@@ -266,4 +272,77 @@ public class DGraph {
 		this.end = e;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Collection<PointMutation> getAllPointMutations() {
+		return pointMutations;
+	}
+
+	@Override
+	public Collection<PointMutation> getAllInDelMutations() {
+		return pointMutations;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Collection<DNode> getDNodes(final ViewArea va) {
+		ArrayList<DNode> ret = new ArrayList<DNode>();
+		for (DNode n : getNodes().values()) {
+			if (va.isContained(n)) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public String toString() {
+		return nodes + " " + edges;
+	}
+
+	/**
+	 * @param newPointMutations
+	 *            pointMutations to set.
+	 */
+	public void setPointMutations(
+			final Collection<PointMutation> newPointMutations) {
+		this.pointMutations = newPointMutations;
+	}
+
+	/**
+	 * @param deletionMutationsIn
+	 *            deletion mutations to set.
+	 */
+	public void setDeletionMutations(
+			final Collection<DeletionMutation> deletionMutationsIn) {
+		delmutations = deletionMutationsIn;
+	}
+
+	/** @return the deletion mutations. */
+	public Collection<DeletionMutation> getDelmutations() {
+		return delmutations;
+	}
+
+	/**
+	 * @return the insmutations
+	 */
+	public Collection<InsertionMutation> getInsmutations() {
+		return insmutations;
+	}
+
+	/**
+	 * @param insmutationsIn
+	 *            the insmutations to set
+	 */
+	public void setInsertionmutations(
+			final Collection<InsertionMutation> insmutationsIn) {
+		this.insmutations = insmutationsIn;
+	}
+
+	/**
+	 * @return the referenceGeneStorage
+	 */
+	public final ReferenceGeneStorage getReferenceGeneStorage() {
+		return referenceGeneStorage;
+	}
 }

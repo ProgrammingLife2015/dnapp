@@ -1,9 +1,10 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -35,7 +36,7 @@ public class ReferenceGeneStorage {
 	private TreeSet<ReferenceGene> referenceGenes;
 
 	/** All the known drug resistance mutations. */
-	private HashMap<Integer, String> drugResMuts;
+	private Map<Integer, String> drugResMuts;
 
 	/**
 	 * Constructor reading the gff3 gene files, extracting all the possible
@@ -61,25 +62,26 @@ public class ReferenceGeneStorage {
 	 *            Path to the file containing the drug resistance mutations.
 	 * @return Returns a hashmap containing the names of the mutations.
 	 */
-	private HashMap<Integer, String> extractMutations(final String mutationPath) {
-		HashMap<Integer, String> temp = new HashMap<Integer, String>();
+	private Map<Integer, String> extractMutations(final String mutationPath) {
+		Map<Integer, String> temp = new HashMap<Integer, String>();
+		Scanner sc = null;
 		try {
-			Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-					.getResourceAsStream(mutationPath));
+			sc = new Scanner(new BufferedReader(new InputStreamReader(
+					ReferenceGene.class.getClassLoader().getResourceAsStream(
+							mutationPath), "UTF-8")));
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				if (!line.contains("##")) {
 					String[] columns = line.split("\\t");
 					String[] linesplit = columns[0].split(":");
 					String[] info = linesplit[1].split(",");
-					temp.put(Integer.valueOf(info[MUTATION_INDEX]),
+					temp.put(Integer.parseInt(info[MUTATION_INDEX]),
 							info[MUTATION_NAME]);
 				}
 			}
 			sc.close();
-		} catch (NullPointerException e) {
-			// TODO When no file was found.
-			// e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		return temp;
 	}
@@ -95,34 +97,27 @@ public class ReferenceGeneStorage {
 	private TreeSet<ReferenceGene> extractReferenceGenes(final String file) {
 		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
 				new RefGeneCompare());
-		try {
-			// Scanner sc = new Scanner(new BufferedReader(new FileReader(
-			// new File(ReferenceGene.class.getClassLoader()
-			// .getResource(file).getPath()))));
-			Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-					.getResourceAsStream(file));
-			while (sc.hasNextLine()) {
-				String line = sc.nextLine();
-				if (line.contains("CDS")) {
-					String[] info = line.split("\\t");
-					String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
-							"Name=", "");
-					ret.add(new ReferenceGene(Integer
-							.valueOf(info[INDEX_START]), Integer
-							.valueOf(info[INDEX_END]), Double
-							.valueOf(info[INDEX_SCORE]), info[INDEX_STRAND],
-							name));
-				}
+		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
+				.getResourceAsStream(file));
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if (line.contains("CDS")) {
+				String[] info = line.split("\\t");
+				String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
+						"Name=", "");
+				ret.add(new ReferenceGene(Integer.parseInt(info[INDEX_START]),
+						Integer.parseInt(info[INDEX_END]), Double
+								.parseDouble(info[INDEX_SCORE]),
+						info[INDEX_STRAND], name));
 			}
-			sc.close();
-		} catch (NullPointerException e) {
-			// TODO When no file was found.
-			// e.printStackTrace();
 		}
+		sc.close();
 		return ret;
 	}
 
-	/** @return the name genes. */
+	/**
+	 * @return the name genes.
+	 */
 	public TreeSet<ReferenceGene> getReferenceGenes() {
 		return referenceGenes;
 	}
@@ -172,8 +167,8 @@ public class ReferenceGeneStorage {
 		return false;
 	}
 
-	/** @return the hashmap containing the know drug resistance mutations. */
-	public HashMap<Integer, String> getDrugResistanceMutations() {
+	/** @return the map containing the know drug resistance mutations. */
+	public Map<Integer, String> getDrugResistanceMutations() {
 		return drugResMuts;
 	}
 

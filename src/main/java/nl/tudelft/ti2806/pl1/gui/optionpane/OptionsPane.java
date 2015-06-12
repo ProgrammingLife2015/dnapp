@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -112,7 +112,7 @@ public class OptionsPane extends JScrollPane {
 	 * The group of elements showing information about a selected genome in the
 	 * genome table.
 	 */
-	private SelectedGenomeGroup grpSelectedGenome;
+	// private SelectedGenomeGroup grpSelectedGenome;
 
 	/** The group of elements showing information about a selected node. */
 	private SelectedNodeGroup grpSelectedNode;
@@ -137,15 +137,14 @@ public class OptionsPane extends JScrollPane {
 		this.pane = new ScrollablePanel(gridBagLayout);
 		pane.setAlignmentY(TOP_ALIGNMENT);
 		pane.setScrollableWidth(ScrollableSizeHint.FIT);
-		pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
+		// pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
 		this.tblGenomes = new GenomeTable();
 		this.grpSelectedNode = new SelectedNodeGroup();
-		this.grpSelectedGenome = new SelectedGenomeGroup(this);
+		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
-
 		setPreferredSize(SIZE);
 		addControls();
 
@@ -158,18 +157,18 @@ public class OptionsPane extends JScrollPane {
 	 * @see Window#Window()
 	 */
 	public final void componentsLoaded() {
-		window.content().getGraphPanel().registerObserver(grpSelectedNode);
+		window.getContent().getGraphPanel().registerObserver(grpSelectedNode);
 	}
 
 	/**
-	 * Adds the control elements to the option pane.
+	 * Adds the elements to the option pane.
 	 */
 	private void addControls() {
 		setupConstraints();
 
 		place(new JLabel("Genomes:"), 0);
 		place(tblGenomes);
-		place(grpSelectedGenome);
+		// place(grpSelectedGenome);
 		place(grpSelectedNode);
 
 		gbc.weighty = GBC_WEIGHT_Y;
@@ -202,7 +201,7 @@ public class OptionsPane extends JScrollPane {
 	 * @param selected
 	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fillGenomeList(final List<String> genomeIds,
+	public final void fillGenomeList(final Collection<String> genomeIds,
 			final boolean empty, final boolean selected) {
 		tblGenomes.fill(genomeIds, empty, selected);
 	}

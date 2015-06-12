@@ -1,9 +1,9 @@
 node {
     size: 20px;
     shape: circle;
-    text-alignment: above;
+    /*text-alignment: above;
     stroke-mode: plain;
-    stroke-color: black;
+    stroke-color: black;*/
     /*text-background-mode: rounded-box;*/
     /*text-background-color: yellow;*/
     /*text-padding: 3px, 0px;*/
@@ -23,4 +23,7 @@ node.highlight {
 }
 node.selected {
     fill-color: yellow;
+}
+node.collapsed{
+    fill-color: purple;
 }
