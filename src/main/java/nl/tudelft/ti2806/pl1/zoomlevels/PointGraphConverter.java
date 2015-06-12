@@ -157,36 +157,39 @@ public final class PointGraphConverter {
 		for (int nodeid : pointmutation.getNodes()) {
 			nodeids.add(nodeid);
 			Node node = gsg.getNode(nodeid + "");
-			x = node.getAttribute("x");
-			y += (int) node.getAttribute("y");
-			if (node.getLeavingEdgeSet().size() == 1
-					&& node.getEnteringEdgeSet().size() == 1) {
-				gsg.removeEdge(node.getLeavingEdgeIterator().next());
-				gsg.removeEdge(node.getEnteringEdgeIterator().next());
-				gsg.removeNode(node);
-			} else {
-				if (node.getLeavingEdgeSet().size() > 1) {
-					boolean stop = false;
-					Iterator<Edge> leavingedges = node.getLeavingEdgeIterator();
-					while (leavingedges.hasNext() && !stop) {
-						Edge edge = leavingedges.next();
-						if (edge.getNode1().getId()
-								.equals(pointmutation.getPostNode() + "")) {
-							gsg.removeEdge(edge);
-							stop = true;
+			if (node != null) {
+				x = node.getAttribute("x");
+				y += (int) node.getAttribute("y");
+				if (node.getLeavingEdgeSet().size() == 1
+						&& node.getEnteringEdgeSet().size() == 1) {
+					gsg.removeEdge(node.getLeavingEdgeIterator().next());
+					gsg.removeEdge(node.getEnteringEdgeIterator().next());
+					gsg.removeNode(node);
+				} else {
+					if (node.getLeavingEdgeSet().size() > 1) {
+						boolean stop = false;
+						Iterator<Edge> leavingedges = node
+								.getLeavingEdgeIterator();
+						while (leavingedges.hasNext() && !stop) {
+							Edge edge = leavingedges.next();
+							if (edge.getNode1().getId()
+									.equals(pointmutation.getPostNode() + "")) {
+								gsg.removeEdge(edge);
+								stop = true;
+							}
 						}
 					}
-				}
-				if (node.getEnteringEdgeSet().size() > 1) {
-					boolean stop = false;
-					Iterator<Edge> enteringedges = node
-							.getEnteringEdgeIterator();
-					while (enteringedges.hasNext() && !stop) {
-						Edge edge = enteringedges.next();
-						if (edge.getNode0().getId()
-								.equals(pointmutation.getPreNode() + "")) {
-							gsg.removeEdge(edge);
-							stop = true;
+					if (node.getEnteringEdgeSet().size() > 1) {
+						boolean stop = false;
+						Iterator<Edge> enteringedges = node
+								.getEnteringEdgeIterator();
+						while (enteringedges.hasNext() && !stop) {
+							Edge edge = enteringedges.next();
+							if (edge.getNode0().getId()
+									.equals(pointmutation.getPreNode() + "")) {
+								gsg.removeEdge(edge);
+								stop = true;
+							}
 						}
 					}
 				}
