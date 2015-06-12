@@ -1,5 +1,8 @@
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -61,19 +64,25 @@ public class ReferenceGeneStorage {
 	 */
 	private Map<Integer, String> extractMutations(final String mutationPath) {
 		Map<Integer, String> temp = new HashMap<Integer, String>();
-		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-				.getResourceAsStream(mutationPath));
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			if (!line.contains("##")) {
-				String[] columns = line.split("\\t");
-				String[] linesplit = columns[0].split(":");
-				String[] info = linesplit[1].split(",");
-				temp.put(Integer.parseInt(info[MUTATION_INDEX]),
-						info[MUTATION_NAME]);
+		Scanner sc = null;
+		try {
+			sc = new Scanner(new BufferedReader(new InputStreamReader(
+					ReferenceGene.class.getClassLoader().getResourceAsStream(
+							mutationPath), "UTF-8")));
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (!line.contains("##")) {
+					String[] columns = line.split("\\t");
+					String[] linesplit = columns[0].split(":");
+					String[] info = linesplit[1].split(",");
+					temp.put(Integer.parseInt(info[MUTATION_INDEX]),
+							info[MUTATION_NAME]);
+				}
 			}
+			sc.close();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
-		sc.close();
 		return temp;
 	}
 
@@ -97,8 +106,8 @@ public class ReferenceGeneStorage {
 				String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
 						"Name=", "");
 				ret.add(new ReferenceGene(Integer.parseInt(info[INDEX_START]),
-						Integer.valueOf(info[INDEX_END]), Double
-								.valueOf(info[INDEX_SCORE]),
+						Integer.parseInt(info[INDEX_END]), Double
+								.parseDouble(info[INDEX_SCORE]),
 						info[INDEX_STRAND], name));
 			}
 		}

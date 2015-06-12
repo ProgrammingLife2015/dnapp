@@ -17,10 +17,8 @@ import org.graphstream.graph.implementations.Graphs;
 public final class HorizontalCollapser {
 
 	/**
-	 * 
 	 */
 	private HorizontalCollapser() {
-
 	}
 
 	/**
@@ -44,7 +42,7 @@ public final class HorizontalCollapser {
 	 *            Graph we want to collapse on.
 	 * @return Horizontally collapsed graph
 	 */
-	private static Graph collapseGraph(Graph graph) {
+	private static Graph collapseGraph(final Graph graph) {
 		Node start = graph.getNode("-2");
 		BreadthFirstIterator<Node> it = new BreadthFirstIterator<Node>(start);
 		Queue<Node> q = new LinkedList<Node>();
@@ -53,11 +51,12 @@ public final class HorizontalCollapser {
 			Node node = it.next();
 			q.add(node);
 		}
+		Graph ret = graph;
 		while (!q.isEmpty()) {
 			Node node = q.remove();
-			graph = collapseNodes(graph, node);
+			ret = collapseNodes(ret, node);
 		}
-		return graph;
+		return ret;
 	}
 
 	/**

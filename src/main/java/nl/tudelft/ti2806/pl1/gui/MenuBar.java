@@ -100,7 +100,7 @@ public class MenuBar extends JMenuBar {
 		ret.add(showToolBar);
 
 		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
-				"Show option panel", true) {
+				"Show option panel", false) {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 1L;
 

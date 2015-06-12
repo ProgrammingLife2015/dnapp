@@ -474,25 +474,24 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
+		int threshold = 0;
 		switch (newZoomLevel) {
 		case 0:
 			visualizeGraph(ConvertDGraph.convert(dgraph));
-			break;
+			return;
 		case 1:
-			int threshold = THRESHOLD_1;
-			visualizeGraph(zlc.createGraph(threshold));
+			threshold = THRESHOLD_1;
 			break;
 		case 2:
 			threshold = THRESHOLD_2;
-			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		case 3:
 			threshold = THRESHOLD_3;
-			visualizeGraph(zlc.createGraph(threshold));
 			break;
 		default:
 			Event.statusBarError("There is no zoom level further from the current level");
 		}
+		visualizeGraph(zlc.createGraph(threshold));
 	}
 
 	@Override

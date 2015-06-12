@@ -8,8 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,12 +231,12 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	 *            The file to read.
 	 * @return the file content as a continuous string
 	 * @throws IOException
-	 *             when something goes wrong xD
+	 *             when file reading goes wrong.
 	 */
 	public static String readIntoString(final File file) throws IOException {
 		final StringBuffer buff = new StringBuffer();
-
-		final BufferedReader in = new BufferedReader(new FileReader(file));
+		final BufferedReader in = new BufferedReader(new BufferedReader(
+				new InputStreamReader(new FileInputStream(file), "UTF-8")));
 		String line;
 		while ((line = in.readLine()) != null) {
 			buff.append(line);
