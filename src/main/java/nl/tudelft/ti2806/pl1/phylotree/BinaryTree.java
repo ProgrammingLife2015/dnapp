@@ -50,7 +50,7 @@ public abstract class BinaryTree extends JButton {
 	private Point gridCoordinates = new Point(0, 0);
 
 	/**
-	 * @return the gridCoordinates
+	 * @return The grid coordinates of this node.
 	 */
 	public final Point getGridCoordinates() {
 		return gridCoordinates;
@@ -102,8 +102,8 @@ public abstract class BinaryTree extends JButton {
 	 * Checks whether two trees are equal.
 	 * 
 	 * @param t2
-	 *            the tree to compare with.
-	 * @return true iff this tree is equal to t2.
+	 *            the tree to compare this tree to.
+	 * @return true iff this tree is equal to <code>t2</code>.
 	 */
 	public abstract boolean equalsTree(final BinaryTree t2);
 
@@ -123,10 +123,13 @@ public abstract class BinaryTree extends JButton {
 	public abstract List<BinaryTree> getChildren();
 
 	/**
+	 * Sets the grid coordinates of the node and computes the children's
+	 * placement.
+	 * 
 	 * @param x
-	 *            The horizontal grid coordinate of the node
+	 *            The horizontal grid coordinate of the node.
 	 * @param y
-	 *            The vertical grid coordinate of the node
+	 *            The vertical grid coordinate of the node.
 	 * @return the width (delta y) of the tree
 	 */
 	public abstract int computePlacement(int x, int y);
@@ -135,9 +138,9 @@ public abstract class BinaryTree extends JButton {
 	 * Sets the grid coordinates.
 	 * 
 	 * @param x
-	 *            The horizontal coordinate
+	 *            The horizontal coordinate.
 	 * @param y
-	 *            The vertical coordinate
+	 *            The vertical coordinate.
 	 */
 	protected final void setGridLoc(final int x, final int y) {
 		this.gridCoordinates = new Point(x, y);
@@ -289,7 +292,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @return the collapsed
+	 * @return true iff this node collapses all its descendants.
 	 */
 	public final boolean isCollapsed() {
 		return collapsed;
@@ -297,16 +300,17 @@ public abstract class BinaryTree extends JButton {
 
 	/**
 	 * @param b
-	 *            the collapsed to set
+	 *            Whether this node should collapse all its descendants.
 	 */
 	public final void setCollapsed(final boolean b) {
 		this.collapsed = b;
 	}
 
-	/**
+	/*
 	 * Note: don't use keyword selected! superclass has methods isSelected and
 	 * setSelected.
-	 * 
+	 */
+	/**
 	 * @return true iff this node is selected.
 	 */
 	public abstract boolean isChosen();
@@ -324,18 +328,18 @@ public abstract class BinaryTree extends JButton {
 	public abstract void setChosen(final boolean b);
 
 	/**
-	 * Checks if a node is a leaf.
+	 * Checks whether a node is a leaf.
 	 * 
 	 * @return True if the current node is a leaf, false otherwise
 	 */
 	public abstract boolean isLeaf();
 
 	/**
-	 * Checks if a node contains a path to a given source.
+	 * Checks whether a node contains a path to a given source.
 	 * 
 	 * @param source
 	 *            The source to which we search a path
-	 * @return True if there exist a path to the source, false otherwise
+	 * @return true iff there exist a path to the source, false otherwise
 	 */
 	public boolean contains(final String source) {
 		if (this.isLeaf()) {
@@ -401,6 +405,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
+	 * This listener handles the click events on the node button.
 	 * 
 	 * @author Maarten, Justin
 	 * @since 27-5-2015
@@ -409,7 +414,7 @@ public abstract class BinaryTree extends JButton {
 	 */
 	class NodeMouseListener implements MouseListener {
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
@@ -420,7 +425,6 @@ public abstract class BinaryTree extends JButton {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				setChosen(!isChosen());
-				System.out.println("Node " + id + " set chosen=" + isChosen());
 				getPhyloPanel().plotTree();
 				break;
 			case MouseEvent.BUTTON3:
@@ -432,17 +436,17 @@ public abstract class BinaryTree extends JButton {
 			}
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseReleased(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
