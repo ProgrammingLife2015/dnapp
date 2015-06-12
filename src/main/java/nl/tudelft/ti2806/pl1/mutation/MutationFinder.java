@@ -93,6 +93,7 @@ public final class MutationFinder {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Finds the complex mutations of a DGraph.
 	 * 
 	 * @param graph
@@ -104,24 +105,44 @@ public final class MutationFinder {
 		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		HashSet<DNode> visitednodes = new HashSet<DNode>();
+=======
+	 * Finds the simple Deletion mutations of a DGraph.
+	 * 
+	 * @param graph
+	 *            The DGraph.
+	 * @return A collection of the Deletion mutations.
+	 */
+	public static Collection<ComplexMutation> findComplexInsertionMutations(
+			final DGraph graph) {
+		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
+		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
+>>>>>>> add finding complex mutations
 		for (DNode node : nodes) {
 			Set<Integer> inNodes = new HashSet<Integer>();
 			Queue<DNode> q = new LinkedList<DNode>();
 			for (DNode next : node.getNextNodes()) {
 				if (!(next.getSources().contains(REFERENCE_GENOME))) {
+<<<<<<< HEAD
 					if (!visitednodes.contains(next)) {
 						q.add(next);
 						visitednodes.add(next);
 					}
+=======
+					q.add(next);
+>>>>>>> add finding complex mutations
 					inNodes.add(next.getId());
 					while (!q.isEmpty()) {
 						DNode n = q.remove();
 						for (DNode qnext : n.getNextNodes()) {
 							if (!qnext.getSources().contains(REFERENCE_GENOME)) {
+<<<<<<< HEAD
 								if (!visitednodes.contains(qnext)) {
 									q.add(qnext);
 									visitednodes.add(qnext);
 								}
+=======
+								q.add(qnext);
+>>>>>>> add finding complex mutations
 								inNodes.add(qnext.getId());
 							}
 						}
@@ -129,10 +150,18 @@ public final class MutationFinder {
 				}
 			}
 			if (inNodes.size() != 1) {
+<<<<<<< HEAD
 				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
+=======
+				ins.add(new ComplexMutation(node.getId(), null, inNodes, graph
+>>>>>>> add finding complex mutations
 						.getReferenceGeneStorage()));
 			}
 		}
 		return ins;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> add finding complex mutations
 }

@@ -207,15 +207,9 @@ public final class PointGraphConverter {
 				}
 				newId += nodeid + "/";
 			}
-<<<<<<< HEAD
 		}
 		y /= pointmutation.getNodes().size();
 		makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
-=======
-			y /= pointmutation.getNodes().size();
-			makeNewNode(gsg, x, y, newId, pointmutation, nodeids);
-		}
->>>>>>> fix complexity and problem with point mutations
 	}
 
 	/**
