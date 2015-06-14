@@ -33,6 +33,8 @@ public final class ZoomlevelCreator {
 	 * 
 	 * @param threshold
 	 *            The score threshold.
+	 * @param viewSize
+	 *            The view size.
 	 * @return The created graph
 	 */
 	public Graph createGraph(final int threshold, final Dimension viewSize) {
