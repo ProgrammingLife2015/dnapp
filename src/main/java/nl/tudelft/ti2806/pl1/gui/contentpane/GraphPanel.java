@@ -511,7 +511,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		private int count = 0;
 
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
-		private static final int NEWLEVEL = 10;
+		private static final int NEWLEVEL = 3;
 
 		// /** How far one scroll zooms in. **/
 		// private static final double ZOOMPERCENTAGE = 1.1;
@@ -525,7 +525,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		@Override
 		public void mouseWheelMoved(final MouseWheelEvent e) {
-			int rotation = -1 * e.getWheelRotation();
+			int rotation = e.getWheelRotation();
 			if (count > NEWLEVEL) {
 				zoomLevel++;
 				upZoomlevel();
