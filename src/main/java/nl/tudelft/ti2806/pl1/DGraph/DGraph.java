@@ -51,6 +51,9 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** All the insertion mutations in the graph. */
 	private Collection<InsertionMutation> insmutations;
 
+	/** Id of the selected id. */
+	private int selected = Integer.MIN_VALUE;
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -344,5 +347,20 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public final ReferenceGeneStorage getReferenceGeneStorage() {
 		return referenceGeneStorage;
+	}
+
+	/**
+	 * @return the selected node
+	 */
+	public final int getSelected() {
+		return selected;
+	}
+
+	/**
+	 * @param selected
+	 *            the selected node to set
+	 */
+	public final void setSelected(final int selected) {
+		this.selected = selected;
 	}
 }
