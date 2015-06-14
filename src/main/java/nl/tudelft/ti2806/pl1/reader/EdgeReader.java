@@ -25,8 +25,8 @@ public final class EdgeReader {
 	/**
 	 * Reads the edges, and returns an arrayList with the edges.
 	 * 
-	 * @param sc
-	 *            Scanner from which the edge information will be read.
+	 * @param reader
+	 *            Buffered Reader from which the edge information will be read.
 	 * @param graph
 	 *            The graph which is used to extract the nodes
 	 * @return ArrayList of all Edges.
