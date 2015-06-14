@@ -357,10 +357,10 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * @param selected
+	 * @param selectedIn
 	 *            the selected node to set
 	 */
-	public final void setSelected(final int selected) {
-		this.selected = selected;
+	public final void setSelected(final int selectedIn) {
+		this.selected = selectedIn;
 	}
 }
