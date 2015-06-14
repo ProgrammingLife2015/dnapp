@@ -399,14 +399,18 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		if (selectedNode != null) {
 			selectedNode.setAttribute("ui.class",
 					selectedNode.getAttribute("oldclass"));
-			selectedNode.removeAttribute("oldclass");
+			selectedNode.setAttribute("oldclass", "common");
 		}
 
 		// Assigns new selected node and stores old ui.class
 		selectedNode = newSelectedNode;
 		selectedNode.setAttribute("oldclass",
 				selectedNode.getAttribute("ui.class"));
-		selectedNode.addAttribute("ui.class", "selected");
+		selectedNode.setAttribute("ui.class", "selected");
+
+		System.out.println(selectedNode.getId());
+		System.out.println(selectedNode.getAttribute("oldclass"));
+		System.out.println(selectedNode.getAttribute("ui.class"));
 	}
 
 	/**
@@ -417,21 +421,26 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	@SuppressWarnings("unchecked")
 	public final void highlight(final String genomeId) {
+		highlightedGenomes.add(genomeId);
 		for (Node n : graph.getEachNode()) {
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
+			boolean contains = false;
 			for (int id : ids) {
-				if (dgraph.getDNode(id).getSources().contains(genomeId)) {
+				contains = contains
+						|| dgraph.getDNode(id).getSources().contains(genomeId);
+			}
+			if (contains) {
+				if (n.equals(selectedNode)) {
+					n.setAttribute("oldclass", "highlight");
+				} else {
+					if (n.getAttribute("ui.class") != "highlight") {
+						n.setAttribute("oldclass", n.getAttribute("ui.class"));
+					}
 					n.setAttribute("ui.class", "highlight");
 				}
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// graph.getNode(String.valueOf(n.getId()));
-		// graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-		// "highlight");
-		// }
-		highlightedGenomes.add(genomeId);
 	}
 
 	/**
@@ -452,20 +461,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 					contains = contains || highlightedGenomes.contains(source);
 				}
 			}
-			if (!contains) {
-				graph.getNode(n.getId()).setAttribute("ui.class", "common");
+			if (!contains && n.hasAttribute("oldclass")) {
+				if (n.equals(selectedNode)) {
+					n.setAttribute("oldclass", "common");
+				} else {
+					n.setAttribute("ui.class", n.getAttribute("oldclass"));
+					n.setAttribute("oldclass", n.getAttribute("ui.class"));
+				}
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// boolean contains = false;
-		// for (String source : n.getSources()) {
-		// contains = contains || highlightedGenomes.contains(source);
-		// }
-		// if (!contains) {
-		// graph.getNode(String.valueOf(n.getId())).setAttribute(
-		// "ui.class", "common");
-		// }
-		// }
 	}
 
 	/**
