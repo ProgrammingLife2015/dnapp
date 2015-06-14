@@ -100,9 +100,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The graph loaded into the panel. */
 	private Graph graph;
 
-	/** The last selected node. */
-	private Node selectedNode;
-
 	/** The graph's view panel. */
 	private ViewPanel view;
 
@@ -396,21 +393,18 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public final void selectNode(final Node newSelectedNode) {
 		// Restores the old class of the previous selected node if present.
-		if (selectedNode != null) {
-			selectedNode.setAttribute("ui.class",
-					selectedNode.getAttribute("oldclass"));
-			selectedNode.setAttribute("oldclass", "common");
+		Node oldSelected = graph.getNode(String.valueOf(dgraph.getSelected()));
+		if (oldSelected != null) {
+			oldSelected.setAttribute("ui.class",
+					oldSelected.getAttribute("oldclass"));
+			oldSelected.setAttribute("oldclass", "common");
 		}
 
 		// Assigns new selected node and stores old ui.class
-		selectedNode = newSelectedNode;
-		selectedNode.setAttribute("oldclass",
-				selectedNode.getAttribute("ui.class"));
-		selectedNode.setAttribute("ui.class", "selected");
-
-		System.out.println(selectedNode.getId());
-		System.out.println(selectedNode.getAttribute("oldclass"));
-		System.out.println(selectedNode.getAttribute("ui.class"));
+		dgraph.setSelected(Integer.valueOf(newSelectedNode.getId()));
+		newSelectedNode.setAttribute("oldclass",
+				newSelectedNode.getAttribute("ui.class"));
+		newSelectedNode.setAttribute("ui.class", "selected");
 	}
 
 	/**
@@ -431,7 +425,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 						|| dgraph.getDNode(id).getSources().contains(genomeId);
 			}
 			if (contains) {
-				if (n.equals(selectedNode)) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
 					n.setAttribute("oldclass", "highlight");
 				} else {
 					if (n.getAttribute("ui.class") != "highlight") {
@@ -462,7 +456,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				}
 			}
 			if (!contains && n.hasAttribute("oldclass")) {
-				if (n.equals(selectedNode)) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
 					n.setAttribute("oldclass", "common");
 				} else {
 					n.setAttribute("ui.class", n.getAttribute("oldclass"));
