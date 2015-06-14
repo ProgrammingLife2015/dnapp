@@ -38,8 +38,8 @@ public final class NodeReader {
 
 	/**
 	 * 
-	 * @param sc
-	 *            Scanner from which contains the Node information.
+	 * @param reader
+	 *            Buffered Reader from which contains the Node information.
 	 * @return Returns a Graph containing all the Nodes, but no Edges.
 	 * @throws IOException
 	 *             When the file can't be read
@@ -73,7 +73,7 @@ public final class NodeReader {
 					throw new InvalidFileFormatException(
 							"The start and end reference should be integers");
 				}
-				if (end - start != content.length()) {
+				if (content != null && end - start != content.length()) {
 					throw new InvalidFileFormatException(
 							"Size of Node content doesn't match with its reference size");
 				}
