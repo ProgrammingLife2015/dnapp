@@ -267,4 +267,20 @@ public final class PointGraphConverter {
 		}
 		return nodes;
 	}
+
+	/**
+	 * Finds the id of the selected node.
+	 * 
+	 * @param ret
+	 *            Graph in which to search the selected node.
+	 * @return the node id if a node is selected, otherwise Integer.MIN_VALUE.
+	 */
+	public static int findSelected(final Graph ret) {
+		for (Node n : ret.getEachNode()) {
+			if (n.getAttribute("ui.class").equals("selected")) {
+				return Integer.valueOf(n.getId());
+			}
+		}
+		return Integer.MIN_VALUE;
+	}
 }
