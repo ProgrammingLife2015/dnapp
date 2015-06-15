@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -47,15 +48,13 @@ public abstract class BinaryTree extends JButton {
 	/** Whether the ancestors of this node are collapsed 'into' this node. */
 	private boolean collapsed = false;
 
+	/**
+	 * The parent of the node, initialised at null for the root
+	 */
+	private BinaryTree parent;
+
 	/** The placement of this node in the tree grid. */
 	private Point gridCoordinates = new Point(0, 0);
-
-	/**
-	 * @return The grid coordinates of this node.
-	 */
-	public final Point getGridCoordinates() {
-		return gridCoordinates;
-	}
 
 	/**
 	 * Constructs leaf node with no children.
@@ -70,6 +69,7 @@ public abstract class BinaryTree extends JButton {
 	public BinaryTree(final String nameIn, final double length,
 			final PhyloPanel panel) {
 		super(nameIn);
+		this.setParent(null);
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
@@ -85,9 +85,32 @@ public abstract class BinaryTree extends JButton {
 
 	}
 
+	/**
+	 * @return The grid coordinates of this node.
+	 */
+	public final Point getGridCoordinates() {
+		return gridCoordinates;
+	}
+
 	/** @return the path length. */
 	public final double getPathLength() {
 		return pathLength;
+	}
+
+	/**
+	 * @return the parent
+	 */
+	@Override
+	public BinaryTree getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent
+	 *            the parent to set
+	 */
+	public void setParent(final BinaryTree parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -224,8 +247,11 @@ public abstract class BinaryTree extends JButton {
 			st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1),
-					left, right, panel);
+			BinaryTree current = new InnerNode(parseName(pieces, 0),
+					parseDouble(pieces, 1), left, right, panel);
+			left.setParent(current);
+			right.setParent(current);
+			return current;
 		} else { // Leaf
 			final String[] pieces = token.split(":");
 			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1), panel);
@@ -348,6 +374,21 @@ public abstract class BinaryTree extends JButton {
 	public abstract boolean isLeaf();
 
 	/**
+	 * This method returns a list of all sources accessible from this node.
+	 * 
+	 * @return A list of sources accessible from this node
+	 */
+	public List<String> getSources() {
+		if (this.isLeaf()) {
+			return Arrays.asList(this.getID());
+		}
+		ArrayList<String> sources = new ArrayList<String>();
+		sources.addAll(this.getLeft().getSources());
+		sources.addAll(this.getRight().getSources());
+		return sources;
+	}
+
+	/**
 	 * Checks whether a node contains a path to a given source.
 	 * 
 	 * @param source
@@ -355,11 +396,46 @@ public abstract class BinaryTree extends JButton {
 	 * @return true iff there exist a path to the source, false otherwise
 	 */
 	public boolean contains(final String source) {
-		if (this.isLeaf()) {
-			return this.getID().equals(source);
+		return this.getSources().contains(source);
+	}
+
+	public ArrayList<ArrayList<String>> findGroups(final List<String> sources,
+			final BinaryTree root) {
+		ArrayList<ArrayList<String>> groupList = new ArrayList<ArrayList<String>>();
+		while (!sources.isEmpty()) {
+
 		}
-		return this.getLeft().contains(source)
-				|| this.getRight().contains(source);
+		return groupList;
+	}
+
+	public ArrayList<String> findGroup(final List<String> sources,
+			final BinaryTree root) {
+		if (isLeaf()) {
+			if (sources.contains(root.getID())) {
+				return (ArrayList<String>) Arrays.asList(root.getID());
+			}
+			return null;
+		}
+		ArrayList<String> left = findGroup(sources, root.getLeft());
+		ArrayList<String> right = findGroup(sources, root.getRight());
+		if (root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			if (left == null || right == null) {
+				return left == null ? right : left;
+			}
+			ArrayList<String> group = new ArrayList<String>();
+			group.addAll(left);
+			group.addAll(right);
+			return group;
+		}
+		if (!root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			if (left == null || right == null) {
+				return left == null ? right : left;
+			}
+			if (root.getLeft().getSources().equals(left)) {
+				left.addAll(right);
+				return left;
+			}
+		}
 	}
 
 	/**

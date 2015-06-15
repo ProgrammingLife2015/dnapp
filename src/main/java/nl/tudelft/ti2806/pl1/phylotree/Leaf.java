@@ -13,7 +13,9 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
  */
 public class Leaf extends BinaryTree {
 
-	/** Serial version UID. */
+	/**
+	 * The serial ID.
+	 */
 	private static final long serialVersionUID = -287972955469890107L;
 
 	/** Whether this node is selected. */
@@ -64,10 +66,7 @@ public class Leaf extends BinaryTree {
 			return false;
 		} else {
 			Leaf t2l = (Leaf) t2;
-			if (!(getPathLength() == t2l.getPathLength())) {
-				return false;
-			}
-			return true;
+			return this.getID().equals(t2l.getID());
 		}
 	}
 
