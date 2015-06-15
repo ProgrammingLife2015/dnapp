@@ -1,8 +1,10 @@
 package nl.tudelft.ti2806.pl1.reader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
@@ -39,9 +41,9 @@ public class EdgeReaderBadWeatherTest {
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
-	public void invalidStringsTest() {
-		Scanner sc = new Scanner(edge);
+	public void invalidStringsTest() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(edge));
 		DGraph graph = new DGraph();
-		EdgeReader.readEdges(sc, graph);
+		EdgeReader.readEdges(reader, graph);
 	}
 }

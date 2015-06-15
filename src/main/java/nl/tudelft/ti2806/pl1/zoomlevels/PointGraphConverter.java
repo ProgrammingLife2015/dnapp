@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
@@ -82,11 +83,12 @@ public final class PointGraphConverter {
 			final int begin, final HashMap<Integer, Set<Integer>> nodegroups,
 			final DGraph graph, final ReferenceGeneStorage rgs) {
 		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
-		for (int end : nodegroups.keySet()) {
-			Set<Integer> group = nodegroups.get(end);
+		for (Entry<Integer, Set<Integer>> end : nodegroups.entrySet()) {
+			Set<Integer> group = end.getValue();
 			if (group.size() > 1) {
-				pointmutations.add(new PointMutation(begin, group, end, graph
-						.getDNode(group.iterator().next()).getStart(), rgs));
+				pointmutations.add(new PointMutation(begin, group,
+						end.getKey(), graph.getDNode(group.iterator().next())
+								.getStart(), rgs));
 			}
 		}
 		return pointmutations;
