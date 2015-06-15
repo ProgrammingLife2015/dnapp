@@ -302,6 +302,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				.findDeletionMutations(dgraph));
 		dgraph.setInsertionMutations(MutationFinder
 				.findInsertionMutations(dgraph));
+		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph));
 	}
 
 	/**
