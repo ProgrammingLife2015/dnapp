@@ -112,10 +112,24 @@ public final class HorizontalCollapser {
 		HashSet<Integer> nodeids = getIds(from);
 		nodeids.addAll(getIds(to));
 		to.setAttribute("collapsed", nodeids);
+		HashSet<String> classes = new HashSet<String>();
 		String oldclass = (String) from.getAttribute("ui.class");
 		String newclass = (String) to.getAttribute("ui.class");
-		if (oldclass.equals("selected") || newclass.equals("selected")) {
+		classes.add(oldclass);
+		classes.add(newclass);
+		if (classes.contains("selected")) {
+			if (classes.contains("highlight")) {
+				to.setAttribute("oldclass", "highlight");
+			} else {
+				to.setAttribute("oldclass", "collapsed");
+			}
 			to.setAttribute("ui.class", "selected");
+		} else if (classes.contains("highlight")) {
+			to.setAttribute("ui.class", "highlight");
+			to.setAttribute("oldclass", "collapsed");
+		} else {
+			to.setAttribute("ui.class", "collapsed");
+			to.setAttribute("oldclass", "common");
 		}
 	}
 
