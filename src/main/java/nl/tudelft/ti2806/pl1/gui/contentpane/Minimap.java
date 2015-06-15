@@ -9,27 +9,25 @@ import javax.swing.border.MatteBorder;
 
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 
-import org.graphstream.ui.view.View;
-
 /**
  * @author Maarten
  * @since 15-6-2015
  */
 public class Minimap extends JPanel implements GraphScrollObserver,
-		GraphChangeObserver {
+		ViewChangeObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -5634260033871592350L;
 
 	/** The height of the minimap. */
-	private static final int HEIGHT = 25;
+	private static final int HEIGHT = 30;
 
 	/**
-	 * The view.
+	 * The view width.
 	 * 
 	 * @see View
 	 */
-	private View graphView;
+	private int viewWidth;
 
 	/** The reference gene storage. */
 	private ReferenceGeneStorage ref;
@@ -42,11 +40,18 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 
 	/**
 	 * Initialize the minimap.
+	 * 
+	 * @param viewWidthIn
+	 *            The width of the initial graph view.
+	 * @param viewAreaIn
+	 *            The initial view area.
 	 */
-	public Minimap() {
+	public Minimap(final int viewWidthIn, final ViewArea viewAreaIn) {
+		this.viewArea = viewAreaIn;
+		this.viewWidth = viewWidthIn;
 		setMinimumSize(new Dimension(2, HEIGHT));
-		setBackground(Color.ORANGE);
-		setBorder(new MatteBorder(0, 0, 2, 0, Color.BLACK));
+		// setBackground(Color.ORANGE);
+		setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
 	}
 
 	/**
@@ -61,17 +66,32 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	@Override
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
-		int width = getWidth();
+		int mapWidth = getWidth();
+		int boxWidth = (viewArea.getWidth() * mapWidth) / (viewWidth + 1);
+		System.out.println(this);
+		System.out.println("mapWidth=" + mapWidth);
+		System.out.println("boxWidth=" + boxWidth);
+		g.setColor(Color.RED);
+		g.fillRect(viewArea.getLeftBoundary() / (viewWidth + 1) * mapWidth, 0,
+				boxWidth, HEIGHT);
+		// g.fillRect(0, 0, 20, 20);
 	}
 
 	@Override
 	public void update(final ViewArea currentViewArea) {
 		this.viewArea = currentViewArea;
+		// System.out.println("minimap update view area");
 	}
 
 	@Override
-	public void update(final View view) {
-		this.graphView = view;
+	public void update(final int newViewWidth) {
+		this.viewWidth = newViewWidth;
+		System.out.println("minimap update view width");
 	}
 
+	@Override
+	public String toString() {
+		return "<Minimap[width=" + getWidth() + ",viewWidth=" + viewWidth
+				+ ",viewArea=" + viewArea + "]>";
+	}
 }

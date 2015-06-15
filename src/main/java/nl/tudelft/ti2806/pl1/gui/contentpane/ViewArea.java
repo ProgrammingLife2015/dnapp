@@ -31,6 +31,13 @@ public class ViewArea {
 	}
 
 	/**
+	 * @return The width of the view area.
+	 */
+	public final int getWidth() {
+		return xRight - xLeft;
+	}
+
+	/**
 	 * Initializes the view area.
 	 * 
 	 * @param xl
@@ -80,6 +87,11 @@ public class ViewArea {
 	public boolean isContained(final Node node) {
 		int x = (int) node.getAttribute("x");
 		return x >= xLeft && x <= xRight;
+	}
+
+	@Override
+	public String toString() {
+		return "<ViewArea[" + xLeft + "-" + xRight + "|w=" + getWidth() + "]>";
 	}
 
 }

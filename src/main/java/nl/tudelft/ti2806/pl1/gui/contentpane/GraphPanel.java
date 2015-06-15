@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -43,6 +44,7 @@ import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.swingViewer.DefaultView;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
@@ -50,7 +52,6 @@ import org.graphstream.ui.view.ViewerPipe;
 
 /**
  * @author Maarten
- * 
  */
 public class GraphPanel extends JSplitPane implements ContentTab {
 
@@ -65,9 +66,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** The horizontal scroll increment value. */
 	private static final int HOR_SCROLL_INCR = 400;
-
-	/** Which zoom level is currently shown. **/
-	private int zoomLevel = 0;
 
 	/**
 	 * Threshold value for first zoom level.
@@ -84,6 +82,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	private static final int THRESHOLD_3 = 90;
 
+	/** Which zoom level is currently shown. **/
+	private int zoomLevel = 0;
+
+	/** The zoom level thresholds. */
+	private int[] thresholds = { THRESHOLD_1, THRESHOLD_2, THRESHOLD_3 };
+
 	/**
 	 * The list of node selection observers.
 	 * 
@@ -97,6 +101,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @see GraphScrollObserver
 	 */
 	private List<GraphScrollObserver> graphScrollObservers = new ArrayList<GraphScrollObserver>();
+
+	/**
+	 * The list of view change observers.
+	 * 
+	 * @see ViewChangeObserver
+	 */
+	private List<ViewChangeObserver> viewChangeObservers = new ArrayList<ViewChangeObserver>();
 
 	/** The window this panel is part of. */
 	private Window window;
@@ -154,9 +165,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		graphPane.setMinimumSize(new Dimension(2, 2));
 
 		infoPane = new JPanel(new BorderLayout());
-
-		minimap = new Minimap();
-		infoPane.add(minimap, BorderLayout.NORTH);
 
 		nodeContentPane = new NodeContentBox();
 		registerObserver(nodeContentPane);
@@ -302,7 +310,20 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		view = viewer.addDefaultView(false);
+		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
+				Viewer.newGraphRenderer()) {
+
+			/** The serial version UID. */
+			private static final long serialVersionUID = 4902528839853178375L;
+
+			@Override
+			public void paintComponent(final java.awt.Graphics g) {
+				super.paintComponent(g);
+				g.setColor(Color.RED);
+				g.fillRect(0, 0, 1000, 1000);
+			}
+		};
+		viewer.addView(view);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
@@ -317,6 +338,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		int scrollval = graphPane.getHorizontalScrollBar().getValue();
 		graphPane.setViewportView(view);
 		graphPane.getHorizontalScrollBar().setValue(scrollval);
+
+		minimap = new Minimap((int) viewSize.getWidth(), getCurrentViewArea());
+		registerObserver((GraphScrollObserver) minimap);
+		registerObserver((ViewChangeObserver) minimap);
+		infoPane.add(minimap, BorderLayout.NORTH);
 
 		window.revalidate();
 		centerVertical();
@@ -337,21 +363,31 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/**
 	 * Register a new node selection observer.
 	 * 
-	 * @param o
+	 * @param nso
 	 *            The observer to add.
 	 */
-	public final void registerObserver(final NodeSelectionObserver o) {
-		nodeSelectionObservers.add(o);
+	public final void registerObserver(final NodeSelectionObserver nso) {
+		nodeSelectionObservers.add(nso);
 	}
 
 	/**
 	 * Register a new graph scroll observer.
 	 * 
-	 * @param o
+	 * @param gso
 	 *            The observer to add.
 	 */
-	public final void registerObserver(final GraphScrollObserver o) {
-		graphScrollObservers.add(o);
+	public final void registerObserver(final GraphScrollObserver gso) {
+		graphScrollObservers.add(gso);
+	}
+
+	/**
+	 * Register a new view change observer.
+	 * 
+	 * @param vco
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ViewChangeObserver vco) {
+		viewChangeObservers.add(vco);
 	}
 
 	/**
@@ -378,6 +414,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	/**
+	 * Notifies the graph scroll observers.
+	 */
+	private void notifyViewChangeObservers() {
+		for (ViewChangeObserver vco : viewChangeObservers) {
+			vco.update(view.getWidth());
+		}
+	}
+
+	/**
 	 * Loads or reloads a specific part of the view panel.
 	 * 
 	 * @param va
@@ -400,7 +445,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @return The current view area of the scrollable graph pane.
 	 */
 	public ViewArea getCurrentViewArea() {
-		Rectangle visible = graphPane.getViewport().getBounds();
+		Rectangle visible = graphPane.getViewportBorderBounds();
+		System.out.println("viewport:" + graphPane.getViewportBorderBounds());
+		System.out.println("visrec: " + graphPane.getVisibleRect());
 		return new ViewArea(visible.getMinX(), visible.getMaxX());
 	}
 
@@ -443,11 +490,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				}
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// graph.getNode(String.valueOf(n.getId()));
-		// graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-		// "highlight");
-		// }
 		highlightedGenomes.add(genomeId);
 	}
 
@@ -473,16 +515,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				graph.getNode(n.getId()).setAttribute("ui.class", "common");
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// boolean contains = false;
-		// for (String source : n.getSources()) {
-		// contains = contains || highlightedGenomes.contains(source);
-		// }
-		// if (!contains) {
-		// graph.getNode(String.valueOf(n.getId())).setAttribute(
-		// "ui.class", "common");
-		// }
-		// }
 	}
 
 	/**
@@ -491,26 +523,25 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
-		int threshold = 0;
-		switch (newZoomLevel) {
-		case 0:
-			visualizeGraph(ConvertDGraph.convert(dgraph));
-			return;
-		case 1:
-			threshold = THRESHOLD_1;
-			break;
-		case 2:
-			threshold = THRESHOLD_2;
-			break;
-		case 3:
-			threshold = THRESHOLD_3;
-			break;
-		default:
+		if (newZoomLevel < 0 || newZoomLevel > thresholds.length) {
 			Event.statusBarError("There is no zoom level further from the current level");
+		} else if (newZoomLevel == 0) {
+			visualizeGraph(ConvertDGraph.convert(dgraph));
+		} else {
+			int threshold = thresholds[newZoomLevel - 1];
+			Graph gr = zlc.createGraph(threshold);
+			setViewSize(NodePlacer.place(gr));
+			visualizeGraph(gr);
 		}
-		Graph gr = zlc.createGraph(threshold);
-		viewSize = NodePlacer.place(gr);
-		visualizeGraph(gr);
+	}
+
+	/**
+	 * @param newViewSize
+	 *            The new view size
+	 */
+	private void setViewSize(final Dimension newViewSize) {
+		this.viewSize = newViewSize;
+		notifyViewChangeObservers();
 	}
 
 	@Override
@@ -573,47 +604,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		public void resetZoom() {
 			view.getCamera().setViewPercent(1.0);
 			count = 0;
-		}
-
-		/**
-		 * Lets you zoom in a defined amount.
-		 * 
-		 * @param percentage
-		 *            How much you want to zoom.
-		 */
-		public void zoomIn(final double percentage) {
-			count++;
-			Rectangle viewRect = graphPane.getViewport().getViewRect();
-			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() / percentage);
-			view.getCamera().setViewCenter(viewRect.getCenterY(),
-					view.getCamera().getViewCenter().y,
-					view.getCamera().getViewCenter().z);
-			// System.out.println("\nIN VP = "
-			// + graphPane.getViewport().getViewRect());
-			// System.out.println("IN CAMERA = "
-			// + view.getCamera().getViewCenter());
-		}
-
-		/**
-		 * Lets you zoom out a defined amount.
-		 * 
-		 * @param percentage
-		 *            How much you want to zoom.
-		 */
-		public void zoomOut(final double percentage) {
-			count--;
-			Rectangle viewRect = graphPane.getViewport().getViewRect();
-			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() * percentage);
-			view.getCamera().setViewCenter(viewRect.getCenterY(),
-					view.getCamera().getViewCenter().y,
-					view.getCamera().getViewCenter().z);
-			// System.out.println("\nOUT VP = "
-			// + graphPane.getViewport().getViewRect());
-			// System.out.println("OUT CAMERA = "
-			// + view.getCamera().getViewCenter());
-			// System.out.println(graph.getNodeSet());
 		}
 
 		/**
