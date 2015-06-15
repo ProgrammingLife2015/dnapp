@@ -118,15 +118,8 @@ public final class HorizontalCollapser {
 		classes.add(oldclass);
 		classes.add(newclass);
 		if (classes.contains("selected")) {
-			if (classes.contains("highlight")) {
-				to.setAttribute("oldclass", "highlight");
-			} else {
-				to.setAttribute("oldclass", "collapsed");
-			}
-			to.setAttribute("ui.class", "selected");
-		} else if (classes.contains("highlight")) {
-			to.setAttribute("ui.class", "highlight");
 			to.setAttribute("oldclass", "collapsed");
+			to.setAttribute("ui.class", "selected");
 		} else {
 			to.setAttribute("ui.class", "collapsed");
 			to.setAttribute("oldclass", "common");

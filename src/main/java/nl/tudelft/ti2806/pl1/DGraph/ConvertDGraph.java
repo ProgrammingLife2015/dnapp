@@ -66,6 +66,7 @@ public final class ConvertDGraph {
 			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
 			if (n.getId() == dgraph.getSelected()) {
 				gn.addAttribute("ui.class", "selected");
+				gn.addAttribute("oldclass", "common");
 			} else {
 				gn.addAttribute("ui.class", "common");
 			}
