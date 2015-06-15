@@ -7,6 +7,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -77,7 +78,8 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-		// ret.add(makeMI("?", null, '?', "?", null));
+		ret.add(makeAC("Reset view", null, 'r',
+				"Lets you reset to the first view", Event.RESET_GRAPH));
 		return ret;
 	}
 
@@ -153,6 +155,34 @@ public class MenuBar extends JMenuBar {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
+		return ret;
+	}
+
+	/**
+	 * Creates and sets up a menu item.
+	 * 
+	 * @param text
+	 *            The text to show on the menu item.
+	 * @param iconName
+	 *            The name of the icon file in the resources/images folder
+	 * @param keyChar
+	 *            The character you can use to call.
+	 * @param toolTipText
+	 *            The tool tip.
+	 * @param action
+	 *            The event name.
+	 * 
+	 * @see Event
+	 * @return The menu item created.
+	 */
+	private JMenuItem makeAC(final String text, final String iconName,
+			final char keyChar, final String toolTipText, final Event action) {
+		JMenuItem ret = new JMenuItem();
+		ret.setText(text);
+		ret.setAccelerator(KeyStroke.getKeyStroke(keyChar));
+		ret.setToolTipText(toolTipText);
+		ret.addActionListener(action);
+		ret.setText(text);
 		return ret;
 	}
 }

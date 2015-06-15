@@ -158,6 +158,13 @@ public enum Event implements ActionListener {
 		}
 	},
 
+	RESET_GRAPH {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent().getGraphPanel().applyZoomLevel(0);
+		}
+	},
+
 	/**
 	 * 
 	 */
