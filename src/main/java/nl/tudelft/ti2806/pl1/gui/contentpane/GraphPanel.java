@@ -352,11 +352,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user
 	 */
-	private void notifyObservers(final DNode selectedNodeIn) {
-		HashSet<DNode> selected = new HashSet<DNode>();
-		selected.add(selectedNodeIn);
+	private void notifyObservers(final HashSet<DNode> selectedNodeIn) {
 		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selected);
+			sgo.update(selectedNodeIn);
 		}
 	}
 
@@ -710,10 +708,16 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 
 		/** {@inheritDoc} */
+		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid(" Selected node: " + id);
-			notifyObservers(dgraph.getDNode(Integer.parseInt(id)));
+			HashSet<DNode> ret = new HashSet<DNode>();
+			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
+					"collapsed")) {
+				ret.add(dgraph.getDNode(n));
+			}
+			notifyObservers(ret);
 		}
 
 		/** {@inheritDoc} */
