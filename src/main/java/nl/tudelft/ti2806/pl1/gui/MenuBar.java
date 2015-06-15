@@ -1,6 +1,5 @@
 package nl.tudelft.ti2806.pl1.gui;
 
-import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -48,12 +47,15 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		ret.add(makeMI("Import", null, 'I',
+		JMenuItem imp = new JMenuItem();
+		makeMI(imp, "Import", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
-				Event.IMPORT_FILE));
-		ret.add(makeMI("Open database", null, 'O',
-				"Open a graph database file", Event.OPEN_GRAPH_DB));
-
+				Event.IMPORT_FILE);
+		ret.add(imp);
+		JMenuItem open = new JMenuItem();
+		makeMI(open, "Open database", null, 'O', "Open a graph database file",
+				Event.OPEN_GRAPH_DB);
+		ret.add(open);
 		JMenu export = new JMenu("Export graph layout as...") {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 6733151149511110189L;
@@ -64,11 +66,13 @@ public class MenuBar extends JMenuBar {
 			}
 		};
 		export.setMnemonic('E');
-		JMenuItem exportDGS = makeMI("DGS format", null, 'D', null,
-				Event.WRITE_TO_DGS);
+		JMenuItem exportDGS = new JMenuItem();
+		makeMI(exportDGS, "DGS format", null, 'D', null, Event.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
-		ret.add(makeMI("Exit", null, 'E', "Exit the program", Event.EXIT_APP));
+		JMenuItem exit = new JMenuItem();
+		makeMI(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
+		ret.add(exit);
 		return ret;
 	}
 
@@ -79,9 +83,21 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-		JMenuItem reset = makeMI("Reset View", null, 'r',
-				"Reset to default view", Event.RESET_GRAPH);
-		reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
+		JMenuItem reset = new JMenuItem() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3037967992670223825L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.getContent().isGraphLoaded();
+			}
+		};
+		makeMI(reset, "Reset view", null, 'r', "Reset to default view.",
+				Event.RESET_GRAPH);
+		reset.setAccelerator(KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
 		return ret;
@@ -129,6 +145,9 @@ public class MenuBar extends JMenuBar {
 	/**
 	 * Creates and sets up a menu item.
 	 * 
+	 * @param item
+	 *            The menuItem we want to set properties for.
+	 * 
 	 * @param text
 	 *            The text to show on the menu item.
 	 * @param iconName
@@ -141,24 +160,22 @@ public class MenuBar extends JMenuBar {
 	 *            The event name.
 	 * 
 	 * @see Event
-	 * @return The menu item created.
 	 */
-	private JMenuItem makeMI(final String text, final String iconName,
-			final char mnemonic, final String toolTipText, final Event action) {
-		JMenuItem ret = new JMenuItem();
-		ret.setText(text);
-		ret.setMnemonic(mnemonic);
-		ret.setToolTipText(toolTipText);
-		ret.addActionListener(action);
+	private void makeMI(final JMenuItem item, final String text,
+			final String iconName, final char mnemonic,
+			final String toolTipText, final Event action) {
+		item.setText(text);
+		item.setMnemonic(mnemonic);
+		item.setToolTipText(toolTipText);
+		item.addActionListener(action);
 		if (iconName != null) {
 			String imgLocation = "images/" + iconName;
 			URL imageURL = ToolBar.class.getResource(imgLocation);
 			if (imageURL != null) {
-				ret.setIcon(new ImageIcon(imageURL, text));
+				item.setIcon(new ImageIcon(imageURL, text));
 			} else {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
-		return ret;
 	}
 }

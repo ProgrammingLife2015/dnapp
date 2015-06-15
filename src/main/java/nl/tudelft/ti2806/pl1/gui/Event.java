@@ -158,6 +158,7 @@ public enum Event implements ActionListener {
 		}
 	},
 
+	/** Reset graph to original representation. **/
 	RESET_GRAPH {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
