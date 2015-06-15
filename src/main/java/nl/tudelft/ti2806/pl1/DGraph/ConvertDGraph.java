@@ -64,7 +64,12 @@ public final class ConvertDGraph {
 			gn.addAttribute("x", n.getX());
 			gn.addAttribute("y", n.getY());
 			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
-			gn.addAttribute("ui.class", "common");
+			if (String.valueOf(n.getId()).equals(dgraph.getSelected())) {
+				gn.addAttribute("ui.class", "selected");
+				gn.addAttribute("oldclass", "common");
+			} else {
+				gn.addAttribute("ui.class", "common");
+			}
 			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 			gn.addAttribute("contentsize", n.getContent().length());
 			gn.addAttribute("collapsed",

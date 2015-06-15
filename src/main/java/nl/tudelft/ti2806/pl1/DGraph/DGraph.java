@@ -54,6 +54,9 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** The length of the reference genome. */
 	private int referenceLength;
 
+	/** Id of the selected id. */
+	private String selected = String.valueOf(Integer.MIN_VALUE);
+
 	/**
 	 * Creates a new DGraph.
 	 */
@@ -388,6 +391,21 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public final int getReferenceLength() {
 		return referenceLength;
+	}
+
+	/**
+	 * @return the selected node
+	 */
+	public final String getSelected() {
+		return selected;
+	}
+
+	/**
+	 * @param string
+	 *            the selected node to set
+	 */
+	public final void setSelected(final String string) {
+		this.selected = string;
 	}
 
 }

@@ -118,9 +118,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The graph loaded into the panel. */
 	private Graph graph;
 
-	/** The last selected node. */
-	private Node selectedNode;
-
 	/** The graph's view panel. */
 	private ViewPanel view;
 
@@ -394,13 +391,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * Notifies the node selection observers.
 	 * 
 	 * @param selectedNodeIn
-	 *            The node clicked on by the user
+	 *            The node clicked on by the user.
 	 */
-	private void notifyNodeSelectionObservers(final DNode selectedNodeIn) {
-		HashSet<DNode> selected = new HashSet<DNode>();
-		selected.add(selectedNodeIn);
-		for (NodeSelectionObserver nso : nodeSelectionObservers) {
-			nso.update(selected);
+	private void notifyNodeSelectionObservers(final HashSet<DNode> selectedNodeIn) {
+		for (NodeSelectionObserver sgo : nodeSelectionObservers) {
+			sgo.update(selectedNodeIn);
 		}
 	}
 
@@ -419,6 +414,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	private void notifyViewChangeObservers() {
 		for (ViewChangeObserver vco : viewChangeObservers) {
 			vco.update(view.getWidth());
+
 		}
 	}
 
@@ -458,50 +454,59 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param newSelectedNode
 	 *            Newly selected node.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void selectNode(final Node newSelectedNode) {
 		// Restores the old class of the previous selected node if present.
-		if (selectedNode != null) {
-			selectedNode.setAttribute("ui.class",
-					selectedNode.getAttribute("oldclass"));
-			selectedNode.removeAttribute("oldclass");
+		Node oldSelected = graph.getNode(String.valueOf(dgraph.getSelected()));
+		if (oldSelected != null) {
+			oldSelected.setAttribute("ui.class",
+					oldSelected.getAttribute("oldclass"));
+			oldSelected.setAttribute("oldclass",
+					checkCollapsed((HashSet<Integer>) oldSelected
+							.getAttribute("collapsed")));
 		}
 
 		// Assigns new selected node and stores old ui.class
-		selectedNode = newSelectedNode;
-		selectedNode.setAttribute("oldclass",
-				selectedNode.getAttribute("ui.class"));
-		selectedNode.addAttribute("ui.class", "selected");
+		dgraph.setSelected(newSelectedNode.getId());
+		newSelectedNode.setAttribute("oldclass",
+				newSelectedNode.getAttribute("ui.class"));
+		newSelectedNode.setAttribute("ui.class", "selected");
 	}
 
 	/**
 	 * Highlights a genome.
-	 * 
-	 * @param genomeId
-	 *            Id of the genome to be highlighted.
 	 */
-	public final void highlight(final String genomeId) {
+	@SuppressWarnings("unchecked")
+	public final void highlight() {
 		for (Node n : graph.getEachNode()) {
-			@SuppressWarnings("unchecked")
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
+			boolean contains = false;
 			for (int id : ids) {
-				if (dgraph.getDNode(id).getSources().contains(genomeId)) {
+				for (String highlight : highlightedGenomes) {
+					contains = contains
+							|| dgraph.getDNode(id).getSources()
+									.contains(highlight);
+				}
+			}
+			if (contains) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
+					n.setAttribute("oldclass", "highlight");
+				} else {
+					if (n.getAttribute("ui.class") != "highlight") {
+						n.setAttribute("oldclass", n.getAttribute("ui.class"));
+					}
 					n.setAttribute("ui.class", "highlight");
 				}
 			}
 		}
-		highlightedGenomes.add(genomeId);
 	}
 
 	/**
-	 * Unhighlights a genome.
-	 * 
-	 * @param genomeId
-	 *            Id of the genome to be highlighted.
+	 * Unhighlights the graph.
 	 */
 	@SuppressWarnings("unchecked")
-	public final void unHighlight(final String genomeId) {
-		highlightedGenomes.remove(genomeId);
+	public final void unHighlight() {
 		for (Node n : graph.getEachNode()) {
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
@@ -511,9 +516,30 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 					contains = contains || highlightedGenomes.contains(source);
 				}
 			}
-			if (!contains) {
-				graph.getNode(n.getId()).setAttribute("ui.class", "common");
+			if (!contains && n.hasAttribute("oldclass")) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
+					n.setAttribute("oldclass", checkCollapsed(ids));
+				} else {
+					n.setAttribute("ui.class", n.getAttribute("oldclass"));
+					n.setAttribute("oldclass", n.getAttribute("ui.class"));
+				}
 			}
+		}
+	}
+
+	/**
+	 * Checks the size of the hashset of ids and returns collapsed or common
+	 * based on it.
+	 * 
+	 * @param ids
+	 *            HashSet to check.
+	 * @return collapsed or common based on the size.
+	 */
+	private String checkCollapsed(final HashSet<Integer> ids) {
+		if (ids.size() > 1) {
+			return "collapsed";
+		} else {
+			return "common";
 		}
 	}
 
@@ -527,11 +553,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			Event.statusBarError("There is no zoom level further from the current level");
 		} else if (newZoomLevel == 0) {
 			visualizeGraph(ConvertDGraph.convert(dgraph));
+			highlight();
 		} else {
 			int threshold = thresholds[newZoomLevel - 1];
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr));
 			visualizeGraph(gr);
+			highlight();
 		}
 	}
 
@@ -692,9 +720,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			// && genomeRow.isVisible()
 			if (genomeHighlightChanged) {
 				if (genomeRow.isHighlighted()) {
-					highlight(genomeRow.getId());
+					highlightedGenomes.add(genomeRow.getId());
+					highlight();
 				} else {
-					unHighlight(genomeRow.getId());
+					highlightedGenomes.remove(genomeRow.getId());
+					unHighlight();
 				}
 			}
 
@@ -719,10 +749,16 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 
 		/** {@inheritDoc} */
+		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid(" Selected node: " + id);
-			notifyNodeSelectionObservers(dgraph.getDNode(Integer.parseInt(id)));
+			HashSet<DNode> ret = new HashSet<DNode>();
+			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
+					"collapsed")) {
+				ret.add(dgraph.getDNode(n));
+			}
+			notifyNodeSelectionObservers(ret);
 		}
 
 		/** {@inheritDoc} */

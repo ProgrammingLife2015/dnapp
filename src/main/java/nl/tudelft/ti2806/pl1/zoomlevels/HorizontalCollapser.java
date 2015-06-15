@@ -88,15 +88,6 @@ public final class HorizontalCollapser {
 	}
 
 	/**
-	 * @param node
-	 *            The node
-	 * @return The size of the content of the node.
-	 */
-	private static int getContentSize(final Node node) {
-		return node.getAttribute("contentsize");
-	}
-
-	/**
 	 * Merges the attributes of two nodes.
 	 * 
 	 * @param from
@@ -107,13 +98,21 @@ public final class HorizontalCollapser {
 	private static void mergeAttributes(final Node from, final Node to) {
 		to.setAttribute("inNodes", from.getAttribute("inNodes"));
 		to.setAttribute("start", from.getAttribute("start"));
-		int combinedlength = getContentSize(from) + getContentSize(to);
-		to.setAttribute("ui.label", combinedlength + "");
 		HashSet<Integer> nodeids = getIds(from);
 		nodeids.addAll(getIds(to));
+		to.setAttribute("ui.label", nodeids.size());
 		to.setAttribute("collapsed", nodeids);
-		if ((String) from.getAttribute("ui.class") == "collapsed") {
+		HashSet<String> classes = new HashSet<String>();
+		String oldclass = (String) from.getAttribute("ui.class");
+		String newclass = (String) to.getAttribute("ui.class");
+		classes.add(oldclass);
+		classes.add(newclass);
+		if (classes.contains("selected")) {
+			to.setAttribute("oldclass", "collapsed");
+			to.setAttribute("ui.class", "selected");
+		} else {
 			to.setAttribute("ui.class", "collapsed");
+			to.setAttribute("oldclass", "common");
 		}
 	}
 
