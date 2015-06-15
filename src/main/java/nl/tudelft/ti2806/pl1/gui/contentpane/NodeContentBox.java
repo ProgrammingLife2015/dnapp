@@ -110,7 +110,7 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				doc.setCharacterAttributes(i, 1, set, true);
 			}
 		} else {
-			text.setText("This is a collapsed section consisiting of "
+			text.setText("This is a collapsed section consisting of "
 					+ newSelectedNodes.size()
 					+ " nodes, please zoom in to gain more information about this section.");
 			StyleConstants.setForeground(set, Color.BLACK);
