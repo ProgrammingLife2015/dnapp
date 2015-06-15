@@ -224,6 +224,7 @@ public final class PointGraphConverter {
 		newnode.addAttribute("x", x);
 		newnode.addAttribute("y", y);
 		newnode.addAttribute("ui.class", "collapsed");
+		newnode.addAttribute("ui.label", nodeids.size());
 		newnode.addAttribute("collapsed", nodeids);
 		newnode.addAttribute("contentsize", 1);
 		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId,
