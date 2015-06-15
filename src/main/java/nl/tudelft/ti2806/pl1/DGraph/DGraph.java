@@ -366,13 +366,8 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * <<<<<<< HEAD
-	 * 
 	 * @param newInsMutations
-	 *            the insertion mutations to set =======
-	 * @param insmutationsIn
-	 *            the insmutations to set >>>>>>> add collapsing complex
-	 *            mutations
+	 *            the insertion mutations to set
 	 */
 	public void setInsertionMutations(
 			final Collection<InsertionMutation> newInsMutations) {
