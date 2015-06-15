@@ -1,9 +1,8 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
@@ -21,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -43,6 +43,7 @@ import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.swingViewer.DefaultView;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
@@ -50,7 +51,6 @@ import org.graphstream.ui.view.ViewerPipe;
 
 /**
  * @author Maarten
- * 
  */
 public class GraphPanel extends JSplitPane implements ContentTab {
 
@@ -65,9 +65,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** The horizontal scroll increment value. */
 	private static final int HOR_SCROLL_INCR = 400;
-
-	/** Which zoom level is currently shown. **/
-	private int zoomLevel = 0;
 
 	/** How far zoomed in. **/
 	private int count = 0;
@@ -87,12 +84,32 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	private static final int THRESHOLD_3 = 90;
 
+	/** Which zoom level is currently shown. **/
+	private int zoomLevel = 0;
+
+	/** The zoom level thresholds. */
+	private int[] thresholds = { THRESHOLD_1, THRESHOLD_2, THRESHOLD_3 };
+
 	/**
 	 * The list of node selection observers.
 	 * 
 	 * @see NodeSelectionObserver
 	 */
-	private List<NodeSelectionObserver> observers = new ArrayList<NodeSelectionObserver>();
+	private List<NodeSelectionObserver> nodeSelectionObservers = new ArrayList<NodeSelectionObserver>();
+
+	/**
+	 * The list of graph scroll observers.
+	 * 
+	 * @see GraphScrollObserver
+	 */
+	private List<GraphScrollObserver> graphScrollObservers = new ArrayList<GraphScrollObserver>();
+
+	/**
+	 * The list of view change observers.
+	 * 
+	 * @see ViewChangeObserver
+	 */
+	private List<ViewChangeObserver> viewChangeObservers = new ArrayList<ViewChangeObserver>();
 
 	/** The window this panel is part of. */
 	private Window window;
@@ -103,9 +120,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The graph loaded into the panel. */
 	private Graph graph;
 
-	/** The last selected node. */
-	private Node selectedNode;
-
 	/** The graph's view panel. */
 	private ViewPanel view;
 
@@ -115,8 +129,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The graph's view pipe. Used to listen for node click events. */
 	private ViewerPipe vp;
 
+	/** The info pane below the graph. */
+	private JPanel infoPane;
+
+	/** The minimap shown between the node content pane and the graph. */
+	private Minimap minimap;
+
 	/** The text area where node content will be shown. */
-	private NodeContentBox infoPane;
+	private NodeContentBox nodeContentPane;
 
 	/** The zoom level creator. */
 	private ZoomlevelCreator zlc;
@@ -143,8 +163,16 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
 
-		infoPane = new NodeContentBox();
-		registerObserver(infoPane);
+		infoPane = new JPanel(new BorderLayout());
+
+		minimap = new Minimap();
+		registerObserver((GraphScrollObserver) minimap);
+		registerObserver((ViewChangeObserver) minimap);
+		infoPane.add(minimap, BorderLayout.NORTH);
+
+		nodeContentPane = new NodeContentBox();
+		registerObserver(nodeContentPane);
+		infoPane.add(nodeContentPane, BorderLayout.CENTER);
 
 		setTopComponent(graphPane);
 		setBottomComponent(infoPane);
@@ -164,14 +192,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		ret.add(ToolBar
 				.makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
 						"Loads or reloads the part of the graph currently in the view port."));
-		ret.add(ToolBar.makeButton("Analyse INDEL", null, new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				System.out.println(MutationFinder.findDeletionMutations(dgraph));
-				System.out.println(MutationFinder
-						.findInsertionMutations(dgraph));
-			}
-		}, "BOE"));
 		return ret;
 	}
 
@@ -213,8 +233,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			e1.printStackTrace();
 			ret = false;
 		}
-		// System.setProperty("org.graphstream.ui.renderer",
-		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		visualizeGraph(graph);
 		return ret;
 	}
@@ -265,10 +283,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 						edges.getAbsolutePath());
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
-				graph = ConvertDGraph.convert(dgraph); // TODO
+				graph = ConvertDGraph.convert(dgraph);
 				analyzeDGraph();
 				window.getOptionPanel().fillGenomeList(
-						dgraph.getReferences().keySet(), true, true);
+						dgraph.getReferencesSet(), true, true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Event.statusBarError(e.getMessage());
@@ -282,7 +300,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
 		dgraph.setDeletionMutations(MutationFinder
 				.findDeletionMutations(dgraph));
-		dgraph.setInsertionmutations(MutationFinder
+		dgraph.setInsertionMutations(MutationFinder
 				.findInsertionMutations(dgraph));
 	}
 
@@ -296,7 +314,18 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		view = viewer.addDefaultView(false);
+		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
+				Viewer.newGraphRenderer()) {
+
+			/** The serial version UID. */
+			private static final long serialVersionUID = 4902528839853178375L;
+
+			@Override
+			public void paintComponent(final java.awt.Graphics g) {
+				super.paintComponent(g);
+			}
+		};
+		viewer.addView(view);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
@@ -304,7 +333,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
-		// view.getCamera().setViewPercent(scroll.getZoomPercentage());
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
@@ -313,10 +341,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		graphPane.setViewportView(view);
 		graphPane.getHorizontalScrollBar().setValue(scrollval);
 
-		window.revalidate();
-		centerVertical();
 		this.graph = vGraph;
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
+		window.revalidate();
+		centerVertical();
+
+		notifyGraphScrollObservers();
+		notifyViewChangeObservers();
 	}
 
 	/**
@@ -332,34 +363,62 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/**
 	 * Register a new node selection observer.
 	 * 
-	 * @param o
+	 * @param nso
 	 *            The observer to add.
 	 */
-	public final void registerObserver(final NodeSelectionObserver o) {
-		observers.add(o);
+	public final void registerObserver(final NodeSelectionObserver nso) {
+		nodeSelectionObservers.add(nso);
 	}
 
 	/**
-	 * Unregistrer a node selection observer.
+	 * Register a new graph scroll observer.
 	 * 
-	 * @param o
-	 *            The observer to delete.
+	 * @param gso
+	 *            The observer to add.
 	 */
-	public final void unregisterObserver(final NodeSelectionObserver o) {
-		observers.remove(o);
+	public final void registerObserver(final GraphScrollObserver gso) {
+		graphScrollObservers.add(gso);
+	}
+
+	/**
+	 * Register a new view change observer.
+	 * 
+	 * @param vco
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ViewChangeObserver vco) {
+		viewChangeObservers.add(vco);
 	}
 
 	/**
 	 * Notifies the node selection observers.
 	 * 
 	 * @param selectedNodeIn
-	 *            The node clicked on by the user
+	 *            The node clicked on by the user.
 	 */
-	private void notifyObservers(final DNode selectedNodeIn) {
-		HashSet<DNode> selected = new HashSet<DNode>();
-		selected.add(selectedNodeIn);
-		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selected);
+	private void notifyNodeSelectionObservers(
+			final HashSet<DNode> selectedNodeIn) {
+		for (NodeSelectionObserver sgo : nodeSelectionObservers) {
+			sgo.update(selectedNodeIn);
+		}
+	}
+
+	/**
+	 * Notifies the graph scroll observers.
+	 */
+	private void notifyGraphScrollObservers() {
+		for (GraphScrollObserver gso : graphScrollObservers) {
+			gso.update(getCurrentViewArea());
+		}
+	}
+
+	/**
+	 * Notifies the graph scroll observers.
+	 */
+	private void notifyViewChangeObservers() {
+		for (ViewChangeObserver vco : viewChangeObservers) {
+			vco.update(view.getWidth());
+
 		}
 	}
 
@@ -386,7 +445,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @return The current view area of the scrollable graph pane.
 	 */
 	public ViewArea getCurrentViewArea() {
-		Rectangle visible = graphPane.getViewport().getBounds();
+		Rectangle visible = graphPane.getViewport().getViewRect();
 		return new ViewArea(visible.getMinX(), visible.getMaxX());
 	}
 
@@ -397,55 +456,59 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param newSelectedNode
 	 *            Newly selected node.
 	 */
+	@SuppressWarnings("unchecked")
 	public final void selectNode(final Node newSelectedNode) {
 		// Restores the old class of the previous selected node if present.
-		if (selectedNode != null) {
-			selectedNode.setAttribute("ui.class",
-					selectedNode.getAttribute("oldclass"));
-			selectedNode.removeAttribute("oldclass");
+		Node oldSelected = graph.getNode(String.valueOf(dgraph.getSelected()));
+		if (oldSelected != null) {
+			oldSelected.setAttribute("ui.class",
+					oldSelected.getAttribute("oldclass"));
+			oldSelected.setAttribute("oldclass",
+					checkCollapsed((HashSet<Integer>) oldSelected
+							.getAttribute("collapsed")));
 		}
 
 		// Assigns new selected node and stores old ui.class
-		selectedNode = newSelectedNode;
-		selectedNode.setAttribute("oldclass",
-				selectedNode.getAttribute("ui.class"));
-		selectedNode.addAttribute("ui.class", "selected");
+		dgraph.setSelected(newSelectedNode.getId());
+		newSelectedNode.setAttribute("oldclass",
+				newSelectedNode.getAttribute("ui.class"));
+		newSelectedNode.setAttribute("ui.class", "selected");
 	}
 
 	/**
 	 * Highlights a genome.
-	 * 
-	 * @param genomeId
-	 *            Id of the genome to be highlighted.
 	 */
 	@SuppressWarnings("unchecked")
-	public final void highlight(final String genomeId) {
+	public final void highlight() {
 		for (Node n : graph.getEachNode()) {
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
+			boolean contains = false;
 			for (int id : ids) {
-				if (dgraph.getDNode(id).getSources().contains(genomeId)) {
+				for (String highlight : highlightedGenomes) {
+					contains = contains
+							|| dgraph.getDNode(id).getSources()
+									.contains(highlight);
+				}
+			}
+			if (contains) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
+					n.setAttribute("oldclass", "highlight");
+				} else {
+					if (n.getAttribute("ui.class") != "highlight") {
+						n.setAttribute("oldclass", n.getAttribute("ui.class"));
+					}
 					n.setAttribute("ui.class", "highlight");
 				}
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// graph.getNode(String.valueOf(n.getId()));
-		// graph.getNode(String.valueOf(n.getId())).setAttribute("ui.class",
-		// "highlight");
-		// }
-		highlightedGenomes.add(genomeId);
 	}
 
 	/**
-	 * Unhighlights a genome.
-	 * 
-	 * @param genomeId
-	 *            Id of the genome to be highlighted.
+	 * Unhighlights the graph.
 	 */
 	@SuppressWarnings("unchecked")
-	public final void unHighlight(final String genomeId) {
-		highlightedGenomes.remove(genomeId);
+	public final void unHighlight() {
 		for (Node n : graph.getEachNode()) {
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
@@ -455,20 +518,31 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 					contains = contains || highlightedGenomes.contains(source);
 				}
 			}
-			if (!contains) {
-				graph.getNode(n.getId()).setAttribute("ui.class", "common");
+			if (!contains && n.hasAttribute("oldclass")) {
+				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
+					n.setAttribute("oldclass", checkCollapsed(ids));
+				} else {
+					n.setAttribute("ui.class", n.getAttribute("oldclass"));
+					n.setAttribute("oldclass", n.getAttribute("ui.class"));
+				}
 			}
 		}
-		// for (DNode n : dgraph.getReferences().get(genomeId)) {
-		// boolean contains = false;
-		// for (String source : n.getSources()) {
-		// contains = contains || highlightedGenomes.contains(source);
-		// }
-		// if (!contains) {
-		// graph.getNode(String.valueOf(n.getId())).setAttribute(
-		// "ui.class", "common");
-		// }
-		// }
+	}
+
+	/**
+	 * Checks the size of the hashset of ids and returns collapsed or common
+	 * based on it.
+	 * 
+	 * @param ids
+	 *            HashSet to check.
+	 * @return collapsed or common based on the size.
+	 */
+	private String checkCollapsed(final HashSet<Integer> ids) {
+		if (ids.size() > 1) {
+			return "collapsed";
+		} else {
+			return "common";
+		}
 	}
 
 	/**
@@ -477,26 +551,28 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
-		int threshold = 0;
-		count = 0;
-		zoomLevel = newZoomLevel;
-		switch (newZoomLevel) {
-		case 0:
-			visualizeGraph(ConvertDGraph.convert(dgraph));
-			return;
-		case 1:
-			threshold = THRESHOLD_1;
-			break;
-		case 2:
-			threshold = THRESHOLD_2;
-			break;
-		case 3:
-			threshold = THRESHOLD_3;
-			break;
-		default:
+		if (newZoomLevel < 0 || newZoomLevel > thresholds.length) {
 			Event.statusBarError("There is no zoom level further from the current level");
+		} else if (newZoomLevel == 0) {
+			visualizeGraph(ConvertDGraph.convert(dgraph));
+			highlight();
+		} else {
+			int threshold = thresholds[newZoomLevel - 1];
+			Graph gr = zlc.createGraph(threshold);
+			setViewSize(NodePlacer.place(gr));
+			visualizeGraph(gr);
+			highlight();
 		}
-		visualizeGraph(zlc.createGraph(threshold));
+		notifyViewChangeObservers();
+	}
+
+	/**
+	 * @param newViewSize
+	 *            The new view size
+	 */
+	private void setViewSize(final Dimension newViewSize) {
+		this.viewSize = newViewSize;
+		notifyViewChangeObservers();
 	}
 
 	@Override
@@ -559,47 +635,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 
 		/**
-		 * Lets you zoom in a defined amount.
-		 * 
-		 * @param percentage
-		 *            How much you want to zoom.
-		 */
-		public void zoomIn(final double percentage) {
-			count++;
-			Rectangle viewRect = graphPane.getViewport().getViewRect();
-			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() / percentage);
-			view.getCamera().setViewCenter(viewRect.getCenterY(),
-					view.getCamera().getViewCenter().y,
-					view.getCamera().getViewCenter().z);
-			// System.out.println("\nIN VP = "
-			// + graphPane.getViewport().getViewRect());
-			// System.out.println("IN CAMERA = "
-			// + view.getCamera().getViewCenter());
-		}
-
-		/**
-		 * Lets you zoom out a defined amount.
-		 * 
-		 * @param percentage
-		 *            How much you want to zoom.
-		 */
-		public void zoomOut(final double percentage) {
-			count--;
-			Rectangle viewRect = graphPane.getViewport().getViewRect();
-			view.getCamera().setViewPercent(
-					view.getCamera().getViewPercent() * percentage);
-			view.getCamera().setViewCenter(viewRect.getCenterY(),
-					view.getCamera().getViewCenter().y,
-					view.getCamera().getViewCenter().z);
-			// System.out.println("\nOUT VP = "
-			// + graphPane.getViewport().getViewRect());
-			// System.out.println("OUT CAMERA = "
-			// + view.getCamera().getViewCenter());
-			// System.out.println(graph.getNodeSet());
-		}
-
-		/**
 		 * Lets you zoom in one level further.
 		 */
 		public void upZoomlevel() {
@@ -627,7 +662,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @since 22-5-2015
 	 * @version 1.0
 	 */
-	static final class ScrollListener implements AdjustmentListener {
+	final class ScrollListener implements AdjustmentListener {
 
 		/**
 		 * Initialize the scroll listener and make it observe a given scroll
@@ -643,7 +678,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		/** {@inheritDoc} */
 		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
-			// int type = e.getAdjustmentType();
+			notifyGraphScrollObservers();
 		}
 
 	}
@@ -673,9 +708,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			// && genomeRow.isVisible()
 			if (genomeHighlightChanged) {
 				if (genomeRow.isHighlighted()) {
-					highlight(genomeRow.getId());
+					highlightedGenomes.add(genomeRow.getId());
+					highlight();
 				} else {
-					unHighlight(genomeRow.getId());
+					highlightedGenomes.remove(genomeRow.getId());
+					unHighlight();
 				}
 			}
 
@@ -700,10 +737,16 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 
 		/** {@inheritDoc} */
+		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid(" Selected node: " + id);
-			notifyObservers(dgraph.getDNode(Integer.parseInt(id)));
+			HashSet<DNode> ret = new HashSet<DNode>();
+			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
+					"collapsed")) {
+				ret.add(dgraph.getDNode(n));
+			}
+			notifyNodeSelectionObservers(ret);
 		}
 
 		/** {@inheritDoc} */

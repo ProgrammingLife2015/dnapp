@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -35,7 +36,7 @@ public class StatusBar extends JPanel {
 	public StatusBar() {
 		setLayout(new BorderLayout());
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
-		midLabel.setAlignmentX(CENTER_ALIGNMENT);
+		midLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		add(mainLabel, BorderLayout.WEST);
 		add(midLabel, BorderLayout.CENTER);
 		add(rightLabel, BorderLayout.EAST);
