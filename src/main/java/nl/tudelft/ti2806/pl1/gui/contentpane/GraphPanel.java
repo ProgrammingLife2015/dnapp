@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -43,6 +44,7 @@ import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.swingViewer.DefaultView;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
@@ -290,7 +292,25 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		view = viewer.addDefaultView(false);
+
+		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
+				Viewer.newGraphRenderer()) {
+
+			/** The serial version UID. */
+			private static final long serialVersionUID = 4902528839853178375L;
+
+			@Override
+			public void paintComponent(final java.awt.Graphics g) {
+				super.paintComponent(g);
+				System.out.println("HEIGHT: " + view.getSize().getHeight());
+				System.out.println("WIDTH: " + view.getSize().getWidth());
+				g.setColor(Color.ORANGE);
+				g.fillRect(0, 0, 200, 10);
+			}
+		};
+
+		viewer.addView(view);
+		// view = viewer.addDefaultView(false);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
@@ -311,6 +331,19 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		centerVertical();
 		this.graph = vGraph;
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
+	}
+
+	@SuppressWarnings("unchecked")
+	private Node searchDNode(final int loc, final Graph graph) {
+		for (Node n : graph.getEachNode()) {
+			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
+				if (dgraph.getDNode(id).getStart() <= loc
+						&& dgraph.getDNode(id).getEnd() > loc) {
+					return n;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
