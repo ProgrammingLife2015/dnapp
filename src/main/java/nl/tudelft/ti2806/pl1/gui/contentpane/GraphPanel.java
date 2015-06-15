@@ -1,9 +1,8 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
@@ -21,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -89,7 +89,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * 
 	 * @see NodeSelectionObserver
 	 */
-	private List<NodeSelectionObserver> observers = new ArrayList<NodeSelectionObserver>();
+	private List<NodeSelectionObserver> nodeSelectionObservers = new ArrayList<NodeSelectionObserver>();
+
+	/**
+	 * The list of graph scroll observers.
+	 * 
+	 * @see GraphScrollObserver
+	 */
+	private List<GraphScrollObserver> graphScrollObservers = new ArrayList<GraphScrollObserver>();
 
 	/** The window this panel is part of. */
 	private Window window;
@@ -112,8 +119,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The graph's view pipe. Used to listen for node click events. */
 	private ViewerPipe vp;
 
+	/** The info pane below the graph. */
+	private JPanel infoPane;
+
+	/** The minimap shown between the node content pane and the graph. */
+	private Minimap minimap;
+
 	/** The text area where node content will be shown. */
-	private NodeContentBox infoPane;
+	private NodeContentBox nodeContentPane;
 
 	/** The zoom level creator. */
 	private ZoomlevelCreator zlc;
@@ -140,8 +153,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
 
-		infoPane = new NodeContentBox();
-		registerObserver(infoPane);
+		infoPane = new JPanel(new BorderLayout());
+
+		minimap = new Minimap();
+		infoPane.add(minimap, BorderLayout.NORTH);
+
+		nodeContentPane = new NodeContentBox();
+		registerObserver(nodeContentPane);
+		infoPane.add(nodeContentPane, BorderLayout.CENTER);
 
 		setTopComponent(graphPane);
 		setBottomComponent(infoPane);
@@ -161,14 +180,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		ret.add(ToolBar
 				.makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
 						"Loads or reloads the part of the graph currently in the view port."));
-		ret.add(ToolBar.makeButton("Analyse INDEL", null, new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				System.out.println(MutationFinder.findDeletionMutations(dgraph));
-				System.out.println(MutationFinder
-						.findInsertionMutations(dgraph));
-			}
-		}, "BOE"));
 		return ret;
 	}
 
@@ -210,8 +221,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			e1.printStackTrace();
 			ret = false;
 		}
-		// System.setProperty("org.graphstream.ui.renderer",
-		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		visualizeGraph(graph);
 		return ret;
 	}
@@ -279,7 +288,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
 		dgraph.setDeletionMutations(MutationFinder
 				.findDeletionMutations(dgraph));
-		dgraph.setInsertionmutations(MutationFinder
+		dgraph.setInsertionMutations(MutationFinder
 				.findInsertionMutations(dgraph));
 	}
 
@@ -301,7 +310,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
-		// view.getCamera().setViewPercent(scroll.getZoomPercentage());
 		scroll = new Scrolling();
 		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
@@ -333,17 +341,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The observer to add.
 	 */
 	public final void registerObserver(final NodeSelectionObserver o) {
-		observers.add(o);
+		nodeSelectionObservers.add(o);
 	}
 
 	/**
-	 * Unregistrer a node selection observer.
+	 * Register a new graph scroll observer.
 	 * 
 	 * @param o
-	 *            The observer to delete.
+	 *            The observer to add.
 	 */
-	public final void unregisterObserver(final NodeSelectionObserver o) {
-		observers.remove(o);
+	public final void registerObserver(final GraphScrollObserver o) {
+		graphScrollObservers.add(o);
 	}
 
 	/**
@@ -352,11 +360,20 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user
 	 */
-	private void notifyObservers(final DNode selectedNodeIn) {
+	private void notifyNodeSelectionObservers(final DNode selectedNodeIn) {
 		HashSet<DNode> selected = new HashSet<DNode>();
 		selected.add(selectedNodeIn);
-		for (NodeSelectionObserver sgo : observers) {
-			sgo.update(selected);
+		for (NodeSelectionObserver nso : nodeSelectionObservers) {
+			nso.update(selected);
+		}
+	}
+
+	/**
+	 * Notifies the graph scroll observers.
+	 */
+	private void notifyGraphScrollObservers() {
+		for (GraphScrollObserver gso : graphScrollObservers) {
+			gso.update(getCurrentViewArea());
 		}
 	}
 
@@ -415,9 +432,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param genomeId
 	 *            Id of the genome to be highlighted.
 	 */
-	@SuppressWarnings("unchecked")
 	public final void highlight(final String genomeId) {
 		for (Node n : graph.getEachNode()) {
+			@SuppressWarnings("unchecked")
 			HashSet<Integer> ids = (HashSet<Integer>) n
 					.getAttribute("collapsed");
 			for (int id : ids) {
@@ -637,7 +654,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @since 22-5-2015
 	 * @version 1.0
 	 */
-	static final class ScrollListener implements AdjustmentListener {
+	final class ScrollListener implements AdjustmentListener {
 
 		/**
 		 * Initialize the scroll listener and make it observe a given scroll
@@ -653,7 +670,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		/** {@inheritDoc} */
 		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
-			// int type = e.getAdjustmentType();
+			notifyGraphScrollObservers();
 		}
 
 	}
@@ -713,7 +730,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		@Override
 		public void buttonReleased(final String id) {
 			Event.statusBarMid(" Selected node: " + id);
-			notifyObservers(dgraph.getDNode(Integer.parseInt(id)));
+			notifyNodeSelectionObservers(dgraph.getDNode(Integer.parseInt(id)));
 		}
 
 		/** {@inheritDoc} */

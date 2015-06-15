@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
@@ -13,7 +14,7 @@ import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 /**
- * The DGraph class for representing our data.
+ * The data graph class representing data.
  * 
  * @author Mark
  *
@@ -38,10 +39,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** File with all the gene information regarding the reference genome. */
 	private static final String GFF_FILE = "decorationV5_20130412.gff";
 
-	// /** File with all the drug resistance causing mutations. */
-	// private static final String MUTATION_FILE =
-	// "resistanceCausingMutations.txt";
-
 	/** All the point mutations in the graph. */
 	private Collection<PointMutation> pointMutations;
 
@@ -50,6 +47,12 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 
 	/** All the insertion mutations in the graph. */
 	private Collection<InsertionMutation> insmutations;
+
+	/** The name of the reference genome. */
+	private String refGenomeName = "TKK_REF";
+
+	/** The length of the reference genome. */
+	private int referenceLength;
 
 	/**
 	 * Creates a new DGraph.
@@ -324,19 +327,19 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * @return the insmutations
+	 * @return the insertion mutations
 	 */
 	public Collection<InsertionMutation> getInsmutations() {
 		return insmutations;
 	}
 
 	/**
-	 * @param insmutationsIn
-	 *            the insmutations to set
+	 * @param newInsMutations
+	 *            the insertion mutations to set
 	 */
-	public void setInsertionmutations(
-			final Collection<InsertionMutation> insmutationsIn) {
-		this.insmutations = insmutationsIn;
+	public void setInsertionMutations(
+			final Collection<InsertionMutation> newInsMutations) {
+		this.insmutations = newInsMutations;
 	}
 
 	/**
@@ -345,4 +348,46 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	public final ReferenceGeneStorage getReferenceGeneStorage() {
 		return referenceGeneStorage;
 	}
+
+	/**
+	 * Calculates the length of the reference genome.
+	 */
+	public final void calculateReferenceLength() {
+		int ret = 0;
+		for (DNode d : references.get(refGenomeName)) {
+			ret += d.getContent().length();
+		}
+		this.referenceLength = ret;
+	}
+
+	/**
+	 * @return the refGenomeName
+	 */
+	public final String getRefGenomeName() {
+		return refGenomeName;
+	}
+
+	/**
+	 * Sets the name of the reference genome if it exists in the set of genomes
+	 * existing in the graph.
+	 * 
+	 * @param newRefGenomeName
+	 *            the refGenomeName to set
+	 */
+	public final void setRefGenomeName(final String newRefGenomeName) {
+		if (references.containsKey(newRefGenomeName)) {
+			this.refGenomeName = newRefGenomeName;
+			calculateReferenceLength();
+		} else {
+			throw new InvalidGenomeIdException(newRefGenomeName);
+		}
+	}
+
+	/**
+	 * @return the referenceLength
+	 */
+	public final int getReferenceLength() {
+		return referenceLength;
+	}
+
 }

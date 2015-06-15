@@ -29,7 +29,6 @@ public final class NodePlacer {
 	private static int width;
 
 	/**
-	 * Empty private constructor.
 	 */
 	private NodePlacer() {
 	}
