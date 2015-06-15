@@ -103,18 +103,25 @@ public final class MutationFinder {
 			final DGraph graph) {
 		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
+		HashSet<DNode> visitednodes = new HashSet<DNode>();
 		for (DNode node : nodes) {
 			Set<Integer> inNodes = new HashSet<Integer>();
 			Queue<DNode> q = new LinkedList<DNode>();
 			for (DNode next : node.getNextNodes()) {
 				if (!(next.getSources().contains(REFERENCE_GENOME))) {
-					q.add(next);
+					if (!visitednodes.contains(next)) {
+						q.add(next);
+						visitednodes.add(next);
+					}
 					inNodes.add(next.getId());
 					while (!q.isEmpty()) {
 						DNode n = q.remove();
 						for (DNode qnext : n.getNextNodes()) {
 							if (!qnext.getSources().contains(REFERENCE_GENOME)) {
-								q.add(qnext);
+								if (!visitednodes.contains(qnext)) {
+									q.add(qnext);
+									visitednodes.add(qnext);
+								}
 								inNodes.add(qnext.getId());
 							}
 						}
