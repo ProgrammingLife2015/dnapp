@@ -98,7 +98,7 @@ public class ReferenceGeneStorage {
 		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
 				new RefGeneCompare());
 		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-				.getResourceAsStream(file));
+				.getResourceAsStream(file), "UTF-8");
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			if (line.contains("CDS")) {

@@ -2,9 +2,11 @@ package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 
 import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -20,14 +22,14 @@ public class EdgeReaderGoodWeatherTest {
 	ArrayList<DEdge> edges;
 
 	@Before
-	public void startUp() {
-		Scanner sc = new Scanner(edge);
+	public void startUp() throws IOException {
+		BufferedReader reader = new BufferedReader(new StringReader(edge));
 		DNode id20 = new DNode(20, new HashSet<String>(), 0, 0, "");
 		DNode id2 = new DNode(2, new HashSet<String>(), 0, 0, "");
 		DGraph graph = new DGraph();
 		graph.addDNode(id20);
 		graph.addDNode(id2);
-		edges = EdgeReader.readEdges(sc, graph);
+		edges = EdgeReader.readEdges(reader, graph);
 	}
 
 	@After

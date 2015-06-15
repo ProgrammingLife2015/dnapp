@@ -3,8 +3,7 @@ package nl.tudelft.ti2806.pl1.reader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
@@ -22,8 +21,7 @@ public class NodePlacerTest {
 	private DGraph graph;
 
 	@Before
-	public void startUp() throws FileNotFoundException,
-			InvalidNodePlacementException, UnsupportedEncodingException {
+	public void startUp() throws InvalidNodePlacementException, IOException {
 		nodesatdepth = new ArrayList<Integer>();
 		nodesatdepth.add(3);
 		nodesatdepth.add(1);
