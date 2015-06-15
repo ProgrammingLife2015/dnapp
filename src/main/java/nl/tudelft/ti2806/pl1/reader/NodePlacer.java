@@ -11,6 +11,10 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
 /**
  * This class calculates where to place the nodes.
  * 
@@ -39,6 +43,67 @@ public final class NodePlacer {
 	 * depth i.
 	 */
 	private static ArrayList<Integer> nodesAtDepth;
+
+	/**
+	 * Places the nodes of a graphstream graph according to the current view
+	 * size.
+	 * 
+	 * @param graph
+	 *            The graph.
+	 * @return The new view size.
+	 */
+	public static Dimension place(final Graph graph) {
+		for (Node n : graph.getEachNode()) {
+			n.setAttribute("x", 0);
+		}
+		Node start = graph.getNode("-2");
+		Queue<Node> q = new LinkedList<Node>();
+		q.add(start);
+		nodesAtDepth = new ArrayList<Integer>();
+		nodesAtDepth.add(graph.getNodeCount());
+		depths(q);
+		for (Node n : graph.getEachNode()) {
+			int dep = n.getAttribute("x");
+			n.setAttribute("x", dep * X_MULTIPLIER);
+		}
+		width = nodesAtDepth.size() * X_MULTIPLIER;
+		height = Collections.max(nodesAtDepth) * Y_MULTIPLIER;
+		return new Dimension(width, height);
+	}
+
+	/**
+	 * For each node, this method finds the highest depth level possible and
+	 * sets this in the node attribute 'x' and it updates nodesAtDepth.
+	 * 
+	 * @param q
+	 *            The queue in which we store the unvisited nodes.
+	 */
+	private static void depths(final Queue<Node> q) {
+		int max = 0;
+		while (!q.isEmpty()) {
+			Node src = q.remove();
+			for (Edge edge : src.getEachLeavingEdge()) {
+				Node tar = edge.getNode1();
+				int odepth = tar.getAttribute("x");
+				int ndepth = (int) src.getAttribute("x") + 1;
+				// System.out.println("odepth" + odepth);
+				// System.out.println("depth" + ndepth);
+				if (ndepth > odepth) {
+					nodesAtDepth.set(odepth, nodesAtDepth.get(odepth) - 1);
+					if (nodesAtDepth.size() > ndepth) {
+						nodesAtDepth.set(ndepth, nodesAtDepth.get(ndepth) + 1);
+					} else {
+						nodesAtDepth.add(1);
+					}
+					tar.setAttribute("x", ndepth);
+					if (ndepth > max) {
+						max = ndepth;
+					}
+					q.add(tar);
+				}
+			}
+		}
+	}
 
 	/**
 	 * The main placer method, this function sets the x and y coordinates of the
@@ -197,5 +262,4 @@ public final class NodePlacer {
 	public static void setWidth(final int newwidth) {
 		NodePlacer.width = newwidth;
 	}
-
 }
