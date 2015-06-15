@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -38,6 +39,7 @@ public class MenuBar extends JMenuBar {
 		this.add(fileMenu());
 		this.add(editMenu());
 		this.add(viewMenu());
+		this.add(infoMenu());
 	}
 
 	/**
@@ -52,27 +54,43 @@ public class MenuBar extends JMenuBar {
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE);
 		ret.add(imp);
-		JMenuItem open = new JMenuItem();
-		makeMI(open, "Open database", null, 'O', "Open a graph database file",
-				Event.OPEN_GRAPH_DB);
-		ret.add(open);
-		JMenu export = new JMenu("Export graph layout as...") {
-			/** The serial version UID. */
-			private static final long serialVersionUID = 6733151149511110189L;
-
-			@Override
-			public boolean isEnabled() {
-				return window.getContent().isGraphLoaded();
-			}
-		};
-		export.setMnemonic('E');
-		JMenuItem exportDGS = new JMenuItem();
-		makeMI(exportDGS, "DGS format", null, 'D', null, Event.WRITE_TO_DGS);
-		export.add(exportDGS);
-		ret.add(export);
+		// JMenuItem open = new JMenuItem();
+		// makeMI(open, "Open database", null, 'O',
+		// "Open a graph database file",
+		// Event.OPEN_GRAPH_DB);
+		// ret.add(open);
+		//
+		// JMenu export = new JMenu("Export graph layout as...") {
+		// /** The serial version UID. */
+		// private static final long serialVersionUID = 6733151149511110189L;
+		//
+		// @Override
+		// public boolean isEnabled() {
+		// return window.getContent().isGraphLoaded();
+		// }
+		// };
+		// export.setMnemonic('E');
+		// JMenuItem exportDGS = new JMenuItem();
+		// makeMI(exportDGS, "DGS format", null, 'D', null, Event.WRITE_TO_DGS);
+		// export.add(exportDGS);
+		// ret.add(export);
 		JMenuItem exit = new JMenuItem();
 		makeMI(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
 		ret.add(exit);
+		return ret;
+	}
+
+	/**
+	 * Creates and fills the info menu.
+	 * 
+	 * @return the info menu
+	 */
+	private JMenu infoMenu() {
+		JMenu ret = new JMenu("Help");
+		JMenuItem help = new JMenuItem();
+		makeMI(help, "Help", null, 'h', "Press to show shortcuts", Event.HELP);
+		help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+		ret.add(help);
 		return ret;
 	}
 
@@ -83,11 +101,21 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
+
+		return ret;
+	}
+
+	/**
+	 * viewMenu.
+	 * 
+	 * @return the view menu
+	 */
+	private JMenu viewMenu() {
+		JMenu ret = new JMenu("View");
+
 		JMenuItem reset = new JMenuItem() {
 
-			/**
-			 * 
-			 */
+			/**  */
 			private static final long serialVersionUID = -3037967992670223825L;
 
 			@Override
@@ -100,16 +128,7 @@ public class MenuBar extends JMenuBar {
 		reset.setAccelerator(KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
-		return ret;
-	}
 
-	/**
-	 * viewMenu.
-	 * 
-	 * @return the view menu
-	 */
-	private JMenu viewMenu() {
-		JMenu ret = new JMenu("View");
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
 		showToolBar.addChangeListener(new ChangeListener() {
