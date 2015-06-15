@@ -39,6 +39,9 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	/** The status bar of the window. */
 	private StatusBar statusBar;
 
+	/** The help menu **/
+	private HelpMenu help;
+
 	/**
 	 * Initiate a new Window with default settings.
 	 */
@@ -67,6 +70,8 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		setWindowSettings(wSettings);
 
 		Event.setWindow(this);
+
+		help = new HelpMenu(this);
 
 		toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
@@ -188,6 +193,10 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	@Override
 	public final String toString() {
 		return this.getClass().toString();
+	}
+
+	public HelpMenu getHelpMenu() {
+		return help;
 	}
 
 }

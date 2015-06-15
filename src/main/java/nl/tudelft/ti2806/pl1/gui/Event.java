@@ -166,6 +166,13 @@ public enum Event implements ActionListener {
 		}
 	},
 
+	HELP {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getHelpMenu().setVisible(true);
+		}
+	},
+
 	/**
 	 * 
 	 */
