@@ -58,7 +58,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 
 	/** Id of the selected id. */
 	private String selected = String.valueOf(Integer.MIN_VALUE);
-
 	/** All the insertion mutations in the graph. */
 	private Collection<ComplexMutation> compmutations;
 
