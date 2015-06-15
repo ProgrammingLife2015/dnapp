@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -323,9 +324,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
+				System.out.println("HEIGHT: " + view.getSize().getHeight());
+				System.out.println("WIDTH: " + view.getSize().getWidth());
+				g.setColor(Color.ORANGE);
+				g.fillRect(0, 0, 200, 10);
 			}
 		};
+
 		viewer.addView(view);
+		// view = viewer.addDefaultView(false);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
@@ -348,6 +355,19 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
+	}
+
+	@SuppressWarnings("unchecked")
+	private Node searchDNode(final int loc, final Graph graph) {
+		for (Node n : graph.getEachNode()) {
+			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
+				if (dgraph.getDNode(id).getStart() <= loc
+						&& dgraph.getDNode(id).getEnd() > loc) {
+					return n;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
