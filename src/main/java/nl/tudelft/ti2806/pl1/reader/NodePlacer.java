@@ -50,10 +50,9 @@ public final class NodePlacer {
 	 * 
 	 * @param graph
 	 *            The graph.
-	 * @param viewSize
-	 *            The view size.
+	 * @return The new view size.
 	 */
-	public static void place(final Graph graph, final Dimension viewSize) {
+	public static Dimension place(final Graph graph) {
 		for (Node n : graph.getEachNode()) {
 			n.setAttribute("x", 0);
 		}
@@ -62,11 +61,14 @@ public final class NodePlacer {
 		q.add(start);
 		nodesAtDepth = new ArrayList<Integer>();
 		nodesAtDepth.add(graph.getNodeCount());
-		int maxdepth = depths(q);
+		depths(q);
 		for (Node n : graph.getEachNode()) {
 			int dep = n.getAttribute("x");
-			n.setAttribute("x", dep * (viewSize.width / maxdepth + 1));
+			n.setAttribute("x", dep * X_MULTIPLIER);
 		}
+		width = nodesAtDepth.size() * X_MULTIPLIER;
+		height = Collections.max(nodesAtDepth) * Y_MULTIPLIER;
+		return new Dimension(width, height);
 	}
 
 	/**
@@ -75,9 +77,8 @@ public final class NodePlacer {
 	 * 
 	 * @param q
 	 *            The queue in which we store the unvisited nodes.
-	 * @return The max depth.
 	 */
-	private static int depths(final Queue<Node> q) {
+	private static void depths(final Queue<Node> q) {
 		int max = 0;
 		while (!q.isEmpty()) {
 			Node src = q.remove();
@@ -102,7 +103,6 @@ public final class NodePlacer {
 				}
 			}
 		}
-		return max;
 	}
 
 	/**

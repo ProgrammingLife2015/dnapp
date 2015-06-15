@@ -491,7 +491,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		default:
 			Event.statusBarError("There is no zoom level further from the current level");
 		}
-		visualizeGraph(zlc.createGraph(threshold, viewSize));
+		Graph gr = zlc.createGraph(threshold);
+		viewSize = NodePlacer.place(gr);
+		visualizeGraph(gr);
 	}
 
 	@Override
