@@ -162,6 +162,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		infoPane = new JPanel(new BorderLayout());
 
+		minimap = new Minimap();
+		registerObserver((GraphScrollObserver) minimap);
+		registerObserver((ViewChangeObserver) minimap);
+		infoPane.add(minimap, BorderLayout.NORTH);
+
 		nodeContentPane = new NodeContentBox();
 		registerObserver(nodeContentPane);
 		infoPane.add(nodeContentPane, BorderLayout.CENTER);
@@ -333,18 +338,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		graphPane.setViewportView(view);
 		graphPane.getHorizontalScrollBar().setValue(scrollval);
 
-		minimap = new Minimap((int) viewSize.getWidth(), getCurrentViewArea());
-		registerObserver((GraphScrollObserver) minimap);
-		registerObserver((ViewChangeObserver) minimap);
-		infoPane.add(minimap, BorderLayout.NORTH);
+		this.graph = vGraph;
+		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
+		window.revalidate();
+		centerVertical();
 
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
-
-		window.revalidate();
-		centerVertical();
-		this.graph = vGraph;
-		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 	}
 
 	/**

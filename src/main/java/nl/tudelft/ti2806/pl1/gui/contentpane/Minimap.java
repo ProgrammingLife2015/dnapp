@@ -38,17 +38,13 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	/** The size of the reference genome. */
 	private int refSize;
 
+	/** Whether the minimap has enough data to be painted. */
+	private boolean showable = false;
+
 	/**
 	 * Initialize the minimap.
-	 * 
-	 * @param graphWidthIn
-	 *            The width of the initial graph view.
-	 * @param viewAreaIn
-	 *            The initial view area.
 	 */
-	public Minimap(final int graphWidthIn, final ViewArea viewAreaIn) {
-		this.viewArea = viewAreaIn;
-		this.graphWidth = graphWidthIn;
+	public Minimap() {
 		setMinimumSize(new Dimension(2, HEIGHT));
 		setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
 	}
@@ -64,6 +60,19 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	@Override
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
+		if (showable) {
+			drawMap(g);
+		}
+	}
+
+	/**
+	 * Draws the content of the mini map.
+	 * 
+	 * @param g
+	 *            The Graphics object to protect.
+	 * @see {@link #paintComponent(Graphics)}
+	 */
+	private void drawMap(final Graphics g) {
 		int mapWidth = getWidth();
 		int boxWidth = (viewArea.getWidth() * mapWidth) / (graphWidth + 1);
 		g.setColor(Color.RED);
@@ -75,14 +84,14 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	public void update(final ViewArea currentViewArea) {
 		this.viewArea = currentViewArea;
 		repaint();
-		// System.out.println("minimap update view area");
+		showable = true;
 	}
 
 	@Override
 	public void update(final int newViewWidth) {
 		this.graphWidth = newViewWidth;
-		// System.out.println("minimap update view width");
 		repaint();
+		showable = true;
 	}
 
 	@Override

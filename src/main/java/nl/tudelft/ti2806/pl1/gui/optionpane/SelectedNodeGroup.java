@@ -132,7 +132,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 */
 	@Override
 	public final void update(final HashSet<DNode> selectedNodes) {
-		this.show = (selectedNodes.size() == 1);
+		this.show = selectedNodes.size() == 1;
 		if (selectedNodes.size() == 1) {
 			DNode selectedNode = selectedNodes.iterator().next();
 			lblID.setText(String.valueOf(selectedNode.getId()));
@@ -153,11 +153,12 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 * @return The basic string representation of <code>col</code>.
 	 */
 	private <A> String collectionToString(final Collection<A> col) {
-		String ret = "<html>";
+		StringBuilder sb = new StringBuilder("<html>");
 		for (A item : col) {
-			ret += item.toString() + "<br>";
+			sb.append(item.toString());
+			sb.append("<br>");
 		}
-		return ret + "</html>";
+		return sb.toString() + "</html>";
 	}
 
 	@Override
