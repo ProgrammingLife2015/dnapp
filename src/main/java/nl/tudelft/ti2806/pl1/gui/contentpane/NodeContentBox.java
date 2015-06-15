@@ -88,25 +88,33 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	 */
 	@Override
 	public final void update(final HashSet<DNode> newSelectedNodes) {
-		Iterator<DNode> it = newSelectedNodes.iterator();
-		StringBuffer buf = new StringBuffer();
-		buf.append(it.next().getContent());
-		while (it.hasNext()) {
-			buf.append("/" + it.next().getContent());
-		}
-		String content = buf.toString();
-		text.setText(content);
-		for (int i = 0; i < text.getDocument().getLength(); i++) {
-			SimpleAttributeSet set = new SimpleAttributeSet();
-			Color nucleoColor = Color.BLACK;
-			try {
-				nucleoColor = NucleoBase.valueOf(doc.getText(i, 1)).getColor()
-						.darker().darker();
-			} catch (BadLocationException e) {
-				e.printStackTrace();
+		SimpleAttributeSet set = new SimpleAttributeSet();
+		if (newSelectedNodes.size() == 1) {
+			Iterator<DNode> it = newSelectedNodes.iterator();
+			StringBuffer buf = new StringBuffer();
+			buf.append(it.next().getContent());
+			while (it.hasNext()) {
+				buf.append("/" + it.next().getContent());
 			}
-			StyleConstants.setForeground(set, nucleoColor);
-			doc.setCharacterAttributes(i, 1, set, true);
+			String content = buf.toString();
+			text.setText(content);
+			for (int i = 0; i < text.getDocument().getLength(); i++) {
+				Color nucleoColor = Color.BLACK;
+				try {
+					nucleoColor = NucleoBase.valueOf(doc.getText(i, 1))
+							.getColor().darker().darker();
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+				StyleConstants.setForeground(set, nucleoColor);
+				doc.setCharacterAttributes(i, 1, set, true);
+			}
+		} else {
+			text.setText("This is a collapsed section consisting of "
+					+ newSelectedNodes.size()
+					+ " nodes, please zoom in to gain more information about this section.");
+			StyleConstants.setForeground(set, Color.BLACK);
+			doc.setCharacterAttributes(0, text.getText().length(), set, true);
 		}
 		// scroll.getVerticalScrollBar().setValue(0);
 		text.setCaretPosition(0);

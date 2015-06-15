@@ -52,7 +52,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	private Collection<InsertionMutation> insmutations;
 
 	/** Id of the selected id. */
-	private int selected = Integer.MIN_VALUE;
+	private String selected = String.valueOf(Integer.MIN_VALUE);
 
 	/**
 	 * Creates a new DGraph.
@@ -352,15 +352,15 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/**
 	 * @return the selected node
 	 */
-	public final int getSelected() {
+	public final String getSelected() {
 		return selected;
 	}
 
 	/**
-	 * @param selectedIn
+	 * @param string
 	 *            the selected node to set
 	 */
-	public final void setSelected(final int selectedIn) {
-		this.selected = selectedIn;
+	public final void setSelected(final String string) {
+		this.selected = string;
 	}
 }

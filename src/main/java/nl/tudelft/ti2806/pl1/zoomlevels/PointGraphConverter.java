@@ -131,16 +131,16 @@ public final class PointGraphConverter {
 	 *            The graph we want to collapse on.
 	 * @param threshold
 	 *            The threshold for collapsing pointmutations.
-	 * @param selected
+	 * @param string
 	 *            The selected node in the graph.
 	 * @return The new pointcollapsedgraph.
 	 */
 	public static Graph collapseNodes(
 			final Collection<PointMutation> pointmutations, final Graph gsg,
-			final double threshold, final int selected) {
+			final double threshold, final String string) {
 		for (PointMutation pointmutation : pointmutations) {
 			if (pointmutation.getScore() < threshold) {
-				collapsePointMutation(gsg, pointmutation, selected);
+				collapsePointMutation(gsg, pointmutation, string);
 			}
 		}
 		return gsg;
@@ -153,11 +153,11 @@ public final class PointGraphConverter {
 	 *            representation.
 	 * @param pointmutation
 	 *            The pointmutation we are trying to collapse.
-	 * @param selected
+	 * @param string
 	 *            The selected node in the graph.
 	 */
 	private static void collapsePointMutation(final Graph gsg,
-			final PointMutation pointmutation, final int selected) {
+			final PointMutation pointmutation, final String string) {
 		HashSet<Integer> nodeids = new HashSet<Integer>();
 		String newId = "";
 		int x = 0;
@@ -203,7 +203,7 @@ public final class PointGraphConverter {
 			newId += nodeid + "/";
 		}
 		y /= pointmutation.getNodes().size();
-		makeNewNode(gsg, x, y, newId, pointmutation, nodeids, selected);
+		makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
 	}
 
 	/**
@@ -221,26 +221,27 @@ public final class PointGraphConverter {
 	 *            Contains the nodes that will connect to the new nods.
 	 * @param nodeids
 	 *            The nodes that this new node contains.
-	 * @param selected
+	 * @param string
 	 *            The selected node in the graph.
 	 */
 	private static void makeNewNode(final Graph gsg, final int x,
 			final double y, final String newId,
 			final PointMutation pointmutation, final HashSet<Integer> nodeids,
-			final int selected) {
+			final String string) {
 		Node newnode = gsg.addNode("COLLAPSED_" + newId
 				+ pointmutation.getPostNode());
 		newnode.addAttribute("x", x);
 		newnode.addAttribute("y", y);
 		boolean selectedbool = false;
 		for (int id : nodeids) {
-			selectedbool = selectedbool || id == selected;
+			selectedbool = selectedbool || String.valueOf(id).equals(string);
 		}
 		if (selectedbool) {
 			newnode.addAttribute("ui.class", "selected");
 		} else {
 			newnode.addAttribute("ui.class", "collapsed");
 		}
+		newnode.addAttribute("ui.label", nodeids.size());
 		newnode.addAttribute("collapsed", nodeids);
 		newnode.addAttribute("contentsize", 1);
 		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId,
@@ -277,12 +278,12 @@ public final class PointGraphConverter {
 	 *            Graph in which to search the selected node.
 	 * @return the node id if a node is selected, otherwise Integer.MIN_VALUE.
 	 */
-	public static int findSelected(final Graph ret) {
+	public static String findSelected(final Graph ret) {
 		for (Node n : ret.getEachNode()) {
 			if (n.getAttribute("ui.class").equals("selected")) {
-				return Integer.parseInt(n.getId());
+				return n.getId();
 			}
 		}
-		return Integer.MIN_VALUE;
+		return String.valueOf(Integer.MIN_VALUE);
 	}
 }
