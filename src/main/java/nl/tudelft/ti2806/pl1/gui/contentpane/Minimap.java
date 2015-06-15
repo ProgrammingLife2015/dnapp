@@ -27,7 +27,7 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	 * 
 	 * @see View
 	 */
-	private int viewWidth;
+	private int graphWidth;
 
 	/** The reference gene storage. */
 	private ReferenceGeneStorage ref;
@@ -41,21 +41,19 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	/**
 	 * Initialize the minimap.
 	 * 
-	 * @param viewWidthIn
+	 * @param graphWidthIn
 	 *            The width of the initial graph view.
 	 * @param viewAreaIn
 	 *            The initial view area.
 	 */
-	public Minimap(final int viewWidthIn, final ViewArea viewAreaIn) {
+	public Minimap(final int graphWidthIn, final ViewArea viewAreaIn) {
 		this.viewArea = viewAreaIn;
-		this.viewWidth = viewWidthIn;
+		this.graphWidth = graphWidthIn;
 		setMinimumSize(new Dimension(2, HEIGHT));
-		// setBackground(Color.ORANGE);
 		setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
 	}
 
 	/**
-	 * 
 	 * @param refGeneStorage
 	 *            The reference gene storage to visualize.
 	 */
@@ -67,31 +65,29 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 		int mapWidth = getWidth();
-		int boxWidth = (viewArea.getWidth() * mapWidth) / (viewWidth + 1);
-		System.out.println(this);
-		System.out.println("mapWidth=" + mapWidth);
-		System.out.println("boxWidth=" + boxWidth);
+		int boxWidth = (viewArea.getWidth() * mapWidth) / (graphWidth + 1);
 		g.setColor(Color.RED);
-		g.fillRect(viewArea.getLeftBoundary() / (viewWidth + 1) * mapWidth, 0,
+		g.fillRect(viewArea.getLeftBoundary() * mapWidth / (graphWidth + 1), 0,
 				boxWidth, HEIGHT);
-		// g.fillRect(0, 0, 20, 20);
 	}
 
 	@Override
 	public void update(final ViewArea currentViewArea) {
 		this.viewArea = currentViewArea;
+		repaint();
 		// System.out.println("minimap update view area");
 	}
 
 	@Override
 	public void update(final int newViewWidth) {
-		this.viewWidth = newViewWidth;
-		System.out.println("minimap update view width");
+		this.graphWidth = newViewWidth;
+		// System.out.println("minimap update view width");
+		repaint();
 	}
 
 	@Override
 	public String toString() {
-		return "<Minimap[width=" + getWidth() + ",viewWidth=" + viewWidth
+		return "<Minimap[width=" + getWidth() + ",viewWidth=" + graphWidth
 				+ ",viewArea=" + viewArea + "]>";
 	}
 }

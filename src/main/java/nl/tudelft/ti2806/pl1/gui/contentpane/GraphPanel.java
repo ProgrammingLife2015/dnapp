@@ -1,7 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -276,10 +275,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 						edges.getAbsolutePath());
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
-				graph = ConvertDGraph.convert(dgraph); // TODO
+				graph = ConvertDGraph.convert(dgraph);
 				analyzeDGraph();
 				window.getOptionPanel().fillGenomeList(
-						dgraph.getReferences().keySet(), true, true);
+						dgraph.getReferencesSet(), true, true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Event.statusBarError(e.getMessage());
@@ -316,8 +315,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
-				g.setColor(Color.RED);
-				g.fillRect(0, 0, 1000, 1000);
 			}
 		};
 		viewer.addView(view);
@@ -340,6 +337,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		registerObserver((GraphScrollObserver) minimap);
 		registerObserver((ViewChangeObserver) minimap);
 		infoPane.add(minimap, BorderLayout.NORTH);
+
+		notifyGraphScrollObservers();
+		notifyViewChangeObservers();
 
 		window.revalidate();
 		centerVertical();
@@ -393,7 +393,8 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user.
 	 */
-	private void notifyNodeSelectionObservers(final HashSet<DNode> selectedNodeIn) {
+	private void notifyNodeSelectionObservers(
+			final HashSet<DNode> selectedNodeIn) {
 		for (NodeSelectionObserver sgo : nodeSelectionObservers) {
 			sgo.update(selectedNodeIn);
 		}
@@ -441,9 +442,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * @return The current view area of the scrollable graph pane.
 	 */
 	public ViewArea getCurrentViewArea() {
-		Rectangle visible = graphPane.getViewportBorderBounds();
-		System.out.println("viewport:" + graphPane.getViewportBorderBounds());
-		System.out.println("visrec: " + graphPane.getVisibleRect());
+		Rectangle visible = graphPane.getViewport().getViewRect();
 		return new ViewArea(visible.getMinX(), visible.getMaxX());
 	}
 
@@ -561,6 +560,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			visualizeGraph(gr);
 			highlight();
 		}
+		notifyViewChangeObservers();
 	}
 
 	/**

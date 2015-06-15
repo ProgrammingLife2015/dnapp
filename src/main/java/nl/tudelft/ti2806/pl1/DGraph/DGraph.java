@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
@@ -74,6 +75,14 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public Map<String, Collection<DNode>> getReferences() {
 		return references;
+	}
+
+	/**
+	 * 
+	 * @return The set containting the names of all references.
+	 */
+	public Set<String> getReferencesSet() {
+		return references.keySet();
 	}
 
 	/**
