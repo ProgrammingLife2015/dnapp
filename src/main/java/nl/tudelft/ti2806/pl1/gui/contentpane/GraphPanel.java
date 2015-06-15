@@ -404,7 +404,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 
 		// Assigns new selected node and stores old ui.class
-		dgraph.setSelected(Integer.valueOf(newSelectedNode.getId()));
+		dgraph.setSelected(Integer.parseInt(newSelectedNode.getId()));
 		newSelectedNode.setAttribute("oldclass",
 				newSelectedNode.getAttribute("ui.class"));
 		newSelectedNode.setAttribute("ui.class", "selected");

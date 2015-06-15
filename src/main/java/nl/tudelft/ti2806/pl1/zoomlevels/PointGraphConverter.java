@@ -278,7 +278,7 @@ public final class PointGraphConverter {
 	public static int findSelected(final Graph ret) {
 		for (Node n : ret.getEachNode()) {
 			if (n.getAttribute("ui.class").equals("selected")) {
-				return Integer.valueOf(n.getId());
+				return Integer.parseInt(n.getId());
 			}
 		}
 		return Integer.MIN_VALUE;
