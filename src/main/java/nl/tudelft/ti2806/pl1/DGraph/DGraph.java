@@ -366,7 +366,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * 
 	 * @param newInsMutations
 	 *            the insertion mutations to set
 	 */
