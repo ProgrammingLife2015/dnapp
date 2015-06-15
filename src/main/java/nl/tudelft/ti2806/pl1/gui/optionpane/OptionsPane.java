@@ -32,30 +32,18 @@ public class OptionsPane extends JScrollPane {
 	private static final Dimension SIZE = new Dimension(WIDTH,
 			Integer.MAX_VALUE);
 
-	// /**
-	// *
-	// */
-	// private static final int W_OFFSET = 20;
-	//
-	// /**
-	// *
-	// */
-	// private static final Dimension PANE_SIZE = new Dimension(WIDTH -
-	// W_OFFSET,
-	// Integer.MAX_VALUE);
-
 	/**
-	 * 
+	 * The maximum width of the (grouped) elements in this pane.
 	 */
 	public static final int MAX_CHILD_WIDTH = 200;
 
 	/**
-	 * 
+	 * The insets values.
 	 */
 	private static final int HOR_INSETS = 10, VER_INSETS = 5;
 
 	/**
-	 * 
+	 * The insets.
 	 */
 	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS,
 			VER_INSETS, HOR_INSETS);
@@ -124,6 +112,16 @@ public class OptionsPane extends JScrollPane {
 		return grpSelectedNode;
 	}
 
+	/**  */
+	private ZoomConfigureGroup grpZoomSettings;
+
+	/**
+	 * @return the grpZoomSettings
+	 */
+	public final ZoomConfigureGroup getGrpZoomSettings() {
+		return grpZoomSettings;
+	}
+
 	/**
 	 * Initialize the option pane.
 	 * 
@@ -142,6 +140,7 @@ public class OptionsPane extends JScrollPane {
 		this.tblGenomes = new GenomeTable();
 		this.grpSelectedNode = new SelectedNodeGroup();
 		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
+		this.grpZoomSettings = new ZoomConfigureGroup();
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
@@ -170,6 +169,7 @@ public class OptionsPane extends JScrollPane {
 		place(tblGenomes);
 		// place(grpSelectedGenome);
 		place(grpSelectedNode);
+		place(grpZoomSettings);
 
 		gbc.weighty = GBC_WEIGHT_Y;
 		place(Box.createGlue());

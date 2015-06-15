@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Collection;
 import java.util.HashSet;
 
 import javax.swing.BorderFactory;
@@ -44,6 +45,9 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
 	/** The simple bar chart showing the distribution of nucleotides. */
 	private NodeContentBar nodeChart;
+
+	/** Whether this group should be visible or not. */
+	private boolean show = false;
 
 	/** Initialize the group layout panel. */
 	public SelectedNodeGroup() {
@@ -128,22 +132,38 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 */
 	@Override
 	public final void update(final HashSet<DNode> selectedNodes) {
+		this.show = selectedNodes.size() == 1;
 		if (selectedNodes.size() == 1) {
 			DNode selectedNode = selectedNodes.iterator().next();
 			lblID.setText(String.valueOf(selectedNode.getId()));
 			lblContentLength.setText(String.valueOf(selectedNode.getContent()
-					.length())); // TODO
-			// lblContentLength.setText(String.valueOf(((String) selectedNode
-			// .getAttribute("content")).length()));
-
-			lblSources.setText(selectedNode.getSources().toString()); // TODO
-			// lblSources.setText(selectedNode.getAttribute("sources").toString());
-			nodeChart.analyseString(selectedNode.getContent().toString());
-			// TODO
+					.length()));
+			lblSources.setText(collectionToString(selectedNode.getSources()));
+			nodeChart.analyseString(selectedNode.getContent());
 			nodeChart.repaint();
-			// System.out.println("Update SelNodeGrp called "
-			// + selectedNode.getAttribute("content").toString());
 		}
+		revalidate();
+	}
+
+	/**
+	 * @param col
+	 *            The collection to stringify.
+	 * @param <A>
+	 *            The type of the collection items.
+	 * @return The basic string representation of <code>col</code>.
+	 */
+	private <A> String collectionToString(final Collection<A> col) {
+		StringBuilder sb = new StringBuilder("<html>");
+		for (A item : col) {
+			sb.append(item.toString());
+			sb.append("<br>");
+		}
+		return sb.toString() + "</html>";
+	}
+
+	@Override
+	public boolean isVisible() {
+		return super.isVisible() && show;
 	}
 
 	@Override
