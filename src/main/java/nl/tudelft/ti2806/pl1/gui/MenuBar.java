@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -78,13 +79,16 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-		ret.add(makeAC("Reset view", null, 'r',
-				"Lets you reset to the first view", Event.RESET_GRAPH));
+		JMenuItem reset = makeMI("Reset View", null, 'r',
+				"Reset to default view", Event.RESET_GRAPH);
+		reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
+				java.awt.Event.CTRL_MASK));
+		ret.add(reset);
 		return ret;
 	}
 
 	/**
-	 * Creates and fills the view menu.
+	 * viewMenu.
 	 * 
 	 * @return the view menu
 	 */
@@ -155,34 +159,6 @@ public class MenuBar extends JMenuBar {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
-		return ret;
-	}
-
-	/**
-	 * Creates and sets up a menu item.
-	 * 
-	 * @param text
-	 *            The text to show on the menu item.
-	 * @param iconName
-	 *            The name of the icon file in the resources/images folder
-	 * @param keyChar
-	 *            The character you can use to call.
-	 * @param toolTipText
-	 *            The tool tip.
-	 * @param action
-	 *            The event name.
-	 * 
-	 * @see Event
-	 * @return The menu item created.
-	 */
-	private JMenuItem makeAC(final String text, final String iconName,
-			final char keyChar, final String toolTipText, final Event action) {
-		JMenuItem ret = new JMenuItem();
-		ret.setText(text);
-		ret.setAccelerator(KeyStroke.getKeyStroke(keyChar));
-		ret.setToolTipText(toolTipText);
-		ret.addActionListener(action);
-		ret.setText(text);
 		return ret;
 	}
 }
