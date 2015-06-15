@@ -7,6 +7,7 @@ import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
 import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
@@ -50,6 +51,9 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 
 	/** All the insertion mutations in the graph. */
 	private Collection<InsertionMutation> insmutations;
+
+	/** All the insertion mutations in the graph. */
+	private Collection<ComplexMutation> compmutations;
 
 	/**
 	 * Creates a new DGraph.
@@ -328,6 +332,22 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public Collection<InsertionMutation> getInsmutations() {
 		return insmutations;
+	}
+
+	/**
+	 * @param mutationsIn
+	 *            The complex mutations to set.
+	 */
+	public void setComplexMutations(
+			final Collection<ComplexMutation> mutationsIn) {
+		this.compmutations = mutationsIn;
+	}
+
+	/**
+	 * @return The complex mutations.
+	 */
+	public Collection<ComplexMutation> getComplexMutations() {
+		return compmutations;
 	}
 
 	/**

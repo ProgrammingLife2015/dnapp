@@ -93,13 +93,13 @@ public final class MutationFinder {
 	}
 
 	/**
-	 * Finds the simple Deletion mutations of a DGraph.
+	 * Finds the complex mutations of a DGraph.
 	 * 
 	 * @param graph
 	 *            The DGraph.
-	 * @return A collection of the Deletion mutations.
+	 * @return A collection of the complex mutations.
 	 */
-	public static Collection<ComplexMutation> findComplexInsertionMutations(
+	public static Collection<ComplexMutation> findComplexMutations(
 			final DGraph graph) {
 		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
@@ -122,7 +122,7 @@ public final class MutationFinder {
 				}
 			}
 			if (inNodes.size() != 1) {
-				ins.add(new ComplexMutation(node.getId(), null, inNodes, graph
+				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
 						.getReferenceGeneStorage()));
 			}
 		}
