@@ -89,7 +89,7 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
 		makeMI(help, "Help", null, 'h', "Press to show shortcuts", Event.HELP);
-		help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
 		return ret;
 	}
@@ -114,7 +114,6 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("View");
 
 		JMenuItem reset = new JMenuItem() {
-
 			/**  */
 			private static final long serialVersionUID = -3037967992670223825L;
 
@@ -125,9 +124,43 @@ public class MenuBar extends JMenuBar {
 		};
 		makeMI(reset, "Reset view", null, 'r', "Reset to default view.",
 				Event.RESET_GRAPH);
-		reset.setAccelerator(KeyStroke.getKeyStroke(reset.getMnemonic(),
+		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
+
+		JMenuItem zoomlevelplus = new JMenuItem() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3037967992670223825L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.getContent().isGraphLoaded();
+			}
+		};
+		makeMI(zoomlevelplus, "Next zoomlevel", null, 'n',
+				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
+		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
+				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
+		ret.add(zoomlevelplus);
+
+		JMenuItem zoomlevelminus = new JMenuItem() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3037967992670223825L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.getContent().isGraphLoaded();
+			}
+		};
+		makeMI(zoomlevelminus, "Previous zoomlevel", null, 'p',
+				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
+		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
+				java.awt.Event.CTRL_MASK));
+		ret.add(zoomlevelminus);
 
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
@@ -196,5 +229,16 @@ public class MenuBar extends JMenuBar {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param item
+	 *            JMenuItem we want to add an acceleator to.
+	 * @param keyStroke
+	 *            The set of keys it will use.
+	 */
+	private void setAcc(final JMenuItem item, final KeyStroke keyStroke) {
+		item.setAccelerator(keyStroke);
 	}
 }

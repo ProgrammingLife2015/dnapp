@@ -190,6 +190,30 @@ public enum Event implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 		}
+	},
+	/**
+	 * 
+	 */
+	NEXTZOOMLEVEL {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent()
+					.getGraphPanel()
+					.applyZoomLevel(
+							window.getContent().getGraphPanel().getZoomLevel() + 1);
+		}
+	},
+	/**
+	 * 
+	 */
+	PREVIOUSZOOMLEVEL {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent()
+					.getGraphPanel()
+					.applyZoomLevel(
+							window.getContent().getGraphPanel().getZoomLevel() - 1);
+		}
 	};
 
 	/**
@@ -273,6 +297,12 @@ public enum Event implements ActionListener {
 	 */
 	public static void statusBarMid(final String message) {
 		window.getStatusBar().mid(message);
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

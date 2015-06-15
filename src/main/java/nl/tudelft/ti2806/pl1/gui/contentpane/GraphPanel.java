@@ -756,4 +756,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	}
 
+	/**
+	 * Get current zoomlevel.
+	 * 
+	 * @return current zoomlevel.
+	 */
+	public int getZoomLevel() {
+		return zoomLevel;
+	}
 }
