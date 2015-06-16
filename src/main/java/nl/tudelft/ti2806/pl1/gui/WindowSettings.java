@@ -18,7 +18,7 @@ public class WindowSettings extends Observable {
 	/**
 	 * 
 	 */
-	private static final int DEFAULT_SIZE_X = 700, DEFAULT_SIZE_Y = 500;
+	private static final int DEFAULT_SIZE_X = 900, DEFAULT_SIZE_Y = 600;
 
 	/**
 	 * 

@@ -6,6 +6,10 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import nl.tudelft.ti2806.pl1.gui.Event;
 
 /**
  * @author Maarten
@@ -46,7 +50,16 @@ public class ZoomConfigureGroup extends JPanel {
 	 */
 	private void addComponents() {
 		for (int i = 0; i < NUM_SLIDERS; i++) {
-			add(new JSlider());
+			JSlider slider = new JSlider(-10, 10);
+			slider.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(final ChangeEvent e) {
+					Event.statusBarInfo("Slider to "
+							+ ((JSlider) e.getSource()).getValue());
+				}
+			});
+			add(slider);
 		}
 	}
 

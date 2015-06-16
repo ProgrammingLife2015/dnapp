@@ -50,7 +50,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
 		JMenuItem imp = new JMenuItem();
-		makeMI(imp, "Import", null, 'I',
+		setMenuItem(imp, "Import", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE);
 		ret.add(imp);
@@ -66,12 +66,13 @@ public class MenuBar extends JMenuBar {
 		};
 		export.setMnemonic('E');
 		JMenuItem exportDGS = new JMenuItem();
-		makeMI(exportDGS, "DGS format", null, 'D', null, Event.WRITE_TO_DGS);
+		setMenuItem(exportDGS, "DGS format", null, 'D', null,
+				Event.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
-		makeMI(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
+		setMenuItem(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
 		ret.add(exit);
 
 		return ret;
@@ -85,7 +86,8 @@ public class MenuBar extends JMenuBar {
 	private JMenu helpMenu() {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
-		makeMI(help, "Help", null, 'h', "Press to show shortcuts", Event.HELP);
+		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
+				Event.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
 		return ret;
@@ -98,64 +100,47 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-
 		return ret;
 	}
 
 	/**
-	 * viewMenu.
+	 * Creates and fills the view menu.
 	 * 
 	 * @return the view menu
 	 */
 	private JMenu viewMenu() {
 		JMenu ret = new JMenu("View");
 
-		JMenuItem reset = new JMenuItem() {
-			/**  */
-			private static final long serialVersionUID = -3037967992670223825L;
-
-			@Override
-			public boolean isEnabled() {
-				return window.getContent().isGraphLoaded();
-			}
-		};
-		makeMI(reset, "Reset view", null, 'r', "Reset to default view.",
+		JMenuItem reset = new LoadedMenuItem(window);
+		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
 				Event.RESET_GRAPH);
 		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomlevelplus = new JMenuItem() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -3037967992670223825L;
-
-			@Override
-			public boolean isEnabled() {
-				return window.getContent().isGraphLoaded();
-			}
-		};
-		makeMI(zoomlevelplus, "Next zoomlevel", null, 'n',
+		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
+		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
 				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
 		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
 				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
 		ret.add(zoomlevelplus);
 
-		JMenuItem zoomlevelminus = new JMenuItem() {
-			/** The serial version UID. */
-			private static final long serialVersionUID = -3037967992670223825L;
-
-			@Override
-			public boolean isEnabled() {
-				return window.getContent().isGraphLoaded();
-			}
-		};
-		makeMI(zoomlevelminus, "Previous zoomlevel", null, 'p',
+		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
+		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
 				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
 		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
 				java.awt.Event.CTRL_MASK));
 		ret.add(zoomlevelminus);
+
+		ret.add(makeShowToolBar());
+		ret.add(makeShowOptionPane());
+		return ret;
+	}
+
+	/**
+	 * @return The show tool bar check box menu item.
+	 */
+	private JCheckBoxMenuItem makeShowToolBar() {
 
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
@@ -166,15 +151,21 @@ public class MenuBar extends JMenuBar {
 				window.revalidate();
 			}
 		});
-		ret.add(showToolBar);
+		return showToolBar;
+	}
+
+	/**
+	 * @return The show option pane check box menu item.
+	 */
+	private JCheckBoxMenuItem makeShowOptionPane() {
 
 		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
-				"Show option panel", false) {
+				"Show option panel", true) {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isVisible() {
 				return window.getContent().isGraphLoaded();
 			}
 		};
@@ -185,8 +176,7 @@ public class MenuBar extends JMenuBar {
 				window.revalidate();
 			}
 		});
-		ret.add(showOptionPane);
-		return ret;
+		return showOptionPane;
 	}
 
 	/**
@@ -208,7 +198,7 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 * @see Event
 	 */
-	private void makeMI(final JMenuItem item, final String text,
+	private void setMenuItem(final JMenuItem item, final String text,
 			final String iconName, final char mnemonic,
 			final String toolTipText, final Event action) {
 		item.setText(text);
