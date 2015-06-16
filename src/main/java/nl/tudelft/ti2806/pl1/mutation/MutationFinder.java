@@ -131,6 +131,10 @@ public final class MutationFinder {
 			if (inNodes.size() != 1) {
 				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
 						.getReferenceGeneStorage()));
+			} else if (graph.getDNode(inNodes.iterator().next()).getContent()
+					.length() > 1) {
+				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
+						.getReferenceGeneStorage()));
 			}
 		}
 		return ins;
