@@ -416,25 +416,34 @@ public abstract class BinaryTree extends JButton {
 			}
 			return null;
 		}
+
 		ArrayList<String> left = findGroup(sources, root.getLeft());
 		ArrayList<String> right = findGroup(sources, root.getRight());
+		if (left == null || right == null) {
+			return left == null ? right : left;
+		}
+
 		if (root.getLeft().isLeaf() && root.getRight().isLeaf()) {
-			if (left == null || right == null) {
-				return left == null ? right : left;
-			}
 			ArrayList<String> group = new ArrayList<String>();
 			group.addAll(left);
 			group.addAll(right);
 			return group;
-		}
-		if (!root.getLeft().isLeaf() && root.getRight().isLeaf()) {
-			if (left == null || right == null) {
-				return left == null ? right : left;
-			}
+		} else if (!root.getLeft().isLeaf() && root.getRight().isLeaf()) {
 			if (root.getLeft().getSources().equals(left)) {
 				left.addAll(right);
-				return left;
 			}
+			return left;
+		} else if (root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			if (root.getRight().getSources().equals(right)) {
+				left.addAll(right);
+			}
+			return left;
+		} else {
+			if (root.getLeft().getSources().equals(left)
+					&& root.getRight().getSources().equals(right)) {
+				left.addAll(right);
+			}
+			return left;
 		}
 	}
 
