@@ -15,8 +15,10 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -30,6 +32,7 @@ import javax.swing.SwingWorker;
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGene;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
@@ -151,6 +154,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** A collection of the highlighted genomes. */
 	private Set<String> highlightedGenomes;
 
+	private HashMap<String, ArrayList<Integer>> genes = new HashMap<String, ArrayList<Integer>>();
+
+	private HashMap<String, ArrayList<Node>> geneLocs;
+
 	/**
 	 * Initialize a graph panel.
 	 * 
@@ -234,6 +241,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			e1.printStackTrace();
 			ret = false;
 		}
+		for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+				.getReferenceGenes()) {
+			Integer start = searchDNode(rg.getStart(), graph);
+			Integer end = searchDNode(rg.getEnd(), graph);
+			if (start != null && end != null) {
+				ArrayList<Integer> locs = new ArrayList<Integer>(2);
+				locs.add(start);
+				locs.add(end);
+				genes.put(rg.getName(), locs);
+			}
+		}
 		visualizeGraph(graph);
 		return ret;
 	}
@@ -305,6 +323,18 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				.findInsertionMutations(dgraph));
 	}
 
+	@SuppressWarnings("unchecked")
+	private Node findNode(final int id, final Graph vGraph) {
+		for (Node n : vGraph.getEachNode()) {
+			for (Integer index : (HashSet<Integer>) n.getAttribute("collapsed")) {
+				if (index == id) {
+					return n;
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Takes the virtual (GraphStream) graph and shows it in the panel.
 	 * 
@@ -312,6 +342,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The visual graph to draw
 	 */
 	private void visualizeGraph(final Graph vGraph) {
+		geneLocs = new HashMap<String, ArrayList<Node>>();
+		for (Entry<String, ArrayList<Integer>> entry : genes.entrySet()) {
+			ArrayList<Node> nodes = new ArrayList<Node>(2);
+			Node begin = findNode(entry.getValue().get(0), vGraph);
+			Node end = findNode(entry.getValue().get(1), vGraph);
+			if (begin != null && end != null) {
+				nodes.add(begin);
+				nodes.add(end);
+				geneLocs.put(entry.getKey(), nodes);
+			}
+		}
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
@@ -324,10 +365,22 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
-				System.out.println("HEIGHT: " + view.getSize().getHeight());
-				System.out.println("WIDTH: " + view.getSize().getWidth());
-				g.setColor(Color.ORANGE);
-				g.fillRect(0, 0, 200, 10);
+				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
+					System.out.println(entry.getKey() + entry.getValue().get(0)
+							+ "- " + entry.getValue().get(1));
+					Node left = entry.getValue().get(0);
+					Node right = entry.getValue().get(1);
+					g.setColor(Color.ORANGE);
+					g.fillRect((int) left.getAttribute("x") - 10, 0,
+							((int) right.getAttribute("x") - (int) left
+									.getAttribute("x")) + 20, 10);
+//					g.setColor(Color.BLACK);
+//					g.drawString(
+//							entry.getKey(),
+//							(int) left.getAttribute("x")
+//									+ (((int) right.getAttribute("x") - 10 - (int) left
+//											.getAttribute("x")) + 20) / 2, 20);
+				}
 			}
 		};
 
@@ -358,12 +411,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Node searchDNode(final int loc, final Graph graph) {
+	private Integer searchDNode(final int loc, final Graph graph) {
 		for (Node n : graph.getEachNode()) {
 			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
 				if (dgraph.getDNode(id).getStart() <= loc
-						&& dgraph.getDNode(id).getEnd() > loc) {
-					return n;
+						&& dgraph.getDNode(id).getEnd() >= loc) {
+					return id;
 				}
 			}
 		}
