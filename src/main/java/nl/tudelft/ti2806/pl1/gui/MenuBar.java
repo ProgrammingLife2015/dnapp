@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -7,6 +8,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,6 +39,7 @@ public class MenuBar extends JMenuBar {
 		this.add(fileMenu());
 		this.add(editMenu());
 		this.add(viewMenu());
+		this.add(helpMenu());
 	}
 
 	/**
@@ -46,11 +49,11 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		ret.add(makeMI("Import", null, 'I',
+		JMenuItem imp = new JMenuItem();
+		setMenuItem(imp, "Import", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
-				Event.IMPORT_FILE));
-		ret.add(makeMI("Open database", null, 'O',
-				"Open a graph database file", Event.OPEN_GRAPH_DB));
+				Event.IMPORT_FILE);
+		ret.add(imp);
 
 		JMenu export = new JMenu("Export graph layout as...") {
 			/** The serial version UID. */
@@ -62,11 +65,31 @@ public class MenuBar extends JMenuBar {
 			}
 		};
 		export.setMnemonic('E');
-		JMenuItem exportDGS = makeMI("DGS format", null, 'D', null,
+		JMenuItem exportDGS = new JMenuItem();
+		setMenuItem(exportDGS, "DGS format", null, 'D', null,
 				Event.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
-		ret.add(makeMI("Exit", null, 'E', "Exit the program", Event.EXIT_APP));
+
+		JMenuItem exit = new JMenuItem();
+		setMenuItem(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
+		ret.add(exit);
+
+		return ret;
+	}
+
+	/**
+	 * Creates and fills the info menu.
+	 * 
+	 * @return the info menu
+	 */
+	private JMenu helpMenu() {
+		JMenu ret = new JMenu("Help");
+		JMenuItem help = new JMenuItem();
+		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
+				Event.HELP);
+		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+		ret.add(help);
 		return ret;
 	}
 
@@ -77,7 +100,6 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu editMenu() {
 		JMenu ret = new JMenu("Edit");
-		// ret.add(makeMI("?", null, '?', "?", null));
 		return ret;
 	}
 
@@ -88,6 +110,38 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu viewMenu() {
 		JMenu ret = new JMenu("View");
+
+		JMenuItem reset = new LoadedMenuItem(window);
+		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
+				Event.RESET_GRAPH);
+		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
+				java.awt.Event.CTRL_MASK));
+		ret.add(reset);
+
+		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
+		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
+				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
+		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
+				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
+		ret.add(zoomlevelplus);
+
+		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
+		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
+				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
+		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
+				java.awt.Event.CTRL_MASK));
+		ret.add(zoomlevelminus);
+
+		ret.add(makeShowToolBar());
+		ret.add(makeShowOptionPane());
+		return ret;
+	}
+
+	/**
+	 * @return The show tool bar check box menu item.
+	 */
+	private JCheckBoxMenuItem makeShowToolBar() {
+
 		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
 				"Show tool bar", true);
 		showToolBar.addChangeListener(new ChangeListener() {
@@ -97,15 +151,21 @@ public class MenuBar extends JMenuBar {
 				window.revalidate();
 			}
 		});
-		ret.add(showToolBar);
+		return showToolBar;
+	}
+
+	/**
+	 * @return The show option pane check box menu item.
+	 */
+	private JCheckBoxMenuItem makeShowOptionPane() {
 
 		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
-				"Show option panel", false) {
+				"Show option panel", true) {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isVisible() {
 				return window.getContent().isGraphLoaded();
 			}
 		};
@@ -116,12 +176,14 @@ public class MenuBar extends JMenuBar {
 				window.revalidate();
 			}
 		});
-		ret.add(showOptionPane);
-		return ret;
+		return showOptionPane;
 	}
 
 	/**
 	 * Creates and sets up a menu item.
+	 * 
+	 * @param item
+	 *            The menuItem we want to set properties for.
 	 * 
 	 * @param text
 	 *            The text to show on the menu item.
@@ -135,24 +197,33 @@ public class MenuBar extends JMenuBar {
 	 *            The event name.
 	 * 
 	 * @see Event
-	 * @return The menu item created.
 	 */
-	private JMenuItem makeMI(final String text, final String iconName,
-			final char mnemonic, final String toolTipText, final Event action) {
-		JMenuItem ret = new JMenuItem();
-		ret.setText(text);
-		ret.setMnemonic(mnemonic);
-		ret.setToolTipText(toolTipText);
-		ret.addActionListener(action);
+	private void setMenuItem(final JMenuItem item, final String text,
+			final String iconName, final char mnemonic,
+			final String toolTipText, final Event action) {
+		item.setText(text);
+		item.setMnemonic(mnemonic);
+		item.setToolTipText(toolTipText);
+		item.addActionListener(action);
 		if (iconName != null) {
 			String imgLocation = "images/" + iconName;
 			URL imageURL = ToolBar.class.getResource(imgLocation);
 			if (imageURL != null) {
-				ret.setIcon(new ImageIcon(imageURL, text));
+				item.setIcon(new ImageIcon(imageURL, text));
 			} else {
 				System.err.println("Resource not found: " + imgLocation);
 			}
 		}
-		return ret;
+	}
+
+	/**
+	 * 
+	 * @param item
+	 *            JMenuItem we want to add an acceleator to.
+	 * @param keyStroke
+	 *            The set of keys it will use.
+	 */
+	private void setAcc(final JMenuItem item, final KeyStroke keyStroke) {
+		item.setAccelerator(keyStroke);
 	}
 }

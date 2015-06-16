@@ -66,6 +66,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** The horizontal scroll increment value. */
 	private static final int HOR_SCROLL_INCR = 400;
 
+	/** How far zoomed in. **/
+	private int count = 0;
+
 	/**
 	 * Threshold value for first zoom level.
 	 */
@@ -548,8 +551,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
-		if (newZoomLevel < 0 || newZoomLevel > thresholds.length) {
+		if (newZoomLevel < 0) {
 			Event.statusBarError("There is no zoom level further from the current level");
+			zoomLevel = 0;
+		} else if (newZoomLevel > thresholds.length) {
+			Event.statusBarError("There is no zoom level further from the current level");
+			zoomLevel = thresholds.length;
 		} else if (newZoomLevel == 0) {
 			visualizeGraph(ConvertDGraph.convert(dgraph));
 			highlight();
@@ -585,11 +592,8 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	class Scrolling implements MouseWheelListener {
 
-		/** How far we're zoomed in on the current level. **/
-		private int count = 0;
-
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
-		private static final int NEWLEVEL = 10;
+		private static final int NEWLEVEL = 3;
 
 		// /** How far one scroll zooms in. **/
 		// private static final double ZOOMPERCENTAGE = 1.1;
@@ -603,7 +607,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		@Override
 		public void mouseWheelMoved(final MouseWheelEvent e) {
-			int rotation = -1 * e.getWheelRotation();
+			int rotation = e.getWheelRotation();
 			if (count > NEWLEVEL) {
 				zoomLevel++;
 				upZoomlevel();
@@ -641,7 +645,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			count = 0;
 			System.out.println("Zoom level up to = " + zoomLevel);
 			Event.statusBarInfo("Zoom level up to = " + zoomLevel);
-			setZoomlevel(zoomLevel);
+			applyZoomLevel(zoomLevel);
 		}
 
 		/**
@@ -651,19 +655,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			count = 0;
 			System.out.println("Zoom level down to = " + zoomLevel);
 			Event.statusBarInfo("Zoom level down to = " + zoomLevel);
-			setZoomlevel(zoomLevel);
-		}
-
-		/**
-		 * Lets you go to a new zoom level.
-		 * 
-		 * @param newZoomLevel
-		 *            The new zoom level.
-		 */
-		public void setZoomlevel(final int newZoomLevel) {
-			count = 0;
-			zoomLevel = newZoomLevel;
-			applyZoomLevel(newZoomLevel);
+			applyZoomLevel(zoomLevel);
 		}
 	}
 
@@ -811,4 +803,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	}
 
+	/**
+	 * Get current zoomlevel.
+	 * 
+	 * @return current zoomlevel.
+	 */
+	public int getZoomLevel() {
+		return zoomLevel;
+	}
 }
