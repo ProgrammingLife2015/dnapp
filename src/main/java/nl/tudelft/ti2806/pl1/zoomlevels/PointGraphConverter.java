@@ -162,8 +162,7 @@ public final class PointGraphConverter {
 		String newId = "";
 		int x = 0;
 		double y = 0.0;
-		if (gsg.getNode(pointmutation.getPreNode() + "") != null
-				&& gsg.getNode(pointmutation.getPostNode() + "") != null) {
+		if (checkViable(gsg, pointmutation)) {
 			for (int nodeid : pointmutation.getNodes()) {
 				nodeids.add(nodeid);
 				Node node = gsg.getNode(nodeid + "");
@@ -174,35 +173,7 @@ public final class PointGraphConverter {
 							&& node.getEnteringEdgeSet().size() == 1) {
 						gsg.removeNode(node);
 					} else {
-						if (node.getLeavingEdgeSet().size() > 1) {
-							boolean stop = false;
-							Iterator<Edge> leavingedges = node
-									.getLeavingEdgeIterator();
-							while (leavingedges.hasNext() && !stop) {
-								Edge edge = leavingedges.next();
-								if (edge.getNode1()
-										.getId()
-										.equals(pointmutation.getPostNode()
-												+ "")) {
-									gsg.removeEdge(edge);
-									stop = true;
-								}
-							}
-						}
-						if (node.getEnteringEdgeSet().size() > 1) {
-							boolean stop = false;
-							Iterator<Edge> enteringedges = node
-									.getEnteringEdgeIterator();
-							while (enteringedges.hasNext() && !stop) {
-								Edge edge = enteringedges.next();
-								if (edge.getNode0()
-										.getId()
-										.equals(pointmutation.getPreNode() + "")) {
-									gsg.removeEdge(edge);
-									stop = true;
-								}
-							}
-						}
+						removeEdges(node, pointmutation, gsg);
 					}
 				}
 				newId += nodeid + "/";
@@ -210,6 +181,77 @@ public final class PointGraphConverter {
 			y /= pointmutation.getNodes().size();
 			makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
 		}
+	}
+
+	/**
+	 * Removes the old edges when a pointmutation is being collapsed.
+	 * 
+	 * @param node
+	 *            The nodes to which the old edges belong.
+	 * @param pointmutation
+	 *            The pointmutation.
+	 * @param gsg
+	 *            The graph
+	 */
+	private static void removeEdges(final Node node,
+			final PointMutation pointmutation, final Graph gsg) {
+		if (node.getLeavingEdgeSet().size() > 1) {
+			boolean stop = false;
+			Iterator<Edge> leavingedges = node.getLeavingEdgeIterator();
+			while (leavingedges.hasNext() && !stop) {
+				Edge edge = leavingedges.next();
+				if (edge.getNode1().getId()
+						.equals(pointmutation.getPostNode() + "")) {
+					gsg.removeEdge(edge);
+					stop = true;
+				}
+			}
+		}
+		if (node.getEnteringEdgeSet().size() > 1) {
+			boolean stop = false;
+			Iterator<Edge> enteringedges = node.getEnteringEdgeIterator();
+			while (enteringedges.hasNext() && !stop) {
+				Edge edge = enteringedges.next();
+				if (edge.getNode0().getId()
+						.equals(pointmutation.getPreNode() + "")) {
+					gsg.removeEdge(edge);
+					stop = true;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks whether the pointmutation can still be collapsed.
+	 * 
+	 * @param gsg
+	 *            The graph
+	 * @param pointmutation
+	 *            The pointmutation
+	 * @return True iff the pre and post nodes of the mutation still exist in
+	 *         the graph and every nodes that would be collapsed has an edge
+	 *         towards the pre and post nodes.
+	 */
+	private static boolean checkViable(final Graph gsg,
+			final PointMutation pointmutation) {
+		Node preNode = gsg.getNode(pointmutation.getPreNode() + "");
+		Node postNode = gsg.getNode(pointmutation.getPostNode() + "");
+		if (preNode == null || postNode == null) {
+			return false;
+		}
+		Set<Node> nodes = new HashSet<Node>();
+		for (Integer n : pointmutation.getNodes()) {
+			nodes.add(gsg.getNode(n + ""));
+		}
+		for (Node n : nodes) {
+			if (n != null) {
+				if (!(preNode.hasEdgeBetween(n))
+						|| !(n.hasEdgeBetween(postNode))) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
