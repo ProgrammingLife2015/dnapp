@@ -178,9 +178,9 @@ public final class PointGraphConverter {
 				}
 				newId += nodeid + "/";
 			}
+			y /= pointmutation.getNodes().size();
+			makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
 		}
-		y /= pointmutation.getNodes().size();
-		makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
 	}
 
 	/**
