@@ -439,8 +439,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		for (Node n : vGraph.getEachNode()) {
 			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
 				if (dgraph.getDNode(id).getStart() <= loc
-						&& dgraph.getDNode(id).getEnd() > loc
-						&& dgraph.getDNode(id).getSources().contains("TKK_REF")) {
+						&& dgraph.getDNode(id).getEnd() > loc) {
 					return id;
 				}
 			}
