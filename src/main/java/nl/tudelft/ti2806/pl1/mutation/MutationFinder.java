@@ -131,18 +131,7 @@ public final class MutationFinder {
 					srcNodes.add(next);
 				}
 			}
-			DNode srcSink = null;
-			int max = 0;
-			for (DNode n : srcNodes) {
-				if (n.getDepth() > max) {
-					max = n.getDepth();
-					srcSink = n;
-				}
-			}
-			int srcId = 0;
-			if (srcSink != null) {
-				srcId = srcSink.getId();
-			}
+			int srcId = getSourceSinkNode(srcNodes);
 			if (inNodes.size() != 1) {
 				ins.add(new ComplexMutation(node.getId(), srcId, inNodes, graph
 						.getReferenceGeneStorage()));
@@ -153,5 +142,29 @@ public final class MutationFinder {
 			}
 		}
 		return ins;
+	}
+
+	/**
+	 * Get the Source Sink node of a set of nodes containing the reference
+	 * genome.
+	 * 
+	 * @param srcNodes
+	 *            The nodes containing the reference genome.
+	 * @return The ID of the Source Sink node.
+	 */
+	private static int getSourceSinkNode(final Set<DNode> srcNodes) {
+		DNode srcSink = null;
+		int max = 0;
+		for (DNode n : srcNodes) {
+			if (n.getDepth() > max) {
+				max = n.getDepth();
+				srcSink = n;
+			}
+		}
+		int srcId = 0;
+		if (srcSink != null) {
+			srcId = srcSink.getId();
+		}
+		return srcId;
 	}
 }
