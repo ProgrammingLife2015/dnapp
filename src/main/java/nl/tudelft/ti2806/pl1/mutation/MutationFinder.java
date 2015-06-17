@@ -105,6 +105,7 @@ public final class MutationFinder {
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		HashSet<DNode> visitednodes = new HashSet<DNode>();
 		for (DNode node : nodes) {
+			Set<DNode> srcNodes = new HashSet<DNode>();
 			Set<Integer> inNodes = new HashSet<Integer>();
 			Queue<DNode> q = new LinkedList<DNode>();
 			for (DNode next : node.getNextNodes()) {
@@ -126,14 +127,28 @@ public final class MutationFinder {
 							}
 						}
 					}
+				} else {
+					srcNodes.add(next);
 				}
 			}
+			DNode srcSink = null;
+			int max = 0;
+			for (DNode n : srcNodes) {
+				if (n.getDepth() > max) {
+					max = n.getDepth();
+					srcSink = n;
+				}
+			}
+			int srcId = 0;
+			if (srcSink != null) {
+				srcId = srcSink.getId();
+			}
 			if (inNodes.size() != 1) {
-				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
+				ins.add(new ComplexMutation(node.getId(), srcId, inNodes, graph
 						.getReferenceGeneStorage()));
 			} else if (graph.getDNode(inNodes.iterator().next()).getContent()
 					.length() > 1) {
-				ins.add(new ComplexMutation(node.getId(), 0, inNodes, graph
+				ins.add(new ComplexMutation(node.getId(), srcId, inNodes, graph
 						.getReferenceGeneStorage()));
 			}
 		}
