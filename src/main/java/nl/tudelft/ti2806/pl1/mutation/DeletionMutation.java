@@ -8,6 +8,13 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public class DeletionMutation extends Mutation {
 
+	/** Starting position of the deletion. **/
+	private int startposition;
+	/** End position of the deletion. **/
+	private int endposition;
+	/** Score if deletion is in gene. **/
+	private static final int SCORE_GENE = 80;
+
 	/**
 	 * @param pre
 	 *            The ID of the node before the mutation.
@@ -17,8 +24,23 @@ public class DeletionMutation extends Mutation {
 	 *            The storage containing all the interesting gene information.
 	 */
 	public DeletionMutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs) {
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		super(pre, post, rgs);
+		startposition = startpos;
+		endposition = endpos;
+		calculateGeneralScore();
+	}
+
+	/**
+	 * Calculate the general score for a mutation.
+	 */
+	private void calculateGeneralScore() {
+		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
+		if (rgs.isIntragenic(startposition) && rgs.isIntragenic(endposition)) {
+			this.setScore(SCORE_GENE);
+		} else {
+			this.setScore(0);
+		}
 	}
 
 	@Override
