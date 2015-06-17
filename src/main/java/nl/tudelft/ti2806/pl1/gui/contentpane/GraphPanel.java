@@ -302,6 +302,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				.findDeletionMutations(dgraph));
 		dgraph.setInsertionMutations(MutationFinder
 				.findInsertionMutations(dgraph));
+		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph));
 	}
 
 	/**
@@ -563,7 +564,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		} else {
 			int threshold = thresholds[newZoomLevel - 1];
 			Graph gr = zlc.createGraph(threshold);
-			setViewSize(NodePlacer.place(gr));
+			setViewSize(NodePlacer.place(gr, viewSize));
 			visualizeGraph(gr);
 			highlight();
 		}
