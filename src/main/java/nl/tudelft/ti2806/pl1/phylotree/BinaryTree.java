@@ -408,11 +408,11 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of groups for which each group share a common ancestor
 	 */
-	public ArrayList<ArrayList<String>> findGroups(final List<String> sources,
+	public List<List<String>> findGroups(final List<String> sources,
 			final BinaryTree root) {
-		ArrayList<ArrayList<String>> groupList = new ArrayList<ArrayList<String>>();
+		List<List<String>> groupList = new ArrayList<List<String>>();
 		while (!sources.isEmpty()) {
-			ArrayList<String> group = findGroup(sources, root);
+			List<String> group = findGroup(sources, root);
 			groupList.add(group);
 			for (String s : group) {
 				sources.remove(s);
@@ -430,16 +430,18 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of sources which share a common ancestor
 	 */
-	public ArrayList<String> findGroup(final List<String> sources,
+	public List<String> findGroup(final List<String> sources,
 			final BinaryTree root) {
-		if (isLeaf()) {
+		if (root.isLeaf()) {
 			if (sources.contains(root.getID())) {
-				return (ArrayList<String>) Arrays.asList(root.getID());
+				List<String> group = new ArrayList<String>();
+				group.add(root.getID());
+				return group;
 			}
 			return null;
 		}
-		ArrayList<String> left = findGroup(sources, root.getLeft());
-		ArrayList<String> right = findGroup(sources, root.getRight());
+		List<String> left = findGroup(sources, root.getLeft());
+		List<String> right = findGroup(sources, root.getRight());
 		if (left == null || right == null) {
 			if (left == null) {
 				return right;
