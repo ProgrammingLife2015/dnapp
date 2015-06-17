@@ -7,9 +7,9 @@ import org.junit.Test;
 
 public class ReferenceGeneStorageTest {
 
-	private static final String GFF_TEST_FILE = "ReferenceGeneStorageTestGenes.gff";
+	private static final String GFF_TEST_FILE = "src/test/resources/ReferenceGeneStorageTestGenes.gff";
 
-	private static final String TSV_TEST_FILE = "resistanceCausingMutationsTesting.txt";
+	private static final String TSV_TEST_FILE = "src/test/resources/resistanceCausingMutationsTesting.txt";
 
 	private ReferenceGeneStorage RGS = new ReferenceGeneStorage(GFF_TEST_FILE,
 			TSV_TEST_FILE);
@@ -93,13 +93,15 @@ public class ReferenceGeneStorageTest {
 	// RGS.toString());
 	// }
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testNoGeneFile() {
-		new ReferenceGeneStorage("NonExistingFile.gff", TSV_TEST_FILE);
+		new ReferenceGeneStorage("src/test/resources/NonExistingFile.gff",
+				TSV_TEST_FILE);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testNoMutationFile() {
-		new ReferenceGeneStorage(GFF_TEST_FILE, "NoExistingMutationsFile.txt");
+		new ReferenceGeneStorage(GFF_TEST_FILE,
+				"src/test/resources/NoExistingMutationsFile.txt");
 	}
 }

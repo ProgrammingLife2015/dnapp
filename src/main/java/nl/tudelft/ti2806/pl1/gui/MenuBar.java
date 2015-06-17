@@ -18,14 +18,10 @@ import javax.swing.event.ChangeListener;
  */
 public class MenuBar extends JMenuBar {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3046759850795865308L;
 
-	/**
-	 * The window this menu bar is part of.
-	 */
+	/** The window this menu bar is part of. */
 	private Window window;
 
 	/**
@@ -49,11 +45,11 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		JMenuItem imp = new JMenuItem();
-		setMenuItem(imp, "Import", null, 'I',
+		JMenuItem impGraph = new JMenuItem();
+		setMenuItem(impGraph, "Import graph", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE);
-		ret.add(imp);
+		ret.add(impGraph);
 
 		JMenu export = new JMenu("Export graph layout as...") {
 			/** The serial version UID. */

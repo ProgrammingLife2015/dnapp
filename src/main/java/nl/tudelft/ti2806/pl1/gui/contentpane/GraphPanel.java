@@ -31,7 +31,6 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
-import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
@@ -165,9 +164,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		infoPane = new JPanel(new BorderLayout());
 
-		minimap = new Minimap();
-		registerObserver((GraphScrollObserver) minimap);
-		registerObserver((ViewChangeObserver) minimap);
+		minimap = new Minimap(this);
 		infoPane.add(minimap, BorderLayout.NORTH);
 
 		nodeContentPane = new NodeContentBox();
@@ -189,9 +186,9 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	@Override
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
-		ret.add(ToolBar
-				.makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
-						"Loads or reloads the part of the graph currently in the view port."));
+		// ret.add(ToolBar
+		// .makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
+		// "Loads or reloads the part of the graph currently in the view port."));
 		return ret;
 	}
 
@@ -223,7 +220,8 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public final boolean loadGraph(final File nodes, final File edges) {
 		boolean ret = true;
-		final ProgressDialog pd = new ProgressDialog(window, "Importing", true);
+		final ProgressDialog pd = new ProgressDialog(window, "Importing...",
+				true);
 		GraphLoadWorker pw = new GraphLoadWorker(nodes, edges, pd);
 		pw.execute();
 		pd.start();
@@ -281,6 +279,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			try {
 				dgraph = Reader.read(nodes.getAbsolutePath(),
 						edges.getAbsolutePath());
+				dgraph.getReferenceGeneStorage().registerObserver(minimap);
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph);
@@ -297,6 +296,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** Performs all the analyze methods on the DGraph. */
 	private void analyzeDGraph() {
+		dgraph.calculateReferenceLength();
 		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
 		dgraph.setDeletionMutations(MutationFinder
 				.findDeletionMutations(dgraph));
@@ -810,5 +810,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public int getZoomLevel() {
 		return zoomLevel;
+	}
+
+	/**
+	 * @return The data graph.
+	 */
+	public final DGraph getDgraph() {
+		return dgraph;
 	}
 }

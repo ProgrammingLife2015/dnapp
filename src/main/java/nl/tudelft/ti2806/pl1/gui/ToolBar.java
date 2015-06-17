@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JToolBar;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.ContentTab;
@@ -21,23 +22,44 @@ public class ToolBar extends JToolBar {
 	/** The serial version UID. */
 	private static final long serialVersionUID = 7980283436568336682L;
 
-	/** The import button. */
-	private JButton btnImport = makeButton("Import graph", null,
-			Event.IMPORT_FILE,
-			"Click to load a graph from .node.graph and .edge.graph files.");
+	/** The window. */
+	private Window window;
+
+	/** The label in front of the import buttons. */
+	private JLabel lblImport = new JLabel("Import: ");
 
 	/** The import phylogenetic tree button. */
-	private JButton btnImportPhylo = makeButton("Import phylo", null,
+	private JButton btnImportPhylo = makeButton("Phylogenetic tree", null,
 			Event.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
 
+	/** Button for importing a gene annotation file. */
+	private JButton btnImportGeneAnn = makeButton("Gene annotation", null,
+			Event.IMPORT_GENE_ANN,
+			"Click to load gene annotation information from a gff file.");
+
+	/** Button for importing resistance causing mutations. */
+	private JButton btnImportResCausMut = makeButton(
+			"Known resistant mutations", null, Event.IMPORT_RES_CAUS_MUT,
+			"Click to load information about known resistant mutations from a krm file.");
+
 	/**
 	 * Initializes the tool bar.
+	 * 
+	 * @param w
+	 *            The window.
 	 */
-	public ToolBar() {
+	public ToolBar(final Window w) {
 		super("DN/App toolbar", JToolBar.HORIZONTAL);
+		this.window = w;
 		setRollover(true);
+		setVisible(false);
 		addGeneralButtons();
+	}
+
+	@Override
+	public boolean isVisible() {
+		return super.isVisible() && window.getContent().isGraphLoaded();
 	}
 
 	/**
@@ -73,8 +95,10 @@ public class ToolBar extends JToolBar {
 	/** Adds the control elements to the tool bar. */
 	private void addGeneralButtons() {
 		this.removeAll();
-		add(btnImport);
+		add(lblImport);
 		add(btnImportPhylo);
+		add(btnImportGeneAnn);
+		add(btnImportResCausMut);
 		addSeparator();
 	}
 

@@ -1,12 +1,16 @@
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeSet;
+
+import nl.tudelft.ti2806.pl1.gui.Event;
 
 /**
  * Storage location of all the genes of the TKK_REF with their information
@@ -38,37 +42,64 @@ public class ReferenceGeneStorage {
 	/** All the known drug resistance mutations. */
 	private Map<Integer, String> drugResMuts;
 
+	/** The list of meta data load observers. */
+	private List<MetaDataLoadObserver> observers = new ArrayList<MetaDataLoadObserver>();
+
+	/**
+	 * Registers a new meta data load observer.
+	 * 
+	 * @param mdlo
+	 *            The new meta data load observer.
+	 */
+	public void registerObserver(final MetaDataLoadObserver mdlo) {
+		observers.add(mdlo);
+	}
+
+	/**
+	 * Initialize a new empty reference gene storage.
+	 */
+	public ReferenceGeneStorage() {
+	}
+
 	/**
 	 * Constructor reading the gff3 gene files, extracting all the possible
 	 * genes in the reference genome.
 	 * 
-	 * @param genePath
-	 *            Path to the file from which information should be extracted.
-	 * @param mutationPath
-	 *            Path to the file containing the drug resistance mutations.
+	 * @param genes
+	 *            File from which information should be extracted.
+	 * @param resMuts
+	 *            File containing the drug resistance mutations.
 	 */
-	public ReferenceGeneStorage(final String genePath, final String mutationPath) {
-		this.referenceGenes = extractReferenceGenes(genePath);
-		if (mutationPath != null) {
-			drugResMuts = extractMutations(mutationPath);
-			connectGeneMutations();
-		}
+	public ReferenceGeneStorage(final File genes, final File resMuts) {
+		setGeneAnnotation(genes);
+		setDrugRestistantMutations(resMuts);
+	}
+
+	/**
+	 * Constructor reading the gff3 gene files, extracting all the possible
+	 * genes in the reference genome.
+	 * 
+	 * @param genesPath
+	 *            Path to the file containing gene annotation.
+	 * @param resMutsPath
+	 *            File containing the drug resistance mutations.
+	 */
+	public ReferenceGeneStorage(final String genesPath, final String resMutsPath) {
+		this(new File(genesPath), new File(resMutsPath));
 	}
 
 	/**
 	 * Extracts all the mutation information given file.
 	 * 
-	 * @param mutationPath
-	 *            Path to the file containing the drug resistance mutations.
+	 * @param file
+	 *            File containing the drug resistance mutations.
 	 * @return Returns a hashmap containing the names of the mutations.
 	 */
-	private Map<Integer, String> extractMutations(final String mutationPath) {
+	private Map<Integer, String> extractMutations(final File file) {
 		Map<Integer, String> temp = new HashMap<Integer, String>();
 		Scanner sc = null;
 		try {
-			sc = new Scanner(new BufferedReader(new InputStreamReader(
-					ReferenceGene.class.getClassLoader().getResourceAsStream(
-							mutationPath), "UTF-8")));
+			sc = new Scanner(new FileInputStream(file), "UTF-8");
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				if (!line.contains("##")) {
@@ -80,8 +111,9 @@ public class ReferenceGeneStorage {
 				}
 			}
 			sc.close();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			Event.statusBarError(file.getAbsolutePath()
+					+ " for known resistant mutations could not be found!");
 		}
 		return temp;
 	}
@@ -94,24 +126,30 @@ public class ReferenceGeneStorage {
 	 *            File from which gene information to be extracted.
 	 * @return HashSet containing all the genes for the reference genome.
 	 */
-	private TreeSet<ReferenceGene> extractReferenceGenes(final String file) {
+	private TreeSet<ReferenceGene> extractReferenceGenes(final File file) {
 		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
 				new RefGeneCompare());
-		Scanner sc = new Scanner(ReferenceGene.class.getClassLoader()
-				.getResourceAsStream(file), "UTF-8");
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			if (line.contains("CDS")) {
-				String[] info = line.split("\\t");
-				String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
-						"Name=", "");
-				ret.add(new ReferenceGene(Integer.parseInt(info[INDEX_START]),
-						Integer.parseInt(info[INDEX_END]), Double
-								.parseDouble(info[INDEX_SCORE]),
-						info[INDEX_STRAND], name));
+		Scanner sc;
+		try {
+			sc = new Scanner(new FileInputStream(file), "UTF-8");
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (line.contains("CDS")) {
+					String[] info = line.split("\\t");
+					String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
+							"Name=", "");
+					ret.add(new ReferenceGene(Integer
+							.parseInt(info[INDEX_START]), Integer
+							.parseInt(info[INDEX_END]), Double
+							.parseDouble(info[INDEX_SCORE]),
+							info[INDEX_STRAND], name));
+				}
 			}
+			sc.close();
+		} catch (FileNotFoundException e) {
+			Event.statusBarError(file.getAbsolutePath()
+					+ " for gene annotation could not be found!");
 		}
-		sc.close();
 		return ret;
 	}
 
@@ -130,9 +168,11 @@ public class ReferenceGeneStorage {
 	 * @return Whether the index is in a intragenic region.
 	 */
 	public boolean isIntragenic(final int index) {
-		for (ReferenceGene rg : getReferenceGenes()) {
-			if (rg.isIntragenic(index)) {
-				return true;
+		if (getReferenceGenes() != null) {
+			for (ReferenceGene rg : getReferenceGenes()) {
+				if (rg.isIntragenic(index)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -140,11 +180,13 @@ public class ReferenceGeneStorage {
 
 	/** Connect the mutations with each referenceGene object. */
 	private void connectGeneMutations() {
-		for (ReferenceGene rg : this.getReferenceGenes()) {
-			for (Integer key : this.getDrugResistanceMutations().keySet()) {
-				if (rg.isIntragenic(key)) {
-					rg.addMutation(key,
-							this.getDrugResistanceMutations().get(key));
+		if (getReferenceGenes() != null && getDrugResistanceMutations() != null) {
+			for (ReferenceGene rg : this.getReferenceGenes()) {
+				for (Integer key : this.getDrugResistanceMutations().keySet()) {
+					if (rg.isIntragenic(key)) {
+						rg.addMutation(key, this.getDrugResistanceMutations()
+								.get(key));
+					}
 				}
 			}
 		}
@@ -172,17 +214,36 @@ public class ReferenceGeneStorage {
 		return drugResMuts;
 	}
 
-	// @Override
-	// public String toString() {
-	// String res = "";
-	// for (ReferenceGene rg : this.getReferenceGenes()) {
-	// res += rg.toString() + "\n";
-	// }
-	// return res;
-	// }
+	/**
+	 * @param knownResMut
+	 *            The known resistance causing mutations file.
+	 */
+	public void setDrugRestistantMutations(final File knownResMut) {
+		if (knownResMut != null) {
+			this.drugResMuts = extractMutations(knownResMut);
+			connectGeneMutations();
+		}
+		notifyMetaDataLoadObservers();
+	}
 
-	// public static void main(final String[] args) {
-	// ReferenceGeneStorage RGS = new ReferenceGeneStorage(
-	// "decorationV5_20130412.gff", "resistanceCausingMutations.tsv");
-	// }
+	/**
+	 * Notifies the meta data load observers when the meta data contained in
+	 * this instance has changed.
+	 */
+	private void notifyMetaDataLoadObservers() {
+		for (MetaDataLoadObserver mdlo : observers) {
+			mdlo.update(this.getDrugResistanceMutations());
+		}
+	}
+
+	/**
+	 * @param geneAnn
+	 *            The gene annotation file
+	 */
+	public void setGeneAnnotation(final File geneAnn) {
+		if (geneAnn != null) {
+			this.referenceGenes = extractReferenceGenes(geneAnn);
+			connectGeneMutations();
+		}
+	}
 }

@@ -32,8 +32,9 @@ public class DeletionMutationTest {
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		insertSrc = new HashSet<String>(Arrays.asList("TKK_2"));
-		rgs = new ReferenceGeneStorage("ReferenceGeneStorageTestGenes.gff",
-				"resistanceCausingMutationsTesting.txt");
+		rgs = new ReferenceGeneStorage(
+				"src/test/resources/ReferenceGeneStorageTestGenes.gff",
+				"src/test/resources/resistanceCausingMutationsTesting.txt");
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);

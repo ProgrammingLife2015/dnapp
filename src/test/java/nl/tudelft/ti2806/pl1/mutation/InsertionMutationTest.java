@@ -30,8 +30,9 @@ public class InsertionMutationTest {
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		HashSet<String> insertSrc = new HashSet<String>(Arrays.asList("REF2"));
-		rgs = new ReferenceGeneStorage("ReferenceGeneStorageTestGenes.gff",
-				"resistanceCausingMutationsTesting.txt");
+		rgs = new ReferenceGeneStorage(
+				"src/test/resources/ReferenceGeneStorageTestGenes.gff",
+				"src/test/resources/resistanceCausingMutationsTesting.txt");
 
 		start = new DNode(1, sources, 0, 0, "");
 		insertion = new DNode(2, insertSrc, 0, 0, "");
