@@ -37,6 +37,7 @@ import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.gui.Window;
+import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
@@ -56,7 +57,8 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Maarten
  */
-public class GraphPanel extends JSplitPane implements ContentTab {
+public class GraphPanel extends JSplitPane implements ContentTab,
+		GeneSelectionObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -920,5 +922,11 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public int getZoomLevel() {
 		return zoomLevel;
+	}
+
+	@Override
+	public void update(final String selectedGene) {
+		// TODO Auto-generated method stub
+
 	}
 }
