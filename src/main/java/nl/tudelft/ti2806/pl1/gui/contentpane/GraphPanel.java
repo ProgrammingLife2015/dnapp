@@ -158,10 +158,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	private HashMap<String, ArrayList<Integer>> genes = new HashMap<String, ArrayList<Integer>>();
 
 	/** Map containing the outer nodes of the gene regions. */
-	private HashMap<String, ArrayList<Node>> geneLocs;
+	private HashMap<String, ArrayList<Integer>> geneLocs;
 
 	/** Diameter of nodes in pixels. */
-	private int NODE_DIAMETER = 20;
+	private final int nodeDiameter = 20;
 
 	/**
 	 * Initialize a graph panel.
@@ -356,15 +356,19 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            Graph in which to search.
 	 */
 	private void searchGeneLocs(final Graph vGraph) {
-		geneLocs = new HashMap<String, ArrayList<Node>>();
+		geneLocs = new HashMap<String, ArrayList<Integer>>();
 		for (Entry<String, ArrayList<Integer>> entry : genes.entrySet()) {
-			ArrayList<Node> nodes = new ArrayList<Node>(2);
+			ArrayList<Integer> nodes = new ArrayList<Integer>(2);
 			Node begin = findNode(entry.getValue().get(0), vGraph);
 			Node end = findNode(entry.getValue().get(1), vGraph);
 			if (begin != null && end != null) {
-				nodes.add(begin);
-				nodes.add(end);
-				geneLocs.put(entry.getKey(), nodes);
+				int xbegin = (int) begin.getAttribute("x");
+				int xend = (int) end.getAttribute("x");
+				if (xbegin < xend) {
+					nodes.add(xbegin);
+					nodes.add(xend);
+					geneLocs.put(entry.getKey(), nodes);
+				}
 			}
 		}
 	}
@@ -388,16 +392,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
-				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
-					Node left = entry.getValue().get(0);
-					Node right = entry.getValue().get(1);
+				for (Entry<String, ArrayList<Integer>> entry : geneLocs
+						.entrySet()) {
 					g.setColor(Color.ORANGE);
-					g.fillRect(
-							(int) left.getAttribute("x") + NODE_DIAMETER,
-							0,
-							((int) right.getAttribute("x") - (int) left
-									.getAttribute("x")) + NODE_DIAMETER,
-							NODE_DIAMETER / 2);
+					g.fillRect(entry.getValue().get(0) - nodeDiameter / 2, 0,
+							entry.getValue().get(1) - entry.getValue().get(0)
+									+ nodeDiameter, nodeDiameter / 2);
 				}
 			}
 		};
@@ -430,37 +430,16 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * 
 	 * @param loc
 	 *            Location on the reference genome.
-	 * @param graph
+	 * @param vGraph
 	 *            graph in which to search.
 	 * @return Index of the node.
 	 */
 	@SuppressWarnings("unchecked")
-	private Integer searchNode(final int loc, final Graph graph) {
-		for (Node n : graph.getEachNode()) {
+	private Integer searchNode(final int loc, final Graph vGraph) {
+		for (Node n : vGraph.getEachNode()) {
 			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
 				if (dgraph.getDNode(id).getStart() <= loc
 						&& dgraph.getDNode(id).getEnd() > loc
-						&& dgraph.getDNode(id).getSources().contains("TKK_REF")) {
-					return id;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param loc
-	 *            Location on the reference genome.
-	 * @param graph
-	 *            graph in which to search.
-	 * @return Index of the node.
-	 */
-	@SuppressWarnings("unchecked")
-	private Integer searchEndNode(final int loc, final Graph graph) {
-		for (Node n : graph.getEachNode()) {
-			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
-				if (dgraph.getDNode(id).getEnd() >= loc
 						&& dgraph.getDNode(id).getSources().contains("TKK_REF")) {
 					return id;
 				}
