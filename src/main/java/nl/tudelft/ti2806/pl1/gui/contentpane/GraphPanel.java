@@ -329,6 +329,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
+		view.setEnabled(false);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
@@ -551,21 +552,24 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
+		count = 0;
 		if (newZoomLevel < 0) {
 			Event.statusBarError("There is no zoom level further from the current level");
-			zoomLevel = 0;
 		} else if (newZoomLevel > thresholds.length) {
 			Event.statusBarError("There is no zoom level further from the current level");
-			zoomLevel = thresholds.length;
-		} else if (newZoomLevel == 0) {
-			visualizeGraph(ConvertDGraph.convert(dgraph));
-			highlight();
 		} else {
-			int threshold = thresholds[newZoomLevel - 1];
+			zoomLevel = newZoomLevel;
+			int threshold;
+			if (newZoomLevel == 0) {
+				threshold = Integer.MIN_VALUE;
+			} else {
+				threshold = thresholds[newZoomLevel - 1];
+			}
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr));
 			visualizeGraph(gr);
 			highlight();
+			Event.statusBarInfo("Zoom level set to: " + zoomLevel);
 		}
 		notifyViewChangeObservers();
 	}
@@ -785,21 +789,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 * Lets you zoom in one level further.
 	 */
 	public void upZoomlevel() {
-		count = 0;
-		zoomLevel++;
-		System.out.println("Zoom level up to = " + zoomLevel);
-		Event.statusBarInfo("Zoom level up to = " + zoomLevel);
-		applyZoomLevel(zoomLevel);
+		applyZoomLevel(zoomLevel + 1);
 	}
 
 	/**
 	 * Lets you zoom out one level further.
 	 */
 	public void downZoomlevel() {
-		count = 0;
-		zoomLevel--;
-		System.out.println("Zoom level down to = " + zoomLevel);
-		Event.statusBarInfo("Zoom level down to = " + zoomLevel);
-		applyZoomLevel(zoomLevel);
+		applyZoomLevel(zoomLevel - 1);
 	}
 }
