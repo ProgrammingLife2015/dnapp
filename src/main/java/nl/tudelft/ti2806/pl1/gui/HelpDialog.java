@@ -67,15 +67,15 @@ public class HelpDialog extends JDialog {
 				USING_DNAPP_HELP_FILE); // TODO fix...
 		Scanner sc = new Scanner(is, "UTF-8");
 		StringBuilder sb = new StringBuilder("<html>");
-		System.out.println(sc);
+		// System.out.println(sc);
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			sb.append(line).append("<br>");
-			System.out.println("READ LINE = " + line);
+			// System.out.println("READ LINE = " + line);
 		}
 		sc.close();
 		sb.append("</html>");
-		System.out.println(sb.toString());
+		// System.out.println(sb.toString());
 		JLabel info = new JLabel(sb.toString());
 		ret.add(info, BorderLayout.CENTER);
 		return ret;
@@ -91,8 +91,8 @@ public class HelpDialog extends JDialog {
 				{ "CTRL + R", "Reset to default view (zoom level)" },
 				{ "CTRL + C", "Close the application" },
 				{ "CTRL + O", "Open a file" },
-				{ "+", "Go to the next zoomlevel" },
-				{ "-", "Go to the previous zoomlevel" } };
+				{ "CTRL + UP", "Go up a zoomlevel" },
+				{ "CTRL + DOWN", "Go down a zoomlevel" } };
 
 		for (int i = 0; i < info.length; i++) {
 			for (int j = 0; j < info[0].length; j++) {

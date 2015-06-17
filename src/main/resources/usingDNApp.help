@@ -1,0 +1,38 @@
+Setup:
+To open a graph click on "Import graph" and select a "Node" file followed by an "Edge" file. If you fail to do so an error will be shown in the status bar.
+After that a loading bar will be shown until the graph has loaded.
+
+You can also load the graph by clicking the File tab, and then clicking import.
+
+A complementary phylogenetic tree can be imported by pressing the "Import phylo" which shows all files with a "nwk" extention.
+
+Exit:
+You can exit the program by pressing the cross, or going to the File tab and pressing Exit.
+
+
+View:
+You can hide the toolbar and the infopanel by going to the View tab and clicking their respective buttons.
+
+The view can be reset to its original state by using the button defined in shortcuts, or by clicking on the button in the View tab.
+
+Graph view:
+Once the graph has been loaded, the genomes will be shown on the left side of the screen. The label next to the node shows its content size, 
+or in the case of a collapsed node the number of nodes collapsed to make this node. Node intensity will be determined by the percentage of unknown bases in the Node.
+
+Highlighting genomes:
+You can highlight the nodes belonging to a certain genome by ticking the box.
+Highlighted nodes will be shown in red.
+
+Selected Node:
+The currently selected node will be shown in yellow. It's content will be shown at the bottom of the screen, and more information will be on the left side of the screen.
+The colors below the node information, show how much of the content is of a certain base.
+
+Collapsed Node:
+Nodes which have more content then what is currently shown in the graph, will be colored purple. 
+
+Phylotree view:
+If a phylogenetic tree has been loaded, it will be shown in the "Phylogenetic tree" tab.
+
+You can select sets of genomes by leftclicking in the Phylotree view.
+
+Parts of the phylotree can be hidden by rightclicking on a branch inside the tree.
