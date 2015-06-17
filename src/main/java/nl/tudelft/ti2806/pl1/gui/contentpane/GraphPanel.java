@@ -374,12 +374,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 					g.fillRect((int) left.getAttribute("x") - 10, 0,
 							((int) right.getAttribute("x") - (int) left
 									.getAttribute("x")) + 20, 10);
-//					g.setColor(Color.BLACK);
-//					g.drawString(
-//							entry.getKey(),
-//							(int) left.getAttribute("x")
-//									+ (((int) right.getAttribute("x") - 10 - (int) left
-//											.getAttribute("x")) + 20) / 2, 20);
+					// g.setColor(Color.BLACK);
+					// g.drawString(
+					// entry.getKey(),
+					// (int) left.getAttribute("x")
+					// + (((int) right.getAttribute("x") - 10 - (int) left
+					// .getAttribute("x")) + 20) / 2, 20);
 				}
 			}
 		};
