@@ -105,7 +105,7 @@ public final class MutationFinder {
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		HashSet<DNode> visitednodes = new HashSet<DNode>();
 		for (DNode node : nodes) {
-			Set<DNode> srcNodes = new HashSet<DNode>();
+			Set<Integer> srcNodes = new HashSet<Integer>();
 			Set<Integer> inNodes = new HashSet<Integer>();
 			Queue<DNode> q = new LinkedList<DNode>();
 			for (DNode next : node.getNextNodes()) {
@@ -124,20 +124,23 @@ public final class MutationFinder {
 									visitednodes.add(qnext);
 								}
 								inNodes.add(qnext.getId());
+							} else {
+								srcNodes.add(qnext.getId());
 							}
 						}
 					}
 				} else {
-					srcNodes.add(next);
+					srcNodes.add(next.getId());
 				}
 			}
-			int srcId = getSourceSinkNode(srcNodes);
+			int srcId = getSourceSinkNode(srcNodes, graph);
 			if (node.getOutEdges().size() > 0) {
-				if (inNodes.size() != 1) {
+				if (inNodes.size() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
 							graph.getReferenceGeneStorage()));
-				} else if (graph.getDNode(inNodes.iterator().next())
-						.getContent().length() > 1) {
+				} else if (inNodes.size() == 1
+						&& graph.getDNode(inNodes.iterator().next())
+								.getContent().length() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
 							graph.getReferenceGeneStorage()));
 				}
@@ -152,15 +155,19 @@ public final class MutationFinder {
 	 * 
 	 * @param srcNodes
 	 *            The nodes containing the reference genome.
+	 * @param g
+	 *            The graph
 	 * @return The ID of the Source Sink node.
 	 */
-	private static int getSourceSinkNode(final Set<DNode> srcNodes) {
+	private static int getSourceSinkNode(final Set<Integer> srcNodes,
+			final DGraph g) {
 		DNode srcSink = null;
 		int max = 0;
-		for (DNode n : srcNodes) {
-			if (n.getDepth() > max) {
-				max = n.getDepth();
-				srcSink = n;
+		for (Integer n : srcNodes) {
+			DNode node = g.getDNode(n);
+			if (node.getDepth() > max) {
+				max = node.getDepth();
+				srcSink = node;
 			}
 		}
 		int srcId = 0;
