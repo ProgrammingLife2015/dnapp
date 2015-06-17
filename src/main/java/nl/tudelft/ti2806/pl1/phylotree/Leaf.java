@@ -64,10 +64,12 @@ public class Leaf extends BinaryTree {
 	public final boolean equalsTree(final BinaryTree t2) {
 		if (!(t2 instanceof Leaf)) {
 			return false;
-		} else {
-			Leaf t2l = (Leaf) t2;
-			return this.getID().equals(t2l.getID());
 		}
+		Leaf t2l = (Leaf) t2;
+		if (!(getPathLength() == t2l.getPathLength())) {
+			return false;
+		}
+		return this.getID().equals(t2l.getID());
 	}
 
 	@Override

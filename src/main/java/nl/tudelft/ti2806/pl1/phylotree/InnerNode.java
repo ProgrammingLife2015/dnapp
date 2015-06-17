@@ -109,6 +109,9 @@ public class InnerNode extends BinaryTree {
 			if (hasLeft() != t2i.hasLeft() || hasRight() != t2i.hasRight()) {
 				return false;
 			}
+			if (!(getPathLength() == t2i.getPathLength())) {
+				return false;
+			}
 			if (hasLeft() && !left.equalsTree(t2i.left)) {
 				return false;
 			}
