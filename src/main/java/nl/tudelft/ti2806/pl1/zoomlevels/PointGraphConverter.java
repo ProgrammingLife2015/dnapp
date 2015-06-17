@@ -159,13 +159,15 @@ public final class PointGraphConverter {
 	private static void collapsePointMutation(final Graph gsg,
 			final PointMutation pointmutation, final String string) {
 		HashSet<Integer> nodeids = new HashSet<Integer>();
-		String newId = "";
+		StringBuilder sb = new StringBuilder();
 		int x = 0;
 		double y = 0.0;
 		if (checkViable(gsg, pointmutation)) {
 			for (int nodeid : pointmutation.getNodes()) {
 				nodeids.add(nodeid);
-				Node node = gsg.getNode(nodeid + "");
+				StringBuilder sb2 = new StringBuilder();
+				sb2.append(nodeid);
+				Node node = gsg.getNode(sb2.toString());
 				if (node != null) {
 					x = node.getAttribute("x");
 					y += (int) node.getAttribute("y");
@@ -176,10 +178,12 @@ public final class PointGraphConverter {
 						removeEdges(node, pointmutation, gsg);
 					}
 				}
-				newId += nodeid + "/";
+				sb.append(nodeid);
+				sb.append("/");
 			}
 			y /= pointmutation.getNodes().size();
-			makeNewNode(gsg, x, y, newId, pointmutation, nodeids, string);
+			makeNewNode(gsg, x, y, sb.toString(), pointmutation, nodeids,
+					string);
 		}
 	}
 
@@ -244,11 +248,10 @@ public final class PointGraphConverter {
 			nodes.add(gsg.getNode(n + ""));
 		}
 		for (Node n : nodes) {
-			if (n != null) {
-				if (!(preNode.hasEdgeBetween(n))
-						|| !(n.hasEdgeBetween(postNode))) {
-					return false;
-				}
+			if (n != null
+					&& (!(preNode.hasEdgeBetween(n)) || !(n
+							.hasEdgeBetween(postNode)))) {
+				return false;
 			}
 		}
 		return true;
