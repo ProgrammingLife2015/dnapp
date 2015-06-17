@@ -53,26 +53,30 @@ public class MenuBar extends JMenuBar {
 		setMenuItem(imp, "Import", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE);
+		setAcc(imp,
+				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.Event.CTRL_MASK));
 		ret.add(imp);
 
-		JMenu export = new JMenu("Export graph layout as...") {
-			/** The serial version UID. */
-			private static final long serialVersionUID = 6733151149511110189L;
-
-			@Override
-			public boolean isEnabled() {
-				return window.getContent().isGraphLoaded();
-			}
-		};
-		export.setMnemonic('E');
-		JMenuItem exportDGS = new JMenuItem();
-		setMenuItem(exportDGS, "DGS format", null, 'D', null,
-				Event.WRITE_TO_DGS);
-		export.add(exportDGS);
-		ret.add(export);
+		// JMenu export = new JMenu("Export graph layout as...") {
+		// /** The serial version UID. */
+		// private static final long serialVersionUID = 6733151149511110189L;
+		//
+		// @Override
+		// public boolean isEnabled() {
+		// return window.getContent().isGraphLoaded();
+		// }
+		// };
+		// export.setMnemonic('E');
+		// JMenuItem exportDGS = new JMenuItem();
+		// setMenuItem(exportDGS, "DGS format", null, 'D', null,
+		// Event.WRITE_TO_DGS);
+		// export.add(exportDGS);
+		// ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
 		setMenuItem(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
+		setAcc(exit,
+				KeyStroke.getKeyStroke(KeyEvent.VK_C, java.awt.Event.CTRL_MASK));
 		ret.add(exit);
 
 		return ret;
