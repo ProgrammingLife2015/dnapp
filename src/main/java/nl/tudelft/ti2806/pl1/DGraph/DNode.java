@@ -392,6 +392,13 @@ public class DNode {
 	}
 
 	/**
+	 * @return true iff this node has at least one resistance mutation.
+	 */
+	public boolean hasResMuts() {
+		return resMuts != null && resMuts.size() > 0;
+	}
+
+	/**
 	 * @return the resMuts
 	 */
 	public final List<ResistanceMutation> getResMuts() {
@@ -399,11 +406,11 @@ public class DNode {
 	}
 
 	/**
-	 * @param resMuts
+	 * @param newResMuts
 	 *            the resMuts to set
 	 */
-	public final void setResMuts(final List<ResistanceMutation> resMuts) {
-		this.resMuts = resMuts;
+	public final void setResMuts(final List<ResistanceMutation> newResMuts) {
+		this.resMuts = newResMuts;
 	}
 
 	@Override

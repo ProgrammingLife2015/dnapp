@@ -102,6 +102,7 @@ public enum Event implements ActionListener {
 				window.getContent().getGraphPanel().getDgraph()
 						.getReferenceGeneStorage()
 						.setDrugRestistantMutations(knownResMut);
+				RESET_GRAPH.actionPerformed(null);
 			} else {
 				dialogCanceled();
 			}

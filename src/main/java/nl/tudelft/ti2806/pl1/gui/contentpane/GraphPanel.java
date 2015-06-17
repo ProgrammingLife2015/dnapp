@@ -530,10 +530,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	/**
-	 * First checks the classtype on resistance and then on collapsed.
+	 * First checks the class type on resistance and then on collapsed.
 	 * 
 	 * @param ids
 	 *            ids of the nodes in this node.
+	 * @return String <code>collapsed</code> or <code>common</code> based on the
+	 *         size.
 	 */
 	private String checkClassType(final HashSet<Integer> ids) {
 		for (int id : ids) {
@@ -545,12 +547,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	/**
-	 * Checks the size of the hashset of ids and returns collapsed or common
-	 * based on it.
+	 * Checks the size of the set of ids and returns collapsed or common based
+	 * on it.
 	 * 
 	 * @param ids
 	 *            HashSet to check.
-	 * @return collapsed or common based on the size.
+	 * @return String <code>collapsed</code> or <code>common</code> based on the
+	 *         size.
 	 */
 	private String checkCollapsed(final HashSet<Integer> ids) {
 		if (ids.size() > 1) {

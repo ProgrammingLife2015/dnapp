@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +22,7 @@ import javax.swing.text.StyledDocument;
 
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.NucleoBase;
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 /**
  * @author Maarten
@@ -77,8 +77,6 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				}
 			}
 		});
-		// infoBar.add(selInfo);
-		// infoBar.add(comp)
 		add(selInfo, BorderLayout.NORTH);
 		add(scroll, BorderLayout.CENTER);
 	}
@@ -90,13 +88,8 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	public final void update(final HashSet<DNode> newSelectedNodes) {
 		SimpleAttributeSet set = new SimpleAttributeSet();
 		if (newSelectedNodes.size() == 1) {
-			Iterator<DNode> it = newSelectedNodes.iterator();
-			StringBuffer buf = new StringBuffer();
-			buf.append(it.next().getContent());
-			while (it.hasNext()) {
-				buf.append("/" + it.next().getContent());
-			}
-			String content = buf.toString();
+			DNode dn = newSelectedNodes.iterator().next();
+			String content = dn.getContent();
 			text.setText(content);
 			for (int i = 0; i < text.getDocument().getLength(); i++) {
 				Color nucleoColor = Color.BLACK;
@@ -109,16 +102,24 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				StyleConstants.setForeground(set, nucleoColor);
 				doc.setCharacterAttributes(i, 1, set, true);
 			}
+			if (dn.hasResMuts()) {
+				set = new SimpleAttributeSet();
+				for (ResistanceMutation rm : dn.getResMuts()) {
+					StyleConstants.setBackground(set, Color.GREEN.brighter());
+					int loc = (int) rm.getRefIndex() - dn.getStart();
+					System.out.println("loc=" + loc + "\t start="
+							+ dn.getStart() + "\t refIndex=" + rm.getRefIndex()
+							+ "\t end=" + dn.getEnd());
+					doc.setCharacterAttributes(loc, 1, set, false);
+				}
+			}
 		} else {
-			text.setText("This is a collapsed section consisting of "
+			text.setText("This is a collapsed section consisting containing "
 					+ newSelectedNodes.size()
-					+ " nodes, please zoom in to gain more information about this section.");
+					+ " nodes.\nPlease zoom in to gain more information about this section.");
 			StyleConstants.setForeground(set, Color.BLACK);
 			doc.setCharacterAttributes(0, text.getText().length(), set, true);
 		}
-		// scroll.getVerticalScrollBar().setValue(0);
 		text.setCaretPosition(0);
-		// TODO change strings to constants (still have to decide in which class
-		// to define them) << I really don't know what this is anymore...
 	}
 }

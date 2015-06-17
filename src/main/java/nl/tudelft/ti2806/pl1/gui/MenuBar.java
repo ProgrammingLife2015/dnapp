@@ -33,7 +33,7 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(final Window w) {
 		this.window = w;
 		this.add(fileMenu());
-		this.add(editMenu());
+		// this.add(editMenu());
 		this.add(viewMenu());
 		this.add(helpMenu());
 	}

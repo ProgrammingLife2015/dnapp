@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
@@ -98,8 +101,19 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	@Override
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
-		ret.add(ToolBar.makeButton("Highlight selection", null, null, null));
-		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		ret.add(ToolBar.makeButton("Highlight selection", null,
+				new ActionListener() {
+					@Override
+					public void actionPerformed(final ActionEvent e) {
+						System.out
+								.println("Now something needs to happen right?!");
+						// TODO
+					}
+				}, null));
+		JButton filter = ToolBar.makeButton("Filter selection", null, null,
+				null);
+		filter.setEnabled(false);
+		ret.add(filter);
 		return ret;
 	}
 
