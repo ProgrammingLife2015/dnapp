@@ -45,7 +45,7 @@ public final class ComplexCollapser {
 	 * @param graph
 	 *            The graph.
 	 */
-	public static void collapseComplexMutation(final ComplexMutation mut,
+	private static void collapseComplexMutation(final ComplexMutation mut,
 			final Graph graph) {
 		Collection<Integer> nodes = mut.getInNodes();
 		for (int n : nodes) {

@@ -132,13 +132,15 @@ public final class MutationFinder {
 				}
 			}
 			int srcId = getSourceSinkNode(srcNodes);
-			if (inNodes.size() != 1) {
-				ins.add(new ComplexMutation(node.getId(), srcId, inNodes, graph
-						.getReferenceGeneStorage()));
-			} else if (graph.getDNode(inNodes.iterator().next()).getContent()
-					.length() > 1) {
-				ins.add(new ComplexMutation(node.getId(), srcId, inNodes, graph
-						.getReferenceGeneStorage()));
+			if (node.getOutEdges().size() > 0) {
+				if (inNodes.size() != 1) {
+					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
+							graph.getReferenceGeneStorage()));
+				} else if (graph.getDNode(inNodes.iterator().next())
+						.getContent().length() > 1) {
+					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
+							graph.getReferenceGeneStorage()));
+				}
 			}
 		}
 		return ins;

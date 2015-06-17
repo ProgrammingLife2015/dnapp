@@ -41,7 +41,7 @@ public class ComplexMutation extends Mutation {
 
 	@Override
 	public String toString() {
-		return "<InsMut[pre:" + getPreNode() + ",post:" + getPostNode()
+		return "<CompMut[pre:" + getPreNode() + ",post:" + getPostNode()
 				+ ",ins:" + getInNodes() + "]>";
 	}
 
