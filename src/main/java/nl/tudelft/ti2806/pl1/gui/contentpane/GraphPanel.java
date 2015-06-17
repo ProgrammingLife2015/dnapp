@@ -160,7 +160,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private HashMap<String, ArrayList<Integer>> genes = new HashMap<String, ArrayList<Integer>>();
 
 	/** Map containing the outer nodes of the gene regions. */
-	private HashMap<String, ArrayList<Integer>> geneLocs;
+	private HashMap<String, ArrayList<Node>> geneLocs;
 
 	/** Diameter of nodes in pixels. */
 	private final int nodeDiameter = 20;
@@ -371,19 +371,19 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 *            Graph in which to search.
 	 */
 	private void searchGeneLocs(final Graph vGraph) {
-		geneLocs = new HashMap<String, ArrayList<Integer>>();
+		geneLocs = new HashMap<String, ArrayList<Node>>();
 		for (Entry<String, ArrayList<Integer>> entry : genes.entrySet()) {
-			ArrayList<Integer> nodes = new ArrayList<Integer>(2);
+			ArrayList<Node> nodes = new ArrayList<Node>(2);
 			Node begin = findNode(entry.getValue().get(0), vGraph);
 			Node end = findNode(entry.getValue().get(1), vGraph);
-			if (begin != null && end != null) {
-				int xbegin = (int) begin.getAttribute("x");
-				int xend = (int) end.getAttribute("x");
-				if (xbegin < xend) {
-					nodes.add(xbegin);
-					nodes.add(xend);
-					geneLocs.put(entry.getKey(), nodes);
-				}
+			if (begin != null
+					&& end != null
+					&& (int) begin.getAttribute("x") < (int) end
+							.getAttribute("x")) {
+				nodes.add(begin);
+				nodes.add(end);
+				geneLocs.put(entry.getKey(), nodes);
+
 			}
 		}
 	}
@@ -407,12 +407,14 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
-				for (Entry<String, ArrayList<Integer>> entry : geneLocs
-						.entrySet()) {
+				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
+					Integer xleft = (int) entry.getValue().get(0)
+							.getAttribute("x");
+					Integer xright = (int) entry.getValue().get(1)
+							.getAttribute("x");
 					g.setColor(Color.ORANGE);
-					g.fillRect(entry.getValue().get(0) - nodeDiameter / 2, 0,
-							entry.getValue().get(1) - entry.getValue().get(0)
-									+ nodeDiameter, nodeDiameter / 2);
+					g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
+							+ nodeDiameter, nodeDiameter / 2);
 				}
 			}
 		};
