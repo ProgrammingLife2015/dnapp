@@ -154,9 +154,14 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** A collection of the highlighted genomes. */
 	private Set<String> highlightedGenomes;
 
+	/** Map containing the position of the genes. */
 	private HashMap<String, ArrayList<Integer>> genes = new HashMap<String, ArrayList<Integer>>();
 
+	/** Map containing the outer nodes of the gene regions. */
 	private HashMap<String, ArrayList<Node>> geneLocs;
+
+	/** Diameter of nodes in pixels. */
+	private int NODE_DIAMETER = 20;
 
 	/**
 	 * Initialize a graph panel.
@@ -243,8 +248,8 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		}
 		for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
 				.getReferenceGenes()) {
-			Integer start = searchDNode(rg.getStart(), graph);
-			Integer end = searchDNode(rg.getEnd(), graph);
+			Integer start = searchNode(rg.getStart(), graph);
+			Integer end = searchNode(rg.getEnd(), graph);
 			if (start != null && end != null) {
 				ArrayList<Integer> locs = new ArrayList<Integer>(2);
 				locs.add(start);
@@ -323,6 +328,15 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				.findInsertionMutations(dgraph));
 	}
 
+	/**
+	 * Finds the graphstream node using a index.
+	 * 
+	 * @param id
+	 *            id of the node.
+	 * @param vGraph
+	 *            graph in which to search.
+	 * @return Node object containing the id or node with the id.
+	 */
 	@SuppressWarnings("unchecked")
 	private Node findNode(final int id, final Graph vGraph) {
 		for (Node n : vGraph.getEachNode()) {
@@ -336,12 +350,12 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	/**
-	 * Takes the virtual (GraphStream) graph and shows it in the panel.
+	 * Searchs the visual graph for the gene locations and stores them.
 	 * 
 	 * @param vGraph
-	 *            The visual graph to draw
+	 *            Graph in which to search.
 	 */
-	private void visualizeGraph(final Graph vGraph) {
+	private void searchGeneLocs(final Graph vGraph) {
 		geneLocs = new HashMap<String, ArrayList<Node>>();
 		for (Entry<String, ArrayList<Integer>> entry : genes.entrySet()) {
 			ArrayList<Node> nodes = new ArrayList<Node>(2);
@@ -353,12 +367,21 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				geneLocs.put(entry.getKey(), nodes);
 			}
 		}
+	}
+
+	/**
+	 * Takes the virtual (GraphStream) graph and shows it in the panel.
+	 * 
+	 * @param vGraph
+	 *            The visual graph to draw
+	 */
+	private void visualizeGraph(final Graph vGraph) {
+		searchGeneLocs(vGraph);
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
 				Viewer.newGraphRenderer()) {
-
 			/** The serial version UID. */
 			private static final long serialVersionUID = 4902528839853178375L;
 
@@ -366,26 +389,19 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
 				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
-					System.out.println(entry.getKey() + entry.getValue().get(0)
-							+ "- " + entry.getValue().get(1));
 					Node left = entry.getValue().get(0);
 					Node right = entry.getValue().get(1);
 					g.setColor(Color.ORANGE);
-					g.fillRect((int) left.getAttribute("x") - 10, 0,
+					g.fillRect(
+							(int) left.getAttribute("x") + NODE_DIAMETER,
+							0,
 							((int) right.getAttribute("x") - (int) left
-									.getAttribute("x")) + 20, 10);
-					// g.setColor(Color.BLACK);
-					// g.drawString(
-					// entry.getKey(),
-					// (int) left.getAttribute("x")
-					// + (((int) right.getAttribute("x") - 10 - (int) left
-					// .getAttribute("x")) + 20) / 2, 20);
+									.getAttribute("x")) + NODE_DIAMETER,
+							NODE_DIAMETER / 2);
 				}
 			}
 		};
-
 		viewer.addView(view);
-		// view = viewer.addDefaultView(false);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
@@ -410,12 +426,42 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		notifyViewChangeObservers();
 	}
 
+	/**
+	 * 
+	 * @param loc
+	 *            Location on the reference genome.
+	 * @param graph
+	 *            graph in which to search.
+	 * @return Index of the node.
+	 */
 	@SuppressWarnings("unchecked")
-	private Integer searchDNode(final int loc, final Graph graph) {
+	private Integer searchNode(final int loc, final Graph graph) {
 		for (Node n : graph.getEachNode()) {
 			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
 				if (dgraph.getDNode(id).getStart() <= loc
-						&& dgraph.getDNode(id).getEnd() >= loc) {
+						&& dgraph.getDNode(id).getEnd() > loc
+						&& dgraph.getDNode(id).getSources().contains("TKK_REF")) {
+					return id;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param loc
+	 *            Location on the reference genome.
+	 * @param graph
+	 *            graph in which to search.
+	 * @return Index of the node.
+	 */
+	@SuppressWarnings("unchecked")
+	private Integer searchEndNode(final int loc, final Graph graph) {
+		for (Node n : graph.getEachNode()) {
+			for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
+				if (dgraph.getDNode(id).getEnd() >= loc
+						&& dgraph.getDNode(id).getSources().contains("TKK_REF")) {
 					return id;
 				}
 			}
