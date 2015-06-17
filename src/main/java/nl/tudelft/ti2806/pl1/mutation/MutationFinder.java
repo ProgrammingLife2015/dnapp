@@ -82,7 +82,8 @@ public final class MutationFinder {
 			}
 			if (isDeletion) {
 				dels.add(new DeletionMutation(node.getId(), endnode.getId(),
-						graph.getReferenceGeneStorage()));
+						graph.getReferenceGeneStorage(), node.getStart(), node
+								.getEnd()));
 			}
 		}
 		return dels;
