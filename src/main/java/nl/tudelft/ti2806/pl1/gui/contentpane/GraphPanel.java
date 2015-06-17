@@ -188,6 +188,10 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		highlightedGenomes = new HashSet<String>();
 	}
 
+	/**
+	 * Fill the navigator box for genes with all the genes name after reading
+	 * all the genes.
+	 */
 	private void fillGeneNavigatorBox() {
 		for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
 				.getReferenceGenes()) {

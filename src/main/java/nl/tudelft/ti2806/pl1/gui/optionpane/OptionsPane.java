@@ -5,18 +5,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.Box;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Window;
-
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.wordpress.tips4java.ScrollablePanel;
 import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
@@ -128,10 +123,10 @@ public class OptionsPane extends JScrollPane {
 	}
 
 	/** Combo box showing all the genes. */
-	private JComboBox<String> geneNavigator;
+	private GeneComboBox geneNavigator;
 
 	/** @return the geneNavigator. */
-	public final JComboBox<String> getGeneNavigator() {
+	public final GeneComboBox getGeneNavigator() {
 		return geneNavigator;
 	}
 
@@ -155,21 +150,7 @@ public class OptionsPane extends JScrollPane {
 		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 		this.grpZoomSettings = new ZoomConfigureGroup();
 
-		geneNavigator = new JComboBox<String>(new String[] { " " });
-		geneNavigator.setEditable(true);
-		geneNavigator.addActionListener(new ActionListener() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				if (e.getActionCommand().equals("comboBoxEdited")) {
-					JComboBox<String> cb = (JComboBox<String>) e.getSource();
-					String newSelection = (String) cb.getSelectedItem();
-					System.out.println(newSelection);
-				}
-			}
-		});
-		AutoCompleteDecorator.decorate(this.geneNavigator);
+		this.geneNavigator = new GeneComboBox();
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
