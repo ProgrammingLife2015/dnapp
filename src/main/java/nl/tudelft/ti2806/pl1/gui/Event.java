@@ -194,25 +194,19 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	NEXTZOOMLEVEL {
+	UPZOOMLEVEL {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent()
-					.getGraphPanel()
-					.applyZoomLevel(
-							window.getContent().getGraphPanel().getZoomLevel() + 1);
+			window.getContent().getGraphPanel().upZoomlevel();
 		}
 	},
 	/**
 	 * 
 	 */
-	PREVIOUSZOOMLEVEL {
+	DOWNZOOMLEVEL {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent()
-					.getGraphPanel()
-					.applyZoomLevel(
-							window.getContent().getGraphPanel().getZoomLevel() - 1);
+			window.getContent().getGraphPanel().downZoomlevel();
 		}
 	};
 

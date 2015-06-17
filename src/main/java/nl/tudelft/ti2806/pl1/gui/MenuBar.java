@@ -120,14 +120,14 @@ public class MenuBar extends JMenuBar {
 
 		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
 		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
-				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
+				"Go to next zoomlevel", Event.UPZOOMLEVEL);
 		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
 				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
 		ret.add(zoomlevelplus);
 
 		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
 		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
-				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
+				"Go to previous zoomlevel", Event.DOWNZOOMLEVEL);
 		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
 				java.awt.Event.CTRL_MASK));
 		ret.add(zoomlevelminus);
