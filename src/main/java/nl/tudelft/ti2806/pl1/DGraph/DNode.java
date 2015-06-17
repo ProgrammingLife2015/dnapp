@@ -3,6 +3,9 @@ package nl.tudelft.ti2806.pl1.DGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 /**
  * The node class we use for reader to read the nodes.
@@ -12,61 +15,35 @@ import java.util.HashSet;
  */
 public class DNode {
 
-	/**
-	 * the id of the node.
-	 */
+	/** The id of the node. */
 	private int id;
 
-	/**
-	 * the out- and inEdges of the node.
-	 */
+	/** The edges of the node. */
 	private Collection<DEdge> outEdges, inEdges;
 
-	/**
-	 * The different genomes which go through this node.
-	 */
+	/** The different genomes which go through this node. */
 	private HashSet<String> sources;
 
-	/**
-	 * The start index on the genome.
-	 */
+	/** The start index on the genome. */
 	private int start;
 
-	/**
-	 * The end index on the genome.
-	 */
+	/** The end index on the genome. */
 	private int end;
 
-	/**
-	 * The content which this node contains.
-	 */
+	/** The content of the node. */
 	private String content;
 
-	/**
-	 * The x and y coordinates.
-	 */
+	/** The original placement coordinates. */
 	private int x, y;
 
-	/**
-	 * The depth of the node.
-	 */
+	/** The depth of the node. */
 	private int depth;
+
+	/** The list of resistance caused mutations in this node. */
+	private List<ResistanceMutation> resMuts;
 
 	/** Percentage of unknown nucleotides in the content. */
 	private double percUnknown;
-
-	/** @return the percUnknown */
-	public double getPercUnknown() {
-		return percUnknown;
-	}
-
-	/**
-	 * @param percUnknownIn
-	 *            the percUnknown to set
-	 */
-	public final void setPercUnknown(final double percUnknownIn) {
-		this.percUnknown = percUnknownIn;
-	}
 
 	/**
 	 * The constructor of the node.
@@ -94,6 +71,7 @@ public class DNode {
 		this.x = 0;
 		this.y = 0;
 		this.depth = 0;
+		this.resMuts = null;
 		if (id >= 0) {
 			this.percUnknown = percentageUnknown(contentIn);
 		} else {
@@ -133,14 +111,11 @@ public class DNode {
 		} else if (edge.getEndNode().id == id && !getInEdges().contains(edge)) {
 			getInEdges().add(edge);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	 * Get the ID of the node.
-	 * 
 	 * @return The ID of the node
 	 */
 	public int getId() {
@@ -148,33 +123,37 @@ public class DNode {
 	}
 
 	/**
-	 * @return the x
+	 * @return the x coordinate.
 	 */
 	public int getX() {
 		return x;
 	}
 
 	/**
-	 * @param xIn
-	 *            the x to set
+	 * Sets the x coordinate.
+	 * 
+	 * @param newX
+	 *            the new x coordinate to set
 	 */
-	public final void setX(final int xIn) {
-		this.x = xIn;
+	public final void setX(final int newX) {
+		this.x = newX;
 	}
 
 	/**
-	 * @return the y
+	 * @return the y coordinate.
 	 */
 	public int getY() {
 		return y;
 	}
 
 	/**
-	 * @param yIn
-	 *            the y to set
+	 * Sets the y coordinate.
+	 * 
+	 * @param newY
+	 *            The y to set.
 	 */
-	public final void setY(final int yIn) {
-		this.y = yIn;
+	public final void setY(final int newY) {
+		this.y = newY;
 	}
 
 	/**
@@ -185,11 +164,13 @@ public class DNode {
 	}
 
 	/**
-	 * @param depthIn
-	 *            the depth to set
+	 * Sets the depth.
+	 * 
+	 * @param newDepth
+	 *            The depth to set.
 	 */
-	public final void setDepth(final int depthIn) {
-		this.depth = depthIn;
+	public final void setDepth(final int newDepth) {
+		this.depth = newDepth;
 	}
 
 	/**
@@ -222,22 +203,10 @@ public class DNode {
 	}
 
 	/**
-	 * Get all the incoming edges.
-	 * 
 	 * @return the incoming edges
 	 */
 	public Collection<DEdge> getInEdges() {
 		return inEdges;
-	}
-
-	/**
-	 * Sets all the incoming edges.
-	 * 
-	 * @param newInEdges
-	 *            Incoming edges.
-	 */
-	public final void setInEdges(final Collection<DEdge> newInEdges) {
-		this.inEdges = newInEdges;
 	}
 
 	/**
@@ -308,16 +277,31 @@ public class DNode {
 	 * Set the content of the node.
 	 * 
 	 * @param newContent
-	 *            Sets the content on the reference genome
+	 *            The new content.
 	 */
 	public final void setContent(final String newContent) {
 		this.content = newContent;
 	}
 
 	/**
+	 * @return the percUnknown
+	 */
+	public double getPercUnknown() {
+		return percUnknown;
+	}
+
+	/**
+	 * @param percUnknownIn
+	 *            the percUnknown to set
+	 */
+	public final void setPercUnknown(final double percUnknownIn) {
+		this.percUnknown = percUnknownIn;
+	}
+
+	/**
 	 * This method returns all the edges in the node.
 	 * 
-	 * @return All the edges in the node.
+	 * @return All the edges of the node.
 	 */
 	public Collection<DEdge> getAllEdges() {
 		Collection<DEdge> allEdges = new ArrayList<DEdge>();
@@ -329,7 +313,7 @@ public class DNode {
 	/**
 	 * This method returns all the nodes which have an edge to this node.
 	 * 
-	 * @return All the nodes which have an edge to this node
+	 * @return All the nodes which have an edge to this node.
 	 */
 	public Collection<DNode> getPreviousNodes() {
 		ArrayList<DNode> previous = new ArrayList<DNode>();
@@ -366,9 +350,8 @@ public class DNode {
 		} else if (getOutEdges().contains(edge)) {
 			getOutEdges().remove(edge);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -391,8 +374,23 @@ public class DNode {
 	}
 
 	/**
-	 * returns the hashcode of this class.
+	 * Adds an index to the list of resistance caused mutations.
+	 * 
+	 * @param resMut
+	 *            The index to add. Should be relative to the reference genome.
 	 */
+	public void addResistantMutationIndex(final ResistanceMutation resMut) {
+		if (resMut.getRefIndex() < getStart()
+				|| resMut.getRefIndex() > getEnd()) {
+			System.out.println("!!! refIndex not in this node!");
+		} else {
+			if (resMuts == null) {
+				resMuts = new ArrayList<ResistanceMutation>(1);
+			}
+			resMuts.add(resMut);
+		}
+	}
+
 	@Override
 	public final int hashCode() {
 		return getId();

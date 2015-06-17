@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.mutation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,9 +33,11 @@ public class DeletionMutationTest {
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		insertSrc = new HashSet<String>(Arrays.asList("TKK_2"));
-		rgs = new ReferenceGeneStorage(
-				"src/test/resources/ReferenceGeneStorageTestGenes.gff",
-				"src/test/resources/resistanceCausingMutationsTesting.txt");
+		rgs = new ReferenceGeneStorage(null);
+		rgs.setDrugRestistantMutations(new File(
+				"src/test/resources/resistanceCausingMutationsTesting.txt"));
+		rgs.setGeneAnnotation(new File(
+				"src/test/resources/ReferenceGeneStorageTestGenes.gff"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);

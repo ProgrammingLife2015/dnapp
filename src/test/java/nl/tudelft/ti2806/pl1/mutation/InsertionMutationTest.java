@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.mutation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,9 +31,11 @@ public class InsertionMutationTest {
 	public void setup() {
 		sources = new HashSet<String>(Arrays.asList("TKK_REF", "REF1", "REF2"));
 		HashSet<String> insertSrc = new HashSet<String>(Arrays.asList("REF2"));
-		rgs = new ReferenceGeneStorage(
-				"src/test/resources/ReferenceGeneStorageTestGenes.gff",
-				"src/test/resources/resistanceCausingMutationsTesting.txt");
+		rgs = new ReferenceGeneStorage(null);
+		rgs.setDrugRestistantMutations(new File(
+				"src/test/resources/resistanceCausingMutationsTesting.txt"));
+		rgs.setGeneAnnotation(new File(
+				"src/test/resources/ReferenceGeneStorageTestGenes.gff"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		insertion = new DNode(2, insertSrc, 0, 0, "");

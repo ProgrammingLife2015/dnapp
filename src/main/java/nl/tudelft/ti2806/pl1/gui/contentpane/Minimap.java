@@ -3,24 +3,20 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
-import nl.tudelft.ti2806.pl1.geneAnnotation.MetaDataLoadObserver;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ResistanceMutationObserver;
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 /**
  * @author Maarten
  * @since 15-6-2015
  */
 public class Minimap extends JPanel implements GraphScrollObserver,
-		ViewChangeObserver, MetaDataLoadObserver {
+		ViewChangeObserver, ResistanceMutationObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -5634260033871592350L;
@@ -31,21 +27,11 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	/** The graph panel. */
 	private GraphPanel graphPanel;
 
-	/** The list of known resistant mutation locations. */
-	private List<Integer> locations;
-
-	/**
-	 * The view width.
-	 * 
-	 * @see View
-	 */
+	/** The view width. */
 	private int graphWidth;
 
-	// /** The reference gene storage. */
-	// private ReferenceGeneStorage ref;
-
 	/** Resistances causing mutations. */
-	private Map<Integer, String> drugResMuts;
+	private Map<Long, ResistanceMutation> drugResMuts;
 
 	/** The view area. */
 	private ViewArea viewArea;
@@ -64,16 +50,15 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 		setMinimumSize(new Dimension(2, HEIGHT));
 		setPreferredSize(new Dimension(2, HEIGHT));
 		setBorder(new MatteBorder(0, 0, 2, 0, Color.GRAY));
-		locations = new ArrayList<Integer>();
 	}
 
 	/**
 	 * @param newDrugResMuts
 	 *            The new resistances causing mutations.
 	 */
-	public void setDrugResMuts(final Map<Integer, String> newDrugResMuts) {
+	public void setDrugResMuts(
+			final Map<Long, ResistanceMutation> newDrugResMuts) {
 		this.drugResMuts = newDrugResMuts;
-		calculateMutLocs();
 	}
 
 	@Override
@@ -89,7 +74,6 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	 * 
 	 * @param g
 	 *            The Graphics object to protect.
-	 * @see {@link #paintComponent(Graphics)}
 	 */
 	private void drawMap(final Graphics g) {
 		int mapWidth = getWidth();
@@ -97,10 +81,23 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 		g.setColor(Color.RED);
 		g.fillRect(viewArea.getLeftBoundary() * mapWidth / (graphWidth + 1), 0,
 				boxWidth, HEIGHT);
-		g.setColor(Color.GREEN);
-		for (Integer r : locations) {
-			g.fillRect(r, 0, 2, HEIGHT);
+		if (isMutsShowable()) {
+			g.setColor(Color.GREEN);
+			for (Long r : drugResMuts.keySet()) {
+				g.fillRect(calculateX(r), 0, 2, HEIGHT);
+			}
 		}
+	}
+
+	/**
+	 * Calculates the horizontal position of a reference genome index pointer.
+	 * 
+	 * @param refIndex
+	 *            The position on the reference genome.
+	 * @return The horizontal position on the mini map.
+	 */
+	private int calculateX(final long refIndex) {
+		return (int) (getWidth() * ((double) refIndex / refSize()));
 	}
 
 	/**
@@ -108,37 +105,6 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	 */
 	private int refSize() {
 		return graphPanel.getDgraph().getReferenceLength();
-	}
-
-	/**
-	 * @return The collection of nodes of the reference genome.
-	 */
-	private Collection<DNode> refGenome() {
-		return graphPanel.getDgraph().getRefGenome();
-	}
-
-	/**
-	 * 
-	 */
-	private void calculateMutLocs() {
-		locations.clear();
-		if (isMutsShowable()) {
-			Set<Integer> resist = drugResMuts.keySet();
-			System.out.println("DrugResMuts keys = " + resist);
-			for (DNode dn : refGenome()) {
-				for (Integer r : resist) {
-					if (r < 0) {
-						System.out.println(r);
-					}
-					if (dn.getStart() <= r && r <= dn.getEnd()) {
-						System.out.println("START=" + dn.getStart() + " | END="
-								+ dn.getEnd() + " | " + "R=" + r);
-						locations.add(r * getWidth() / refSize());
-					}
-				}
-			}
-		}
-		System.out.println("calc locs = " + locations);
 	}
 
 	@Override
@@ -154,8 +120,8 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	}
 
 	@Override
-	public void update(final Map<Integer, String> rgs) {
-		System.out.println("Minimap update REF GEN STO");
+	public void update(final Map<Long, ResistanceMutation> rgs) {
+		System.out.println("Minimap update ResMuts");
 		setDrugResMuts(rgs);
 	}
 
