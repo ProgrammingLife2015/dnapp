@@ -107,12 +107,17 @@ public final class HorizontalCollapser {
 		String newclass = (String) to.getAttribute("ui.class");
 		classes.add(oldclass);
 		classes.add(newclass);
-		if (classes.contains("selected")) {
-			to.setAttribute("oldclass", "collapsed");
-			to.setAttribute("ui.class", "selected");
+		String subtype;
+		if (classes.contains("resistant")) {
+			subtype = "resistant";
 		} else {
-			to.setAttribute("ui.class", "collapsed");
-			to.setAttribute("oldclass", "common");
+			subtype = "collapsed";
+		}
+		if (classes.contains("selected")) {
+			to.setAttribute("ui.class", "selected");
+			to.setAttribute("oldclass", subtype);
+		} else {
+			to.setAttribute("ui.class", subtype);
 		}
 	}
 

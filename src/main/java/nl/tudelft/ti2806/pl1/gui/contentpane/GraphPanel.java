@@ -464,7 +464,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			oldSelected.setAttribute("ui.class",
 					oldSelected.getAttribute("oldclass"));
 			oldSelected.setAttribute("oldclass",
-					checkCollapsed((HashSet<Integer>) oldSelected
+					checkClassType((HashSet<Integer>) oldSelected
 							.getAttribute("collapsed")));
 		}
 
@@ -520,13 +520,28 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			}
 			if (!contains && n.hasAttribute("oldclass")) {
 				if (n.getId().equals(String.valueOf(dgraph.getSelected()))) {
-					n.setAttribute("oldclass", checkCollapsed(ids));
+					n.setAttribute("oldclass", checkClassType(ids));
 				} else {
 					n.setAttribute("ui.class", n.getAttribute("oldclass"));
 					n.setAttribute("oldclass", n.getAttribute("ui.class"));
 				}
 			}
 		}
+	}
+
+	/**
+	 * First checks the classtype on resistance and then on collapsed.
+	 * 
+	 * @param ids
+	 *            ids of the nodes in this node.
+	 */
+	private String checkClassType(final HashSet<Integer> ids) {
+		for (int id : ids) {
+			if (dgraph.getDNode(id).getResMuts() != null) {
+				return "resistant";
+			}
+		}
+		return checkCollapsed(ids);
 	}
 
 	/**

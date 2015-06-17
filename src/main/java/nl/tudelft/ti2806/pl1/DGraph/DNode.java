@@ -391,6 +391,21 @@ public class DNode {
 		}
 	}
 
+	/**
+	 * @return the resMuts
+	 */
+	public final List<ResistanceMutation> getResMuts() {
+		return resMuts;
+	}
+
+	/**
+	 * @param resMuts
+	 *            the resMuts to set
+	 */
+	public final void setResMuts(final List<ResistanceMutation> resMuts) {
+		this.resMuts = resMuts;
+	}
+
 	@Override
 	public final int hashCode() {
 		return getId();
