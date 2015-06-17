@@ -29,6 +29,7 @@ import javax.swing.SwingWorker;
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGene;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
@@ -183,7 +184,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
+
 		highlightedGenomes = new HashSet<String>();
+	}
+
+	private void fillGeneNavigatorBox() {
+		System.out
+				.println(dgraph.getReferenceGeneStorage().getReferenceGenes());
+		for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+				.getReferenceGenes()) {
+			window.getOptionPanel().getGeneNavigator().addItem(rg.getName());
+		}
 	}
 
 	@Override
@@ -234,6 +245,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			ret = false;
 		}
 		visualizeGraph(graph);
+		fillGeneNavigatorBox();
 		return ret;
 	}
 

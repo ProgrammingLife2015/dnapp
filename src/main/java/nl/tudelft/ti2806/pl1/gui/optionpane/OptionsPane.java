@@ -5,13 +5,18 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.Box;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.Window;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.wordpress.tips4java.ScrollablePanel;
 import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
@@ -122,6 +127,14 @@ public class OptionsPane extends JScrollPane {
 		return grpZoomSettings;
 	}
 
+	/** Combo box showing all the genes. */
+	private JComboBox<String> geneNavigator;
+
+	/** @return the geneNavigator. */
+	public final JComboBox<String> getGeneNavigator() {
+		return geneNavigator;
+	}
+
 	/**
 	 * Initialize the option pane.
 	 * 
@@ -141,6 +154,25 @@ public class OptionsPane extends JScrollPane {
 		this.grpSelectedNode = new SelectedNodeGroup();
 		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 		this.grpZoomSettings = new ZoomConfigureGroup();
+
+		// String[] patternExamples = { "dd MMMMM yyyy", "dd.MM.yy",
+		// "//MM/dd/yy",
+		// "yyyy.MM.dd G 'at' hh:mm:ss z", "EEE, MMM d, ''yy", "h:mm a",
+		// "H:mm:ss:SSS", "K:mm a,z", "yyyy.MMMMM.dd GGG hh:mm aaa" };
+		geneNavigator = new JComboBox<String>(new String[] { " " });
+		geneNavigator.setEditable(true);
+		geneNavigator.addActionListener(new ActionListener() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				System.out.println(e.getActionCommand());
+				System.out.println(e.paramString());
+				JComboBox<String> cb = (JComboBox<String>) e.getSource();
+				String newSelection = (String) cb.getSelectedItem();
+			}
+		});
+		AutoCompleteDecorator.decorate(this.geneNavigator);
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
@@ -170,6 +202,8 @@ public class OptionsPane extends JScrollPane {
 		// place(grpSelectedGenome);
 		place(grpSelectedNode);
 		place(grpZoomSettings);
+
+		place(geneNavigator);
 
 		gbc.weighty = GBC_WEIGHT_Y;
 		place(Box.createGlue());
