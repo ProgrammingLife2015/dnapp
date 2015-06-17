@@ -189,8 +189,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	}
 
 	private void fillGeneNavigatorBox() {
-		System.out
-				.println(dgraph.getReferenceGeneStorage().getReferenceGenes());
 		for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
 				.getReferenceGenes()) {
 			window.getOptionPanel().getGeneNavigator().addItem(rg.getName());

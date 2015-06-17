@@ -155,10 +155,6 @@ public class OptionsPane extends JScrollPane {
 		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 		this.grpZoomSettings = new ZoomConfigureGroup();
 
-		// String[] patternExamples = { "dd MMMMM yyyy", "dd.MM.yy",
-		// "//MM/dd/yy",
-		// "yyyy.MM.dd G 'at' hh:mm:ss z", "EEE, MMM d, ''yy", "h:mm a",
-		// "H:mm:ss:SSS", "K:mm a,z", "yyyy.MMMMM.dd GGG hh:mm aaa" };
 		geneNavigator = new JComboBox<String>(new String[] { " " });
 		geneNavigator.setEditable(true);
 		geneNavigator.addActionListener(new ActionListener() {
@@ -166,10 +162,11 @@ public class OptionsPane extends JScrollPane {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				System.out.println(e.getActionCommand());
-				System.out.println(e.paramString());
-				JComboBox<String> cb = (JComboBox<String>) e.getSource();
-				String newSelection = (String) cb.getSelectedItem();
+				if (e.getActionCommand().equals("comboBoxEdited")) {
+					JComboBox<String> cb = (JComboBox<String>) e.getSource();
+					String newSelection = (String) cb.getSelectedItem();
+					System.out.println(newSelection);
+				}
 			}
 		});
 		AutoCompleteDecorator.decorate(this.geneNavigator);
