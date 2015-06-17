@@ -137,7 +137,6 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 	 */
 	private boolean isMutsShowable() {
 		boolean ret = isShowable() && refSize() > 0 && drugResMuts != null;
-		System.out.println("isMutsShowable = " + ret);
 		return ret;
 	}
 
