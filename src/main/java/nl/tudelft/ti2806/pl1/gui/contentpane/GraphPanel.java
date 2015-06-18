@@ -41,6 +41,7 @@ import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
+import nl.tudelft.ti2806.pl1.gui.optionpane.ZoomlevelObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
@@ -118,6 +119,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	private List<ViewChangeObserver> viewChangeObservers = new ArrayList<ViewChangeObserver>();
 
+	/**
+	 * The list of zoom level observers.
+	 * 
+	 * @see ZoomlevelObserver
+	 */
+	private List<ZoomlevelObserver> zoomLevelObserver = new ArrayList<ZoomlevelObserver>();
+
 	/** The window this panel is part of. */
 	private Window window;
 
@@ -164,7 +172,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private HashMap<String, ArrayList<Node>> geneLocs;
 
 	/** Diameter of nodes in pixels. */
-	private final int nodeDiameter = 20;
+	private static final int nodeDiameter = 20;
 
 	/** Genelocator object for detecting genes. */
 	private final GeneLocator gl;
@@ -494,6 +502,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		centerVertical();
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
+		notifyZoomLevelObservers();
 	}
 
 	/**
@@ -553,6 +562,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
+	 * Register a new zoom level observer.
+	 * 
+	 * @param zlo
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ZoomlevelObserver zlo) {
+		zoomLevelObserver.add(zlo);
+	}
+
+	/**
 	 * Notifies the node selection observers.
 	 * 
 	 * @param selectedNodeIn
@@ -582,6 +601,27 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			vco.update(view.getWidth());
 
 		}
+	}
+
+	/**
+	 * Notifies the zoom level observers.
+	 */
+	private void notifyZoomLevelObservers() {
+		double percentage = calculatePercentageCollapsed();
+		System.out.println(percentage);
+		for (ZoomlevelObserver zlo : zoomLevelObserver) {
+			zlo.update(percentage, zoomLevel);
+
+		}
+	}
+
+	/**
+	 * Calculates the percentage of collapsed nodes in the visual graph.
+	 * 
+	 * @return percentage of collapsed nodes in the visual graph.
+	 */
+	private double calculatePercentageCollapsed() {
+		return (double) graph.getNodeCount() / dgraph.getNodeCount();
 	}
 
 	/**
