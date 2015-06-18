@@ -75,7 +75,7 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
-		expected.add(new DeletionMutation(start.getId(), end.getId(), rgs));
+		expected.add(new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -93,8 +93,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId(), rgs),
-				new DeletionMutation(end.getId(), end2.getId(), rgs));
+				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
+				new DeletionMutation(end.getId(), end2.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -126,8 +126,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId(), rgs),
-				new DeletionMutation(end2.getId(), end3.getId(), rgs));
+				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
+				new DeletionMutation(end2.getId(), end3.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -155,8 +155,8 @@ public class DeletionMutationTest {
 		Collection<DeletionMutation> muts = MutationFinder
 				.findDeletionMutations(graph);
 		Collection<DeletionMutation> expected = Arrays.asList(
-				new DeletionMutation(start.getId(), end.getId(), rgs),
-				new DeletionMutation(end2.getId(), end3.getId(), rgs));
+				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
+				new DeletionMutation(end2.getId(), end3.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 

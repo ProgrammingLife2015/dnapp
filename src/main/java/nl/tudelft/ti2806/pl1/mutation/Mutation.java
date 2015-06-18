@@ -17,7 +17,7 @@ public abstract class Mutation {
 	/**
 	 * Score of the mutation.
 	 */
-	private double score;
+	private double score = 0;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
@@ -40,7 +40,7 @@ public abstract class Mutation {
 	}
 
 	/** @return the score */
-	public final double getScore() {
+	public double getScore() {
 		return score;
 	}
 
@@ -86,7 +86,7 @@ public abstract class Mutation {
 	 * @param addScore
 	 *            Score to add.
 	 */
-	public final void addSCore(final double addScore) {
+	public final void addScore(final double addScore) {
 		this.score += addScore;
 	}
 
