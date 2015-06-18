@@ -2,6 +2,7 @@ package nl.tudelft.ti2806.pl1.mutation;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,8 +33,11 @@ public class ComplexMutationTest {
 		insertSrc = new HashSet<String>(Arrays.asList("REF1", "REF2"));
 		insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
 		insertSrc3 = new HashSet<String>(Arrays.asList("REF2"));
-		rgs = new ReferenceGeneStorage("ReferenceGeneStorageTestGenes.gff",
-				"resistanceCausingMutationsTesting.txt");
+		rgs = new ReferenceGeneStorage(null);
+		rgs.setDrugRestistantMutations(new File(
+				"src/test/resources/resistanceCausingMutationsTesting.txt"));
+		rgs.setGeneAnnotation(new File(
+				"src/test/resources/ReferenceGeneStorageTestGenes.gff"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);

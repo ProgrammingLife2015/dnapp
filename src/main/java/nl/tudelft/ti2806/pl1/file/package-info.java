@@ -1,5 +1,5 @@
 /**
- * This package contains classes supporting file filtering and importing and exporting of files.
+ * This package contains classes supporting file filtering and the importing and exporting of files.
  * @author Maarten
  * @since 18-5-2015
  */

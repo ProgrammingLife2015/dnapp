@@ -1,9 +1,8 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
 import java.util.HashMap;
+
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 /**
  * Storage location for information about a gene.
@@ -20,8 +19,9 @@ public class ReferenceGene {
 	private double score;
 
 	/**
-	 * Strand of the feature. + for positive strand, - for minus strand, . for
-	 * non-stranded and ? for relevant but unknown.
+	 * Strand of the feature. <code>+</code> for positive strand, <code>-</code>
+	 * for minus strand, <code>.</code> for non-stranded and <code>?</code> for
+	 * relevant but unknown.
 	 */
 	private String strand;
 
@@ -29,7 +29,7 @@ public class ReferenceGene {
 	private String name;
 
 	/** Indices where mutation causes a drug resistance. */
-	private HashMap<Integer, String> mutations;
+	private HashMap<Long, ResistanceMutation> mutations;
 
 	/**
 	 * Constructor for storing all the needed information about a gene.
@@ -52,7 +52,7 @@ public class ReferenceGene {
 		this.score = scoreIn;
 		this.strand = strandIn;
 		this.name = nameIn;
-		this.mutations = new HashMap<Integer, String>();
+		this.mutations = null;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ReferenceGene {
 	 *            Index of the position to be checked.
 	 * @return Whether the index is in the gene's region.
 	 */
-	public boolean isIntragenic(final int index) {
+	public boolean isIntragenic(final long index) {
 		if (index >= this.getStart() && index <= this.getEnd()) {
 			return true;
 		}
@@ -77,19 +77,19 @@ public class ReferenceGene {
 	 *            Index of the position to be checked
 	 * @return Whether the index results in a change of the current gene.
 	 */
-	public boolean containsMutationIndex(final int index) {
-		return this.getMutations().keySet().contains(index);
+	public boolean containsMutationIndex(final long index) {
+		return mutations != null && mutations.keySet().contains(index);
 	}
 
 	/**
-	 * @return the start
+	 * @return the start position on the reference genome.
 	 */
 	public final int getStart() {
 		return start;
 	}
 
 	/**
-	 * @return the end
+	 * @return the end position on the reference genome.
 	 */
 	public final int getEnd() {
 		return end;
@@ -116,8 +116,10 @@ public class ReferenceGene {
 		return name;
 	}
 
-	/** @return The mutations in this gene. */
-	public final HashMap<Integer, String> getMutations() {
+	/**
+	 * @return The mutations in this gene.
+	 */
+	public final HashMap<Long, ResistanceMutation> getMutations() {
 		return mutations;
 	}
 
@@ -126,16 +128,20 @@ public class ReferenceGene {
 	 * 
 	 * @param location
 	 *            Location of the mutation.
-	 * @param mutName
-	 *            Name of the mutation.
+	 * @param mut
+	 *            The resistance mutation.
 	 */
-	public final void addMutation(final int location, final String mutName) {
-		this.getMutations().put(location, mutName);
+	public final void addMutation(final long location,
+			final ResistanceMutation mut) {
+		if (mutations == null) {
+			mutations = new HashMap<Long, ResistanceMutation>(1);
+		}
+		mutations.put(location, mut);
 	}
 
-	// @Override
-	// public String toString() {
-	// return "Gene[" + start + ", " + end + ", " + score + ", " + strand
-	// + ", " + name + "," + this.getMutations().toString() + "]";
-	// }
+	@Override
+	public String toString() {
+		return "<Gene[" + start + "-" + end + ",score=" + score + ",strand="
+				+ strand + ",name=" + name + ",mutations=" + mutations + "]>";
+	}
 }

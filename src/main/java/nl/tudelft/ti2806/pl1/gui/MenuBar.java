@@ -18,14 +18,10 @@ import javax.swing.event.ChangeListener;
  */
 public class MenuBar extends JMenuBar {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3046759850795865308L;
 
-	/**
-	 * The window this menu bar is part of.
-	 */
+	/** The window this menu bar is part of. */
 	private Window window;
 
 	/**
@@ -37,7 +33,6 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(final Window w) {
 		this.window = w;
 		this.add(fileMenu());
-		this.add(editMenu());
 		this.add(viewMenu());
 		this.add(helpMenu());
 	}
@@ -49,11 +44,11 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		JMenuItem imp = new JMenuItem();
-		setMenuItem(imp, "Import", null, 'I',
+		JMenuItem impGraph = new JMenuItem();
+		setMenuItem(impGraph, "Import graph", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				Event.IMPORT_FILE);
-		ret.add(imp);
+		ret.add(impGraph);
 
 		JMenu export = new JMenu("Export graph layout as...") {
 			/** The serial version UID. */
@@ -94,38 +89,37 @@ public class MenuBar extends JMenuBar {
 	}
 
 	/**
-	 * Creates and fills the edit menu.
-	 * 
-	 * @return the edit menu
-	 */
-	private JMenu editMenu() {
-		JMenu ret = new JMenu("Edit");
-		return ret;
-	}
-
-	/**
 	 * Creates and fills the view menu.
 	 * 
 	 * @return the view menu
 	 */
 	private JMenu viewMenu() {
-		JMenu ret = new JMenu("View");
+		JMenu ret = new JMenu("View") {
 
-		JMenuItem reset = new LoadedMenuItem(window);
+			/** The serial version UID. */
+			private static final long serialVersionUID = -8732114494095898765L;
+
+			@Override
+			public boolean isEnabled() {
+				return window != null && window.getContent().isGraphLoaded();
+			}
+		};
+
+		JMenuItem reset = new JMenuItem();
 		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
 				Event.RESET_GRAPH);
 		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
+		JMenuItem zoomlevelplus = new JMenuItem();
 		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
 				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
 		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
 				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
 		ret.add(zoomlevelplus);
 
-		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
+		JMenuItem zoomlevelminus = new JMenuItem();
 		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
 				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
 		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
