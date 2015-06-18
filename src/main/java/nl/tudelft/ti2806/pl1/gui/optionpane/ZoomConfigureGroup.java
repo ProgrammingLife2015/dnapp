@@ -9,7 +9,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 
 /**
  * @author Maarten
@@ -53,7 +53,7 @@ public class ZoomConfigureGroup extends JPanel {
 			slider.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
-					Event.statusBarInfo("Slider to "
+					AppEvent.statusBarInfo("Slider to "
 							+ ((JSlider) e.getSource()).getValue());
 				}
 			});

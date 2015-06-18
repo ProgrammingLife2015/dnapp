@@ -35,7 +35,7 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	private static final int FONT_SIZE = 12;
 
 	/** The background color of nucleotides involved in resistance mutations. */
-	private static final Color RES_NUCLEO_BG_COLOR = new Color(150, 255, 150);
+	private static final Color RES_NUCLEO_BG_COLOR = new Color(120, 255, 120);
 
 	/** The text area document. */
 	private StyledDocument doc = new DefaultStyledDocument();

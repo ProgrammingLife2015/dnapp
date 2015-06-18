@@ -27,8 +27,11 @@ public class GenomeTable extends JScrollPane {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2803975406952542688L;
 
-	/** Fixed column widths. */
-	private static final int COL_SHOW_WIDTH = 40, COL_HIGHLIGHT_WIDTH = 55;
+	// /** The width of the show column. */
+	// private static final int COL_SHOW_WIDTH = 40;
+
+	/** The width of the highlight column. */
+	private static final int COL_HIGHLIGHT_WIDTH = 55;
 
 	/**
 	 * The list of registered observers getting notified when the contents or
@@ -51,13 +54,9 @@ public class GenomeTable extends JScrollPane {
 		super();
 		setMinimumSize(SIZE);
 		setMaximumSize(SIZE);
-		// setPreferredSize(size);
-		// table.setPreferredScrollableViewportSize(size);
-		// table.setFillsViewportHeight(true);
 		setColumnWidth(GenomeRow.COL_HIGHLIGHT, COL_HIGHLIGHT_WIDTH);
-		setColumnWidth(GenomeRow.COL_SHOW, COL_SHOW_WIDTH);
+		// setColumnWidth(GenomeRow.COL_SHOW, COL_SHOW_WIDTH);
 
-		// table.getColumnModel().getColumn(1).setPreferredWidth(50);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			@Override
@@ -79,7 +78,6 @@ public class GenomeTable extends JScrollPane {
 		});
 
 		setViewportView(table);
-		// fillDebug();
 	}
 
 	/**
@@ -152,15 +150,6 @@ public class GenomeTable extends JScrollPane {
 		revalidate();
 	}
 
-	// /**
-	// *
-	// * @param index
-	// * @return
-	// */
-	// public GenomeRow getGenomeRow(final int index) {
-	// return gtm.data.get(index);
-	// }
-
 	/**
 	 * TODO delete.
 	 */
@@ -221,32 +210,20 @@ public class GenomeTable extends JScrollPane {
 	 */
 	static class GenomeTableModel extends AbstractTableModel {
 
-		/**
-		 * The serial version UID.
-		 */
+		/** The serial version UID. */
 		private static final long serialVersionUID = -2345996098819339949L;
 
-		/**
-		 * The column headers.
-		 */
-		private String[] columnNames = { "Genome", "Show", "Highlight" };
+		/** The column headers. */
+		private String[] columnNames = { "Genome", "Highlight" };
 
-		/**
-		 * The table content.
-		 */
+		/** The table content. */
 		private List<GenomeRow> data = new ArrayList<GenomeRow>();
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int getRowCount() {
 			return data.size();
@@ -257,9 +234,6 @@ public class GenomeTable extends JScrollPane {
 			return columnNames[col];
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValueAt(final int row, final int col) {
 			return data.get(row).getCol(col);
@@ -272,7 +246,7 @@ public class GenomeTable extends JScrollPane {
 
 		@Override
 		public boolean isCellEditable(final int row, final int col) {
-			return col == 1 || col == 2;
+			return col == 1; // || col == 2;
 		}
 
 		@Override

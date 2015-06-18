@@ -1,9 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 /**
- * 
  * @author Maarten
- *
  */
 public class GenomeRow {
 
@@ -20,12 +18,13 @@ public class GenomeRow {
 	public static final int COL_ID = 0;
 
 	/** Column number for select checkboxes. */
-	public static final int COL_SHOW = 1;
+	public static final int COL_SHOW = -1;
 
 	/** Column number for highlight checkboxes. */
-	public static final int COL_HIGHLIGHT = 2;
+	public static final int COL_HIGHLIGHT = 1;
 
 	/**
+	 * Initialize the genome row.
 	 * 
 	 * @param idIn
 	 *            the id to set
@@ -57,7 +56,7 @@ public class GenomeRow {
 	}
 
 	/**
-	 * @return whether the genome is selected or not
+	 * @return whether the genome is selected or not.
 	 */
 	public final boolean isVisible() {
 		return visible;
@@ -65,14 +64,14 @@ public class GenomeRow {
 
 	/**
 	 * @param newSelected
-	 *            whether the genome is now selected or not
+	 *            whether the genome is now selected or not.
 	 */
 	public final void setVisible(final boolean newSelected) {
 		this.visible = newSelected;
 	}
 
 	/**
-	 * @return the highlighted
+	 * @return whether the genome is highlighted.
 	 */
 	public final boolean isHighlighted() {
 		return highlighted;
@@ -80,7 +79,7 @@ public class GenomeRow {
 
 	/**
 	 * @param newHighlighted
-	 *            whether the genome is now highlighted or not
+	 *            whether the genome is now highlighted or not.
 	 */
 	public final void setHighlighted(final boolean newHighlighted) {
 		this.highlighted = newHighlighted;
@@ -98,8 +97,8 @@ public class GenomeRow {
 		switch (col) {
 		case COL_ID:
 			return id;
-		case COL_SHOW:
-			return visible;
+			// case COL_SHOW:
+			// return visible;
 		case COL_HIGHLIGHT:
 			return highlighted;
 		default:
@@ -120,13 +119,13 @@ public class GenomeRow {
 	public final void set(final int col, final Object value)
 			throws IndexOutOfBoundsException {
 		switch (col) {
-		case 0:
+		case COL_ID:
 			setId((String) value);
 			break;
-		case 1:
-			setVisible((Boolean) value);
-			break;
-		case 2:
+		// case 1:
+		// setVisible((Boolean) value);
+		// break;
+		case COL_HIGHLIGHT:
 			setHighlighted((Boolean) value);
 			break;
 		default:

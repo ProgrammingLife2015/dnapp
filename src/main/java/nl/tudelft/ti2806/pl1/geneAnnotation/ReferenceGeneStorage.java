@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 /**
@@ -114,7 +114,7 @@ public class ReferenceGeneStorage {
 			sc.close();
 			findDNodes(ret);
 		} catch (FileNotFoundException e) {
-			Event.statusBarError(file.getAbsolutePath()
+			AppEvent.statusBarError(file.getAbsolutePath()
 					+ " for known resistant mutations could not be found!");
 		}
 		return ret;
@@ -173,7 +173,7 @@ public class ReferenceGeneStorage {
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
-			Event.statusBarError(file.getAbsolutePath()
+			AppEvent.statusBarError(file.getAbsolutePath()
 					+ " for gene annotation could not be found!");
 		}
 		return ret;

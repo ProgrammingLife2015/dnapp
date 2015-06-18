@@ -93,20 +93,22 @@ public class HelpDialog extends JDialog {
 	 * @return The panel with information about the available shortcuts.
 	 */
 	private JPanel makeShortcuts() {
-		JPanel ret = new JPanel(new GridBagLayout());
+		JPanel ret = new JPanel(new BorderLayout());
+		JPanel tab = new JPanel(new GridBagLayout());
 
 		String[][] info = { { "Shortcuts: ", "" }, { "F1", "Help" },
 				{ "CTRL + R", "Reset to default view (zoom level)" },
 				{ "CTRL + C", "Close the application" },
 				{ "CTRL + O", "Open a file" },
-				{ "+", "Go to the next zoomlevel" },
-				{ "-", "Go to the previous zoomlevel" } };
+				{ "CTRL + UP", "Go up a zoomlevel" },
+				{ "CTRL + DOWN", "Go down a zoomlevel" } };
 
 		for (int i = 0; i < info.length; i++) {
 			for (int j = 0; j < info[0].length; j++) {
-				ret.add(new JLabel(info[i][j]), new GBC(j, i));
+				tab.add(new JLabel(info[i][j]), new GBC(j, i));
 			}
 		}
+		ret.add(tab, BorderLayout.WEST);
 		return ret;
 	}
 }

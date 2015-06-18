@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -34,7 +35,7 @@ import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGene;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneObserver;
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
@@ -201,9 +202,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		new ScrollListener(graphPane.getHorizontalScrollBar());
 		gl = new GeneLocator();
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
-
 		highlightedGenomes = new HashSet<String>();
-
 	}
 
 	/**
@@ -238,9 +237,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	public final void writeGraph(final String filePath) {
 		try {
 			graph.write(filePath);
-			Event.statusBarInfo("Exported graph representation to: " + filePath);
+			AppEvent.statusBarInfo("Exported graph representation to: "
+					+ filePath);
 		} catch (IOException e) {
-			Event.statusBarError("Error during visual graph export: "
+			AppEvent.statusBarError("Error during visual graph export: "
 					+ e.getMessage());
 			e.printStackTrace();
 		}
@@ -275,11 +275,11 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * 
 	 * @author ChakShun
-	 *
+	 * @since 18-6-2015
 	 */
 	class GeneLocator implements ReferenceGeneObserver {
+
 		/**
 		 * Locate the genes in the graph.
 		 * 
@@ -432,7 +432,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 						dgraph.getReferencesSet(), true, true);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Event.statusBarError(e.getMessage());
+				AppEvent.statusBarError(e.getMessage());
 			}
 			return graph;
 		}
@@ -466,26 +466,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			private static final long serialVersionUID = 4902528839853178375L;
 
 			@Override
-			public void paintComponent(final java.awt.Graphics g) {
+			public void paintComponent(final Graphics g) {
 				super.paintComponent(g);
-				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
-					Integer xleft = (int) entry.getValue().get(0)
-							.getAttribute("x");
-					Integer xright = (int) entry.getValue().get(1)
-							.getAttribute("x");
-					g.setColor(Color.ORANGE);
-					g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
-							+ nodeDiameter, nodeDiameter / 2);
-					// g.setColor(Color.BLACK);
-					// g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
-					// + nodeDiameter, nodeDiameter / 2);
-				}
+				paintGeneBoxes(g);
 			}
 		};
 		viewer.addView(view);
 		view.setMinimumSize(viewSize);
 		view.setPreferredSize(viewSize);
 		view.setMaximumSize(viewSize);
+		view.setEnabled(false);
 
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
@@ -504,6 +494,22 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		centerVertical();
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
+	}
+
+	/**
+	 * Paints the gene boxes overlay.
+	 * 
+	 * @param g
+	 *            The Graphics object to protect.
+	 */
+	private void paintGeneBoxes(final Graphics g) {
+		for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
+			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
+			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
+			g.setColor(Color.ORANGE);
+			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
+					+ nodeDiameter, nodeDiameter / 2);
+		}
 	}
 
 	/**
@@ -725,22 +731,25 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 *            The zoom level to apply.
 	 */
 	public void applyZoomLevel(final int newZoomLevel) {
+		count = 0;
 		if (newZoomLevel < 0) {
-			Event.statusBarError("There is no zoom level further from the current level");
-			zoomLevel = 0;
+			AppEvent.statusBarError("There is no zoom level further from the current level");
 		} else if (newZoomLevel > thresholds.length) {
-			Event.statusBarError("There is no zoom level further from the current level");
-			zoomLevel = thresholds.length;
-		} else if (newZoomLevel == 0) {
-			visualizeGraph(ConvertDGraph.convert(dgraph));
-			highlight();
+			AppEvent.statusBarError("There is no zoom level further from the current level");
 		} else {
-			int threshold = thresholds[newZoomLevel - 1];
+			zoomLevel = newZoomLevel;
+			int threshold;
+			if (newZoomLevel == 0) {
+				threshold = Integer.MIN_VALUE;
+			} else {
+				threshold = thresholds[newZoomLevel - 1];
+			}
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr, viewSize));
 			NodePlacer.placeY(gr);
 			visualizeGraph(gr);
 			highlight();
+			AppEvent.statusBarInfo("Zoom level set to: " + zoomLevel);
 		}
 		notifyViewChangeObservers();
 	}
@@ -784,10 +793,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = e.getWheelRotation();
 			if (count > NEWLEVEL) {
-				zoomLevel++;
 				upZoomlevel();
 			} else if (count < -NEWLEVEL) {
-				zoomLevel--;
 				downZoomlevel();
 			} else if (rotation > 0) {
 				count++;
@@ -811,26 +818,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void resetZoom() {
 			view.getCamera().setViewPercent(1.0);
 			count = 0;
-		}
-
-		/**
-		 * Lets you zoom in one level further.
-		 */
-		public void upZoomlevel() {
-			count = 0;
-			System.out.println("Zoom level up to = " + zoomLevel);
-			Event.statusBarInfo("Zoom level up to = " + zoomLevel);
-			applyZoomLevel(zoomLevel);
-		}
-
-		/**
-		 * Lets you zoom out one level further.
-		 */
-		public void downZoomlevel() {
-			count = 0;
-			System.out.println("Zoom level down to = " + zoomLevel);
-			Event.statusBarInfo("Zoom level down to = " + zoomLevel);
-			applyZoomLevel(zoomLevel);
 		}
 	}
 
@@ -919,7 +906,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
-			Event.statusBarMid(" Selected node: " + id);
+			AppEvent.statusBarMid(" Selected node: " + id);
 			HashSet<DNode> ret = new HashSet<DNode>();
 			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
 					"collapsed")) {
@@ -979,12 +966,17 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * Get current zoomlevel.
-	 * 
-	 * @return current zoomlevel.
+	 * Lets you zoom in one level further.
 	 */
-	public int getZoomLevel() {
-		return zoomLevel;
+	public void upZoomlevel() {
+		applyZoomLevel(zoomLevel + 1);
+	}
+
+	/**
+	 * Lets you zoom out one level further.
+	 */
+	public void downZoomlevel() {
+		applyZoomLevel(zoomLevel - 1);
 	}
 
 	/**

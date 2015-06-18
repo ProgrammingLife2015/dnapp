@@ -5,8 +5,9 @@ import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import org.graphstream.graph.Node;
 
 /**
+ * Represents a horizontal section of a graph view.
+ * 
  * @author Maarten
- *
  */
 public class ViewArea {
 

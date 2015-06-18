@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.NucleoBase;
 
 /**
@@ -95,7 +95,7 @@ public class NodeContentBar extends JPanel {
 				lenN++;
 				break;
 			default:
-				Event.statusBarError("invalid nucleotide base \'" + c
+				AppEvent.statusBarError("invalid nucleotide base \'" + c
 						+ "\' found in selected node.");
 				System.out.println("ERROR: Invalid nucleotide found (" + c
 						+ ") in string: " + newSequence);
