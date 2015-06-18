@@ -361,8 +361,8 @@ public abstract class BinaryTree extends JButton {
 			return Arrays.asList(root.getID());
 		}
 		Collection<String> chosen = new ArrayList<String>();
-		chosen.addAll(getSelected(root.getLeft()));
-		chosen.addAll(getSelected(root.getRight()));
+		chosen.addAll(getChosen(root.getLeft()));
+		chosen.addAll(getChosen(root.getRight()));
 		return chosen;
 	}
 
