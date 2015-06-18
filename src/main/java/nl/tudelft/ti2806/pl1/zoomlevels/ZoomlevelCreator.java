@@ -26,19 +26,20 @@ public final class ZoomlevelCreator {
 
 	/**
 	 * Creates a graph with its mutations collapsed according to a score
-	 * threshold. Mutations get collapsed if their score is lower than the
 	 * threshold.
 	 * 
 	 * @param threshold
 	 *            The score threshold.
-	 * @return The visual graph.
+	 * @return The created graph
 	 */
 	public Graph createGraph(final int threshold) {
 		Graph ret = ConvertDGraph.convert(graph);
 		ret = InDelCollapser.collapseInsertions(graph.getInsMutations(), ret);
 		ret = InDelCollapser.collapseDeletions(graph.getDelMutations(), ret);
+		ret = ComplexCollapser.collapseComplexMutations(
+				graph.getComplexMutations(), ret);
 		ret = PointGraphConverter.collapseNodes(graph.getAllPointMutations(),
-				ret, threshold, graph);
+				ret, threshold, graph.getSelected());
 		ret = HorizontalCollapser.horizontalCollapse(ret);
 		graph.setSelected(PointGraphConverter.findSelected(ret));
 		return ret;
