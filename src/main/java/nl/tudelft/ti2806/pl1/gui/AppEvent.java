@@ -85,6 +85,7 @@ public enum AppEvent implements ActionListener {
 				final File geneAnn = fcGeneAnn.getSelectedFile();
 				window.getContent().getGraphPanel().getDgraph()
 						.getReferenceGeneStorage().setGeneAnnotation(geneAnn);
+				window.repaint();
 			} else {
 				dialogCanceled();
 			}

@@ -106,7 +106,6 @@ public class Content extends JPanel {
 		phyloPanel = new PhyloPanel();
 
 		tabs.addTab("Main", graphPanel);
-		tabs.addTab("Phylogenetic tree", phyloPanel);
 		tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
@@ -158,8 +157,18 @@ public class Content extends JPanel {
 	 */
 	public final void loadTree(final File newick) {
 		treeLoaded = phyloPanel.loadTree(newick);
+		setPhyloTab();
 		for (ContentLoadedObserver clo : observers) {
 			clo.phyloLoaded();
+		}
+	}
+
+	/**
+	 * Adds the phylogenetic tree tab if it does not exist yet.
+	 */
+	private void setPhyloTab() {
+		if (tabs.getTabCount() <= 1) {
+			tabs.addTab("Phylogenetic tree", phyloPanel);
 		}
 	}
 

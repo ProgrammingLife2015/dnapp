@@ -111,21 +111,20 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
-				AppEvent.RESET_GRAPH);
+		setMenuItem(reset, "Reset view", null, 'R',
+				"Reset to the initial view.", AppEvent.RESET_GRAPH);
 		setAcc(reset,
 				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
 
 		JMenuItem zoomUp = new JMenuItem();
-		setMenuItem(zoomUp, "Up zoomlevel", null, 'u', "Go to next zoomlevel",
-				AppEvent.ZOOMLEVEL_UP);
-		setAcc(zoomUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP,
-				java.awt.Event.CTRL_MASK));
+		setMenuItem(zoomUp, "Up zoomlevel", null, 'U',
+				"Go to the next zoomlevel", AppEvent.ZOOMLEVEL_UP);
+		setAcc(zoomUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK));
 		ret.add(zoomUp);
 
 		JMenuItem zoomDown = new JMenuItem();
-		setMenuItem(zoomDown, "Down zoomlevel", null, 'd',
+		setMenuItem(zoomDown, "Down zoomlevel", null, 'D',
 				"Go to previous zoomlevel", AppEvent.ZOOMLEVEL_DOWN);
 		setAcc(zoomDown,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
