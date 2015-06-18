@@ -8,12 +8,8 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public class DeletionMutation extends Mutation {
 
-	/** Starting position of the deletion. **/
-	private int startposition;
-	/** End position of the deletion. **/
-	private int endposition;
-	/** Score if deletion is in gene. **/
-	private static final int SCORE_GENE = 80;
+	/** Extra points for being insertion or deletion. **/
+	private static final int INDELMODIFIER = 10;
 
 	/**
 	 * @param pre
@@ -30,22 +26,7 @@ public class DeletionMutation extends Mutation {
 	 */
 	public DeletionMutation(final int pre, final int post,
 			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
-		super(pre, post, rgs);
-		startposition = startpos;
-		endposition = endpos;
-		calculateGeneralScore();
-	}
-
-	/**
-	 * Calculate the general score for a mutation.
-	 */
-	private void calculateGeneralScore() {
-		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
-		if (rgs.isIntragenic(startposition) && rgs.isIntragenic(endposition)) {
-			this.setScore(SCORE_GENE);
-		} else {
-			this.setScore(0);
-		}
+		super(pre, post, rgs, startpos, endpos);
 	}
 
 	@Override
@@ -65,5 +46,13 @@ public class DeletionMutation extends Mutation {
 	@Override
 	public final int hashCode() {
 		return super.hashCode();
+	}
+
+	@Override
+	public double getScore() {
+		double tempscore = super.getScore();
+		tempscore += INDELMODIFIER
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
+		return tempscore;
 	}
 }

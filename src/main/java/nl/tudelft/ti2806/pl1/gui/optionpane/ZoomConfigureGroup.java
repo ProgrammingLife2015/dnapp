@@ -31,7 +31,7 @@ public class ZoomConfigureGroup extends JPanel {
 	/**
 	 * The number of sliders.
 	 */
-	private static final int NUM_SLIDERS = 2;
+	private static final int NUM_SLIDERS = MutationMultipliers.values().length;
 
 	/** The default visible title. */
 	private static final String DEFAULT_TITLE = "Zoom settings.";
@@ -68,7 +68,7 @@ public class ZoomConfigureGroup extends JPanel {
 				public void stateChanged(final ChangeEvent e) {
 					JSlider changed = (JSlider) e.getSource();
 					Event.statusBarInfo("Slider to "
-							+ ((double) changed.getValue() / 10));
+							+ ((double) changed.getValue() / SLIDERVALUES));
 					ScoreMultiplier.multiplierChange(changed);
 				}
 			});

@@ -139,12 +139,14 @@ public final class MutationFinder {
 			if (node.getOutEdges().size() > 0) {
 				if (inNodes.size() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage()));
+							graph.getReferenceGeneStorage(), node.getStart(),
+							node.getEnd()));
 				} else if (inNodes.size() == 1
 						&& graph.getDNode(inNodes.iterator().next())
 								.getContent().length() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage()));
+							graph.getReferenceGeneStorage(), node.getStart(),
+							node.getEnd()));
 				}
 			}
 		}

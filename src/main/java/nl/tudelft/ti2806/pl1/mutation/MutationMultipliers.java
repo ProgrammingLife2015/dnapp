@@ -30,6 +30,14 @@ public enum MutationMultipliers {
 			return "Known Mutation";
 		}
 
+	},
+
+	/** Make indels more important. **/
+	INDEL {
+		@Override
+		public String getGUI() {
+			return "Indels more important";
+		}
 	};
 
 	/**

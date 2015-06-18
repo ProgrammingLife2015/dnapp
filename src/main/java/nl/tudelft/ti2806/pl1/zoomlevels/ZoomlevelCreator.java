@@ -34,10 +34,10 @@ public final class ZoomlevelCreator {
 	 */
 	public Graph createGraph(final int threshold) {
 		Graph ret = ConvertDGraph.convert(graph);
-		ret = InDelCollapser.collapseInsertions(graph.getInsMutations(), ret);
-		ret = InDelCollapser.collapseDeletions(graph.getDelMutations(), ret);
-		ret = ComplexCollapser.collapseComplexMutations(
-				graph.getComplexMutations(), ret);
+		ret = InDelCollapser.collapseInsertions(graph.getInsMutations(), ret,
+				threshold);
+		ret = InDelCollapser.collapseDeletions(graph.getDelMutations(), ret,
+				threshold);
 		ret = PointGraphConverter.collapseNodes(graph.getAllPointMutations(),
 				ret, threshold, graph.getSelected());
 		ret = HorizontalCollapser.horizontalCollapse(ret);

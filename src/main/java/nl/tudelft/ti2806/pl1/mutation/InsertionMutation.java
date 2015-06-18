@@ -8,6 +8,9 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public class InsertionMutation extends Mutation {
 
+	/** Extra points for being insertion or deletion. **/
+	private static final int INDELMODIFIER = 10;
+
 	/** The node(s) inserted in the graph. */
 	private int inNode;
 
@@ -29,7 +32,7 @@ public class InsertionMutation extends Mutation {
 	public InsertionMutation(final int pre, final int post,
 			final int insertednode, final ReferenceGeneStorage rgs,
 			final int startpos, final int endpos) {
-		super(pre, post, rgs);
+		super(pre, post, rgs, startpos, endpos);
 		this.inNode = insertednode;
 	}
 
@@ -60,4 +63,11 @@ public class InsertionMutation extends Mutation {
 		return getPreNode();
 	}
 
+	@Override
+	public double getScore() {
+		double tempscore = super.getScore();
+		tempscore += INDELMODIFIER
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
+		return tempscore;
+	}
 }

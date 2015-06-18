@@ -27,8 +27,8 @@ public class ComplexMutation extends Mutation {
 	 */
 	public ComplexMutation(final int pre, final Integer post,
 			final Collection<Integer> insertedNodes,
-			final ReferenceGeneStorage rgs) {
-		super(pre, post, rgs);
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
+		super(pre, post, rgs, startpos, endpos);
 		this.inNodes = insertedNodes;
 	}
 
