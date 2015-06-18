@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -201,9 +202,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		new ScrollListener(graphPane.getHorizontalScrollBar());
 		gl = new GeneLocator();
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
-
 		highlightedGenomes = new HashSet<String>();
-
 	}
 
 	/**
@@ -238,7 +237,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	public final void writeGraph(final String filePath) {
 		try {
 			graph.write(filePath);
-			AppEvent.statusBarInfo("Exported graph representation to: " + filePath);
+			AppEvent.statusBarInfo("Exported graph representation to: "
+					+ filePath);
 		} catch (IOException e) {
 			AppEvent.statusBarError("Error during visual graph export: "
 					+ e.getMessage());
@@ -275,11 +275,11 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * 
 	 * @author ChakShun
-	 *
+	 * @since 18-6-2015
 	 */
 	class GeneLocator implements ReferenceGeneObserver {
+
 		/**
 		 * Locate the genes in the graph.
 		 * 
@@ -466,20 +466,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			private static final long serialVersionUID = 4902528839853178375L;
 
 			@Override
-			public void paintComponent(final java.awt.Graphics g) {
+			public void paintComponent(final Graphics g) {
 				super.paintComponent(g);
-				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
-					Integer xleft = (int) entry.getValue().get(0)
-							.getAttribute("x");
-					Integer xright = (int) entry.getValue().get(1)
-							.getAttribute("x");
-					g.setColor(Color.ORANGE);
-					g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
-							+ nodeDiameter, nodeDiameter / 2);
-					// g.setColor(Color.BLACK);
-					// g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
-					// + nodeDiameter, nodeDiameter / 2);
-				}
+				paintGeneBoxes(g);
 			}
 		};
 		viewer.addView(view);
@@ -505,6 +494,22 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		centerVertical();
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
+	}
+
+	/**
+	 * Paints the gene boxes overlay.
+	 * 
+	 * @param g
+	 *            The Graphics object to protect.
+	 */
+	private void paintGeneBoxes(final Graphics g) {
+		for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
+			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
+			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
+			g.setColor(Color.ORANGE);
+			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
+					+ nodeDiameter, nodeDiameter / 2);
+		}
 	}
 
 	/**
