@@ -33,7 +33,7 @@ public class ReaderTest {
 
 	@Test
 	public void added2NodesTest() {
-		assertEquals(graph.getNodeCount(), 4);
+		assertEquals(graph.getNodeCount(), 3);
 	}
 
 	@Test
@@ -42,22 +42,10 @@ public class ReaderTest {
 	}
 
 	@Test
-	public void getEndNodeTest() {
-		assertEquals(graph.getEnd(), graph.getDNode(-1));
-	}
-
-	@Test
 	public void starNodeHasEdgeToNode1Test() {
 		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-2)
 				.getOutEdges();
 		assertEquals(edges.get(0).getEndNode(), graph.getDNode(0));
-	}
-
-	@Test
-	public void endNodeHasEdgeToNode2Test() {
-		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-1)
-				.getInEdges();
-		assertEquals(edges.get(0).getStartNode(), graph.getDNode(1));
 	}
 
 	@Test

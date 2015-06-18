@@ -31,8 +31,8 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** The edges in the graph. */
 	private Collection<DEdge> edges;
 
-	/** The start node and end node of the graph. */
-	private DNode start, end;
+	/** The start node of the graph. */
+	private DNode start;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
@@ -65,7 +65,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		edges = new ArrayList<DEdge>();
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
-		end = null;
 		referenceGeneStorage = new ReferenceGeneStorage(this);
 	}
 
@@ -278,21 +277,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		this.start = s;
 	}
 
-	/**
-	 * @return the end.
-	 */
-	public DNode getEnd() {
-		return end;
-	}
-
-	/**
-	 * @param e
-	 *            the end to set.
-	 */
-	public final void setEnd(final DNode e) {
-		this.end = e;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
 		return pointMutations;
