@@ -25,16 +25,14 @@ public class ZoomConfigureGroup extends JPanel {
 	private static final Dimension SIZE = new Dimension(
 			OptionsPane.MAX_CHILD_WIDTH, 200);
 
-	/**
-	 * The number of sliders.
-	 */
+	/** The number of sliders. */
 	private static final int NUM_SLIDERS = 5;
 
 	/** The default visible title. */
 	private static final String DEFAULT_TITLE = "Zoom settings.";
 
 	/**
-	 * 
+	 * Initialize the zoom configure group.
 	 */
 	public ZoomConfigureGroup() {
 		super();
@@ -46,13 +44,13 @@ public class ZoomConfigureGroup extends JPanel {
 	}
 
 	/**
-	 * 
+	 * Add the sliders.
 	 */
 	private void addComponents() {
 		for (int i = 0; i < NUM_SLIDERS; i++) {
-			JSlider slider = new JSlider(-10, 10);
+			final int low = -10, high = 10;
+			JSlider slider = new JSlider(low, high);
 			slider.addChangeListener(new ChangeListener() {
-
 				@Override
 				public void stateChanged(final ChangeEvent e) {
 					Event.statusBarInfo("Slider to "

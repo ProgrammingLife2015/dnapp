@@ -27,3 +27,6 @@ node.selected {
 node.collapsed{
     fill-color: purple;
 }
+node.resistant{
+    fill-color:green;
+}

@@ -1,16 +1,11 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.file;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * 
  * @author Maarten
  * @since 22-5-2015
- * @version 1.1
  */
 public class ExportDialog extends JFileChooser {
 
@@ -27,10 +22,7 @@ public class ExportDialog extends JFileChooser {
 		setFileSelectionMode(JFileChooser.FILES_ONLY); // default
 		setCurrentDirectory(null);
 		setAcceptAllFileFilterUsed(false);
-		FileNameExtensionFilter extDGS = new FileNameExtensionFilter(
-				"DGS graph format", "dgs");
-
-		addChoosableFileFilter(extDGS);
+		addChoosableFileFilter(new FileNameExtensionFilter("DGS graph format",
+				"dgs"));
 	}
-
 }

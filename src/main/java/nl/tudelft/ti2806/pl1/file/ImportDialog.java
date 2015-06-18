@@ -54,7 +54,6 @@ public class ImportDialog extends JFileChooser {
 	 * 
 	 * @author Maarten
 	 * @since 20-5-2015
-	 * @version 1.0
 	 */
 	public enum ImportType {
 
@@ -73,9 +72,7 @@ public class ImportDialog extends JFileChooser {
 			}
 		},
 
-		/**
-		 * Only graph edge files will be shown.
-		 */
+		/** Only graph edge files will be shown. */
 		EDGES {
 			@Override
 			public FileFilter getFileFilter() {
@@ -88,9 +85,7 @@ public class ImportDialog extends JFileChooser {
 			}
 		},
 
-		/**
-		 * 
-		 */
+		/** */
 		PHYLO {
 			@Override
 			public FileFilter getFileFilter() {
@@ -101,6 +96,33 @@ public class ImportDialog extends JFileChooser {
 			public String getTitle() {
 				return "Load phylogenetic tree file";
 			}
+		},
+
+		/** */
+		GENE_ANNOTATION {
+			@Override
+			public FileFilter getFileFilter() {
+				return new ExtensionFileFilter("GFF file", "gff");
+			}
+
+			@Override
+			public String getTitle() {
+				return "Load gene annotation";
+			}
+		},
+
+		/** */
+		KNOWN_RES_MUT {
+			@Override
+			public FileFilter getFileFilter() {
+				return new ExtensionFileFilter(
+						"RCM file (resistance causing mutations)", "rcm");
+			}
+
+			@Override
+			public String getTitle() {
+				return "Load resistance causing mutations file.";
+			}
 		};
 
 		/**
@@ -110,8 +132,8 @@ public class ImportDialog extends JFileChooser {
 		public abstract FileFilter getFileFilter();
 
 		/**
-		 * @return the file chooser dialog title to show for this type of
-		 *         importable files.
+		 * @return The title for the file chooser dialog this type of importable
+		 *         files.
 		 */
 		public abstract String getTitle();
 	}

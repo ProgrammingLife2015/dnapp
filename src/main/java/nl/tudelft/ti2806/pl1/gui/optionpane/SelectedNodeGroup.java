@@ -23,6 +23,27 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
  */
 public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
+	/** Vertical grid coordinate of ID field. */
+	private static final int Y_ID = 0;
+
+	/** Vertical grid coordinate of length field. */
+	private static final int Y_LENGTH = 1;
+
+	/** Vertical grid coordinate of the label of the content bar. */
+	private static final int Y_CONTENT_BAR_LABEL = 2;
+
+	/** Vertical grid coordinate of the content bar. */
+	private static final int Y_CONTENT_BAR = 3;
+
+	/** Vertical grid coordinate of the label of the sources field. */
+	private static final int Y_SOURCES_LABEL = 4;
+
+	/** Vertical grid coordinate of the sources. */
+	private static final int Y_SOURCES = 5;
+
+	/** Horizontal weight of info labels containing the values. */
+	private static final int XW_VAL_LABEL = 10;
+
 	/** The serial version UID. */
 	private static final long serialVersionUID = -4851724739205792429L;
 
@@ -36,12 +57,24 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	private static final Dimension SIZE = new Dimension(
 			OptionsPane.MAX_CHILD_WIDTH, 120);
 
+	/** The width of the node content bar. */
+	private static final int NCB_WIDTH = 15;
+
+	/** The lenth of the node content bar. */
+	private static final int NCB_LENGTH = 160;
+
 	/** The grid bag constraints for the layout manager. */
 	private GridBagConstraints gbc = new GridBagConstraints();
 
 	/** The labels containing the node statistics. */
-	private JLabel lblID = mkLabel(""), lblContentLength = mkLabel(""),
-			lblSources = mkLabel("");
+	private JLabel lblIDL = mkLabel("ID:", RIGHT_ALIGNMENT),
+			lblContentLengthL = mkLabel("Length:", RIGHT_ALIGNMENT),
+			lblSourcesL = mkLabel("Sources:", LEFT_ALIGNMENT);
+
+	/** The labels containing the node statistics. */
+	private JLabel lblID = mkLabel("", LEFT_ALIGNMENT),
+			lblContentLength = mkLabel("", LEFT_ALIGNMENT),
+			lblSources = mkLabel("", LEFT_ALIGNMENT);
 
 	/** The simple bar chart showing the distribution of nucleotides. */
 	private NodeContentBar nodeChart;
@@ -58,40 +91,45 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setAlignmentY(TOP_ALIGNMENT);
 		setBorder(BorderFactory.createTitledBorder(DEFAULT_TITLE));
 		gbc.fill = GridBagConstraints.NONE;
-		gbc.gridy = 0;
+		gbc.gridy = SelectedNodeGroup.Y_ID;
 		gbc.gridx = 0;
-		gbc.weightx = 0;
-		add(new JLabel("ID:"), gbc);
+		gbc.weightx = 1;
+		add(lblIDL, gbc);
 		gbc.gridx = 1;
-		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
+		gbc.weightx = XW_VAL_LABEL;
 		add(lblID, gbc);
 
-		gbc.gridy = 1;
+		gbc.gridy = Y_LENGTH;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
-		add(new JLabel("Length:"), gbc);
+		add(lblContentLengthL, gbc);
 		gbc.gridx = 1;
-		gbc.weightx = OptionsPane.GBC_WEIGHT_X;
+		gbc.weightx = XW_VAL_LABEL;
 		add(lblContentLength, gbc);
 
-		gbc.gridy = 2;
+		gbc.gridy = Y_CONTENT_BAR_LABEL;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
-		add(new JLabel("Sources:"), gbc);
-		gbc.gridy = OptionsPane.GBC_GRIDY_3;
+		gbc.gridwidth = 2;
+		add(new JLabel("Nucleotide type distribution:"), gbc);
+
+		nodeChart = new NodeContentBar(NCB_WIDTH, NCB_LENGTH);
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridy = Y_CONTENT_BAR;
+		gbc.gridwidth = 2;
+		add(nodeChart, gbc);
+
+		gbc.gridy = Y_SOURCES_LABEL;
+		gbc.gridx = 0;
+		gbc.weightx = 1;
+		add(lblSourcesL, gbc);
+		gbc.gridy = Y_SOURCES;
 		gbc.gridwidth = 2;
 		gbc.weightx = 2.0;
 		add(lblSources, gbc);
 
-		nodeChart = new NodeContentBar(OptionsPane.NBC_WIDTH,
-				OptionsPane.NBC_HEIGHT);
-
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.gridy = OptionsPane.GBC_GRIDY_4;
-		gbc.gridwidth = 2;
-		add(nodeChart, gbc);
-
-		gbc.weighty = OptionsPane.GBC_WEIGHT_Y;
+		final int wyBox = 100;
+		gbc.weighty = wyBox;
 		add(Box.createVerticalGlue());
 	}
 
@@ -100,11 +138,13 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	 * 
 	 * @param text
 	 *            Input text.
+	 * @param align
+	 *            Align
 	 * @return JLabel object with the input text.
 	 */
-	private JLabel mkLabel(final String text) {
+	private JLabel mkLabel(final String text, final float align) {
 		JLabel ret = new JLabel(text);
-		ret.setAlignmentX(LEFT_ALIGNMENT);
+		ret.setAlignmentX(align);
 		return ret;
 	}
 
