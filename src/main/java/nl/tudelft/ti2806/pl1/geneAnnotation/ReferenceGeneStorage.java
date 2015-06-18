@@ -122,7 +122,7 @@ public class ReferenceGeneStorage {
 			for (DNode dn : dgraph.getRefGenome()) {
 				for (ResistanceMutation mut : resMuts) {
 					if (dn.getStart() <= mut.getRefIndex()
-							&& mut.getRefIndex() <= dn.getEnd()) {
+							&& mut.getRefIndex() < dn.getEnd()) {
 						mut.setDnode(dn);
 						dn.addResistantMutationIndex(mut);
 					}

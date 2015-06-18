@@ -19,8 +19,7 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 /**
  * The data graph class representing data.
  * 
- * @author Mark
- *
+ * @author Mark, PL1
  */
 public class DGraph implements MutatedGraph, DynamicGraph {
 

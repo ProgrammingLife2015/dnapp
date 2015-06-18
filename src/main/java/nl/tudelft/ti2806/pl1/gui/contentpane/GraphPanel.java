@@ -424,7 +424,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/**
 	 * Loads or reloads a specific part of the view panel.
-	 * 
+	 *
 	 * @param va
 	 *            The view area to (re)load
 	 */

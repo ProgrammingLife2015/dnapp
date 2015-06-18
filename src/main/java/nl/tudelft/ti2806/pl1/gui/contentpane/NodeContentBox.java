@@ -37,6 +37,9 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	/** The font size of the node content text pane. */
 	private static final int FONT_SIZE = 12;
 
+	/** The background color of nucleotides involved in resistance mutations. */
+	private static final Color RES_NUCLEO_BG_COLOR = new Color(150, 255, 150);
+
 	/** The text area document. */
 	private StyledDocument doc = new DefaultStyledDocument();
 
@@ -45,9 +48,6 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 
 	/** The scroll pane containing the text pane. */
 	private JScrollPane scroll = new JScrollPane(text);
-
-	// /** The info bar op top of the text pane. */
-	// private JPanel infoBar = new JPanel();
 
 	/**
 	 * The label showing information about the user's selection within the text
@@ -102,10 +102,12 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				StyleConstants.setForeground(set, nucleoColor);
 				doc.setCharacterAttributes(i, 1, set, true);
 			}
+			System.out.println("\t start=" + dn.getStart() + "\t end="
+					+ dn.getEnd());
 			if (dn.hasResMuts()) {
 				set = new SimpleAttributeSet();
 				for (ResistanceMutation rm : dn.getResMuts()) {
-					StyleConstants.setBackground(set, Color.GREEN.brighter());
+					StyleConstants.setBackground(set, RES_NUCLEO_BG_COLOR);
 					int loc = (int) rm.getRefIndex() - dn.getStart();
 					System.out.println("loc=" + loc + "\t start="
 							+ dn.getStart() + "\t refIndex=" + rm.getRefIndex()

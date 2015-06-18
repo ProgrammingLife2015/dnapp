@@ -26,11 +26,12 @@ public final class ZoomlevelCreator {
 
 	/**
 	 * Creates a graph with its mutations collapsed according to a score
+	 * threshold. Mutations get collapsed if their score is lower than the
 	 * threshold.
 	 * 
 	 * @param threshold
 	 *            The score threshold.
-	 * @return The created graph
+	 * @return The visual graph.
 	 */
 	public Graph createGraph(final int threshold) {
 		Graph ret = ConvertDGraph.convert(graph);

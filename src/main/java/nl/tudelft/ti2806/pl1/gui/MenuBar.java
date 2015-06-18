@@ -90,16 +90,6 @@ public class MenuBar extends JMenuBar {
 	}
 
 	/**
-	 * Creates and fills the edit menu.
-	 * 
-	 * @return the edit menu
-	 */
-	private JMenu editMenu() {
-		JMenu ret = new JMenu("Edit");
-		return ret;
-	}
-
-	/**
 	 * Creates and fills the view menu.
 	 * 
 	 * @return the view menu
