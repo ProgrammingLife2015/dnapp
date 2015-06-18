@@ -50,7 +50,7 @@ public abstract class BinaryTree extends JButton {
 	private boolean collapsed = false;
 
 	/**
-	 * The parent of the node, initialised at null for the root
+	 * The parent of the node, initialised at null for the root.
 	 */
 	private BinaryTree parent;
 
@@ -387,6 +387,23 @@ public abstract class BinaryTree extends JButton {
 		sources.addAll(this.getLeft().getSources());
 		sources.addAll(this.getRight().getSources());
 		return sources;
+	}
+
+	/**
+	 * Returns a collection of sources which have been selected.
+	 * 
+	 * @param root
+	 *            The root node
+	 * @return A collection of selected sources
+	 */
+	public Collection<String> getChosen(final BinaryTree root) {
+		if (root.isLeaf() && root.isChosen()) {
+			return Arrays.asList(root.getID());
+		}
+		Collection<String> chosen = new ArrayList<String>();
+		chosen.addAll(getChosen(root.getLeft()));
+		chosen.addAll(getChosen(root.getRight()));
+		return chosen;
 	}
 
 	/**

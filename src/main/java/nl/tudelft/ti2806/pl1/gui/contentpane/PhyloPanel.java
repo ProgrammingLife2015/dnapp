@@ -14,14 +14,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
+import nl.tudelft.ti2806.pl1.gui.observable.ChosenObservable;
+import nl.tudelft.ti2806.pl1.gui.observable.ChosenObserver;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -30,7 +32,8 @@ import com.wordpress.tips4java.ScrollablePanel;
  * @author Maarten
  *
  */
-public class PhyloPanel extends JScrollPane implements ContentTab {
+public class PhyloPanel extends JScrollPane implements ContentTab,
+		ChosenObservable {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -61,6 +64,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 
 	/** The tree that this panel will show. */
 	private BinaryTree tree;
+
+	private Collection<ChosenObserver> observers;
 
 	/**
 	 * @return The loaded tree.
@@ -95,6 +100,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 			}
 		};
 		treePanel.setLayout(null);
+		observers = new ArrayList<ChosenObserver>();
 		setViewportView(treePanel);
 	}
 
@@ -102,18 +108,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
 		ret.add(ToolBar.makeButton("Highlight selection", null,
-				new ActionListener() {
-					@Override
-					public void actionPerformed(final ActionEvent e) {
-						System.out
-								.println("Now something needs to happen right?!");
-						// TODO
-					}
-				}, null));
-		JButton filter = ToolBar.makeButton("Filter selection", null, null,
-				null);
-		filter.setEnabled(false);
-		ret.add(filter);
+				new sourceHighlightListener(), null));
+		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
 		return ret;
 	}
 
@@ -257,5 +253,36 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 		in.close();
 
 		return buff.toString();
+	}
+
+	@Override
+	public void registerObserver(final ChosenObserver o) {
+		observers.add(o);
+	}
+
+	@Override
+	public void deleteObserver(final ChosenObserver o) {
+		observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers(final Collection<String> chosen) {
+		for (ChosenObserver o : observers) {
+			o.update(chosen);
+		}
+	}
+
+	/**
+	 * The event listener for the filter selection button.
+	 * 
+	 * @author mark
+	 *
+	 */
+	class sourceHighlightListener implements ActionListener {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			Collection<String> chosen = getTree().getChosen(getTree());
+			notifyObservers(chosen);
+		}
 	}
 }
