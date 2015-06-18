@@ -41,7 +41,7 @@ public class ZoomConfigureGroup extends JPanel {
 			.values();
 
 	/** How many options the slider can take. **/
-	private static final int SLIDERVALUES = 1;
+	private static final int SLIDERVALUES = 10;
 
 	/**
 	 * Initialize the zoom configure group.
@@ -60,13 +60,15 @@ public class ZoomConfigureGroup extends JPanel {
 	 */
 	private void addComponents() {
 		for (int i = 0; i < NUM_SLIDERS; i++) {
-			JSlider slider = new JSlider(0, SLIDERVALUES, 1);
+			JSlider slider = new JSlider(0, SLIDERVALUES, SLIDERVALUES);
 			slider.setName(SLIDERS[i].name());
+			slider.setPaintTicks(true);
 			slider.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
 					JSlider changed = (JSlider) e.getSource();
-					Event.statusBarInfo("Slider to " + changed.getValue());
+					Event.statusBarInfo("Slider to "
+							+ ((double) changed.getValue() / 10));
 					ScoreMultiplier.multiplierChange(changed);
 				}
 			});
