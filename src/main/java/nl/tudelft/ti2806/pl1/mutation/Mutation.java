@@ -60,6 +60,7 @@ public abstract class Mutation {
 
 	/** @return the score */
 	public double getScore() {
+		calculateGeneralScore();
 		return score;
 	}
 
@@ -69,17 +70,20 @@ public abstract class Mutation {
 	 * @return
 	 */
 	private void calculateGeneralScore() {
+		score = 0;
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
-		if (rgs.isIntragenic(startposition) && rgs.isIntragenic(endposition)) {
+		if (rgs.isIntragenic(startposition) || rgs.isIntragenic(endposition)) {
 			addScore(SCORE_IN_GENE
 					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
 							.name()));
-			if (rgs.containsMutationIndex(startposition)
-					&& rgs.containsMutationIndex(endposition)) {
-				addScore(SCORE_MUT
-						* ScoreMultiplier
-								.getMult(MutationMultipliers.KNOWN_MUTATION
-										.name()));
+			for (long pos : rgs.getDrugResistanceMutations().keySet()) {
+				if (startposition <= pos && pos < endposition) {
+					addScore(SCORE_MUT
+							* ScoreMultiplier
+									.getMult(MutationMultipliers.KNOWN_MUTATION
+											.name()));
+					break;
+				}
 			}
 		}
 	}
