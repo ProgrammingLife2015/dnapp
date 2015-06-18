@@ -49,9 +49,11 @@ public final class NodePlacer {
 	 * 
 	 * @param graph
 	 *            The graph.
+	 * @param viewSize
+	 *            The old view size.
 	 * @return The new view size.
 	 */
-	public static Dimension place(final Graph graph) {
+	public static Dimension place(final Graph graph, final Dimension viewSize) {
 		for (Node n : graph.getEachNode()) {
 			n.setAttribute("x", 0);
 		}
@@ -66,7 +68,7 @@ public final class NodePlacer {
 			n.setAttribute("x", dep * X_MULTIPLIER);
 		}
 		width = nodesAtDepth.size() * X_MULTIPLIER;
-		height = Collections.max(nodesAtDepth) * Y_MULTIPLIER;
+		height = viewSize.height;
 		return new Dimension(width, height);
 	}
 
@@ -85,8 +87,6 @@ public final class NodePlacer {
 				Node tar = edge.getNode1();
 				int odepth = tar.getAttribute("x");
 				int ndepth = (int) src.getAttribute("x") + 1;
-				// System.out.println("odepth" + odepth);
-				// System.out.println("depth" + ndepth);
 				if (ndepth > odepth) {
 					nodesAtDepth.set(odepth, nodesAtDepth.get(odepth) - 1);
 					if (nodesAtDepth.size() > ndepth) {
