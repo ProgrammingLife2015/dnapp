@@ -268,7 +268,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			e1.printStackTrace();
 			ret = false;
 		}
-		// gl.locateGenes(graph);
 		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
 		return ret;
@@ -373,6 +372,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		@Override
 		public void update() {
 			locateGenes(graph);
+			searchGeneLocs(graph);
 			fillGeneNavigatorBox();
 		}
 	}
@@ -508,6 +508,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
 			g.setColor(Color.ORANGE);
 			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
+					+ nodeDiameter, nodeDiameter / 2);
+			g.setColor(Color.BLACK);
+			g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
 					+ nodeDiameter, nodeDiameter / 2);
 		}
 	}
@@ -989,7 +992,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	@Override
 	public void update(final String selectedGene) {
 		if (geneLocs.containsKey(selectedGene)) {
-			System.out.println("???");
 			Node beginnode = this.geneLocs.get(selectedGene).get(0);
 			this.selectNode(beginnode);
 			graphPane.getHorizontalScrollBar().setValue(
