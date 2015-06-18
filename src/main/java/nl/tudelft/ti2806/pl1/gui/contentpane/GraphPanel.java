@@ -942,8 +942,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	@Override
 	public void update(final String selectedGene) {
 		if (geneLocs.containsKey(selectedGene)) {
+			Node beginnode = this.geneLocs.get(selectedGene).get(0);
+			this.selectNode(beginnode);
 			graphPane.getHorizontalScrollBar().setValue(
-					(int) geneLocs.get(selectedGene).get(0).getAttribute("x")
+					(int) beginnode.getAttribute("x")
 							- graphPane.getViewport().getWidth() / 2);
 		}
 
