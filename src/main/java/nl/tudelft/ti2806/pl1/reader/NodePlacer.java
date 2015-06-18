@@ -3,6 +3,7 @@ package nl.tudelft.ti2806.pl1.reader;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -63,9 +64,16 @@ public final class NodePlacer {
 		nodesAtDepth = new ArrayList<Integer>();
 		nodesAtDepth.add(graph.getNodeCount());
 		depths(q);
+		ArrayList<Integer> hdiff = heightDiff(nodesAtDepth, height);
 		for (Node n : graph.getEachNode()) {
 			int dep = n.getAttribute("x");
 			n.setAttribute("x", dep * X_MULTIPLIER);
+			try {
+				n.setAttribute("y", getHeight(dep, hdiff, nodesAtDepth, height));
+			} catch (InvalidNodePlacementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		width = nodesAtDepth.size() * X_MULTIPLIER;
 		height = viewSize.height;
@@ -260,5 +268,34 @@ public final class NodePlacer {
 	 */
 	public static void setWidth(final int newwidth) {
 		NodePlacer.width = newwidth;
+	}
+
+	/**
+	 * Places the nodes of the graph vertically.
+	 * 
+	 * @param graph
+	 *            The graph
+	 */
+	public static void placeY(final Graph graph) {
+		Node start = graph.getNode("-2");
+		int standardY = start.getAttribute("y");
+		for (Node n : graph.getEachNode()) {
+			int y = n.getAttribute("y");
+			if (y == standardY) {
+				Iterator<Node> iter = n.getNeighborNodeIterator();
+				boolean bothSides = false;
+				while (iter.hasNext()) {
+					Node next = iter.next();
+					if ((int) next.getAttribute("y") == standardY
+							&& !next.getId().equals(start.getId())) {
+						if (bothSides) {
+							next.setAttribute("y", Y_MULTIPLIER);
+						}
+						bothSides = true;
+					}
+				}
+			}
+		}
+
 	}
 }

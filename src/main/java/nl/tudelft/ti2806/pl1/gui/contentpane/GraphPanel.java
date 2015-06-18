@@ -262,6 +262,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			ret = false;
 		}
 		locateGenes(graph);
+		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
 		fillGeneNavigatorBox();
 		return ret;
@@ -334,6 +335,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph);
+				viewSize = NodePlacer.place(graph, viewSize);
 				analyzeDGraph();
 				window.getOptionPanel().fillGenomeList(
 						dgraph.getReferencesSet(), true, true);
@@ -691,6 +693,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			int threshold = thresholds[newZoomLevel - 1];
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr, viewSize));
+			NodePlacer.placeY(gr);
 			visualizeGraph(gr);
 			highlight();
 		}
