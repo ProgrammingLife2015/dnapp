@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 
@@ -18,14 +19,10 @@ import javax.swing.event.ChangeListener;
  */
 public class MenuBar extends JMenuBar {
 
-	/**
-	 * The serial version UID.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3046759850795865308L;
 
-	/**
-	 * The window this menu bar is part of.
-	 */
+	/** The window this menu bar is part of. */
 	private Window window;
 
 	/**
@@ -37,7 +34,6 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(final Window w) {
 		this.window = w;
 		this.add(fileMenu());
-		this.add(editMenu());
 		this.add(viewMenu());
 		this.add(helpMenu());
 	}
@@ -49,34 +45,34 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
-		JMenuItem imp = new JMenuItem();
-		setMenuItem(imp, "Import", null, 'I',
+		JMenuItem impGraph = new JMenuItem();
+		setMenuItem(impGraph, "Import graph", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
-				Event.IMPORT_FILE);
-		setAcc(imp,
-				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.Event.CTRL_MASK));
-		ret.add(imp);
+				AppEvent.IMPORT_FILE);
 
-		// JMenu export = new JMenu("Export graph layout as...") {
-		// /** The serial version UID. */
-		// private static final long serialVersionUID = 6733151149511110189L;
-		//
-		// @Override
-		// public boolean isEnabled() {
-		// return window.getContent().isGraphLoaded();
-		// }
-		// };
-		// export.setMnemonic('E');
-		// JMenuItem exportDGS = new JMenuItem();
-		// setMenuItem(exportDGS, "DGS format", null, 'D', null,
-		// Event.WRITE_TO_DGS);
-		// export.add(exportDGS);
-		// ret.add(export);
+		setAcc(impGraph, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+		ret.add(impGraph);
+
+		JMenu export = new JMenu("Export graph layout as...") {
+			/** The serial version UID. */
+			private static final long serialVersionUID = 6733151149511110189L;
+
+			@Override
+			public boolean isEnabled() {
+				return window.getContent().isGraphLoaded();
+			}
+		};
+		export.setMnemonic('E');
+		JMenuItem exportDGS = new JMenuItem();
+		setMenuItem(exportDGS, "DGS format", null, 'D', null,
+				AppEvent.WRITE_TO_DGS);
+		export.add(exportDGS);
+		ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
-		setMenuItem(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
-		setAcc(exit,
-				KeyStroke.getKeyStroke(KeyEvent.VK_C, java.awt.Event.CTRL_MASK));
+		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
+				AppEvent.EXIT_APP);
+		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 		ret.add(exit);
 
 		return ret;
@@ -91,19 +87,9 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
 		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
-				Event.HELP);
+				AppEvent.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
-		return ret;
-	}
-
-	/**
-	 * Creates and fills the edit menu.
-	 * 
-	 * @return the edit menu
-	 */
-	private JMenu editMenu() {
-		JMenu ret = new JMenu("Edit");
 		return ret;
 	}
 
@@ -113,28 +99,37 @@ public class MenuBar extends JMenuBar {
 	 * @return the view menu
 	 */
 	private JMenu viewMenu() {
-		JMenu ret = new JMenu("View");
+		JMenu ret = new JMenu("View") {
 
-		JMenuItem reset = new LoadedMenuItem(window);
+			/** The serial version UID. */
+			private static final long serialVersionUID = -8732114494095898765L;
+
+			@Override
+			public boolean isEnabled() {
+				return window != null && window.getContent().isGraphLoaded();
+			}
+		};
+
+		JMenuItem reset = new JMenuItem();
 		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
-				Event.RESET_GRAPH);
-		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
-				java.awt.Event.CTRL_MASK));
+				AppEvent.RESET_GRAPH);
+		setAcc(reset,
+				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
-		setMenuItem(zoomlevelplus, "Up zoomlevel", null, 'u',
-				"Go to next zoomlevel", Event.UPZOOMLEVEL);
-		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_UP,
+		JMenuItem zoomUp = new JMenuItem();
+		setMenuItem(zoomUp, "Up zoomlevel", null, 'u', "Go to next zoomlevel",
+				AppEvent.ZOOMLEVEL_UP);
+		setAcc(zoomUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP,
 				java.awt.Event.CTRL_MASK));
-		ret.add(zoomlevelplus);
+		ret.add(zoomUp);
 
-		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
-		setMenuItem(zoomlevelminus, "Down zoomlevel", null, 'd',
-				"Go to previous zoomlevel", Event.DOWNZOOMLEVEL);
-		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
-				java.awt.Event.CTRL_MASK));
-		ret.add(zoomlevelminus);
+		JMenuItem zoomDown = new JMenuItem();
+		setMenuItem(zoomDown, "Down zoomlevel", null, 'd',
+				"Go to previous zoomlevel", AppEvent.ZOOMLEVEL_DOWN);
+		setAcc(zoomDown,
+				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
+		ret.add(zoomDown);
 
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());
@@ -200,11 +195,11 @@ public class MenuBar extends JMenuBar {
 	 * @param action
 	 *            The event name.
 	 * 
-	 * @see Event
+	 * @see AppEvent
 	 */
 	private void setMenuItem(final JMenuItem item, final String text,
 			final String iconName, final char mnemonic,
-			final String toolTipText, final Event action) {
+			final String toolTipText, final AppEvent action) {
 		item.setText(text);
 		item.setMnemonic(mnemonic);
 		item.setToolTipText(toolTipText);

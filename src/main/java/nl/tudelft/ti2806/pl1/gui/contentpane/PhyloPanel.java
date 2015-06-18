@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,10 +16,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
@@ -98,8 +101,19 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	@Override
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
-		ret.add(ToolBar.makeButton("Highlight selection", null, null, null));
-		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		ret.add(ToolBar.makeButton("Highlight selection", null,
+				new ActionListener() {
+					@Override
+					public void actionPerformed(final ActionEvent e) {
+						System.out
+								.println("Now something needs to happen right?!");
+						// TODO
+					}
+				}, null));
+		JButton filter = ToolBar.makeButton("Filter selection", null, null,
+				null);
+		filter.setEnabled(false);
+		ret.add(filter);
 		return ret;
 	}
 
@@ -170,7 +184,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 			this.newickSource = readIntoString(newick);
 		} catch (IOException e) {
 			ret = false;
-			Event.statusBarError("File " + newick.getAbsolutePath()
+			AppEvent.statusBarError("File " + newick.getAbsolutePath()
 					+ " could not be read.");
 			e.printStackTrace();
 		}
@@ -186,7 +200,6 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 		removeTree();
 		int treeWidth = tree.computePlacement(0, 0);
 		int treeHeight = tree.height();
-		// System.out.println(tree.toString());
 		addNode(tree);
 		treePanel.setPreferredSize(new Dimension((treeHeight + 1)
 				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)

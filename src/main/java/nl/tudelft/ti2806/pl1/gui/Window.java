@@ -1,10 +1,13 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -62,19 +65,14 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		// UIManager.put("swing.boldMetal", Boolean.FALSE);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setLayout(new BorderLayout());
-
 		setWindowSettings(wSettings);
 
-		Event.setWindow(this);
+		AppEvent.setWindow(this);
 
 		helpDialog = new HelpDialog(this);
-
-		toolBar = new ToolBar();
-		add(toolBar, BorderLayout.NORTH);
 
 		statusBar = new StatusBar();
 		add(statusBar, BorderLayout.SOUTH);
@@ -88,6 +86,9 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		content.registerObserver(this);
 		add(content, BorderLayout.CENTER);
 
+		toolBar = new ToolBar(this);
+		add(toolBar, BorderLayout.NORTH);
+
 		menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
 
@@ -95,10 +96,41 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		callAfterInitialization();
 
 		addComponentListener(new WindowEvents(this));
+		addWindowListener(new CloseConfirmationAdapter(this));
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	/**
+	 * @author Maarten
+	 * @since 17-6-2015
+	 */
+	final class CloseConfirmationAdapter extends WindowAdapter {
+
+		/** The window. */
+		private Window window;
+
+		/**
+		 * Initialize the close confirmation adapter.
+		 * 
+		 * @param w
+		 *            The window.
+		 */
+		public CloseConfirmationAdapter(final Window w) {
+			this.window = w;
+		}
+
+		@Override
+		public void windowClosing(final WindowEvent e) {
+			if (JOptionPane.showConfirmDialog(window,
+					"Are you sure you want to close the application?",
+					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				AppEvent.EXIT_APP.actionPerformed(null);
+			}
+		}
 	}
 
 	/**
@@ -156,7 +188,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
-		Event.statusBarRight("[" + (int) getSize().getWidth() + ","
+		AppEvent.statusBarRight("[" + (int) getSize().getWidth() + ","
 				+ (int) getSize().getHeight() + "]");
 	}
 

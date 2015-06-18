@@ -54,11 +54,6 @@ public class NodePlacerTest {
 	}
 
 	@Test
-	public void depthLevelEndNodeTest2() {
-		assertEquals(graph.getDNode(-1).getDepth(), 3);
-	}
-
-	@Test
 	public void depthLevelNode0Test() {
 		assertEquals(graph.getDNode(0).getDepth(), 1);
 	}
@@ -71,11 +66,6 @@ public class NodePlacerTest {
 	@Test
 	public void xLevelNodeStartTest() {
 		assertEquals(graph.getDNode(-2).getX(), 0);
-	}
-
-	@Test
-	public void xLevelNodeEndTest() {
-		assertEquals(graph.getDNode(-1).getX(), 90);
 	}
 
 	@Test

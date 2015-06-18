@@ -56,10 +56,4 @@ public class NodeReaderTest {
 				">0 | b | a | 2" + "\n" + "AA"));
 		NodeReader.readNodes(reader);
 	}
-
-	@Test
-	public void returnsOneNodeTest() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader(node));
-		ArrayList<DNode> graph = NodeReader.readNodes(reader);
-	}
 }

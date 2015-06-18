@@ -32,19 +32,6 @@ public final class ConvertDGraph {
 	}
 
 	/**
-	 * Converts a data graph into a visual graph.
-	 * 
-	 * 
-	 * @param dgraph
-	 *            The data graph to convert.
-	 * @return The visual graph containing all the nodes from the data graph.
-	 */
-	public static Graph convert(final DGraph dgraph) {
-		return convert(dgraph, new ViewArea(Integer.MIN_VALUE,
-				Integer.MAX_VALUE));
-	}
-
-	/**
 	 * Converts a part of a data graph into a visual graph.
 	 * 
 	 * @param dgraph
@@ -55,20 +42,37 @@ public final class ConvertDGraph {
 	 *         view area of the data graph.
 	 */
 	public static Graph convert(final DGraph dgraph, final ViewArea va) {
+		return convert(dgraph);
+	}
+
+	/**
+	 * Converts a data graph into a visual graph.
+	 * 
+	 * @param dgraph
+	 *            The data graph to convert.
+	 * @return The visual graph containing all the nodes from the data graph.
+	 */
+	public static Graph convert(final DGraph dgraph) {
 		Graph graph = new SingleGraph("");
 		Set<DEdge> edges = new HashSet<DEdge>();
-		for (DNode n : dgraph.getDNodes(va)) {
+		for (DNode n : dgraph.getNodes().values()) {
 			edges.addAll(n.getAllEdges());
 			String id = String.valueOf(n.getId());
 			Node gn = graph.addNode(id);
 			gn.addAttribute("x", n.getX());
 			gn.addAttribute("y", n.getY());
 			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
+			String nodeclass;
+			if (n.getResMuts() != null) {
+				nodeclass = "resistant";
+			} else {
+				nodeclass = "common";
+			}
 			if (String.valueOf(n.getId()).equals(dgraph.getSelected())) {
 				gn.addAttribute("ui.class", "selected");
-				gn.addAttribute("oldclass", "common");
+				gn.addAttribute("oldclass", nodeclass);
 			} else {
-				gn.addAttribute("ui.class", "common");
+				gn.addAttribute("ui.class", nodeclass);
 			}
 			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 			gn.addAttribute("contentsize", n.getContent().length());

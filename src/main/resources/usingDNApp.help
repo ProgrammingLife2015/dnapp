@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Setup:
 To open a graph click on "Import graph" and select a "Node" file followed by an "Edge" file. If you fail to do so an error will be shown in the status bar.
 After that a loading bar will be shown until the graph has loaded.
@@ -32,7 +33,5 @@ Nodes which have more content then what is currently shown in the graph, will be
 
 Phylotree view:
 If a phylogenetic tree has been loaded, it will be shown in the "Phylogenetic tree" tab.
-
 You can select sets of genomes by leftclicking in the Phylotree view.
-
-Parts of the phylotree can be hidden by rightclicking on a branch inside the tree.
+Sub trees of the phylogenetic tree can be collapsed by right clicking on a branch inside the tree.

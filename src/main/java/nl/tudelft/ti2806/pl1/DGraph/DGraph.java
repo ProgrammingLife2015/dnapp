@@ -9,6 +9,7 @@ import java.util.Set;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
 import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
@@ -17,8 +18,7 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 /**
  * The data graph class representing data.
  * 
- * @author Mark
- *
+ * @author Mark, PL1
  */
 public class DGraph implements MutatedGraph, DynamicGraph {
 
@@ -31,32 +31,31 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** The edges in the graph. */
 	private Collection<DEdge> edges;
 
-	/** The start node and end node of the graph. */
-	private DNode start, end;
+	/** The start node of the graph. */
+	private DNode start;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
-
-	/** File with all the gene information regarding the reference genome. */
-	private static final String GFF_FILE = "decorationV5_20130412.gff";
 
 	/** All the point mutations in the graph. */
 	private Collection<PointMutation> pointMutations;
 
 	/** All the deletion mutations in the graph. */
-	private Collection<DeletionMutation> delmutations;
+	private Collection<DeletionMutation> delMutations;
 
 	/** All the insertion mutations in the graph. */
-	private Collection<InsertionMutation> insmutations;
+	private Collection<InsertionMutation> insMutations;
 
 	/** The name of the reference genome. */
 	private String refGenomeName = "TKK_REF";
 
 	/** The length of the reference genome. */
-	private int referenceLength;
+	private int refGenomeLength;
 
 	/** Id of the selected id. */
 	private String selected = String.valueOf(Integer.MIN_VALUE);
+	/** All the insertion mutations in the graph. */
+	private Collection<ComplexMutation> compmutations;
 
 	/**
 	 * Creates a new DGraph.
@@ -66,8 +65,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		edges = new ArrayList<DEdge>();
 		references = new HashMap<String, Collection<DNode>>();
 		start = null;
-		end = null;
-		referenceGeneStorage = new ReferenceGeneStorage(GFF_FILE, null);
+		referenceGeneStorage = new ReferenceGeneStorage(this);
 	}
 
 	/**
@@ -79,7 +77,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 
 	/**
 	 * 
-	 * @return The set containting the names of all references.
+	 * @return The set containing the names of all references.
 	 */
 	public Set<String> getReferencesSet() {
 		return references.keySet();
@@ -97,15 +95,22 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/**
 	 * Returns all the nodes which contain a specific reference.
 	 * 
-	 * @param s
+	 * @param genomeName
 	 *            The reference from which we want to gain the nodes
-	 * @return A collection which contain
+	 * @return A collection which contain the specified genome.
 	 */
-	public Collection<DNode> getReference(final String s) {
-		if (!references.containsKey(s)) {
+	public Collection<DNode> getReference(final String genomeName) {
+		if (!references.containsKey(genomeName)) {
 			return new ArrayList<DNode>();
 		}
-		return references.get(s);
+		return references.get(genomeName);
+	}
+
+	/**
+	 * @return The collection of nodes of the reference genome.
+	 */
+	public Collection<DNode> getRefGenome() {
+		return getReference(getRefGenomeName());
 	}
 
 	/**
@@ -272,21 +277,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		this.start = s;
 	}
 
-	/**
-	 * @return the end.
-	 */
-	public DNode getEnd() {
-		return end;
-	}
-
-	/**
-	 * @param e
-	 *            the end to set.
-	 */
-	public final void setEnd(final DNode e) {
-		this.end = e;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
@@ -298,7 +288,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		return pointMutations;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Collection<DNode> getDNodes(final ViewArea va) {
 		ArrayList<DNode> ret = new ArrayList<DNode>();
@@ -330,19 +319,35 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public void setDeletionMutations(
 			final Collection<DeletionMutation> deletionMutationsIn) {
-		delmutations = deletionMutationsIn;
+		delMutations = deletionMutationsIn;
 	}
 
 	/** @return the deletion mutations. */
-	public Collection<DeletionMutation> getDelmutations() {
-		return delmutations;
+	public Collection<DeletionMutation> getDelMutations() {
+		return delMutations;
 	}
 
 	/**
 	 * @return the insertion mutations
 	 */
-	public Collection<InsertionMutation> getInsmutations() {
-		return insmutations;
+	public Collection<InsertionMutation> getInsMutations() {
+		return insMutations;
+	}
+
+	/**
+	 * @param mutationsIn
+	 *            The complex mutations to set.
+	 */
+	public void setComplexMutations(
+			final Collection<ComplexMutation> mutationsIn) {
+		this.compmutations = mutationsIn;
+	}
+
+	/**
+	 * @return The complex mutations.
+	 */
+	public Collection<ComplexMutation> getComplexMutations() {
+		return compmutations;
 	}
 
 	/**
@@ -351,7 +356,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public void setInsertionMutations(
 			final Collection<InsertionMutation> newInsMutations) {
-		this.insmutations = newInsMutations;
+		this.insMutations = newInsMutations;
 	}
 
 	/**
@@ -369,14 +374,21 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		for (DNode d : references.get(refGenomeName)) {
 			ret += d.getContent().length();
 		}
-		this.referenceLength = ret;
+		this.refGenomeLength = ret;
 	}
 
 	/**
-	 * @return the refGenomeName
+	 * @return the reference genome name.
 	 */
 	public final String getRefGenomeName() {
 		return refGenomeName;
+	}
+
+	/**
+	 * @return true iff the reference genome name has been set.
+	 */
+	public final boolean isRefGenSet() {
+		return refGenomeName != null;
 	}
 
 	/**
@@ -384,7 +396,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 * existing in the graph.
 	 * 
 	 * @param newRefGenomeName
-	 *            the refGenomeName to set
+	 *            the new reference genome name to set.
 	 */
 	public final void setRefGenomeName(final String newRefGenomeName) {
 		if (references.containsKey(newRefGenomeName)) {
@@ -396,25 +408,45 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	}
 
 	/**
-	 * @return the referenceLength
+	 * @return the referenceLength.
 	 */
 	public final int getReferenceLength() {
-		return referenceLength;
+		return refGenomeLength;
 	}
 
 	/**
-	 * @return the selected node
+	 * @return the selected node.
 	 */
 	public final String getSelected() {
 		return selected;
 	}
 
 	/**
-	 * @param string
-	 *            the selected node to set
+	 * @param id
+	 *            The selected node to set
 	 */
-	public final void setSelected(final String string) {
-		this.selected = string;
+	public final void setSelected(final String id) {
+		this.selected = id;
 	}
+
+	// /**
+	// * Takes a list of nodes, and sorts them according to their start
+	// property.
+	// *
+	// * @param dnodes
+	// * List of nodes to sort.
+	// * @return A list with the nodes sorted nodes.
+	// */
+	// public List<DNode> sortNodes(final List<DNode> dnodes) {
+	// dnodes.sort(new Comparator<DNode>() {
+	// @Override
+	// public int compare(final DNode n1, final DNode n2) {
+	// int start1 = n1.getStart();
+	// int start2 = n2.getStart();
+	// return start1 - start2;
+	// }
+	// });
+	// return dnodes;
+	// }
 
 }

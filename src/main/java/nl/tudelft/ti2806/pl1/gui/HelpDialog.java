@@ -9,7 +9,10 @@ import java.util.Scanner;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import com.horstmann.corejava.GBC;
 
@@ -27,6 +30,9 @@ public class HelpDialog extends JDialog {
 
 	/** The file name of the source text for the 'Using DNApp' tab. */
 	private static final String USING_DNAPP_HELP_FILE = "usingDNApp.help";
+
+	/** The padding around the labels. */
+	private static final Border EMPTY_BORDER = new EmptyBorder(10, 10, 10, 10);
 
 	/** The content panel. */
 	private JPanel content;
@@ -64,20 +70,22 @@ public class HelpDialog extends JDialog {
 	private JPanel makeUsingDNApp() {
 		JPanel ret = new JPanel(new BorderLayout());
 		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(
-				USING_DNAPP_HELP_FILE); // TODO fix...
+				USING_DNAPP_HELP_FILE);
 		Scanner sc = new Scanner(is, "UTF-8");
 		StringBuilder sb = new StringBuilder("<html>");
-		// System.out.println(sc);
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			sb.append(line).append("<br>");
-			// System.out.println("READ LINE = " + line);
 		}
 		sc.close();
 		sb.append("</html>");
-		// System.out.println(sb.toString());
-		JLabel info = new JLabel(sb.toString());
-		ret.add(info, BorderLayout.CENTER);
+		JLabel info = new JLabel();
+		info.setText(sb.toString());
+		info.setBorder(EMPTY_BORDER);
+		JScrollPane jsp = new JScrollPane(info,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		ret.add(jsp, BorderLayout.CENTER);
 		return ret;
 	}
 
@@ -85,7 +93,8 @@ public class HelpDialog extends JDialog {
 	 * @return The panel with information about the available shortcuts.
 	 */
 	private JPanel makeShortcuts() {
-		JPanel ret = new JPanel(new GridBagLayout());
+		JPanel ret = new JPanel(new BorderLayout());
+		JPanel tab = new JPanel(new GridBagLayout());
 
 		String[][] info = { { "Shortcuts: ", "" }, { "F1", "Help" },
 				{ "CTRL + R", "Reset to default view (zoom level)" },
@@ -96,9 +105,10 @@ public class HelpDialog extends JDialog {
 
 		for (int i = 0; i < info.length; i++) {
 			for (int j = 0; j < info[0].length; j++) {
-				ret.add(new JLabel(info[i][j]), new GBC(j, i));
+				tab.add(new JLabel(info[i][j]), new GBC(j, i));
 			}
 		}
+		ret.add(tab, BorderLayout.WEST);
 		return ret;
 	}
 }

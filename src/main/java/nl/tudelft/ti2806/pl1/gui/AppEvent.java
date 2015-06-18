@@ -15,48 +15,7 @@ import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
  * @author Maarten
  *
  */
-public enum Event implements ActionListener {
-
-	/**
-	 * Instead of null, use NONE to indicate no event will be fired.
-	 */
-	NONE {
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			System.out.println("Event NONE fired.");
-		}
-	},
-
-	/**
-	 * 
-	 */
-	SHOW_TOOLBAR {
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			window.getToolBar().setVisible(true);
-		}
-
-	},
-
-	/**
-	 * 
-	 */
-	HIDE_TOOLBAR {
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			window.getToolBar().setVisible(false);
-		}
-
-	},
+public enum AppEvent implements ActionListener {
 
 	/**
 	 * Exits the application.
@@ -68,8 +27,8 @@ public enum Event implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
-			// window.setVisible(false);
 			window.dispose();
+			System.exit(0);
 		}
 
 	},
@@ -102,13 +61,8 @@ public enum Event implements ActionListener {
 		}
 	},
 
-	/**
-	 * Loads a phylogenetic tree into the window content.
-	 */
+	/** Loads a phylogenetic tree into the window content. */
 	IMPORT_PHYLO {
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fcPhylo = new ImportDialog(ImportType.PHYLO);
@@ -119,23 +73,58 @@ public enum Event implements ActionListener {
 				dialogCanceled();
 			}
 		}
+	},
 
+	/** Load gene annotation file. */
+	IMPORT_GENE_ANN {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			final ImportDialog fcGeneAnn = new ImportDialog(
+					ImportType.GENE_ANNOTATION);
+			if (fcGeneAnn.showDialog(window, "Load gene annotation") == JFileChooser.APPROVE_OPTION) {
+				final File geneAnn = fcGeneAnn.getSelectedFile();
+				window.getContent().getGraphPanel().getDgraph()
+						.getReferenceGeneStorage().setGeneAnnotation(geneAnn);
+			} else {
+				dialogCanceled();
+			}
+		}
+	},
+
+	/** Load resistance causing mutations file. */
+	IMPORT_RES_CAUS_MUT {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			final ImportDialog fcKnownResMut = new ImportDialog(
+					ImportType.KNOWN_RES_MUT);
+			if (fcKnownResMut.showDialog(window, "Load gene annotation") == JFileChooser.APPROVE_OPTION) {
+				final File knownResMut = fcKnownResMut.getSelectedFile();
+				window.getContent().getGraphPanel().getDgraph()
+						.getReferenceGeneStorage()
+						.setDrugRestistantMutations(knownResMut);
+				RESET_GRAPH.actionPerformed(null);
+			} else {
+				dialogCanceled();
+			}
+		}
+	},
+
+	/**  */
+	IMPORT_INFECTED {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+		}
 	},
 
 	/**
-	 * 
+	 * Export the visual graph representation to DGS format.
 	 */
 	WRITE_TO_DGS {
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			ExportDialog fs = new ExportDialog();
 			if (fs.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
 				String writePath = fs.getSelectedFile().getAbsolutePath();
-				// System.out.println("selected file filter: "
-				// + fs.getFileFilter());
 				if (!writePath.endsWith(".dgs")) {
 					writePath += ".dgs";
 					statusBarInfo("Appended file extension .dgs");
@@ -148,16 +137,6 @@ public enum Event implements ActionListener {
 		}
 	},
 
-	/**
-	 * 
-	 */
-	RELOAD_GRAPH {
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			window.getContent().getGraphPanel().loadCurrentViewArea();
-		}
-	},
-
 	/** Reset graph to original representation. **/
 	RESET_GRAPH {
 		@Override
@@ -166,6 +145,7 @@ public enum Event implements ActionListener {
 		}
 	},
 
+	/** Show the help dialog. */
 	HELP {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
@@ -176,34 +156,17 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	COLLAPSE_SNPS {
+	ZOOMLEVEL_UP {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent().getGraphPanel().applyZoomLevel(1);
+			window.getContent().getGraphPanel().upZoomlevel();
 		}
 	},
 
 	/**
 	 * 
 	 */
-	OPEN_GRAPH_DB {
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-		}
-	},
-	/**
-	 * 
-	 */
-	UPZOOMLEVEL {
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			window.getContent().getGraphPanel().upZoomlevel();
-		}
-	},
-	/**
-	 * 
-	 */
-	DOWNZOOMLEVEL {
+	ZOOMLEVEL_DOWN {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			window.getContent().getGraphPanel().downZoomlevel();
@@ -253,7 +216,9 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarInfo(final String message) {
-		window.getStatusBar().main(message, StatusBar.MessageType.INFO);
+		if (window != null) {
+			window.getStatusBar().main(message, StatusBar.MessageType.INFO);
+		}
 	}
 
 	/**
@@ -265,7 +230,9 @@ public enum Event implements ActionListener {
 	 *      nl.tudelft.ti2806.pl1.gui.StatusBar.MessageType)
 	 */
 	public static void statusBarError(final String message) {
-		window.getStatusBar().main(message, StatusBar.MessageType.ERROR);
+		if (window != null) {
+			window.getStatusBar().main(message, StatusBar.MessageType.ERROR);
+		}
 	}
 
 	/**
@@ -277,7 +244,9 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#right(String)
 	 */
 	public static void statusBarRight(final String message) {
-		window.getStatusBar().right(message);
+		if (window != null) {
+			window.getStatusBar().right(message);
+		}
 	}
 
 	/**
@@ -290,13 +259,9 @@ public enum Event implements ActionListener {
 	 * @see StatusBar#mid(String)
 	 */
 	public static void statusBarMid(final String message) {
-		window.getStatusBar().mid(message);
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-		// TODO Auto-generated method stub
-
+		if (window != null) {
+			window.getStatusBar().mid(message);
+		}
 	}
 
 }

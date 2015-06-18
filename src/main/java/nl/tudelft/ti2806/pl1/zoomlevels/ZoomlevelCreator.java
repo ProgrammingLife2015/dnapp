@@ -11,12 +11,12 @@ import org.graphstream.graph.Graph;
  */
 public final class ZoomlevelCreator {
 
-	/**
-	 * The data graph from which the zoom levels will be created.
-	 */
+	/** The data graph from which the zoom levels will be created. */
 	private DGraph graph;
 
 	/**
+	 * Initialize the zoom level creator.
+	 * 
 	 * @param dataGraph
 	 *            The data graph from which the zoom levels will be created.
 	 */
@@ -35,16 +35,18 @@ public final class ZoomlevelCreator {
 	public Graph createGraph(final int threshold) {
 		Graph ret = ConvertDGraph.convert(graph);
 		if (threshold > 0) {
-			ret = InDelCollapser.collapseInsertions(graph.getInsmutations(),
+			ret = InDelCollapser.collapseInsertions(graph.getInsMutations(),
 					ret);
 			ret = InDelCollapser
-					.collapseDeletions(graph.getDelmutations(), ret);
+					.collapseDeletions(graph.getDelMutations(), ret);
+			ret = ComplexCollapser.collapseComplexMutations(
+					graph.getComplexMutations(), ret);
 			ret = PointGraphConverter.collapseNodes(
 					graph.getAllPointMutations(), ret, threshold,
 					graph.getSelected());
 			ret = HorizontalCollapser.horizontalCollapse(ret);
-			graph.setSelected(PointGraphConverter.findSelected(ret));
 		}
+		graph.setSelected(PointGraphConverter.findSelected(ret));
 		return ret;
 	}
 }
