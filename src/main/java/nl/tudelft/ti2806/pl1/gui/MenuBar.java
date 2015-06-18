@@ -48,7 +48,7 @@ public class MenuBar extends JMenuBar {
 		JMenuItem impGraph = new JMenuItem();
 		setMenuItem(impGraph, "Import graph", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
-				AppEvent.IMPORT_FILE);
+				AppEvent.IMPORT_GRAPH);
 
 		setAcc(impGraph, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		ret.add(impGraph);
