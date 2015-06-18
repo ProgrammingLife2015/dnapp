@@ -53,6 +53,9 @@ public class ReferenceGeneStorage {
 	/** The list of meta data load observers. */
 	private List<ResistanceMutationObserver> observers = new ArrayList<ResistanceMutationObserver>();
 
+	/** The list of reference gene data storage observers. */
+	private List<ReferenceGeneObserver> rgobservers = new ArrayList<ReferenceGeneObserver>();
+
 	/**
 	 * Registers a new meta data load observer.
 	 * 
@@ -61,6 +64,16 @@ public class ReferenceGeneStorage {
 	 */
 	public void registerObserver(final ResistanceMutationObserver mdlo) {
 		observers.add(mdlo);
+	}
+
+	/**
+	 * Registers a reference genes data storage observer.
+	 * 
+	 * @param rgo
+	 *            The reference gene data storage observer.
+	 */
+	public void registerObserver(final ReferenceGeneObserver rgo) {
+		rgobservers.add(rgo);
 	}
 
 	/**
@@ -251,6 +264,16 @@ public class ReferenceGeneStorage {
 	}
 
 	/**
+	 * Notifies the meta data load observers when the meta data contained in
+	 * this instance has changed.
+	 */
+	private void notifyReferenceGeneObservers() {
+		for (ReferenceGeneObserver rgo : rgobservers) {
+			rgo.update();
+		}
+	}
+
+	/**
 	 * @param geneAnn
 	 *            The gene annotation file
 	 */
@@ -258,6 +281,7 @@ public class ReferenceGeneStorage {
 		if (geneAnn != null) {
 			this.referenceGenes = extractReferenceGenes(geneAnn);
 			connectGeneMutations();
+			notifyReferenceGeneObservers();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -14,8 +15,10 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -29,9 +32,12 @@ import javax.swing.SwingWorker;
 import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGene;
+import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneObserver;
 import nl.tudelft.ti2806.pl1.gui.Event;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
+import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
@@ -51,7 +57,8 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Maarten
  */
-public class GraphPanel extends JSplitPane implements ContentTab {
+public class GraphPanel extends JSplitPane implements ContentTab,
+		GeneSelectionObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -149,6 +156,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	/** A collection of the highlighted genomes. */
 	private Set<String> highlightedGenomes;
 
+	/** Map containing the position of the genes. */
+	private HashMap<String, ArrayList<Integer>> genes = new HashMap<String, ArrayList<Integer>>();
+
+	/** Map containing the outer nodes of the gene regions. */
+	private HashMap<String, ArrayList<Node>> geneLocs;
+
+	/** Diameter of nodes in pixels. */
+	private final int nodeDiameter = 20;
+
+	private final GeneLocator gl;
+
 	/**
 	 * Initialize a graph panel.
 	 * 
@@ -158,6 +176,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	public GraphPanel(final Window w) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
 		this.window = w;
+		this.window.getOptionPanel().getGeneNavigator().registerObserver(this);
 
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
@@ -179,8 +198,25 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 
 		new GenomeHighlight();
 		new ScrollListener(graphPane.getHorizontalScrollBar());
+		gl = new GeneLocator();
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
+
 		highlightedGenomes = new HashSet<String>();
+
+	}
+
+	/**
+	 * Fill the navigator box for genes with all the genes name after reading
+	 * all the genes.
+	 */
+	private void fillGeneNavigatorBox() {
+		if (dgraph.getReferenceGeneStorage().getReferenceGenes() != null) {
+			for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+					.getReferenceGenes()) {
+				window.getOptionPanel().getGeneNavigator()
+						.addItem(rg.getName());
+			}
+		}
 	}
 
 	@Override
@@ -231,8 +267,113 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 			e1.printStackTrace();
 			ret = false;
 		}
+		gl.locateGenes(graph);
+
 		visualizeGraph(graph);
+		fillGeneNavigatorBox();
 		return ret;
+	}
+
+	/**
+	 * 
+	 * @author ChakShun
+	 *
+	 */
+	class GeneLocator implements ReferenceGeneObserver {
+		/**
+		 * Locate the genes in the graph.
+		 * 
+		 * @param vGraph
+		 *            Graph in which to look up the genes.
+		 */
+		public void locateGenes(final Graph vGraph) {
+			if (dgraph.getReferenceGeneStorage().getReferenceGenes() != null) {
+				for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+						.getReferenceGenes()) {
+					Integer start = searchNode(rg.getStart(), vGraph);
+					Integer end = searchNode(rg.getEnd(), vGraph);
+					if (start != null && end != null) {
+						ArrayList<Integer> locs = new ArrayList<Integer>(2);
+						locs.add(start);
+						locs.add(end);
+						genes.put(rg.getName(), locs);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Finds the graphstream node using a index.
+		 * 
+		 * @param id
+		 *            id of the node.
+		 * @param vGraph
+		 *            graph in which to search.
+		 * @return Node object containing the id or node with the id.
+		 */
+		@SuppressWarnings("unchecked")
+		private Node findNode(final int id, final Graph vGraph) {
+			for (Node n : vGraph.getEachNode()) {
+				for (Integer index : (HashSet<Integer>) n
+						.getAttribute("collapsed")) {
+					if (index == id) {
+						return n;
+					}
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * Search the visual graph for the gene locations and stores them.
+		 * 
+		 * @param vGraph
+		 *            Graph in which to search.
+		 */
+		private void searchGeneLocs(final Graph vGraph) {
+			geneLocs = new HashMap<String, ArrayList<Node>>();
+			if (!genes.isEmpty()) {
+				for (Entry<String, ArrayList<Integer>> entry : genes.entrySet()) {
+					ArrayList<Node> nodes = new ArrayList<Node>(2);
+					Node begin = findNode(entry.getValue().get(0), vGraph);
+					Node end = findNode(entry.getValue().get(1), vGraph);
+					if (begin != null
+							&& end != null
+							&& (int) begin.getAttribute("x") <= (int) end
+									.getAttribute("x")) {
+						nodes.add(begin);
+						nodes.add(end);
+						geneLocs.put(entry.getKey(), nodes);
+					}
+				}
+			}
+		}
+
+		/**
+		 * 
+		 * @param loc
+		 *            Location on the reference genome.
+		 * @param vGraph
+		 *            graph in which to search.
+		 * @return Index of the node.
+		 */
+		@SuppressWarnings("unchecked")
+		private Integer searchNode(final int loc, final Graph vGraph) {
+			for (Node n : vGraph.getEachNode()) {
+				for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
+					if (dgraph.getDNode(id).getStart() <= loc
+							&& dgraph.getDNode(id).getEnd() > loc) {
+						return id;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public void update() {
+			locateGenes(graph);
+		}
 	}
 
 	/**
@@ -280,6 +421,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 				dgraph = Reader.read(nodes.getAbsolutePath(),
 						edges.getAbsolutePath());
 				dgraph.getReferenceGeneStorage().registerObserver(minimap);
+				dgraph.getReferenceGeneStorage().registerObserver(gl);
 				zlc = new ZoomlevelCreator(dgraph);
 				viewSize = NodePlacer.place(dgraph);
 				graph = ConvertDGraph.convert(dgraph);
@@ -312,18 +454,30 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 *            The visual graph to draw
 	 */
 	private void visualizeGraph(final Graph vGraph) {
+		gl.searchGeneLocs(vGraph);
 		Viewer viewer = new Viewer(vGraph,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
 		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
 				Viewer.newGraphRenderer()) {
-
 			/** The serial version UID. */
 			private static final long serialVersionUID = 4902528839853178375L;
 
 			@Override
 			public void paintComponent(final java.awt.Graphics g) {
 				super.paintComponent(g);
+				for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
+					Integer xleft = (int) entry.getValue().get(0)
+							.getAttribute("x");
+					Integer xright = (int) entry.getValue().get(1)
+							.getAttribute("x");
+					g.setColor(Color.ORANGE);
+					g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
+							+ nodeDiameter, nodeDiameter / 2);
+					g.setColor(Color.BLACK);
+					g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
+							+ nodeDiameter, nodeDiameter / 2);
+				}
 			}
 		};
 		viewer.addView(view);
@@ -346,7 +500,6 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 		window.revalidate();
 		centerVertical();
-
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
 	}
@@ -836,5 +989,17 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public final DGraph getDgraph() {
 		return dgraph;
+	}
+
+	@Override
+	public void update(final String selectedGene) {
+		if (geneLocs.containsKey(selectedGene)) {
+			Node beginnode = this.geneLocs.get(selectedGene).get(0);
+			this.selectNode(beginnode);
+			graphPane.getHorizontalScrollBar().setValue(
+					(int) beginnode.getAttribute("x")
+							- graphPane.getViewport().getWidth() / 2);
+		}
+
 	}
 }
