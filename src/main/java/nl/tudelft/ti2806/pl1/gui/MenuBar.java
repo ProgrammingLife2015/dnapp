@@ -33,7 +33,6 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(final Window w) {
 		this.window = w;
 		this.add(fileMenu());
-		// this.add(editMenu());
 		this.add(viewMenu());
 		this.add(helpMenu());
 	}
@@ -95,23 +94,32 @@ public class MenuBar extends JMenuBar {
 	 * @return the view menu
 	 */
 	private JMenu viewMenu() {
-		JMenu ret = new JMenu("View");
+		JMenu ret = new JMenu("View") {
 
-		JMenuItem reset = new LoadedMenuItem(window);
+			/** The serial version UID. */
+			private static final long serialVersionUID = -8732114494095898765L;
+
+			@Override
+			public boolean isEnabled() {
+				return window != null && window.getContent().isGraphLoaded();
+			}
+		};
+
+		JMenuItem reset = new JMenuItem();
 		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
 				Event.RESET_GRAPH);
 		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
 				java.awt.Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomlevelplus = new LoadedMenuItem(window);
+		JMenuItem zoomlevelplus = new JMenuItem();
 		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
 				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
 		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
 				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
 		ret.add(zoomlevelplus);
 
-		JMenuItem zoomlevelminus = new LoadedMenuItem(window);
+		JMenuItem zoomlevelminus = new JMenuItem();
 		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
 				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
 		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
