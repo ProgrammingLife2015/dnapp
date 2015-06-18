@@ -181,6 +181,7 @@ public class OptionsPane extends JScrollPane {
 		place(grpSelectedNode);
 		place(grpZoomSettings);
 
+		place(new JLabel("Select a gene and press ENTER key:"), 0);
 		place(geneNavigator);
 
 		gbc.weighty = GBC_WEIGHT_Y;
