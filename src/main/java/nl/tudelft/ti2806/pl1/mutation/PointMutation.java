@@ -21,12 +21,12 @@ public class PointMutation extends Mutation {
 	/**
 	 * Score for a mutation if it is located on a gene.
 	 */
-	private static final int SCORE_GENE = 80;
+	private static final int SCORE_MUT = 70;
 
 	/**
 	 * Score for a mutation if it is not located on a gene.
 	 */
-	private static final int SCORE_NO_GENE = 10;
+	private static final int SCORE_IN_GENE = 10;
 
 	/**
 	 * 
@@ -56,13 +56,15 @@ public class PointMutation extends Mutation {
 	private void calculateGeneralScore() {
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
 		if (rgs.isIntragenic(getPosition())) {
+			addScore(SCORE_IN_GENE
+					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
+							.name()));
 			if (rgs.containsMutationIndex(getPosition())) {
-				this.setScore(SCORE_GENE);
-			} else {
-				this.setScore(SCORE_NO_GENE);
+				addScore(SCORE_MUT
+						* ScoreMultiplier
+								.getMult(MutationMultipliers.KNOWN_MUTATION
+										.name()));
 			}
-		} else {
-			this.setScore(0);
 		}
 	}
 
@@ -78,6 +80,13 @@ public class PointMutation extends Mutation {
 	 */
 	public final int getPosition() {
 		return position;
+	}
+
+	@Override
+	public final double getScore() {
+		super.setScore(0);
+		calculateGeneralScore();
+		return super.getScore();
 	}
 
 }

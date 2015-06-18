@@ -4,12 +4,15 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.mutation.MutationMultipliers;
+import nl.tudelft.ti2806.pl1.mutation.ScoreMultiplier;
 
 /**
  * @author Maarten
@@ -28,10 +31,17 @@ public class ZoomConfigureGroup extends JPanel {
 	/**
 	 * The number of sliders.
 	 */
-	private static final int NUM_SLIDERS = 5;
+	private static final int NUM_SLIDERS = 2;
 
 	/** The default visible title. */
 	private static final String DEFAULT_TITLE = "Zoom settings.";
+
+	/** Slider options. **/
+	private static final MutationMultipliers[] SLIDERS = MutationMultipliers
+			.values();
+
+	/** How many options the slider can take. **/
+	private static final int SLIDERVALUES = 1;
 
 	/**
 	 * 
@@ -50,17 +60,19 @@ public class ZoomConfigureGroup extends JPanel {
 	 */
 	private void addComponents() {
 		for (int i = 0; i < NUM_SLIDERS; i++) {
-			JSlider slider = new JSlider(-10, 10);
+			JSlider slider = new JSlider(0, SLIDERVALUES, 1);
+			slider.setName(SLIDERS[i].name());
 			slider.addChangeListener(new ChangeListener() {
 
 				@Override
 				public void stateChanged(final ChangeEvent e) {
-					Event.statusBarInfo("Slider to "
-							+ ((JSlider) e.getSource()).getValue());
+					JSlider changed = (JSlider) e.getSource();
+					Event.statusBarInfo("Slider to " + changed.getValue());
+					ScoreMultiplier.multiplierChange(changed);
 				}
 			});
+			add(new JLabel(SLIDERS[i].getGUI()));
 			add(slider);
 		}
 	}
-
 }
