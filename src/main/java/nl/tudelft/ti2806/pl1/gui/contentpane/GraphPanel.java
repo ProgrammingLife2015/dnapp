@@ -451,7 +451,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		vGraph.addAttribute("ui.stylesheet", "url('stylesheet.css')");
 		window.revalidate();
 		centerVertical();
-
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
 	}
