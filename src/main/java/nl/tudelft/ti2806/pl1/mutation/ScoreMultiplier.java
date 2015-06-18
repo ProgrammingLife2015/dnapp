@@ -17,6 +17,9 @@ public final class ScoreMultiplier implements ChangeListener {
 	/** The multiplier value for each score category. **/
 	private static HashMap<String, Double> mults = new HashMap<String, Double>();
 
+	/** Convert it from 0-10 to 0-1 scale. **/
+	private static final int MAKEPERCENTAGE = 10;
+
 	/** Private constructor to avoid instantiation. **/
 	private ScoreMultiplier() {
 	}
@@ -28,7 +31,8 @@ public final class ScoreMultiplier implements ChangeListener {
 	 *            The slider that has changed.
 	 */
 	public static void multiplierChange(final JSlider changed) {
-		mults.put(changed.getName(), (double) changed.getValue() / 10);
+		mults.put(changed.getName(), (double) changed.getValue()
+				/ MAKEPERCENTAGE);
 	}
 
 	/**

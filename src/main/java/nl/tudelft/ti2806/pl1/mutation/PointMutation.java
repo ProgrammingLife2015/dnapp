@@ -41,4 +41,11 @@ public class PointMutation extends Mutation {
 	public final Set<Integer> getNodes() {
 		return nodes;
 	}
+
+	@Override
+	public double getScore() {
+		return super.getScore()
+				* ScoreMultiplier.getMult((MutationMultipliers.POINTMUTATION
+						.name()));
+	}
 }

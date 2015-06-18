@@ -32,11 +32,19 @@ public enum MutationMultipliers {
 
 	},
 
-	/** Make indels more important. **/
+	/** Importance INDELS. **/
 	INDEL {
 		@Override
 		public String getGUI() {
-			return "Indels more important";
+			return "Importance INDELs";
+		}
+	},
+
+	/** Importance Pointmutations. **/
+	POINTMUTATION {
+		@Override
+		public String getGUI() {
+			return "Importance Pointmutations";
 		}
 	};
 

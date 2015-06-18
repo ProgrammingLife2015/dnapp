@@ -65,9 +65,7 @@ public class InsertionMutation extends Mutation {
 
 	@Override
 	public double getScore() {
-		double tempscore = super.getScore();
-		tempscore += INDELMODIFIER
-				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
-		return tempscore;
+		return super.getScore()
+				* ScoreMultiplier.getMult((MutationMultipliers.INDEL.name()));
 	}
 }

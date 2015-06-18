@@ -63,4 +63,10 @@ public class ComplexMutation extends Mutation {
 		return getPreNode();
 	}
 
+	@Override
+	public double getScore() {
+		return super.getScore()
+				* ScoreMultiplier.getMult((MutationMultipliers.INDEL.name()));
+	}
+
 }
