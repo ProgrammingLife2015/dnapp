@@ -509,6 +509,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			g.setColor(Color.ORANGE);
 			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
 					+ nodeDiameter, nodeDiameter / 2);
+			g.setColor(Color.BLACK);
+			g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
+					+ nodeDiameter, nodeDiameter / 2);
 		}
 	}
 
