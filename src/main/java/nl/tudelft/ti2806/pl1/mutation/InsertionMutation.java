@@ -20,9 +20,15 @@ public class InsertionMutation extends Mutation {
 	 *            The node inserted in the graph.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
+	 * @param startpos
+	 *            The start position on the reference genome.
+	 * 
+	 * @param endpos
+	 *            The end position on the reference genome.
 	 */
 	public InsertionMutation(final int pre, final int post,
-			final int insertednode, final ReferenceGeneStorage rgs) {
+			final int insertednode, final ReferenceGeneStorage rgs,
+			final int startpos, final int endpos) {
 		super(pre, post, rgs);
 		this.inNode = insertednode;
 	}
