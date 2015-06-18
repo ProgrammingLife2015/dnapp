@@ -14,21 +14,6 @@ public class PointMutation extends Mutation {
 	private final Set<Integer> nodes;
 
 	/**
-	 * Position of the mutation on the reference genome.
-	 */
-	private final int position;
-
-	/**
-	 * Score for a mutation if it is located on a gene.
-	 */
-	private static final int SCORE_MUT = 70;
-
-	/**
-	 * Score for a mutation if it is not located on a gene.
-	 */
-	private static final int SCORE_IN_GENE = 10;
-
-	/**
 	 * 
 	 * @param pre
 	 *            The ID of the node before the mutation.
@@ -36,36 +21,18 @@ public class PointMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param nodesIn
 	 *            The nodes directly involved in the mutation.
-	 * @param positionIn
-	 *            Position of the mutation on the reference genome.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
-	 * 
+	 * @param startpos
+	 *            The starting position on the reference genome.
+	 * @param endpos
+	 *            the end position on the reference genome.
 	 */
 	public PointMutation(final int pre, final Set<Integer> nodesIn,
-			final int post, final int positionIn, final ReferenceGeneStorage rgs) {
-		super(pre, post, rgs);
+			final int post, final int startpos, final int endpos,
+			final ReferenceGeneStorage rgs) {
+		super(pre, post, rgs, startpos, endpos);
 		this.nodes = nodesIn;
-		this.position = positionIn;
-		calculateGeneralScore();
-	}
-
-	/**
-	 * Calculate the general score for a mutation.
-	 */
-	private void calculateGeneralScore() {
-		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
-		if (rgs.isIntragenic(getPosition())) {
-			addScore(SCORE_IN_GENE
-					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
-							.name()));
-			if (rgs.containsMutationIndex(getPosition())) {
-				addScore(SCORE_MUT
-						* ScoreMultiplier
-								.getMult(MutationMultipliers.KNOWN_MUTATION
-										.name()));
-			}
-		}
 	}
 
 	/**
@@ -74,19 +41,4 @@ public class PointMutation extends Mutation {
 	public final Set<Integer> getNodes() {
 		return nodes;
 	}
-
-	/**
-	 * @return Position of the mutation on the reference genome.
-	 */
-	public final int getPosition() {
-		return position;
-	}
-
-	@Override
-	public final double getScore() {
-		super.setScore(0);
-		calculateGeneralScore();
-		return super.getScore();
-	}
-
 }

@@ -56,14 +56,19 @@ public final class InDelCollapser {
 	 *            Mutations to be collapsed.
 	 * @param graph
 	 *            Graph in which collapsing should be applied.
+	 * @param threshold
+	 *            The threshold for collapsing insertions.
 	 * @return graphstream graph object with all the insertion mutations
 	 *         collapsed.
 	 * 
 	 */
 	public static Graph collapseInsertions(
-			final Collection<InsertionMutation> insmutations, final Graph graph) {
+			final Collection<InsertionMutation> insmutations,
+			final Graph graph, final int threshold) {
 		for (InsertionMutation ins : insmutations) {
-			collapseInsertion(ins, graph);
+			if (ins.getScore() < threshold) {
+				collapseInsertion(ins, graph);
+			}
 		}
 		return graph;
 	}
@@ -75,13 +80,18 @@ public final class InDelCollapser {
 	 *            Mutations to be collapsed.
 	 * @param graph
 	 *            Graph in which collapsing should be applied.
+	 * @param threshold
+	 *            The threshold for collapsing deletions.
 	 * @return graphstream graph object with all the deletion mutations
 	 *         collapsed.
 	 */
 	public static Graph collapseDeletions(
-			final Collection<DeletionMutation> delmutations, final Graph graph) {
+			final Collection<DeletionMutation> delmutations, final Graph graph,
+			final int threshold) {
 		for (DeletionMutation del : delmutations) {
-			collapseDeletion(del, graph);
+			if (del.getScore() < threshold) {
+				collapseDeletion(del, graph);
+			}
 		}
 		return graph;
 	}

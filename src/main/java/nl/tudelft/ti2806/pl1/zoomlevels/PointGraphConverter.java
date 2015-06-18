@@ -86,9 +86,10 @@ public final class PointGraphConverter {
 		for (Entry<Integer, Set<Integer>> end : nodegroups.entrySet()) {
 			Set<Integer> group = end.getValue();
 			if (group.size() > 1) {
+				int position = graph.getDNode(group.iterator().next())
+						.getStart();
 				pointmutations.add(new PointMutation(begin, group,
-						end.getKey(), graph.getDNode(group.iterator().next())
-								.getStart(), rgs));
+						end.getKey(), position, position, rgs));
 			}
 		}
 		return pointmutations;
