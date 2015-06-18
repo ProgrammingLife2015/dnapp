@@ -16,7 +16,7 @@ or in the case of a collapsed node the number of nodes collapsed to make this no
 <b>Highlighting genomes:</b><br>
 You can highlight genomes in the sequence graph by ticking the check boxes in the left panel, shown when a graph is loaded. Highlighted nodes will be shown in red.<br>
 <br>
-<b>Selected Node:</b>
+<b>Selected Node:</b><br>
 You can select a node by clicking it. Depending on the kind of node (collapsed, original), certain information about the selected node will be shown in the left and bottom panel. The selected node will be shown in yellow. The bottom panel will show the nucleotide content if the node is an original node (not collapsed). In the panel on the left, for original nodes, a box will show information about the node, including the length of the content, the distribution of nucleotide base types, and the genomes going through it.<br>
 <br>
 <b>Collapsed Nodes:</b><br>
