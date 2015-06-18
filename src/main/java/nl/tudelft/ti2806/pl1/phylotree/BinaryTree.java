@@ -48,6 +48,11 @@ public abstract class BinaryTree extends JButton {
 	/** Whether the ancestors of this node are collapsed 'into' this node. */
 	private boolean collapsed = false;
 
+	/**
+	 * The parent of the node, initialised at null for the root
+	 */
+	private BinaryTree parent;
+
 	/** The placement of this node in the tree grid. */
 	private Point gridCoordinates = new Point(0, 0);
 
@@ -71,6 +76,7 @@ public abstract class BinaryTree extends JButton {
 	public BinaryTree(final String nameIn, final double length,
 			final PhyloPanel panel) {
 		super(nameIn);
+		this.parent = null;
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
@@ -135,6 +141,22 @@ public abstract class BinaryTree extends JButton {
 
 	/** @return an array of the children of this node. */
 	public abstract List<BinaryTree> getChildren();
+
+	/**
+	 * @return the parent
+	 */
+	@Override
+	public BinaryTree getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent
+	 *            the parent to set
+	 */
+	public void setParent(final BinaryTree parent) {
+		this.parent = parent;
+	}
 
 	/**
 	 * Sets the grid coordinates of the node and computes the children's
@@ -225,8 +247,11 @@ public abstract class BinaryTree extends JButton {
 			st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1),
-					left, right, panel);
+			BinaryTree current = new InnerNode(parseName(pieces, 0),
+					parseDouble(pieces, 1), left, right, panel);
+			left.setParent(current);
+			right.setParent(current);
+			return current;
 		} else { // Leaf
 			final String[] pieces = token.split(":");
 			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1), panel);
