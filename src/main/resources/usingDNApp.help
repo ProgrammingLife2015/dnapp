@@ -1,37 +1,29 @@
-<<<<<<< HEAD
-Setup:
-To open a graph click on "Import graph" and select a "Node" file followed by an "Edge" file. If you fail to do so an error will be shown in the status bar.
-After that a loading bar will be shown until the graph has loaded.
-
-You can also load the graph by clicking the File tab, and then clicking import.
-
-A complementary phylogenetic tree can be imported by pressing the "Import phylo" which shows all files with a "nwk" extention.
-
-Exit:
-You can exit the program by pressing the cross, or going to the File tab and pressing Exit.
-
-
-View:
-You can hide the toolbar and the infopanel by going to the View tab and clicking their respective buttons.
-
-The view can be reset to its original state by using the button defined in shortcuts, or by clicking on the button in the View tab.
-
-Graph view:
+<html>
+<b>Setup:</b><br>
+To load a sequence graph, click on <i>Import graph</i> in the <i>File</i> menu. You will first get so select a <code>.node.graph</code> file and after that a new file chooser dialog will able you to open a <code>.edge.graph</code> file. After confirming the second file chooser dialog the sequence graph will be parsed. If the input files have wrong encoding, the importing will stop and an error message will be shown in the status bar.<br>
+<br>
+<b>Exit:</b><br>
+You can exit the program by pressing the cross, or going to the <i>File</i> menu and pressing <i>Exit</i>.<br>
+<br>
+<b>View:</b><br>
+You can hide the toolbar and the infopanel by going to the View tab and clicking their respective buttons.<br>
+The view can be reset to its original state by using the button defined in shortcuts, or by clicking on the button in the View tab.<br>
+<br>
+<b>Graph view:</b><br>
 Once the graph has been loaded, the genomes will be shown on the left side of the screen. The label next to the node shows its content size, 
-or in the case of a collapsed node the number of nodes collapsed to make this node. Node intensity will be determined by the percentage of unknown bases in the Node.
-
-Highlighting genomes:
-You can highlight the nodes belonging to a certain genome by ticking the box.
-Highlighted nodes will be shown in red.
-
-Selected Node:
-The currently selected node will be shown in yellow. It's content will be shown at the bottom of the screen, and more information will be on the left side of the screen.
-The colors below the node information, show how much of the content is of a certain base.
-
-Collapsed Node:
-Nodes which have more content then what is currently shown in the graph, will be colored purple. 
-
-Phylotree view:
-If a phylogenetic tree has been loaded, it will be shown in the "Phylogenetic tree" tab.
-You can select sets of genomes by leftclicking in the Phylotree view.
-Sub trees of the phylogenetic tree can be collapsed by right clicking on a branch inside the tree.
+or in the case of a collapsed node the number of nodes collapsed to make this node. Node intensity will be determined by the percentage of unknown bases in the Node.<br>
+<br>
+<b>Highlighting genomes:</b><br>
+You can highlight genomes in the sequence graph by ticking the check boxes in the left panel, shown when a graph is loaded. Highlighted nodes will be shown in red.<br>
+<br>
+<b>Selected Node:</b>
+You can select a node by clicking it. Depending on the kind of node (collapsed, original), certain information about the selected node will be shown in the left and bottom panel. The selected node will be shown in yellow. The bottom panel will show the nucleotide content if the node is an original node (not collapsed). In the panel on the left, for original nodes, a box will show information about the node, including the length of the content, the distribution of nucleotide base types, and the genomes going through it.<br>
+<br>
+<b>Collapsed Nodes:</b><br>
+Nodes which represent a collection of original nodes are highlighed purple.<br>
+<br>
+<b>Phylotree view:</b><br>
+If a phylogenetic tree has been loaded, it will be shown in the <i>Phylogenetic tree</i> tab.<br>
+You can select sets of genomes by left clicking on nodes in the tree. Clicking inner nodes will select or deselect the entire subtree below it.<br>
+By right clicking inner nodes in the tree, you can of the phylogenetic tree can be collapsed by right clicking on a branch inside the tree.
+</html>

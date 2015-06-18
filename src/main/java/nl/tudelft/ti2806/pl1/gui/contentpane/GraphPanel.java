@@ -268,7 +268,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			e1.printStackTrace();
 			ret = false;
 		}
-		gl.locateGenes(graph);
+		// gl.locateGenes(graph);
 		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
 		return ret;

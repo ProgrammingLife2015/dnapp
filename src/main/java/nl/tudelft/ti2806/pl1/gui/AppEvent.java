@@ -13,7 +13,6 @@ import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
 
 /**
  * @author Maarten
- *
  */
 public enum AppEvent implements ActionListener {
 
@@ -36,10 +35,7 @@ public enum AppEvent implements ActionListener {
 	/**
 	 * Loads a graph into the window content.
 	 */
-	IMPORT_FILE {
-		/**
-		 * {@inheritDoc}
-		 */
+	IMPORT_GRAPH {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
