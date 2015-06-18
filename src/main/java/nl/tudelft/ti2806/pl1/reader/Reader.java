@@ -24,11 +24,6 @@ public final class Reader {
 	private static final int STARTID = -2;
 
 	/**
-	 * The end id of the end node in the graph.
-	 */
-	private static final int ENDID = -1;
-
-	/**
 	 * 
 	 */
 	private Reader() {
@@ -112,18 +107,11 @@ public final class Reader {
 			}
 		}
 		DNode start = new DNode(STARTID, sources, 0, 0, "");
-		DNode end = new DNode(ENDID, sources, 0, 0, "");
 		graph.addDNode(start);
-		graph.addDNode(end);
 		for (DNode n : startNodes) {
 			DEdge edge = new DEdge(start, n);
 			graph.addDEdge(edge);
 		}
-		for (DNode n : endNodes) {
-			DEdge edge = new DEdge(n, end);
-			graph.addDEdge(edge);
-		}
 		graph.setStart(start);
-		graph.setEnd(end);
 	}
 }
