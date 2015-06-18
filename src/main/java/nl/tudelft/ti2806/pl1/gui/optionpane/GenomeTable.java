@@ -27,8 +27,11 @@ public class GenomeTable extends JScrollPane {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2803975406952542688L;
 
-	/** Fixed column widths. */
-	private static final int COL_SHOW_WIDTH = 40, COL_HIGHLIGHT_WIDTH = 55;
+	// /** The width of the show column. */
+	// private static final int COL_SHOW_WIDTH = 40;
+
+	/** The width of the highlight column. */
+	private static final int COL_HIGHLIGHT_WIDTH = 55;
 
 	/**
 	 * The list of registered observers getting notified when the contents or
