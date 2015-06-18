@@ -15,7 +15,7 @@ import javax.swing.event.ChangeListener;
 public final class ScoreMultiplier implements ChangeListener {
 
 	/** The multiplier value for each score category. **/
-	private static HashMap<String, Integer> mults = new HashMap<String, Integer>();
+	private static HashMap<String, Double> mults = new HashMap<String, Double>();
 
 	/** Private constructor to avoid instantiation. **/
 	private ScoreMultiplier() {
@@ -28,7 +28,7 @@ public final class ScoreMultiplier implements ChangeListener {
 	 *            The slider that has changed.
 	 */
 	public static void multiplierChange(final JSlider changed) {
-		mults.put(changed.getName(), changed.getValue());
+		mults.put(changed.getName(), (double) changed.getValue() / 10);
 	}
 
 	/**
@@ -38,11 +38,11 @@ public final class ScoreMultiplier implements ChangeListener {
 	 *            The score we want to get the multiplier for.
 	 * @return The multiplier for the given score.
 	 */
-	public static int getMult(final String mult) {
+	public static Double getMult(final String mult) {
 		if (mults.containsKey(mult)) {
 			return mults.get(mult);
 		}
-		return 1;
+		return 1.0;
 	}
 
 	@Override
