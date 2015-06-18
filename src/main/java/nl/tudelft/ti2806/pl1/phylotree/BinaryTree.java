@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -408,11 +409,11 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of groups for which each group share a common ancestor
 	 */
-	public List<List<String>> findGroups(final List<String> sources,
-			final BinaryTree root) {
-		List<List<String>> groupList = new ArrayList<List<String>>();
+	public Collection<Collection<String>> findGroups(
+			final Collection<String> sources, final BinaryTree root) {
+		Collection<Collection<String>> groupList = new ArrayList<Collection<String>>();
 		while (!sources.isEmpty()) {
-			List<String> group = findGroup(sources, root);
+			Collection<String> group = findGroup(sources, root);
 			groupList.add(group);
 			for (String s : group) {
 				sources.remove(s);
@@ -430,7 +431,7 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of sources which share a common ancestor
 	 */
-	public List<String> findGroup(final List<String> sources,
+	public Collection<String> findGroup(final Collection<String> sources,
 			final BinaryTree root) {
 		if (root.isLeaf()) {
 			if (sources.contains(root.getID())) {
@@ -440,8 +441,8 @@ public abstract class BinaryTree extends JButton {
 			}
 			return null;
 		}
-		List<String> left = findGroup(sources, root.getLeft());
-		List<String> right = findGroup(sources, root.getRight());
+		Collection<String> left = findGroup(sources, root.getLeft());
+		Collection<String> right = findGroup(sources, root.getRight());
 		if (left == null || right == null) {
 			if (left == null) {
 				return right;
