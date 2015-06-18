@@ -43,7 +43,8 @@ public final class MutationFinder {
 						if (node.getNextNodes().contains(endnode)) {
 							ins.add(new InsertionMutation(node.getId(), endnode
 									.getId(), next.getId(), graph
-									.getReferenceGeneStorage()));
+									.getReferenceGeneStorage(),
+									node.getStart(), node.getEnd()));
 						}
 					}
 				}

@@ -1,7 +1,16 @@
 package nl.tudelft.ti2806.pl1.mutation;
 
+/**
+ * Multiplier for score on a mutation.
+ * 
+ * @author Marissa
+ * @since 18-06-15
+ */
 public enum MutationMultipliers {
 
+	/**
+	 * Multiplier for score if mutation is in a gene.
+	 */
 	IN_GENE {
 
 		@Override
@@ -11,6 +20,9 @@ public enum MutationMultipliers {
 
 	},
 
+	/**
+	 * Multiplier for score of its a known mutation.
+	 */
 	KNOWN_MUTATION {
 
 		@Override
@@ -20,6 +32,11 @@ public enum MutationMultipliers {
 
 	};
 
+	/**
+	 * Get the GUI name for the multiplier.
+	 * 
+	 * @return Name we want the GUI to use.
+	 */
 	public abstract String getGUI();
 
 }
