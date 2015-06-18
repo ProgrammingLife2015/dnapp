@@ -165,6 +165,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/** Diameter of nodes in pixels. */
 	private final int nodeDiameter = 20;
 
+	/** Genelocator object for detecting genes. */
 	private final GeneLocator gl;
 
 	/**
@@ -270,7 +271,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		gl.locateGenes(graph);
 
 		visualizeGraph(graph);
-		fillGeneNavigatorBox();
 		return ret;
 	}
 
@@ -373,6 +373,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		@Override
 		public void update() {
 			locateGenes(graph);
+			fillGeneNavigatorBox();
 		}
 	}
 
@@ -474,9 +475,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 					g.setColor(Color.ORANGE);
 					g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
 							+ nodeDiameter, nodeDiameter / 2);
-					g.setColor(Color.BLACK);
-					g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
-							+ nodeDiameter, nodeDiameter / 2);
+					// g.setColor(Color.BLACK);
+					// g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
+					// + nodeDiameter, nodeDiameter / 2);
 				}
 			}
 		};
@@ -994,6 +995,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	@Override
 	public void update(final String selectedGene) {
 		if (geneLocs.containsKey(selectedGene)) {
+			System.out.println("???");
 			Node beginnode = this.geneLocs.get(selectedGene).get(0);
 			this.selectNode(beginnode);
 			graphPane.getHorizontalScrollBar().setValue(
