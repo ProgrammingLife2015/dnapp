@@ -119,7 +119,7 @@ public class ReferenceGeneStorage {
 	private void findDNodes(final Map<Long, ResistanceMutation> map) {
 		if (dgraph != null) {
 			Collection<ResistanceMutation> resMuts = map.values();
-			for (DNode dn : dgraph.getRefGenome()) {
+			for (DNode dn : dgraph.getNodes().values()) {
 				for (ResistanceMutation mut : resMuts) {
 					if (dn.getStart() <= mut.getRefIndex()
 							&& mut.getRefIndex() < dn.getEnd()) {

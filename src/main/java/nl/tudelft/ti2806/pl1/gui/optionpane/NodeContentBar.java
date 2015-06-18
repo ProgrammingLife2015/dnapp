@@ -95,7 +95,7 @@ public class NodeContentBar extends JPanel {
 				lenN++;
 				break;
 			default:
-				Event.statusBarError("invalid nucleo base \'" + c
+				Event.statusBarError("invalid nucleotide base \'" + c
 						+ "\' found in selected node.");
 				System.out.println("ERROR: Invalid nucleotide found (" + c
 						+ ") in string: " + newSequence);
@@ -141,8 +141,8 @@ public class NodeContentBar extends JPanel {
 		g.fillRect(start, 0, barLength, width);
 		if (barLength > 0) {
 			g.setColor(nuc.getColor().darker().darker());
-			g.drawString(nuc.toString(), (start + barLength / 2)
-					+ X_OFFSET_LABEL, Y_LABEL);
+			g.drawString(nuc.toString(),
+					start + barLength / 2 + X_OFFSET_LABEL, Y_LABEL);
 		}
 	}
 

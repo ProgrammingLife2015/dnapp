@@ -73,7 +73,6 @@ public class HelpDialog extends JDialog {
 				USING_DNAPP_HELP_FILE);
 		Scanner sc = new Scanner(is, "UTF-8");
 		StringBuilder sb = new StringBuilder("<html>");
-		System.out.println(sc);
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			sb.append(line).append("<br>");

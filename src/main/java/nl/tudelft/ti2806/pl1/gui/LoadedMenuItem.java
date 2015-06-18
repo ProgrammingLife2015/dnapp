@@ -31,21 +31,12 @@ public class LoadedMenuItem extends JMenuItem {
 		this.window = w;
 	}
 
-	// @Override
-	// public boolean isEnabled() {
-	// if(window == null) {
-	// System.out.println("WIN NULL");
-	// return super.isEnabled();
-	// }
-	// return window.getContent().isGraphLoaded();
-	// }
-
 	@Override
-	public boolean isVisible() {
+	public boolean isEnabled() {
 		if (window == null) {
-			System.out.println("WIN NULL");
 			return super.isEnabled();
 		}
 		return window.getContent().isGraphLoaded();
 	}
+
 }

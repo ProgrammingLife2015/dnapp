@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.awt.BorderLayout;
@@ -102,16 +99,11 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				StyleConstants.setForeground(set, nucleoColor);
 				doc.setCharacterAttributes(i, 1, set, true);
 			}
-			System.out.println("\t start=" + dn.getStart() + "\t end="
-					+ dn.getEnd());
 			if (dn.hasResMuts()) {
 				set = new SimpleAttributeSet();
 				for (ResistanceMutation rm : dn.getResMuts()) {
 					StyleConstants.setBackground(set, RES_NUCLEO_BG_COLOR);
 					int loc = (int) rm.getRefIndex() - dn.getStart();
-					System.out.println("loc=" + loc + "\t start="
-							+ dn.getStart() + "\t refIndex=" + rm.getRefIndex()
-							+ "\t end=" + dn.getEnd());
 					doc.setCharacterAttributes(loc, 1, set, false);
 				}
 			}

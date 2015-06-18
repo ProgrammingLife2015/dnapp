@@ -2,9 +2,7 @@ package nl.tudelft.ti2806.pl1.DGraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -387,7 +385,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 * Calculates the length of the reference genome.
 	 */
 	public final void calculateReferenceLength() {
-		System.out.println("IN CALC");
 		int ret = 0;
 		for (DNode d : references.get(refGenomeName)) {
 			ret += d.getContent().length();
@@ -447,23 +444,24 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		this.selected = id;
 	}
 
-	/**
-	 * Takes a list of nodes, and sorts them according to their start property.
-	 * 
-	 * @param dnodes
-	 *            List of nodes to sort.
-	 * @return A list with the nodes sorted nodes.
-	 */
-	public List<DNode> sortNodes(final List<DNode> dnodes) {
-		dnodes.sort(new Comparator<DNode>() {
-			@Override
-			public int compare(final DNode n1, final DNode n2) {
-				int start1 = n1.getStart();
-				int start2 = n2.getStart();
-				return start1 - start2;
-			}
-		});
-		return dnodes;
-	}
+	// /**
+	// * Takes a list of nodes, and sorts them according to their start
+	// property.
+	// *
+	// * @param dnodes
+	// * List of nodes to sort.
+	// * @return A list with the nodes sorted nodes.
+	// */
+	// public List<DNode> sortNodes(final List<DNode> dnodes) {
+	// dnodes.sort(new Comparator<DNode>() {
+	// @Override
+	// public int compare(final DNode n1, final DNode n2) {
+	// int start1 = n1.getStart();
+	// int start2 = n2.getStart();
+	// return start1 - start2;
+	// }
+	// });
+	// return dnodes;
+	// }
 
 }

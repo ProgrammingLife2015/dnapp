@@ -107,7 +107,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * @author Maarten
 	 * @since 17-6-2015
 	 */
-	class CloseConfirmationAdapter extends WindowAdapter {
+	final class CloseConfirmationAdapter extends WindowAdapter {
 
 		/** The window. */
 		private Window window;

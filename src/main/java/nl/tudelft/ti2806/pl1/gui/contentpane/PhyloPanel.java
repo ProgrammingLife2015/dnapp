@@ -200,7 +200,6 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 		removeTree();
 		int treeWidth = tree.computePlacement(0, 0);
 		int treeHeight = tree.height();
-		// System.out.println(tree.toString());
 		addNode(tree);
 		treePanel.setPreferredSize(new Dimension((treeHeight + 1)
 				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)

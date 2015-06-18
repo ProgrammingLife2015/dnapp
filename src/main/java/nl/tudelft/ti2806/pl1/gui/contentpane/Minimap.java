@@ -121,7 +121,6 @@ public class Minimap extends JPanel implements GraphScrollObserver,
 
 	@Override
 	public void update(final Map<Long, ResistanceMutation> rgs) {
-		System.out.println("Minimap update ResMuts");
 		setDrugResMuts(rgs);
 	}
 
