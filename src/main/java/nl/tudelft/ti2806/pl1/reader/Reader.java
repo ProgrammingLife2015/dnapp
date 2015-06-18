@@ -96,14 +96,11 @@ public final class Reader {
 	 */
 	private static void addStartEndNode(final DGraph graph) {
 		ArrayList<DNode> startNodes = new ArrayList<DNode>();
-		ArrayList<DNode> endNodes = new ArrayList<DNode>();
 		HashSet<String> sources = new HashSet<String>();
 		for (DNode node : graph.getNodes().values()) {
 			sources.addAll(node.getSources());
 			if (node.getInEdges().size() == 0) {
 				startNodes.add(node);
-			} else if (node.getOutEdges().size() == 0) {
-				endNodes.add(node);
 			}
 		}
 		DNode start = new DNode(STARTID, sources, 0, 0, "");
