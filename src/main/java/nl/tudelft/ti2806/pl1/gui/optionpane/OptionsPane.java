@@ -122,6 +122,14 @@ public class OptionsPane extends JScrollPane {
 		return grpZoomSettings;
 	}
 
+	/** Combo box showing all the genes. */
+	private GeneComboBox geneNavigator;
+
+	/** @return the geneNavigator. */
+	public final GeneComboBox getGeneNavigator() {
+		return geneNavigator;
+	}
+
 	/**
 	 * Initialize the option pane.
 	 * 
@@ -141,6 +149,8 @@ public class OptionsPane extends JScrollPane {
 		this.grpSelectedNode = new SelectedNodeGroup();
 		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 		this.grpZoomSettings = new ZoomConfigureGroup();
+
+		this.geneNavigator = new GeneComboBox();
 
 		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
@@ -170,6 +180,9 @@ public class OptionsPane extends JScrollPane {
 		// place(grpSelectedGenome);
 		place(grpSelectedNode);
 		place(grpZoomSettings);
+
+		place(new JLabel("Select a gene and press ENTER key:"), 0);
+		place(geneNavigator);
 
 		gbc.weighty = GBC_WEIGHT_Y;
 		place(Box.createGlue());
