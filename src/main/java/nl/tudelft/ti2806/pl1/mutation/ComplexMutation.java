@@ -24,6 +24,10 @@ public class ComplexMutation extends Mutation {
 	 *            The IDs of the inserted nodes.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
+	 * @param startpos
+	 *            The starting position of the mutation in the reference genome.
+	 * @param endpos
+	 *            The end position of the mutation in the reference genome.
 	 */
 	public ComplexMutation(final int pre, final Integer post,
 			final Collection<Integer> insertedNodes,
