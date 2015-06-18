@@ -5,7 +5,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -346,6 +348,23 @@ public abstract class BinaryTree extends JButton {
 	 * @return True if the current node is a leaf, false otherwise
 	 */
 	public abstract boolean isLeaf();
+
+	/**
+	 * Returns a collection of sources which have been selected.
+	 * 
+	 * @param root
+	 *            The root node
+	 * @return A collection of selected sources
+	 */
+	public Collection<String> getChosen(final BinaryTree root) {
+		if (root.isLeaf() && root.isChosen()) {
+			return Arrays.asList(root.getID());
+		}
+		Collection<String> chosen = new ArrayList<String>();
+		chosen.addAll(getSelected(root.getLeft()));
+		chosen.addAll(getSelected(root.getRight()));
+		return chosen;
+	}
 
 	/**
 	 * Checks whether a node contains a path to a given source.
