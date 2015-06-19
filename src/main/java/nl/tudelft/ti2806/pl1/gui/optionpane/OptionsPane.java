@@ -116,14 +116,13 @@ public class OptionsPane extends JScrollPane {
 	private void addControls() {
 		setupConstraints();
 
-		place(new JLabel("Genomes:"), 0);
+		place(new JLabel("<html><b>Genomes:"), 0);
 		place(tblGenomes);
 		place(grpZoomInfo);
 		place(grpZoomSettings);
-		place(grpSelectedNode);
-
-		place(new JLabel("Select a gene and press ENTER key:"), 0);
+		place(new JLabel("<html><b>Select gene and press ENTER:"), 0);
 		place(geneNavigator);
+		place(grpSelectedNode);
 
 		final int boxWY = 100;
 		gbc.weighty = boxWY;

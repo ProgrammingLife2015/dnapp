@@ -1,14 +1,10 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 /**
  * An observer for the information about the zoomlevel.
  * 
- * @author ChakShun
+ * @author Chak Shun
  * @since 18-6-2015
- * @version 1.0
  */
 public interface ZoomlevelObserver {
 

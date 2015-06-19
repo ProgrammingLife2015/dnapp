@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Observable interface for the phylopanel selection.
  * 
- * @author ChakShun
+ * @author Chak Shun
  *
  */
 public interface PhyloChosenObservable {

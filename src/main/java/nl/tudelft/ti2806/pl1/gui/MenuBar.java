@@ -111,11 +111,19 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset view", null, 'R',
-				"Reset to the initial view.", AppEvent.RESET_GRAPH);
+		setMenuItem(reset, "Reset initial view", null, 'R',
+				"Reset to the initial zoom level view.",
+				AppEvent.RESET_INITIAL_LEVEL);
 		setAcc(reset,
 				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
+
+		JMenuItem resetCurrent = new JMenuItem();
+		setMenuItem(resetCurrent, "Reset current view", null, 'C',
+				"Reset the current zoom level view.",
+				AppEvent.RESET_CURRENT_LEVEL);
+		setAcc(resetCurrent, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		ret.add(resetCurrent);
 
 		JMenuItem zoomIn = new JMenuItem();
 		setMenuItem(zoomIn, "Zoom in", null, 'I',
@@ -131,7 +139,6 @@ public class MenuBar extends JMenuBar {
 		setAcc(zoomOut,
 				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
 		ret.add(zoomOut);
-
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());
 		return ret;

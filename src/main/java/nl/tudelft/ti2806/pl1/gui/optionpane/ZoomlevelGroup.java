@@ -19,7 +19,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	private static final long serialVersionUID = 8506736750408563126L;
 
 	/** The default visible title. */
-	private static final String DEFAULT_TITLE = "Current zoom level";
+	private static final String DEFAULT_TITLE = "<html><b>Current zoom level";
 
 	/** The size of the group. */
 	private static final Dimension SIZE = new Dimension(

@@ -274,7 +274,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * @author ChakShun
+	 * @author Chak Shun
 	 * @since 18-6-2015
 	 */
 	class GeneLocator implements ReferenceGeneObserver {
@@ -752,6 +752,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
+	 * Reloads the current zoom level.
+	 */
+	public void reloadCurrentLevel() {
+		applyZoomLevel(zoomLevel);
+	}
+
+	/**
 	 * 
 	 * @param newZoomLevel
 	 *            The zoom level to apply.
@@ -859,7 +866,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * Observer class implementing the GenomeTableObserver interface processing
 	 * events for filtering genomes.
 	 * 
-	 * @author ChakShun
+	 * @author Chak Shun
 	 * @since 18-05-2015
 	 */
 	class GenomeHighlight implements GenomeTableObserver {
@@ -876,7 +883,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
-			// && genomeRow.isVisible()
 			if (genomeHighlightChanged) {
 				if (genomeRow.isHighlighted()) {
 					highlightedGenomes.add(genomeRow.getId());
@@ -886,7 +892,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 					unHighlight();
 				}
 			}
-
 		}
 
 		@Override
@@ -906,7 +911,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * 
 	 * @author Maarten
 	 * @since 18-5-2015
-	 * @version 1.0
 	 */
 	class NodeClickListener implements ViewerListener {
 
@@ -930,44 +934,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
 		}
-	}
-
-	/**
-	 * A mouse listener pumping the viewer pipe each time the mouse is pressed
-	 * or released. This makes sure that the NodeClickListener receives its
-	 * click events immediately when a node is clicked.
-	 * 
-	 * @see NodeClickListener
-	 * @see ViewerPipe
-	 * 
-	 * @author Maarten
-	 * @since 18-5-2015
-	 * @version 1.0
-	 */
-	class ViewMouseListener implements MouseListener {
-
-		@Override
-		public void mouseReleased(final MouseEvent e) {
-			vp.pump();
-		}
-
-		@Override
-		public void mousePressed(final MouseEvent e) {
-			vp.pump();
-		}
-
-		@Override
-		public void mouseExited(final MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(final MouseEvent e) {
-		}
-
-		@Override
-		public void mouseClicked(final MouseEvent e) {
-		}
-
 	}
 
 	/**
@@ -1005,7 +971,42 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	@Override
 	public void update(final Collection<String> chosen) {
-		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * A mouse listener pumping the viewer pipe each time the mouse is pressed
+	 * or released. This makes sure that the NodeClickListener receives its
+	 * click events immediately when a node is clicked.
+	 * 
+	 * @see NodeClickListener
+	 * @see ViewerPipe
+	 * 
+	 * @author Maarten
+	 * @since 18-5-2015
+	 */
+	class ViewMouseListener implements MouseListener {
+
+		@Override
+		public void mouseReleased(final MouseEvent e) {
+			vp.pump();
+		}
+
+		@Override
+		public void mousePressed(final MouseEvent e) {
+			vp.pump();
+		}
+
+		@Override
+		public void mouseExited(final MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(final MouseEvent e) {
+		}
+
+		@Override
+		public void mouseClicked(final MouseEvent e) {
+		}
 
 	}
 }

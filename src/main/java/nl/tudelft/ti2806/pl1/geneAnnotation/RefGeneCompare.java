@@ -9,7 +9,7 @@ import java.util.Comparator;
 /**
  * Comparator for the ReferenceGene based on start index.
  * 
- * @author ChakShun
+ * @author Chak Shun
  * @since 2-6-2015
  * */
 public class RefGeneCompare implements Comparator<ReferenceGene>, Serializable {

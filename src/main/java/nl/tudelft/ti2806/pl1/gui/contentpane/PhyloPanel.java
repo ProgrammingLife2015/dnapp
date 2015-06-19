@@ -28,7 +28,6 @@ import com.wordpress.tips4java.ScrollablePanel;
 
 /**
  * @author Maarten
- *
  */
 public class PhyloPanel extends JScrollPane implements ContentTab,
 		PhyloChosenObservable {

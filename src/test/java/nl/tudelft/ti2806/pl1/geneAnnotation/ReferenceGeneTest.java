@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * JUnit test class for ReferenceGene class.
  * 
- * @author ChakShun
+ * @author Chak Shun
  * @since 2-6-2015
  *
  */

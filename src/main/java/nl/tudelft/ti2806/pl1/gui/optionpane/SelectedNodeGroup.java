@@ -46,7 +46,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	private static final long serialVersionUID = -4851724739205792429L;
 
 	/** The default visible title. */
-	private static final String DEFAULT_TITLE = "Selected node";
+	private static final String DEFAULT_TITLE = "<html><b>Selected node";
 
 	/** The insets. */
 	private static final Insets INSETS = new Insets(2, 5, 2, 5);
