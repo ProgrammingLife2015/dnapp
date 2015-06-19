@@ -60,7 +60,7 @@ public final class ConvertDGraph {
 	 * @return The visual graph containing all the nodes from the data graph.
 	 */
 	public static Graph convert(final DGraph dgraph) {
-		int o = dgraph.getStart().getSources().size();
+		int totalGenomes = dgraph.getStart().getSources().size();
 		Graph graph = new SingleGraph("");
 		Set<DEdge> edges = new HashSet<DEdge>();
 		for (DNode n : dgraph.getNodes().values()) {
@@ -101,7 +101,7 @@ public final class ConvertDGraph {
 					.getSources().clone();
 			m.retainAll(edge.getEndNode().getSources());
 			eg.addAttribute("ui.size",
-					(int) ((double) m.size() / o * MAX_SIZE_EDGE));
+					(int) ((double) m.size() / totalGenomes * MAX_SIZE_EDGE));
 		}
 		return graph;
 	}
