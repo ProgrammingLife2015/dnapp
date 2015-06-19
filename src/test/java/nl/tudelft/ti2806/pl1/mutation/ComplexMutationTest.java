@@ -34,10 +34,8 @@ public class ComplexMutationTest {
 		insertSrc2 = new HashSet<String>(Arrays.asList("REF1"));
 		insertSrc3 = new HashSet<String>(Arrays.asList("REF2"));
 		rgs = new ReferenceGeneStorage(null);
-		rgs.setDrugRestistantMutations(new File(
-				"src/test/resources/resistanceCausingMutationsTesting.txt"));
-		rgs.setGeneAnnotation(new File(
-				"src/test/resources/ReferenceGeneStorageTestGenes.gff"));
+		rgs.setDrugRestistantMutations(new File("src/test/resources/resistanceCausingMutationsTesting.txt"));
+		rgs.setGeneAnnotation(new File("src/test/resources/ReferenceGeneStorageTestGenes.gff"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);
@@ -84,16 +82,14 @@ public class ComplexMutationTest {
 		graph.addDEdge(e6);
 		graph.addDEdge(e7);
 		graph.addDEdge(e8);
-		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
-				graph, null);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(graph, null);
 		Collection<ComplexMutation> expected = new ArrayList<ComplexMutation>();
 		Collection<Integer> inNodes = new ArrayList<Integer>();
 		inNodes.add(ins1.getId());
 		inNodes.add(ins2.getId());
 		inNodes.add(ins3.getId());
 		inNodes.add(ins4.getId());
-		expected.add(new ComplexMutation(start.getId(), end.getId(), inNodes,
-				rgs, 0, 0));
+		expected.add(new ComplexMutation(start.getId(), end.getId(), inNodes, rgs, 0, 0));
 		assertEquals(expected.toString(), muts.toString());
 	}
 
@@ -137,16 +133,14 @@ public class ComplexMutationTest {
 		graph.addDEdge(e8);
 		graph.addDEdge(e9);
 		graph.addDEdge(e10);
-		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
-				graph, null);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(graph, null);
 		Collection<ComplexMutation> expected = new ArrayList<ComplexMutation>();
 		Collection<Integer> inNodes = new ArrayList<Integer>();
 		inNodes.add(ins1.getId());
 		inNodes.add(ins2.getId());
 		inNodes.add(ins3.getId());
 		inNodes.add(ins4.getId());
-		expected.add(new ComplexMutation(start.getId(), end2.getId(), inNodes,
-				rgs, 0, 0));
+		expected.add(new ComplexMutation(start.getId(), end2.getId(), inNodes, rgs, 0, 0));
 		assertEquals(expected.toString(), muts.toString());
 	}
 }

@@ -25,8 +25,7 @@ public class ZoomConfigureGroup extends JPanel {
 	private static final long serialVersionUID = -3307531710544343583L;
 
 	/** The size of the group. */
-	private static final Dimension SIZE = new Dimension(
-			OptionsPane.MAX_CHILD_WIDTH, 200);
+	private static final Dimension SIZE = new Dimension(OptionsPane.MAX_CHILD_WIDTH, 200);
 
 	/**
 	 * The number of sliders.
@@ -37,8 +36,7 @@ public class ZoomConfigureGroup extends JPanel {
 	private static final String DEFAULT_TITLE = "Zoom settings.";
 
 	/** Slider options. **/
-	private static final MutationMultipliers[] SLIDERS = MutationMultipliers
-			.values();
+	private static final MutationMultipliers[] SLIDERS = MutationMultipliers.values();
 
 	/** How many options the slider can take. **/
 	private static final int SLIDERVALUES = 10;
@@ -67,8 +65,7 @@ public class ZoomConfigureGroup extends JPanel {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
 					JSlider changed = (JSlider) e.getSource();
-					AppEvent.statusBarInfo("Slider to "
-							+ ((double) changed.getValue() / SLIDERVALUES));
+					AppEvent.statusBarInfo("Slider to " + ((double) changed.getValue() / SLIDERVALUES));
 					ScoreMultiplier.multiplierChange(changed);
 				}
 			});

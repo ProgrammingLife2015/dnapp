@@ -33,8 +33,8 @@ public final class EdgeReader {
 	 * @throws IOException
 	 *             When the file can't be read
 	 */
-	public static ArrayList<DEdge> readEdges(final BufferedReader reader,
-			final DGraph graph) throws IOException {
+	public static ArrayList<DEdge> readEdges(final BufferedReader reader, final DGraph graph)
+			throws IOException {
 		ArrayList<DEdge> edges = new ArrayList<DEdge>();
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -49,8 +49,7 @@ public final class EdgeReader {
 				start = Integer.parseInt(nodes[0]);
 				end = Integer.parseInt(nodes[1]);
 			} catch (Exception e) {
-				throw new InvalidFileFormatException(
-						"The id's should be integers");
+				throw new InvalidFileFormatException("The id's should be integers");
 			}
 			DNode src = graph.getDNode(start);
 			DNode tar = graph.getDNode(end);

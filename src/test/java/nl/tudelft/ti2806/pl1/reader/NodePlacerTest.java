@@ -26,8 +26,7 @@ public class NodePlacerTest {
 		nodesatdepth.add(3);
 		nodesatdepth.add(1);
 		hdiff = NodePlacer.heightDiff(nodesatdepth, height);
-		graph = Reader.read("src/test/resources/nodes.txt",
-				"src/test/resources/edges.txt");
+		graph = Reader.read("src/test/resources/nodes.txt", "src/test/resources/edges.txt");
 		NodePlacer.place(graph);
 	}
 

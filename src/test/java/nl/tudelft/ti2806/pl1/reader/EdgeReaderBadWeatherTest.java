@@ -30,8 +30,7 @@ public class EdgeReaderBadWeatherTest {
 	 */
 	@Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { edge1 }, { edge2 }, { edge3 },
-				{ edge4 }, { edge5 } });
+		return Arrays.asList(new Object[][] { { edge1 }, { edge2 }, { edge3 }, { edge4 }, { edge5 } });
 	}
 
 	private String edge;

@@ -30,8 +30,7 @@ import com.wordpress.tips4java.ScrollablePanel;
  * @author Maarten
  *
  */
-public class PhyloPanel extends JScrollPane implements ContentTab,
-		PhyloChosenObservable {
+public class PhyloPanel extends JScrollPane implements ContentTab, PhyloChosenObservable {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -105,8 +104,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	@Override
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
-		ret.add(ToolBar.makeButton("Highlight selection", null,
-				new SourceHighlightListener(), null));
+		ret.add(ToolBar.makeButton("Highlight selection", null, new SourceHighlightListener(), null));
 		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
 		return ret;
 	}
@@ -132,13 +130,11 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 				int childY = (int) child.getCenter().getY();
 				if (childY == y) {
 					g2.drawLine(x, y, childX, y);
-					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N),
-							(x + childX) / 2, childY);
+					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), (x + childX) / 2, childY);
 				} else {
 					g2.drawLine(x, y, x, childY);
 					g2.drawLine(x, childY, childX, childY);
-					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), x,
-							(y + childY) / 2);
+					g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), x, (y + childY) / 2);
 				}
 				g2.setColor(DEFAULT_COLOR);
 				drawLines(g, child);
@@ -158,8 +154,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	 *         the <code>child</code> with.
 	 */
 	private Color getLineColor(final BinaryTree parent, final BinaryTree child) {
-		if (parent.getChildren().contains(child) && parent.isChosen()
-				&& child.isChosen()) {
+		if (parent.getChildren().contains(child) && parent.isChosen() && child.isChosen()) {
 			return EDGE_BETWEEN_SELECTED_COLOR;
 		}
 		return DEFAULT_COLOR;
@@ -178,8 +173,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 			this.newickSource = readIntoString(newick);
 		} catch (IOException e) {
 			ret = false;
-			AppEvent.statusBarError("File " + newick.getAbsolutePath()
-					+ " could not be read.");
+			AppEvent.statusBarError("File " + newick.getAbsolutePath() + " could not be read.");
 			e.printStackTrace();
 		}
 		this.tree = BinaryTree.parseNewick(newickSource, this);
@@ -195,9 +189,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 		int treeWidth = tree.computePlacement(0, 0);
 		int treeHeight = tree.height();
 		addNode(tree);
-		treePanel.setPreferredSize(new Dimension((treeHeight + 1)
-				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)
-				* (NODE_HEIGHT + INSETS.top) + INSETS.top));
+		treePanel.setPreferredSize(new Dimension((treeHeight + 1) * (NODE_WIDTH + INSETS.left) + INSETS.left,
+				(treeWidth + 1) * (NODE_HEIGHT + INSETS.top) + INSETS.top));
 		repaint();
 		// revalidate();
 	}
@@ -219,9 +212,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 		// treePanel.remove(tree);
 		int x = (int) bintree.getGridCoordinates().getX();
 		int y = (int) bintree.getGridCoordinates().getY();
-		bintree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y
-				* (NODE_HEIGHT + INSETS.top) + INSETS.top, NODE_WIDTH,
-				NODE_HEIGHT);
+		bintree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y * (NODE_HEIGHT + INSETS.top)
+				+ INSETS.top, NODE_WIDTH, NODE_HEIGHT);
 		bintree.setText(bintree.getID());
 		treePanel.add(bintree);
 		if (!bintree.isCollapsed()) {
@@ -242,8 +234,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	 */
 	public static String readIntoString(final File file) throws IOException {
 		final StringBuffer buff = new StringBuffer();
-		final BufferedReader in = new BufferedReader(new BufferedReader(
-				new InputStreamReader(new FileInputStream(file), "UTF-8")));
+		final BufferedReader in = new BufferedReader(new BufferedReader(new InputStreamReader(
+				new FileInputStream(file), "UTF-8")));
 		String line;
 		while ((line = in.readLine()) != null) {
 			buff.append(line);

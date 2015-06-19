@@ -13,8 +13,7 @@ public class InvalidGenomeIdException extends ApplicationException {
 	 *            The genome id/name which is not present.
 	 */
 	public InvalidGenomeIdException(final String genomeId) {
-		super("Genome " + genomeId
-				+ " is not available in this sequence graph.");
+		super("Genome " + genomeId + " is not available in this sequence graph.");
 	}
 
 }

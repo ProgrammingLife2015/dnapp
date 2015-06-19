@@ -67,8 +67,7 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				if (right - left == 1) {
 					selInfo.setText(" Selected nucleotide: " + right);
 				} else if (left != right) {
-					selInfo.setText(" Selected nucleotides: " + (left + 1)
-							+ " to " + right);
+					selInfo.setText(" Selected nucleotides: " + (left + 1) + " to " + right);
 				} else {
 					selInfo.setText(" ");
 				}
@@ -91,8 +90,7 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 			for (int i = 0; i < text.getDocument().getLength(); i++) {
 				Color nucleoColor = Color.BLACK;
 				try {
-					nucleoColor = NucleoBase.valueOf(doc.getText(i, 1))
-							.getColor().darker().darker();
+					nucleoColor = NucleoBase.valueOf(doc.getText(i, 1)).getColor().darker().darker();
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
@@ -108,8 +106,7 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				}
 			}
 		} else {
-			text.setText("This is a collapsed section consisting containing "
-					+ newSelectedNodes.size()
+			text.setText("This is a collapsed section consisting containing " + newSelectedNodes.size()
 					+ " nodes.\nPlease zoom in to gain more information about this section.");
 			StyleConstants.setForeground(set, Color.BLACK);
 			doc.setCharacterAttributes(0, text.getText().length(), set, true);

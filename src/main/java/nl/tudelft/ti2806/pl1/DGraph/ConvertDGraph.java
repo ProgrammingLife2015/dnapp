@@ -85,8 +85,7 @@ public final class ConvertDGraph {
 			}
 			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
 			gn.addAttribute("contentsize", n.getContent().length());
-			gn.addAttribute("collapsed",
-					new HashSet<Integer>(Arrays.asList(n.getId())));
+			gn.addAttribute("collapsed", new HashSet<Integer>(Arrays.asList(n.getId())));
 		}
 		for (DEdge edge : edges) {
 			String from = String.valueOf(edge.getStartNode().getId());
@@ -97,11 +96,9 @@ public final class ConvertDGraph {
 				addNodeToGraph(graph, to, dgraph);
 			}
 			Edge eg = graph.addEdge(from + to, from, to, true);
-			Collection<String> m = (Collection<String>) edge.getStartNode()
-					.getSources().clone();
+			Collection<String> m = (Collection<String>) edge.getStartNode().getSources().clone();
 			m.retainAll(edge.getEndNode().getSources());
-			eg.addAttribute("ui.size",
-					(int) ((double) m.size() / totalGenomes * MAX_SIZE_EDGE));
+			eg.addAttribute("ui.size", (int) ((double) m.size() / totalGenomes * MAX_SIZE_EDGE));
 		}
 		return graph;
 	}
@@ -118,8 +115,7 @@ public final class ConvertDGraph {
 	 *            The data graph where the node is defined.
 	 * @return
 	 */
-	private static void addNodeToGraph(final Graph g, final String id,
-			final DGraph dg) {
+	private static void addNodeToGraph(final Graph g, final String id, final DGraph dg) {
 		Node gn = g.addNode(id);
 		DNode n = dg.getDNode(Integer.parseInt(id));
 		gn.addAttribute("x", n.getX());

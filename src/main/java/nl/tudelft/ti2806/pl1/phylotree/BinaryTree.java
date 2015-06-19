@@ -76,19 +76,17 @@ public abstract class BinaryTree extends JButton {
 	 * @param panel
 	 *            The phylo panel this node is part of.
 	 */
-	public BinaryTree(final String nameIn, final double length,
-			final PhyloPanel panel) {
+	public BinaryTree(final String nameIn, final double length, final PhyloPanel panel) {
 		super(nameIn);
 		this.ancestor = null;
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
 		if (nameIn.isEmpty()) {
-			setToolTipText(String.valueOf(roundN(pathLength,
-					PATH_LENGTH_ROUND_TO_N)));
+			setToolTipText(String.valueOf(roundN(pathLength, PATH_LENGTH_ROUND_TO_N)));
 		} else {
-			setToolTipText("<html>" + nameIn + "<br>"
-					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N) + "</html>");
+			setToolTipText("<html>" + nameIn + "<br>" + roundN(pathLength, PATH_LENGTH_ROUND_TO_N)
+					+ "</html>");
 		}
 		addMouseListener(new NodeMouseListener());
 		this.setBackground(Color.GRAY);
@@ -224,8 +222,7 @@ public abstract class BinaryTree extends JButton {
 	 *            The parent container.
 	 * @return a phylogenetic tree
 	 */
-	private static BinaryTree parseNewick(final StringTokenizer st,
-			final PhyloPanel panel) {
+	private static BinaryTree parseNewick(final StringTokenizer st, final PhyloPanel panel) {
 		final String token = st.nextToken();
 		if (token.equals("(")) { // Inner node
 			final BinaryTree left = parseNewick(st, panel);
@@ -234,8 +231,8 @@ public abstract class BinaryTree extends JButton {
 			st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			BinaryTree current = new InnerNode(parseName(pieces, 0),
-					parseDouble(pieces, 1), left, right, panel);
+			BinaryTree current = new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1), left, right,
+					panel);
 			left.setAncestor(current);
 			right.setAncestor(current);
 			return current;
@@ -419,8 +416,8 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node.
 	 * @return A list of groups for which each group share a common ancestor.
 	 */
-	public static Collection<Collection<String>> findGroups(
-			final Collection<String> sources, final BinaryTree root) {
+	public static Collection<Collection<String>> findGroups(final Collection<String> sources,
+			final BinaryTree root) {
 		Collection<Collection<String>> groupList = new ArrayList<Collection<String>>();
 		while (!sources.isEmpty()) {
 			Collection<String> group = findGroup(sources, root);
@@ -441,8 +438,7 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of sources which share a common ancestor
 	 */
-	public static Collection<String> findGroup(
-			final Collection<String> sources, final BinaryTree root) {
+	public static Collection<String> findGroup(final Collection<String> sources, final BinaryTree root) {
 		if (root.isLeaf()) {
 			if (sources.contains(root.getID())) {
 				List<String> group = new ArrayList<String>();
@@ -474,8 +470,7 @@ public abstract class BinaryTree extends JButton {
 			}
 			return left;
 		} else {
-			if (root.getLeft().getSources().equals(left)
-					&& root.getRight().getSources().equals(right)) {
+			if (root.getLeft().getSources().equals(left) && root.getRight().getSources().equals(right)) {
 				left.addAll(right);
 			}
 			return left;
@@ -495,8 +490,7 @@ public abstract class BinaryTree extends JButton {
 	 * @return The distance between the common ancestor of 2 sources and the
 	 *         root of the tree
 	 */
-	public double getDistance(final String source1, final String source2,
-			final BinaryTree root) {
+	public double getDistance(final String source1, final String source2, final BinaryTree root) {
 		return getDistance(Arrays.asList(source1, source2), root);
 	}
 
@@ -527,11 +521,9 @@ public abstract class BinaryTree extends JButton {
 		if (containsL && containsR) {
 			return 0;
 		} else if (containsL) {
-			return root.getLeft().getPathLength()
-					+ getDistance(sources, root.getLeft());
+			return root.getLeft().getPathLength() + getDistance(sources, root.getLeft());
 		} else if (containsR) {
-			return root.getRight().getPathLength()
-					+ getDistance(sources, root.getRight());
+			return root.getRight().getPathLength() + getDistance(sources, root.getRight());
 		} else {
 			return 0;
 		}

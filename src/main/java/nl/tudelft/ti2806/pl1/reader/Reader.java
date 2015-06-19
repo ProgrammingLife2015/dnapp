@@ -40,8 +40,7 @@ public final class Reader {
 	 * @throws IOException
 	 *             When the file can't be read
 	 */
-	public static DGraph read(final String nodes, final String edges)
-			throws IOException {
+	public static DGraph read(final String nodes, final String edges) throws IOException {
 		DGraph graph = new DGraph();
 		for (DNode node : readNodes(nodes)) {
 			graph.addDNode(node);
@@ -62,10 +61,9 @@ public final class Reader {
 	 * @throws IOException
 	 *             When the file can't be read
 	 */
-	private static ArrayList<DNode> readNodes(final String nodesPath)
-			throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(nodesPath), "UTF-8"));
+	private static ArrayList<DNode> readNodes(final String nodesPath) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nodesPath),
+				"UTF-8"));
 		return NodeReader.readNodes(reader);
 	}
 
@@ -80,10 +78,9 @@ public final class Reader {
 	 * @throws IOException
 	 *             When the file can't be read
 	 */
-	private static ArrayList<DEdge> readEdges(final String edgesPath,
-			final DGraph graph) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(edgesPath), "UTF-8"));
+	private static ArrayList<DEdge> readEdges(final String edgesPath, final DGraph graph) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(edgesPath),
+				"UTF-8"));
 		return EdgeReader.readEdges(reader, graph);
 	}
 

@@ -52,9 +52,8 @@ public class Leaf extends BinaryTree {
 
 	@Override
 	protected final String toStringHelper(final String indent) {
-		String res = indent + stringOrElse(getID(), "X") + " (dist="
-				+ getPathLength() + ",x=" + getGridCoordinates().getX() + ",y="
-				+ getGridCoordinates().getY() + ")\n";
+		String res = indent + stringOrElse(getID(), "X") + " (dist=" + getPathLength() + ",x="
+				+ getGridCoordinates().getX() + ",y=" + getGridCoordinates().getY() + ")\n";
 		return res;
 	}
 

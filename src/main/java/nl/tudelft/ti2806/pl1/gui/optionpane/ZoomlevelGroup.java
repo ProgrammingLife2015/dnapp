@@ -22,8 +22,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	private static final String DEFAULT_TITLE = "Current zoom level";
 
 	/** The size of the group. */
-	private static final Dimension SIZE = new Dimension(
-			OptionsPane.MAX_CHILD_WIDTH, 120);
+	private static final Dimension SIZE = new Dimension(OptionsPane.MAX_CHILD_WIDTH, 120);
 
 	/** The total number of nodes in the original graph. */
 	private int totalNodes;
@@ -50,8 +49,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	}
 
 	@Override
-	public void update(final int totalNodesCount, final int visualNodesCount,
-			final int zoomLevelIndex) {
+	public void update(final int totalNodesCount, final int visualNodesCount, final int zoomLevelIndex) {
 		this.totalNodes = totalNodesCount;
 		this.visibleNodes = visualNodesCount;
 		this.zoomLevel = zoomLevelIndex;
@@ -67,10 +65,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 		mkRow(sb, "Zoom level:", String.valueOf(zoomLevel));
 		mkRow(sb, "# visible nodes:", String.valueOf(visibleNodes));
 		mkRow(sb, "# total nodes:", String.valueOf(totalNodes));
-		mkRow(sb,
-				"% collapsed:",
-				asPercentage(((double) (totalNodes - visibleNodes))
-						/ totalNodes, 2));
+		mkRow(sb, "% collapsed:", asPercentage(((double) (totalNodes - visibleNodes)) / totalNodes, 2));
 		sb.append("</table></html>");
 		info.setText(sb.toString());
 	}
@@ -83,8 +78,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	 * @param value
 	 *            The row value.
 	 */
-	private void mkRow(final StringBuilder sb, final String label,
-			final String value) {
+	private void mkRow(final StringBuilder sb, final String label, final String value) {
 		sb.append("<tr><td>");
 		sb.append(label);
 		sb.append("</td><td>");
@@ -102,13 +96,12 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	private static String asPercentage(final double val, final int decimals) {
 		final int perc = 100;
 		final int dec = (int) Math.pow(10, decimals);
-		return String.valueOf((double) Math.round(val * perc * dec) / dec)
-				+ "%";
+		return String.valueOf((double) Math.round(val * perc * dec) / dec) + "%";
 	}
 
 	@Override
 	public String toString() {
-		return "<ZoomlevelGroup[total=" + totalNodes + ",visible="
-				+ visibleNodes + ",level=" + zoomLevel + "]>";
+		return "<ZoomlevelGroup[total=" + totalNodes + ",visible=" + visibleNodes + ",level=" + zoomLevel
+				+ "]>";
 	}
 }

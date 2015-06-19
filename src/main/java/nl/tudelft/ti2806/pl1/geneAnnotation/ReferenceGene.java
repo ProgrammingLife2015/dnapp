@@ -45,8 +45,8 @@ public class ReferenceGene {
 	 * @param nameIn
 	 *            Name of the feature.
 	 */
-	public ReferenceGene(final int startIn, final int endIn,
-			final double scoreIn, final String strandIn, final String nameIn) {
+	public ReferenceGene(final int startIn, final int endIn, final double scoreIn, final String strandIn,
+			final String nameIn) {
 		this.start = startIn;
 		this.end = endIn;
 		this.score = scoreIn;
@@ -131,8 +131,7 @@ public class ReferenceGene {
 	 * @param mut
 	 *            The resistance mutation.
 	 */
-	public final void addMutation(final long location,
-			final ResistanceMutation mut) {
+	public final void addMutation(final long location, final ResistanceMutation mut) {
 		if (mutations == null) {
 			mutations = new HashMap<Long, ResistanceMutation>(1);
 		}
@@ -141,7 +140,7 @@ public class ReferenceGene {
 
 	@Override
 	public String toString() {
-		return "<Gene[" + start + "-" + end + ",score=" + score + ",strand="
-				+ strand + ",name=" + name + ",mutations=" + mutations + "]>";
+		return "<Gene[" + start + "-" + end + ",score=" + score + ",strand=" + strand + ",name=" + name
+				+ ",mutations=" + mutations + "]>";
 	}
 }

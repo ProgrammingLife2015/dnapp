@@ -43,8 +43,7 @@ public class ReaderTest {
 
 	@Test
 	public void starNodeHasEdgeToNode1Test() {
-		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-2)
-				.getOutEdges();
+		ArrayList<DEdge> edges = (ArrayList<DEdge>) graph.getDNode(-2).getOutEdges();
 		assertEquals(edges.get(0).getEndNode(), graph.getDNode(0));
 	}
 

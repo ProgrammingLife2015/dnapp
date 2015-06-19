@@ -33,8 +33,7 @@ public class GenomeRow {
 	 * @param highlightedIn
 	 *            whether the genome is highlighted or not
 	 */
-	public GenomeRow(final String idIn, final boolean visibleIn,
-			final boolean highlightedIn) {
+	public GenomeRow(final String idIn, final boolean visibleIn, final boolean highlightedIn) {
 		this.id = idIn;
 		this.visible = visibleIn;
 		this.highlighted = highlightedIn;
@@ -116,8 +115,7 @@ public class GenomeRow {
 	 * @throws IndexOutOfBoundsException
 	 *             when the column index is out of bounds.
 	 */
-	public final void set(final int col, final Object value)
-			throws IndexOutOfBoundsException {
+	public final void set(final int col, final Object value) throws IndexOutOfBoundsException {
 		switch (col) {
 		case COL_ID:
 			setId((String) value);
@@ -135,7 +133,6 @@ public class GenomeRow {
 
 	@Override
 	public final String toString() {
-		return "<Genome[" + id + ",visible=" + visible + ",highlighted="
-				+ highlighted + "]>";
+		return "<Genome[" + id + ",visible=" + visible + ",highlighted=" + highlighted + "]>";
 	}
 }

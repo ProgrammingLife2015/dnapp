@@ -34,9 +34,8 @@ public final class ComplexCollapser {
 	 *            the thresholds.
 	 * @return The graph with the complex mutations collapsed.
 	 */
-	public static Graph collapseComplexMutations(
-			final Collection<ComplexMutation> mutations, final Graph graph,
-			final int threshold) {
+	public static Graph collapseComplexMutations(final Collection<ComplexMutation> mutations,
+			final Graph graph, final int threshold) {
 		for (ComplexMutation mut : mutations) {
 			if (threshold >= COMPLEXTHRESHOLD) {
 				collapseComplexMutation(mut, graph);
@@ -53,8 +52,7 @@ public final class ComplexCollapser {
 	 * @param graph
 	 *            The graph.
 	 */
-	private static void collapseComplexMutation(final ComplexMutation mut,
-			final Graph graph) {
+	private static void collapseComplexMutation(final ComplexMutation mut, final Graph graph) {
 		Collection<Integer> nodes = mut.getInNodes();
 		for (int n : nodes) {
 			Node node = graph.getNode("" + n);

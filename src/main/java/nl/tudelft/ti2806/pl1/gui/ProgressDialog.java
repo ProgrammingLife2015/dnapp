@@ -55,8 +55,7 @@ public class ProgressDialog extends JDialog {
 	 * 
 	 * @see JDialog#JDialog(Frame, String, boolean)
 	 */
-	public ProgressDialog(final Frame owner, final String title,
-			final boolean modal) {
+	public ProgressDialog(final Frame owner, final String title, final boolean modal) {
 		super(owner, title, modal);
 		setLocationRelativeTo(owner);
 		setSize(SIZE);

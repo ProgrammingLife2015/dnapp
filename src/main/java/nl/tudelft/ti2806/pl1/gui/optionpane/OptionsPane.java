@@ -29,8 +29,7 @@ public class OptionsPane extends JScrollPane {
 	private static final int WIDTH = 220;
 
 	/** The width of the pane in a dimension object. */
-	private static final Dimension SIZE = new Dimension(WIDTH,
-			Integer.MAX_VALUE);
+	private static final Dimension SIZE = new Dimension(WIDTH, Integer.MAX_VALUE);
 
 	/** The maximum width of the (grouped) elements in this pane. */
 	public static final int MAX_CHILD_WIDTH = 200;
@@ -39,8 +38,7 @@ public class OptionsPane extends JScrollPane {
 	private static final int HOR_INSETS = 10, VER_INSETS = 5;
 
 	/** The insets. */
-	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS,
-			VER_INSETS, HOR_INSETS);
+	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS, VER_INSETS, HOR_INSETS);
 
 	// ***** Fields ***** //
 
@@ -155,8 +153,8 @@ public class OptionsPane extends JScrollPane {
 	 * @param selected
 	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fillGenomeList(final Collection<String> genomeIds,
-			final boolean empty, final boolean selected) {
+	public final void fillGenomeList(final Collection<String> genomeIds, final boolean empty,
+			final boolean selected) {
 		tblGenomes.fill(genomeIds, empty, selected);
 	}
 

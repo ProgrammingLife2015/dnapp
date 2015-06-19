@@ -76,8 +76,7 @@ public class HelpDialog extends JDialog {
 		info.setText(readHelpFile(HELP_USING_DNAPP));
 		info.setBorder(EMPTY_BORDER);
 		info.setPreferredSize(new Dimension(I_WIDTH, I_HEIGHT));
-		JScrollPane jsp = new JScrollPane(info,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane jsp = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		ret.add(jsp, BorderLayout.CENTER);
 		return ret;
@@ -101,8 +100,7 @@ public class HelpDialog extends JDialog {
 	 * @return The content of the help file.
 	 */
 	private String readHelpFile(final String fileName) {
-		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(
-				fileName);
+		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(fileName);
 		Scanner sc = new Scanner(is, "UTF-8");
 		StringBuilder sb = new StringBuilder();
 		while (sc.hasNextLine()) {

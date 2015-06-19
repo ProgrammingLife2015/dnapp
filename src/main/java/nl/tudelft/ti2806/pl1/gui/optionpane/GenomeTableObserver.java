@@ -18,8 +18,7 @@ public interface GenomeTableObserver {
 	 * @param genomeHighlightChanged
 	 *            Whether the choice of highlighting of the genome has changed.
 	 */
-	void update(GenomeRow genomeRow, boolean genomeFilterChanged,
-			boolean genomeHighlightChanged);
+	void update(GenomeRow genomeRow, boolean genomeFilterChanged, boolean genomeHighlightChanged);
 
 	/**
 	 * Update the observers for the selected genes in the phylotree.

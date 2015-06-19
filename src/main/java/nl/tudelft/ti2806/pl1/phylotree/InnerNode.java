@@ -31,9 +31,8 @@ public class InnerNode extends BinaryTree {
 	 * @param panel
 	 *            The phylo panel this node is part of.
 	 */
-	public InnerNode(final String nameIn, final double dist,
-			final BinaryTree leftChild, final BinaryTree rightChild,
-			final PhyloPanel panel) {
+	public InnerNode(final String nameIn, final double dist, final BinaryTree leftChild,
+			final BinaryTree rightChild, final PhyloPanel panel) {
 		super(nameIn, dist, panel);
 		this.left = leftChild;
 		this.right = rightChild;
@@ -88,9 +87,8 @@ public class InnerNode extends BinaryTree {
 
 	@Override
 	protected final String toStringHelper(final String indent) {
-		String res = indent + stringOrElse(getID(), "X") + " (dist="
-				+ getPathLength() + ",x=" + getGridCoordinates().getX() + ",y="
-				+ getGridCoordinates().getY() + ")\n";
+		String res = indent + stringOrElse(getID(), "X") + " (dist=" + getPathLength() + ",x="
+				+ getGridCoordinates().getX() + ",y=" + getGridCoordinates().getY() + ")\n";
 		if (hasLeft()) {
 			res += left.toStringHelper(indent + "\t");
 		}

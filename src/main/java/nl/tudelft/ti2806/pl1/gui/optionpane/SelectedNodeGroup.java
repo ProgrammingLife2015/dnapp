@@ -52,8 +52,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	private static final Insets INSETS = new Insets(2, 5, 2, 5);
 
 	/** The size of the group. */
-	private static final Dimension SIZE = new Dimension(
-			OptionsPane.MAX_CHILD_WIDTH, 120);
+	private static final Dimension SIZE = new Dimension(OptionsPane.MAX_CHILD_WIDTH, 120);
 
 	/** The width of the node content bar. */
 	private static final int NCB_WIDTH = 15;
@@ -65,13 +64,11 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	private GridBagConstraints gbc = new GridBagConstraints();
 
 	/** The labels containing the node statistics. */
-	private JLabel lblIDL = mkLabel("ID:", RIGHT_ALIGNMENT),
-			lblContentLengthL = mkLabel("Length:", RIGHT_ALIGNMENT),
-			lblSourcesL = mkLabel("Sources:", LEFT_ALIGNMENT);
+	private JLabel lblIDL = mkLabel("ID:", RIGHT_ALIGNMENT), lblContentLengthL = mkLabel("Length:",
+			RIGHT_ALIGNMENT), lblSourcesL = mkLabel("Sources:", LEFT_ALIGNMENT);
 
 	/** The labels containing the node statistics. */
-	private JLabel lblID = mkLabel("", LEFT_ALIGNMENT),
-			lblContentLength = mkLabel("", LEFT_ALIGNMENT),
+	private JLabel lblID = mkLabel("", LEFT_ALIGNMENT), lblContentLength = mkLabel("", LEFT_ALIGNMENT),
 			lblSources = mkLabel("", LEFT_ALIGNMENT);
 
 	/** The simple bar chart showing the distribution of nucleotides. */
@@ -171,8 +168,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		if (selectedNodes.size() == 1) {
 			DNode selectedNode = selectedNodes.iterator().next();
 			lblID.setText(String.valueOf(selectedNode.getId()));
-			lblContentLength.setText(String.valueOf(selectedNode.getContent()
-					.length()));
+			lblContentLength.setText(String.valueOf(selectedNode.getContent().length()));
 			lblSources.setText(collectionToString(selectedNode.getSources()));
 			nodeChart.analyseString(selectedNode.getContent());
 			nodeChart.repaint();

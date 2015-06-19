@@ -59,8 +59,8 @@ public class DNode {
 	 * @param contentIn
 	 *            DNA bases inside the Node.
 	 */
-	public DNode(final int idIn, final HashSet<String> sourcesIn,
-			final int startIn, final int endIn, final String contentIn) {
+	public DNode(final int idIn, final HashSet<String> sourcesIn, final int startIn, final int endIn,
+			final String contentIn) {
 		this.id = idIn;
 		this.outEdges = new ArrayList<DEdge>();
 		this.inEdges = new ArrayList<DEdge>();
@@ -380,8 +380,7 @@ public class DNode {
 	 *            The index to add. Should be relative to the reference genome.
 	 */
 	public void addResistantMutationIndex(final ResistanceMutation resMut) {
-		if (resMut.getRefIndex() >= getStart()
-				&& resMut.getRefIndex() <= getEnd()) {
+		if (resMut.getRefIndex() >= getStart() && resMut.getRefIndex() <= getEnd()) {
 			if (resMuts == null) {
 				resMuts = new ArrayList<ResistanceMutation>(1);
 			}

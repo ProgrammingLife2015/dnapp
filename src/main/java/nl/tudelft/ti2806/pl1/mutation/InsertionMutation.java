@@ -26,9 +26,8 @@ public class InsertionMutation extends Mutation {
 	 * @param endpos
 	 *            The end position on the reference genome.
 	 */
-	public InsertionMutation(final int pre, final int post,
-			final int insertednode, final ReferenceGeneStorage rgs,
-			final int startpos, final int endpos) {
+	public InsertionMutation(final int pre, final int post, final int insertednode,
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		super(pre, post, rgs, startpos, endpos);
 		this.inNode = insertednode;
 	}
@@ -42,8 +41,7 @@ public class InsertionMutation extends Mutation {
 
 	@Override
 	public String toString() {
-		return "<InsMut[pre:" + getPreNode() + ",post:" + getPostNode()
-				+ ",ins:" + getInNode() + "]>";
+		return "<InsMut[pre:" + getPreNode() + ",post:" + getPostNode() + ",ins:" + getInNode() + "]>";
 	}
 
 	@Override
@@ -62,7 +60,6 @@ public class InsertionMutation extends Mutation {
 
 	@Override
 	public double getScore() {
-		return super.getScore()
-				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
+		return super.getScore() * ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
 	}
 }

@@ -30,8 +30,7 @@ import javax.swing.SwingConstants;
  * 
  * @author https://tips4java.wordpress.com/2009/12/20/scrollable-panel
  */
-public class ScrollablePanel extends JPanel implements Scrollable,
-		SwingConstants {
+public class ScrollablePanel extends JPanel implements Scrollable, SwingConstants {
 
 	/**
 	 * 
@@ -143,8 +142,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 * @return the block IncrementInfo for the specified orientation
 	 */
 	public IncrementInfo getScrollableBlockIncrement(final int orientation) {
-		return orientation == SwingConstants.HORIZONTAL ? horizontalBlock
-				: verticalBlock;
+		return orientation == SwingConstants.HORIZONTAL ? horizontalBlock : verticalBlock;
 	}
 
 	/**
@@ -161,8 +159,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 *            a value used with the IncrementType to determine the
 	 *            scrollable amount
 	 */
-	public void setScrollableBlockIncrement(final int orientation,
-			final IncrementType type, final int amount) {
+	public void setScrollableBlockIncrement(final int orientation, final IncrementType type, final int amount) {
 		IncrementInfo info = new IncrementInfo(type, amount);
 		setScrollableBlockIncrement(orientation, info);
 	}
@@ -177,8 +174,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 *            An IncrementInfo object containing information of how to
 	 *            calculate the scrollable amount.
 	 */
-	public void setScrollableBlockIncrement(final int orientation,
-			final IncrementInfo info) {
+	public void setScrollableBlockIncrement(final int orientation, final IncrementInfo info) {
 		switch (orientation) {
 		case SwingConstants.HORIZONTAL:
 			horizontalBlock = info;
@@ -187,8 +183,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 			verticalBlock = info;
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid orientation: "
-					+ orientation);
+			throw new IllegalArgumentException("Invalid orientation: " + orientation);
 		}
 	}
 
@@ -198,8 +193,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 * @return the unit IncrementInfo for the specified orientation
 	 */
 	public IncrementInfo getScrollableUnitIncrement(final int orientation) {
-		return orientation == SwingConstants.HORIZONTAL ? horizontalUnit
-				: verticalUnit;
+		return orientation == SwingConstants.HORIZONTAL ? horizontalUnit : verticalUnit;
 	}
 
 	/**
@@ -216,8 +210,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 *            a value used with the IncrementType to determine the
 	 *            scrollable amount
 	 */
-	public void setScrollableUnitIncrement(final int orientation,
-			final IncrementType type, final int amount) {
+	public void setScrollableUnitIncrement(final int orientation, final IncrementType type, final int amount) {
 		IncrementInfo info = new IncrementInfo(type, amount);
 		setScrollableUnitIncrement(orientation, info);
 	}
@@ -232,8 +225,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 	 *            An IncrementInfo object containing information of how to
 	 *            calculate the scrollable amount.
 	 */
-	public void setScrollableUnitIncrement(final int orientation,
-			final IncrementInfo info) {
+	public void setScrollableUnitIncrement(final int orientation, final IncrementInfo info) {
 		switch (orientation) {
 		case SwingConstants.HORIZONTAL:
 			horizontalUnit = info;
@@ -242,8 +234,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 			verticalUnit = info;
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid orientation: "
-					+ orientation);
+			throw new IllegalArgumentException("Invalid orientation: " + orientation);
 		}
 	}
 
@@ -253,34 +244,29 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 		return getPreferredSize();
 	}
 
-	public int getScrollableUnitIncrement(final Rectangle visible,
-			final int orientation, final int direction) {
+	public int getScrollableUnitIncrement(final Rectangle visible, final int orientation, final int direction) {
 		switch (orientation) {
 		case SwingConstants.HORIZONTAL:
 			return getScrollableIncrement(horizontalUnit, visible.width);
 		case SwingConstants.VERTICAL:
 			return getScrollableIncrement(verticalUnit, visible.height);
 		default:
-			throw new IllegalArgumentException("Invalid orientation: "
-					+ orientation);
+			throw new IllegalArgumentException("Invalid orientation: " + orientation);
 		}
 	}
 
-	public int getScrollableBlockIncrement(final Rectangle visible,
-			final int orientation, final int direction) {
+	public int getScrollableBlockIncrement(final Rectangle visible, final int orientation, final int direction) {
 		switch (orientation) {
 		case SwingConstants.HORIZONTAL:
 			return getScrollableIncrement(horizontalBlock, visible.width);
 		case SwingConstants.VERTICAL:
 			return getScrollableIncrement(verticalBlock, visible.height);
 		default:
-			throw new IllegalArgumentException("Invalid orientation: "
-					+ orientation);
+			throw new IllegalArgumentException("Invalid orientation: " + orientation);
 		}
 	}
 
-	protected int getScrollableIncrement(final IncrementInfo info,
-			final int distance) {
+	protected int getScrollableIncrement(final IncrementInfo info, final int distance) {
 		if (info.getIncrement() == IncrementType.PIXELS)
 			return info.getAmount();
 		else

@@ -115,8 +115,7 @@ public class ImportDialog extends JFileChooser {
 		KNOWN_RES_MUT {
 			@Override
 			public FileFilter getFileFilter() {
-				return new ExtensionFileFilter(
-						"RCM file (resistance causing mutations)", "rcm");
+				return new ExtensionFileFilter("RCM file (resistance causing mutations)", "rcm");
 			}
 
 			@Override

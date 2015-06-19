@@ -31,8 +31,7 @@ public final class ScoreMultiplier implements ChangeListener {
 	 *            The slider that has changed.
 	 */
 	public static void multiplierChange(final JSlider changed) {
-		mults.put(changed.getName(), (double) changed.getValue()
-				/ MAKEPERCENTAGE);
+		mults.put(changed.getName(), (double) changed.getValue() / MAKEPERCENTAGE);
 	}
 
 	/**

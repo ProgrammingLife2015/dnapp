@@ -47,8 +47,7 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("File");
 		JMenuItem impGraph = new JMenuItem();
 		setMenuItem(impGraph, "Import graph", null, 'I',
-				"Import a sequence graph (.node.graph and .edge.graph)",
-				AppEvent.IMPORT_GRAPH);
+				"Import a sequence graph (.node.graph and .edge.graph)", AppEvent.IMPORT_GRAPH);
 
 		setAcc(impGraph, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		ret.add(impGraph);
@@ -64,14 +63,12 @@ public class MenuBar extends JMenuBar {
 		};
 		export.setMnemonic('E');
 		JMenuItem exportDGS = new JMenuItem();
-		setMenuItem(exportDGS, "DGS format", null, 'D', null,
-				AppEvent.WRITE_TO_DGS);
+		setMenuItem(exportDGS, "DGS format", null, 'D', null, AppEvent.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
-		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
-				AppEvent.EXIT_APP);
+		setMenuItem(exit, "Exit", null, 'E', "Exit the program", AppEvent.EXIT_APP);
 		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 		ret.add(exit);
 
@@ -86,8 +83,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu helpMenu() {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
-		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
-				AppEvent.HELP);
+		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts", AppEvent.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
 		return ret;
@@ -111,25 +107,20 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset view", null, 'R',
-				"Reset to the initial view.", AppEvent.RESET_GRAPH);
-		setAcc(reset,
-				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
+		setMenuItem(reset, "Reset view", null, 'R', "Reset to the initial view.", AppEvent.RESET_GRAPH);
+		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
 
 		JMenuItem zoomIn = new JMenuItem();
 		setMenuItem(zoomIn, "Zoom in", null, 'I',
-				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.",
-				AppEvent.ZOOMLEVEL_IN);
+				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.", AppEvent.ZOOMLEVEL_IN);
 		setAcc(zoomIn, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, Event.CTRL_MASK));
 		ret.add(zoomIn);
 
 		JMenuItem zoomOut = new JMenuItem();
 		setMenuItem(zoomOut, "Zoom out", null, 'O',
-				"<html>Go to previous zoomlevel.<br>Nodes might be collapsed.",
-				AppEvent.ZOOMLEVEL_OUT);
-		setAcc(zoomOut,
-				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
+				"<html>Go to previous zoomlevel.<br>Nodes might be collapsed.", AppEvent.ZOOMLEVEL_OUT);
+		setAcc(zoomOut, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
 		ret.add(zoomOut);
 
 		ret.add(makeShowToolBar());
@@ -142,8 +133,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JCheckBoxMenuItem makeShowToolBar() {
 
-		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem(
-				"Show tool bar", true);
+		final JCheckBoxMenuItem showToolBar = new JCheckBoxMenuItem("Show tool bar", true);
 		showToolBar.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
@@ -159,8 +149,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JCheckBoxMenuItem makeShowOptionPane() {
 
-		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem(
-				"Show option panel", true) {
+		final JCheckBoxMenuItem showOptionPane = new JCheckBoxMenuItem("Show option panel", true) {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 1L;
 
@@ -198,9 +187,8 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 * @see AppEvent
 	 */
-	private void setMenuItem(final JMenuItem item, final String text,
-			final String iconName, final char mnemonic,
-			final String toolTipText, final AppEvent action) {
+	private void setMenuItem(final JMenuItem item, final String text, final String iconName,
+			final char mnemonic, final String toolTipText, final AppEvent action) {
 		item.setText(text);
 		item.setMnemonic(mnemonic);
 		item.setToolTipText(toolTipText);
