@@ -1,13 +1,10 @@
 package nl.tudelft.ti2806.pl1.mutation;
 
-import java.util.Arrays;
-
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 
 /**
  * @author Maarten, Justin
  * @since 2-6-2015
- * @version 1.0
  */
 public abstract class Mutation {
 
@@ -20,8 +17,8 @@ public abstract class Mutation {
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
 
-	/**  */
-	private static final int[] GROUP_SCORE = { 0, 0, 10, 10, 20 };
+	/** The scores for the number of phylo groups. */
+	private static final int[] GROUP_SCORE = { 0, 5, 10, 15, 20 };
 
 	/** Score for a mutation if it is located on a gene. */
 	private static final int SCORE_MUT = 70;
@@ -48,8 +45,8 @@ public abstract class Mutation {
 	 * @param endpos
 	 *            End position on the reference genome.
 	 */
-	public Mutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
+	public Mutation(final int pre, final int post, final ReferenceGeneStorage rgs, final int startpos,
+			final int endpos) {
 		this.preNode = pre;
 		this.postNode = post;
 		this.referenceGeneStorage = rgs;
@@ -89,26 +86,27 @@ public abstract class Mutation {
 		score = 0;
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
 		if (rgs.isIntragenic(startposition) || rgs.isIntragenic(endposition)) {
-			addScore(SCORE_IN_GENE
-					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
-							.name()));
-			for (long pos : rgs.getDrugResistanceMutations().keySet()) {
-				if (startposition <= pos && pos < endposition) {
-					addScore(SCORE_MUT
-							* ScoreMultiplier
-									.getMult(MutationMultipliers.KNOWN_MUTATION
-											.name()));
-					break;
+			System.out.println("WEL INTRA");
+			addScore(SCORE_IN_GENE * ScoreMultiplier.getMult(MutationMultipliers.IN_GENE.name()));
+			if (rgs.getDrugResistanceMutations() != null) {
+				for (long pos : rgs.getDrugResistanceMutations().keySet()) {
+					if (startposition <= pos && pos < endposition) {
+						addScore(SCORE_MUT
+								* ScoreMultiplier.getMult(MutationMultipliers.KNOWN_MUTATION.name()));
+						break;
+					}
 				}
 			}
-			double phylomult = ScoreMultiplier
-					.getMult(MutationMultipliers.PHYLO.name());
+			double phylomult = ScoreMultiplier.getMult(MutationMultipliers.PHYLO.name());
 			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
 				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
+				System.out.println("in=" + GROUP_SCORE[affectedNodeGroups] * phylomult);
 			} else {
 				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
+				System.out.println("out=" + GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 			}
-			System.out.println(Arrays.toString(GROUP_SCORE));
+		} else {
+			System.out.println("not intragenetic mutation");
 		}
 	}
 
@@ -130,8 +128,7 @@ public abstract class Mutation {
 	public boolean equals(final Object obj) {
 		if (obj instanceof Mutation) {
 			Mutation that = (Mutation) obj;
-			return this.preNode == that.preNode
-					&& this.postNode == that.postNode;
+			return this.preNode == that.preNode && this.postNode == that.postNode;
 		}
 		return false;
 	}
