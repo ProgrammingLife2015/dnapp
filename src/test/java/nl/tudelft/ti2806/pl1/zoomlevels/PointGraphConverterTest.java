@@ -56,6 +56,7 @@ public class PointGraphConverterTest {
 		graph.addDEdge(e2);
 		graph.addDEdge(e3);
 		graph.addDEdge(e4);
+		graph.setStart(start);
 	}
 
 	@After
