@@ -27,31 +27,21 @@ public class WindowEvents implements ComponentListener {
 		this.window = w;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public final void componentResized(final ComponentEvent e) {
 		window.resized();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public final void componentMoved(final ComponentEvent e) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public final void componentShown(final ComponentEvent e) {
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public final void componentHidden(final ComponentEvent e) {
-
 	}
 
 }

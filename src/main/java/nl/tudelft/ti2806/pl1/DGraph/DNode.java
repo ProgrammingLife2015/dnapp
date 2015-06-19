@@ -380,10 +380,8 @@ public class DNode {
 	 *            The index to add. Should be relative to the reference genome.
 	 */
 	public void addResistantMutationIndex(final ResistanceMutation resMut) {
-		if (resMut.getRefIndex() < getStart()
-				|| resMut.getRefIndex() > getEnd()) {
-			System.out.println("!!! refIndex not in this node!");
-		} else {
+		if (resMut.getRefIndex() >= getStart()
+				&& resMut.getRefIndex() <= getEnd()) {
 			if (resMuts == null) {
 				resMuts = new ArrayList<ResistanceMutation>(1);
 			}

@@ -48,6 +48,6 @@ public class DeletionMutation extends Mutation {
 	@Override
 	public double getScore() {
 		return super.getScore()
-				* ScoreMultiplier.getMult((MutationMultipliers.INDEL.name()));
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
 	}
 }
