@@ -18,7 +18,7 @@ public abstract class Mutation {
 	private ReferenceGeneStorage referenceGeneStorage;
 
 	/** The scores for the number of phylo groups. */
-	private static final int[] GROUP_SCORE = { 0, 5, 10, 15, 20 };
+	private static final int[] GROUP_SCORE = { 0, 0, 8, 16, 24 };
 
 	/** Score for a mutation if it is located on a gene. */
 	private static final int SCORE_MUT = 70;
@@ -86,7 +86,6 @@ public abstract class Mutation {
 		score = 0;
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
 		if (rgs.isIntragenic(startposition) || rgs.isIntragenic(endposition)) {
-			System.out.println("WEL INTRA");
 			addScore(SCORE_IN_GENE * ScoreMultiplier.getMult(MutationMultipliers.IN_GENE.name()));
 			if (rgs.getDrugResistanceMutations() != null) {
 				for (long pos : rgs.getDrugResistanceMutations().keySet()) {
@@ -100,13 +99,9 @@ public abstract class Mutation {
 			double phylomult = ScoreMultiplier.getMult(MutationMultipliers.PHYLO.name());
 			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
 				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
-				System.out.println("in=" + GROUP_SCORE[affectedNodeGroups] * phylomult);
 			} else {
 				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
-				System.out.println("out=" + GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 			}
-		} else {
-			System.out.println("not intragenetic mutation");
 		}
 	}
 
