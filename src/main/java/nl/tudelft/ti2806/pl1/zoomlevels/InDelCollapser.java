@@ -15,15 +15,6 @@ import org.graphstream.graph.Node;
  */
 public final class InDelCollapser {
 
-	/** The amount of nucleoids that determine how important a deletion is. */
-	private static final int LARGE_AMOUNT_OF_NUCLEOIDS = 20000;
-
-	/**
-	 * The threshold applied when a deletion is larger than a certain amount of
-	 * nucleoids.
-	 */
-	private static final int THRESHOLD = 95;
-
 	/**	 */
 	private InDelCollapser() {
 	}
@@ -69,27 +60,10 @@ public final class InDelCollapser {
 			final int threshold) {
 		for (DeletionMutation del : delmutations) {
 			if (del.getScore() < threshold) {
-				if (getSize(del, graph) < LARGE_AMOUNT_OF_NUCLEOIDS) {
-					collapseDeletion(del, graph);
-				} else if (threshold > THRESHOLD) {
-					collapseDeletion(del, graph);
-				}
+				collapseDeletion(del, graph);
 			}
 		}
 		return graph;
-	}
-
-	/**
-	 * @param del
-	 *            The mutation
-	 * @param graph
-	 *            The graph
-	 * @return The amount of nucleoids that are in the mutation
-	 */
-	private static int getSize(final DeletionMutation del, final Graph graph) {
-		int start = graph.getNode(del.getPreNode()).getAttribute("end");
-		int end = graph.getNode(del.getPostNode()).getAttribute("start");
-		return end - start;
 	}
 
 	/**
