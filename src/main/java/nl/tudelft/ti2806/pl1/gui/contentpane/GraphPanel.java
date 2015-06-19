@@ -14,9 +14,9 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
@@ -52,7 +52,8 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Maarten
  */
-public class GraphPanel extends JSplitPane implements ContentTab {
+public class GraphPanel extends JSplitPane implements ContentTab,
+		PhyloChosenObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -148,7 +149,7 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	private DGraph dgraph;
 
 	/** A collection of the highlighted genomes. */
-	private Set<String> highlightedGenomes;
+	private Collection<String> highlightedGenomes;
 
 	/**
 	 * Initialize a graph panel.
@@ -811,5 +812,13 @@ public class GraphPanel extends JSplitPane implements ContentTab {
 	 */
 	public int getZoomLevel() {
 		return zoomLevel;
+	}
+
+	@Override
+	public void update(final Collection<String> chosen) {
+		highlightedGenomes.clear();
+		unHighlight();
+		highlightedGenomes = chosen;
+		highlight();
 	}
 }
