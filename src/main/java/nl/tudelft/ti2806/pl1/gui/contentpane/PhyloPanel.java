@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
@@ -65,26 +66,26 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	/** The observers for the phylopanel. */
 	private Collection<PhyloChosenObserver> observers = new ArrayList<PhyloChosenObserver>();
 
-	/**
-	 * @return The loaded tree.
-	 */
-	public final BinaryTree getTree() {
-		return tree;
-	}
-
 	/** The Newick formatted input string. */
 	private String newickSource;
 
 	/** The scroll panel. */
 	private ScrollablePanel treePanel;
 
+	/** The tabs this pane is part of. */
+	private JTabbedPane tabsParent;
+
 	/** The space in between the nodes. */
 	private static final Insets INSETS = new Insets(3, 10, 0, 0);
 
 	/**
 	 * Initializes the panel.
+	 * 
+	 * @param parent
+	 *            The tabs this pane is part of.
 	 */
-	public PhyloPanel() {
+	public PhyloPanel(final JTabbedPane parent) {
+		this.tabsParent = parent;
 		treePanel = new ScrollablePanel() {
 			/** The serial version UID */
 			private static final long serialVersionUID = 118748767146413611L;
@@ -106,7 +107,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 		List<JComponent> ret = new ArrayList<JComponent>(2);
 		ret.add(ToolBar.makeButton("Highlight selection", null,
 				new SourceHighlightListener(), null));
-		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		// ret.add(ToolBar.makeButton("Filter selection", null, null, null));
 		return ret;
 	}
 
@@ -198,7 +199,6 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)
 				* (NODE_HEIGHT + INSETS.top) + INSETS.top));
 		repaint();
-		// revalidate();
 	}
 
 	/**
@@ -215,7 +215,6 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	 *            The current tree
 	 */
 	private void addNode(final BinaryTree bintree) {
-		// treePanel.remove(tree);
 		int x = (int) bintree.getGridCoordinates().getX();
 		int y = (int) bintree.getGridCoordinates().getY();
 		bintree.setBounds(x * (NODE_WIDTH + INSETS.left) + INSETS.left, y
@@ -270,16 +269,23 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	}
 
 	/**
+	 * @return The loaded tree.
+	 */
+	public final BinaryTree getTree() {
+		return tree;
+	}
+
+	/**
 	 * The event listener for the filter selection button.
 	 * 
-	 * @author mark
-	 *
+	 * @author Mark
 	 */
 	class SourceHighlightListener implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			Collection<String> chosen = getTree().getChosen(getTree());
 			notifyObservers(chosen);
+			tabsParent.setSelectedIndex(0);
 		}
 	}
 }

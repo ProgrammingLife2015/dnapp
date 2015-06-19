@@ -26,21 +26,6 @@ import org.junit.Test;
  */
 public class BinaryTreeTest {
 
-	/**
-	 * Path to the input file.
-	 */
-	// private String path;
-
-	/**
-	 * Content of the input file in a single string.
-	 */
-	// private String s;
-
-	/**
-	 * Binary treed made from the content of the input file.
-	 */
-	// private BinaryTree t;
-
 	private String s1;
 	private String s2;
 	private String s3;
@@ -200,7 +185,7 @@ public class BinaryTreeTest {
 
 	@Test
 	public final void testComputePlacement() {
-		PhyloPanel pp = new PhyloPanel();
+		PhyloPanel pp = new PhyloPanel(null);
 		pp.loadTree(new File("src/test/resources/phylotree.txt"));
 		BinaryTree t = pp.getTree();
 		assertEquals(t.computePlacement(0, 0), 4);

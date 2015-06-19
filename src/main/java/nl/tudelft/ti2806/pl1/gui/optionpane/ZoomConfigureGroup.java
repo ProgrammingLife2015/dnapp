@@ -34,7 +34,7 @@ public class ZoomConfigureGroup extends JPanel {
 	private static final int NUM_SLIDERS = MutationMultipliers.values().length;
 
 	/** The default visible title. */
-	private static final String DEFAULT_TITLE = "<html><b>Zoom settings.";
+	private static final String DEFAULT_TITLE = "<html><b>Zoom settings";
 
 	/** Slider options. **/
 	private static final MutationMultipliers[] SLIDERS = MutationMultipliers

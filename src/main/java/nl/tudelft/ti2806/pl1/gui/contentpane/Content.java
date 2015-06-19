@@ -65,7 +65,7 @@ public class Content extends JPanel {
 		setLayout(new BorderLayout());
 
 		graphPanel = new GraphPanel(window);
-		phyloPanel = new PhyloPanel();
+		phyloPanel = new PhyloPanel(tabs);
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addChangeListener(new ChangeListener() {

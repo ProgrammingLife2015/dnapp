@@ -1,9 +1,11 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -507,6 +509,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 *            The Graphics object to protect.
 	 */
 	private void paintGeneBoxes(final Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(1));
 		for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
 			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");

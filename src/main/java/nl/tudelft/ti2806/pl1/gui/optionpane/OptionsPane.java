@@ -18,7 +18,6 @@ import com.wordpress.tips4java.ScrollablePanel.ScrollableSizeHint;
 
 /**
  * @author Maarten
- *
  */
 public class OptionsPane extends JScrollPane {
 
@@ -119,9 +118,10 @@ public class OptionsPane extends JScrollPane {
 		place(new JLabel("<html><b>Genomes:"), 0);
 		place(tblGenomes);
 		place(grpZoomInfo);
-		place(grpZoomSettings);
-		place(new JLabel("<html><b>Select gene and press ENTER:"), 0);
+		place(new JLabel("<html><b>Select gene and press <code>ENTER</code>:"),
+				0);
 		place(geneNavigator);
+		place(grpZoomSettings);
 		place(grpSelectedNode);
 
 		final int boxWY = 100;
