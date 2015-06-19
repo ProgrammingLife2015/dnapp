@@ -39,10 +39,8 @@ public class ComplexCollapserTest {
 		insertSrc3 = new HashSet<String>(Arrays.asList("REF2"));
 
 		rgs = new ReferenceGeneStorage(null);
-		rgs.setDrugRestistantMutations(new File(
-				"src/test/resources/resistanceCausingMutationsTesting.txt"));
-		rgs.setGeneAnnotation(new File(
-				"src/test/resources/ReferenceGeneStorageTestGenes.gff"));
+		rgs.setDrugRestistantMutations(new File("src/test/resources/resistanceCausingMutationsTesting.txt"));
+		rgs.setGeneAnnotation(new File("src/test/resources/ReferenceGeneStorageTestGenes.gff"));
 
 		start = new DNode(1, sources, 0, 0, "");
 		start.setDepth(1);
@@ -89,9 +87,11 @@ public class ComplexCollapserTest {
 		graph.addDEdge(e6);
 		graph.addDEdge(e7);
 		graph.addDEdge(e8);
-		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
-				graph, null);
+
+		graph.setStart(start);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
+
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
 		assertTrue(gsg.getNode("3") != null);
@@ -147,8 +147,10 @@ public class ComplexCollapserTest {
 		graph.addDEdge(e8);
 		graph.addDEdge(e9);
 		graph.addDEdge(e10);
-		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
-				graph, null);
+
+		graph.setStart(start);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(graph, null);
+
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);

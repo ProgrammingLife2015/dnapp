@@ -48,6 +48,7 @@ public class InDelCollapserInsertionsTest {
 		graph.addDEdge(si);
 		graph.addDEdge(se);
 		graph.addDEdge(ie);
+		graph.setStart(start);
 	}
 
 	@After
