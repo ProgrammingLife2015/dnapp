@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.Dimension;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -59,10 +60,15 @@ public class ZoomConfigureGroup extends JPanel {
 	 * Add the sliders.
 	 */
 	private void addComponents() {
+		Hashtable<Integer, JLabel> table = new Hashtable<Integer, JLabel>();
+		table.put(0, new JLabel("Ignore"));
+		table.put(SLIDERVALUES, new JLabel("Default"));
 		for (int i = 0; i < NUM_SLIDERS; i++) {
 			JSlider slider = new JSlider(0, SLIDERVALUES, SLIDERVALUES);
 			slider.setName(SLIDERS[i].name());
 			slider.setPaintTicks(true);
+			slider.setLabelTable(table);
+			slider.setPaintLabels(true);
 			slider.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
