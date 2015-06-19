@@ -35,7 +35,7 @@ public class HelpDialog extends JDialog {
 	private static final int I_OFFSET = 50;
 
 	/** The size of the content label. */
-	private static final int I_WIDTH = WIDTH - I_OFFSET, I_HEIGHT = 580;
+	private static final int I_WIDTH = WIDTH - I_OFFSET, I_HEIGHT = 620;
 
 	/** The padding around the labels. */
 	private static final Border EMPTY_BORDER = new EmptyBorder(10, 10, 10, 10);
