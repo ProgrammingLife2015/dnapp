@@ -261,6 +261,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		}
 		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
+		applyZoomLevel(0);
 		return ret;
 	}
 
