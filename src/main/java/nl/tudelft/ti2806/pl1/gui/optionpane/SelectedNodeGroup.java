@@ -18,8 +18,6 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
 /**
  * @author Maarten
  * @since 18-5-2015
- * @version 1.0
- * 
  */
 public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
@@ -167,9 +165,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setBorder(BorderFactory.createTitledBorder(newTitle));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void update(final HashSet<DNode> selectedNodes) {
 		this.show = selectedNodes.size() == 1;

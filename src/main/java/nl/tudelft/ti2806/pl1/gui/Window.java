@@ -84,6 +84,9 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		content = new Content(this);
 		content.setVisible(false);
 		content.registerObserver(this);
+
+		content.getPhyloPanel().registerObserver(optionPanel.getGenomes());
+
 		add(content, BorderLayout.CENTER);
 
 		toolBar = new ToolBar(this);
@@ -165,9 +168,6 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		revalidate();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();

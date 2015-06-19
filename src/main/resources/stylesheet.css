@@ -30,3 +30,7 @@ node.collapsed{
 node.resistant{
     fill-color: green;
 }
+edge{
+    size-mode: dyn-size;
+    size: 1px;
+}

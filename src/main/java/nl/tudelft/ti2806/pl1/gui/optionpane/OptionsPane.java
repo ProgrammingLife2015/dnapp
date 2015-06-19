@@ -32,35 +32,27 @@ public class OptionsPane extends JScrollPane {
 	private static final Dimension SIZE = new Dimension(WIDTH,
 			Integer.MAX_VALUE);
 
-	/**
-	 * The maximum width of the (grouped) elements in this pane.
-	 */
+	/** The maximum width of the (grouped) elements in this pane. */
 	public static final int MAX_CHILD_WIDTH = 200;
 
-	/**
-	 * The insets values.
-	 */
+	/** The insets values. */
 	private static final int HOR_INSETS = 10, VER_INSETS = 5;
 
-	/**
-	 * The insets.
-	 */
+	/** The insets. */
 	private static final Insets INSETS = new Insets(VER_INSETS, HOR_INSETS,
 			VER_INSETS, HOR_INSETS);
 
 	// ***** Fields ***** //
 
-	/**
-	 * The window this option pane is part of.
-	 */
+	/** The window this option pane is part of. */
 	private Window window;
 
-	// ***** Elements ***** //
+	// Elements //
 
 	/** The panel containing the control elements. */
 	private ScrollablePanel pane;
 
-	/** */
+	/** The panel layout manager. */
 	private GridBagLayout gridBagLayout;
 
 	/** The grid bag constraints used by the layout manager. */
@@ -69,46 +61,17 @@ public class OptionsPane extends JScrollPane {
 	/** The genome table. */
 	private GenomeTable tblGenomes;
 
-	/**
-	 * @return the genome table
-	 */
-	public final GenomeTable getGenomes() {
-		return tblGenomes;
-	}
-
-	/**
-	 * The group of elements showing information about a selected genome in the
-	 * genome table.
-	 */
-	// private SelectedGenomeGroup grpSelectedGenome;
-
 	/** The group of elements showing information about a selected node. */
 	private SelectedNodeGroup grpSelectedNode;
 
-	/**
-	 * @return the selected node group
-	 */
-	public final SelectedNodeGroup getSelectedNodeGroup() {
-		return grpSelectedNode;
-	}
-
-	/**  */
+	/** The group showing the zoom level settings. */
 	private ZoomConfigureGroup grpZoomSettings;
-
-	/**
-	 * @return the grpZoomSettings
-	 */
-	public final ZoomConfigureGroup getGrpZoomSettings() {
-		return grpZoomSettings;
-	}
 
 	/** Combo box showing all the genes. */
 	private GeneComboBox geneNavigator;
 
-	/** @return the geneNavigator. */
-	public final GeneComboBox getGeneNavigator() {
-		return geneNavigator;
-	}
+	/** The group showing information about the current zoom level. */
+	private ZoomlevelGroup grpZoomInfo;
 
 	/**
 	 * Initialize the option pane.
@@ -123,16 +86,13 @@ public class OptionsPane extends JScrollPane {
 		this.pane = new ScrollablePanel(gridBagLayout);
 		pane.setAlignmentY(TOP_ALIGNMENT);
 		pane.setScrollableWidth(ScrollableSizeHint.FIT);
-		// pane.setScrollableHeight(ScrollableSizeHint.STRETCH);
 
 		this.tblGenomes = new GenomeTable();
 		this.grpSelectedNode = new SelectedNodeGroup();
-		// this.grpSelectedGenome = new SelectedGenomeGroup(this);
 		this.grpZoomSettings = new ZoomConfigureGroup();
-
+		this.grpZoomInfo = new ZoomlevelGroup();
 		this.geneNavigator = new GeneComboBox();
 
-		// setMinimumSize(new Dimension(WIDTH, 10));
 		setMaximumSize(SIZE);
 		setPreferredSize(SIZE);
 		addControls();
@@ -147,6 +107,7 @@ public class OptionsPane extends JScrollPane {
 	 */
 	public final void componentsLoaded() {
 		window.getContent().getGraphPanel().registerObserver(grpSelectedNode);
+		window.getContent().getGraphPanel().registerObserver(grpZoomInfo);
 	}
 
 	/**
@@ -157,7 +118,7 @@ public class OptionsPane extends JScrollPane {
 
 		place(new JLabel("Genomes:"), 0);
 		place(tblGenomes);
-		// place(grpSelectedGenome);
+		place(grpZoomInfo);
 		place(grpZoomSettings);
 		place(grpSelectedNode);
 
@@ -223,6 +184,41 @@ public class OptionsPane extends JScrollPane {
 		gbc.insets = new Insets(VER_INSETS, HOR_INSETS, belowInset, HOR_INSETS);
 		place(elem);
 		gbc.insets = INSETS;
+	}
+
+	/**
+	 * @return the grpZoomSettings
+	 */
+	public final ZoomConfigureGroup getGrpZoomSettings() {
+		return grpZoomSettings;
+	}
+
+	/**
+	 * @return the geneNavigator.
+	 */
+	public final GeneComboBox getGeneNavigator() {
+		return geneNavigator;
+	}
+
+	/**
+	 * @return the selected node group
+	 */
+	public final SelectedNodeGroup getSelectedNodeGroup() {
+		return grpSelectedNode;
+	}
+
+	/**
+	 * @return the genome table
+	 */
+	public final GenomeTable getGenomes() {
+		return tblGenomes;
+	}
+
+	/**
+	 * @return the zoom level info group.
+	 */
+	public ZoomlevelGroup getGrpZoomInfo() {
+		return grpZoomInfo;
 	}
 
 	@Override

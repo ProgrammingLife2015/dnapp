@@ -89,6 +89,7 @@ public class ComplexCollapserTest {
 		graph.addDEdge(e6);
 		graph.addDEdge(e7);
 		graph.addDEdge(e8);
+		graph.setStart(start);
 		Collection<ComplexMutation> muts = MutationFinder
 				.findComplexMutations(graph);
 		gsg = ConvertDGraph.convert(graph);
@@ -147,6 +148,7 @@ public class ComplexCollapserTest {
 		graph.addDEdge(e8);
 		graph.addDEdge(e9);
 		graph.addDEdge(e10);
+		graph.setStart(start);
 		Collection<ComplexMutation> muts = MutationFinder
 				.findComplexMutations(graph);
 		gsg = ConvertDGraph.convert(graph);

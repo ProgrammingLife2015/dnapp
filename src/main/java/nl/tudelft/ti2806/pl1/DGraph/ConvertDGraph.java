@@ -1,11 +1,13 @@
 package nl.tudelft.ti2806.pl1.DGraph;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -25,6 +27,11 @@ public final class ConvertDGraph {
 	 * node will be displayed on or next to the node.
 	 */
 	private static final int LABEL_LENGTH_THRESHOLD = 10;
+
+	/**
+	 * Maximum thickness of the edge.
+	 */
+	private static final int MAX_SIZE_EDGE = 5;
 
 	/**
 	 */
@@ -52,7 +59,9 @@ public final class ConvertDGraph {
 	 *            The data graph to convert.
 	 * @return The visual graph containing all the nodes from the data graph.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Graph convert(final DGraph dgraph) {
+		int totalGenomes = dgraph.getStart().getSources().size();
 		Graph graph = new SingleGraph("");
 		Set<DEdge> edges = new HashSet<DEdge>();
 		for (DNode n : dgraph.getNodes().values()) {
@@ -87,7 +96,12 @@ public final class ConvertDGraph {
 			} else if (graph.getNode(to) == null) {
 				addNodeToGraph(graph, to, dgraph);
 			}
-			graph.addEdge(from + to, from, to, true);
+			Edge eg = graph.addEdge(from + to, from, to, true);
+			Collection<String> m = (Collection<String>) edge.getStartNode()
+					.getSources().clone();
+			m.retainAll(edge.getEndNode().getSources());
+			eg.addAttribute("ui.size",
+					(int) ((double) m.size() / totalGenomes * MAX_SIZE_EDGE));
 		}
 		return graph;
 	}
