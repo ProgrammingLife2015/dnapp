@@ -22,6 +22,8 @@ public abstract class Mutation {
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
 
+	private static final int[] GROUP_SCORE = { 0, 0, 10, 10, 20 };
+
 	/**
 	 * Score for a mutation if it is located on a gene.
 	 */
@@ -104,6 +106,13 @@ public abstract class Mutation {
 											.name()));
 					break;
 				}
+			}
+			double phylomult = ScoreMultiplier
+					.getMult(MutationMultipliers.PHYLO.name());
+			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
+				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
+			} else {
+				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 			}
 		}
 	}

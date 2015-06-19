@@ -88,13 +88,7 @@ public final class MutationFinder {
 	 */
 	public static Collection<PointMutation> findPointMutations(
 			final DGraph graph, final BinaryTree tree) {
-		Collection<PointMutation> pointMuts = PointMutationFinder
-				.findPointMutations(graph);
-		for (PointMutation pm : pointMuts) {
-			pm.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
-					pm.getPreNode(), pm.getPostNode(), tree));
-		}
-		return pointMuts;
+		return PointMutationFinder.findPointMutations(graph);
 	}
 
 	/**
@@ -122,9 +116,6 @@ public final class MutationFinder {
 									next.getId(),
 									graph.getReferenceGeneStorage(),
 									node.getStart(), node.getEnd());
-							mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(
-									graph, mut.getPreNode(), mut.getPostNode(),
-									tree));
 							ins.add(mut);
 						}
 					}
@@ -168,8 +159,6 @@ public final class MutationFinder {
 				DeletionMutation mut = new DeletionMutation(node.getId(),
 						endnode.getId(), graph.getReferenceGeneStorage(),
 						node.getStart(), node.getEnd());
-				mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
-						mut.getPreNode(), mut.getPostNode(), tree));
 				dels.add(mut);
 			}
 		}
@@ -228,8 +217,6 @@ public final class MutationFinder {
 					ComplexMutation mut = new ComplexMutation(node.getId(),
 							srcId, inNodes, graph.getReferenceGeneStorage(),
 							node.getStart(), node.getEnd());
-					mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
-							mut.getPreNode(), mut.getPostNode(), tree));
 					ins.add(mut);
 				}
 			}
