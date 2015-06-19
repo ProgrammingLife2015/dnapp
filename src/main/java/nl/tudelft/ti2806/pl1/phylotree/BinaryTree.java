@@ -50,7 +50,7 @@ public abstract class BinaryTree extends JButton {
 	private boolean collapsed = false;
 
 	/**
-	 * The parent of the node, initialised at null for the root
+	 * The parent of the node, initialized at null for the root.
 	 */
 	private BinaryTree parent;
 
@@ -152,11 +152,11 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @param parent
+	 * @param newParent
 	 *            the parent to set
 	 */
-	public void setParent(final BinaryTree parent) {
-		this.parent = parent;
+	public void setParent(final BinaryTree newParent) {
+		this.parent = newParent;
 	}
 
 	/**
