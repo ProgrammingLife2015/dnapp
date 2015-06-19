@@ -28,8 +28,9 @@ public class PointMutation extends Mutation {
 	 * @param endpos
 	 *            the end position on the reference genome.
 	 */
-	public PointMutation(final int pre, final Set<Integer> nodesIn, final int post, final int startpos,
-			final int endpos, final ReferenceGeneStorage rgs) {
+	public PointMutation(final int pre, final Set<Integer> nodesIn,
+			final int post, final int startpos, final int endpos,
+			final ReferenceGeneStorage rgs) {
 		super(pre, post, rgs, startpos, endpos);
 		this.nodes = nodesIn;
 	}
@@ -43,6 +44,8 @@ public class PointMutation extends Mutation {
 
 	@Override
 	public double getScore() {
-		return super.getScore() * ScoreMultiplier.getMult((MutationMultipliers.POINTMUTATION.name()));
+		return super.getScore()
+				* ScoreMultiplier.getMult((MutationMultipliers.POINTMUTATION
+						.name()));
 	}
 }

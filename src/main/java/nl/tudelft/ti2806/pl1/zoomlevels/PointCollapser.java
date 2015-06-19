@@ -40,7 +40,8 @@ public final class PointCollapser {
 	 *            The selected node in the graph.
 	 * @return The new pointcollapsedgraph.
 	 */
-	public static Graph collapseNodes(final Collection<PointMutation> pointmutations, final Graph gsg,
+	public static Graph collapseNodes(
+			final Collection<PointMutation> pointmutations, final Graph gsg,
 			final double threshold, final String string) {
 		for (PointMutation pointmutation : pointmutations) {
 			if (pointmutation.getScore() < threshold) {
@@ -60,8 +61,8 @@ public final class PointCollapser {
 	 * @param string
 	 *            The selected node in the graph.
 	 */
-	private static void collapsePointMutation(final Graph gsg, final PointMutation pointmutation,
-			final String string) {
+	private static void collapsePointMutation(final Graph gsg,
+			final PointMutation pointmutation, final String string) {
 		HashSet<Integer> nodeids = new HashSet<Integer>();
 		StringBuilder sb = new StringBuilder();
 		int x = 0;
@@ -75,7 +76,8 @@ public final class PointCollapser {
 				if (node != null) {
 					x = node.getAttribute("x");
 					y += (int) node.getAttribute("y");
-					if (node.getLeavingEdgeSet().size() == 1 && node.getEnteringEdgeSet().size() == 1) {
+					if (node.getLeavingEdgeSet().size() == 1
+							&& node.getEnteringEdgeSet().size() == 1) {
 						gsg.removeNode(node);
 					} else {
 						removeEdges(node, pointmutation, gsg);
@@ -85,7 +87,8 @@ public final class PointCollapser {
 				sb.append("/");
 			}
 			y /= pointmutation.getNodes().size();
-			makeNewNode(gsg, x, y, sb.toString(), pointmutation, nodeids, string);
+			makeNewNode(gsg, x, y, sb.toString(), pointmutation, nodeids,
+					string);
 		}
 	}
 
@@ -99,13 +102,15 @@ public final class PointCollapser {
 	 * @param gsg
 	 *            The graph
 	 */
-	private static void removeEdges(final Node node, final PointMutation pointmutation, final Graph gsg) {
+	private static void removeEdges(final Node node,
+			final PointMutation pointmutation, final Graph gsg) {
 		if (node.getLeavingEdgeSet().size() > 1) {
 			boolean stop = false;
 			Iterator<Edge> leavingedges = node.getLeavingEdgeIterator();
 			while (leavingedges.hasNext() && !stop) {
 				Edge edge = leavingedges.next();
-				if (edge.getNode1().getId().equals(pointmutation.getPostNode() + "")) {
+				if (edge.getNode1().getId()
+						.equals(pointmutation.getPostNode() + "")) {
 					gsg.removeEdge(edge);
 					stop = true;
 				}
@@ -116,7 +121,8 @@ public final class PointCollapser {
 			Iterator<Edge> enteringedges = node.getEnteringEdgeIterator();
 			while (enteringedges.hasNext() && !stop) {
 				Edge edge = enteringedges.next();
-				if (edge.getNode0().getId().equals(pointmutation.getPreNode() + "")) {
+				if (edge.getNode0().getId()
+						.equals(pointmutation.getPreNode() + "")) {
 					gsg.removeEdge(edge);
 					stop = true;
 				}
@@ -135,7 +141,8 @@ public final class PointCollapser {
 	 *         the graph and every nodes that would be collapsed has an edge
 	 *         towards the pre and post nodes.
 	 */
-	private static boolean checkViable(final Graph gsg, final PointMutation pointmutation) {
+	private static boolean checkViable(final Graph gsg,
+			final PointMutation pointmutation) {
 		Node preNode = gsg.getNode(pointmutation.getPreNode() + "");
 		Node postNode = gsg.getNode(pointmutation.getPostNode() + "");
 		if (preNode == null || postNode == null) {
@@ -146,7 +153,9 @@ public final class PointCollapser {
 			nodes.add(gsg.getNode(n + ""));
 		}
 		for (Node n : nodes) {
-			if (n != null && (!(preNode.hasEdgeBetween(n)) || !(n.hasEdgeBetween(postNode)))) {
+			if (n != null
+					&& (!(preNode.hasEdgeBetween(n)) || !(n
+							.hasEdgeBetween(postNode)))) {
 				return false;
 			}
 		}
@@ -171,9 +180,12 @@ public final class PointCollapser {
 	 * @param string
 	 *            The selected node in the graph.
 	 */
-	private static void makeNewNode(final Graph gsg, final int x, final double y, final String newId,
-			final PointMutation pointmutation, final HashSet<Integer> nodeids, final String string) {
-		Node newnode = gsg.addNode("COLLAPSED_" + newId + pointmutation.getPostNode());
+	private static void makeNewNode(final Graph gsg, final int x,
+			final double y, final String newId,
+			final PointMutation pointmutation, final HashSet<Integer> nodeids,
+			final String string) {
+		Node newnode = gsg.addNode("COLLAPSED_" + newId
+				+ pointmutation.getPostNode());
 		newnode.addAttribute("x", x);
 		newnode.addAttribute("y", y);
 		boolean selectedbool = false;
@@ -188,10 +200,10 @@ public final class PointCollapser {
 		newnode.addAttribute("ui.label", nodeids.size());
 		newnode.addAttribute("collapsed", nodeids);
 		newnode.addAttribute("contentsize", 1);
-		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId, pointmutation.getPreNode() + "",
-				newnode.getId(), true);
-		gsg.addEdge("CEDGE_" + newId + "/" + pointmutation.getPostNode(), newnode.getId(),
-				pointmutation.getPostNode() + "", true);
+		gsg.addEdge("CEDGE_" + pointmutation.getPreNode() + "/" + newId,
+				pointmutation.getPreNode() + "", newnode.getId(), true);
+		gsg.addEdge("CEDGE_" + newId + "/" + pointmutation.getPostNode(),
+				newnode.getId(), pointmutation.getPostNode() + "", true);
 	}
 
 	/**

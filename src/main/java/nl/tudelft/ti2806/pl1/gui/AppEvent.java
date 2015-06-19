@@ -35,7 +35,8 @@ public enum AppEvent implements ActionListener {
 			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
 			if (fsNode.showDialog(window, "Load nodes") == JFileChooser.APPROVE_OPTION) {
 				final File nodes = fsNode.getSelectedFile();
-				final ImportDialog fsEdge = new ImportDialog(ImportType.EDGES, nodes);
+				final ImportDialog fsEdge = new ImportDialog(ImportType.EDGES,
+						nodes);
 				if (fsEdge.showDialog(window, "Load edges") == JFileChooser.APPROVE_OPTION) {
 					final File edges = fsEdge.getSelectedFile();
 					try {
@@ -68,11 +69,12 @@ public enum AppEvent implements ActionListener {
 	IMPORT_GENE_ANN {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			final ImportDialog fcGeneAnn = new ImportDialog(ImportType.GENE_ANNOTATION);
+			final ImportDialog fcGeneAnn = new ImportDialog(
+					ImportType.GENE_ANNOTATION);
 			if (fcGeneAnn.showDialog(window, "Load gene annotation") == JFileChooser.APPROVE_OPTION) {
 				final File geneAnn = fcGeneAnn.getSelectedFile();
-				window.getContent().getGraphPanel().getDgraph().getReferenceGeneStorage()
-						.setGeneAnnotation(geneAnn);
+				window.getContent().getGraphPanel().getDgraph()
+						.getReferenceGeneStorage().setGeneAnnotation(geneAnn);
 				window.repaint();
 			} else {
 				dialogCanceled();
@@ -84,10 +86,12 @@ public enum AppEvent implements ActionListener {
 	IMPORT_RES_CAUS_MUT {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			final ImportDialog fcKnownResMut = new ImportDialog(ImportType.KNOWN_RES_MUT);
+			final ImportDialog fcKnownResMut = new ImportDialog(
+					ImportType.KNOWN_RES_MUT);
 			if (fcKnownResMut.showDialog(window, "Load gene annotation") == JFileChooser.APPROVE_OPTION) {
 				final File knownResMut = fcKnownResMut.getSelectedFile();
-				window.getContent().getGraphPanel().getDgraph().getReferenceGeneStorage()
+				window.getContent().getGraphPanel().getDgraph()
+						.getReferenceGeneStorage()
 						.setDrugRestistantMutations(knownResMut);
 				RESET_GRAPH.actionPerformed(null);
 			} else {
@@ -163,7 +167,8 @@ public enum AppEvent implements ActionListener {
 	 * a file to load or to save.
 	 */
 	private static void dialogCanceled() {
-		System.out.println("User closed file chooser dialog without choosing a file.");
+		System.out
+				.println("User closed file chooser dialog without choosing a file.");
 	}
 
 	/**

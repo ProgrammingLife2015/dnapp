@@ -108,7 +108,8 @@ public class GBC extends GridBagConstraints {
 	 * @return this object for further modification
 	 */
 	public final GBC setInsets(final int distance) {
-		this.insets = new java.awt.Insets(distance, distance, distance, distance);
+		this.insets = new java.awt.Insets(distance, distance, distance,
+				distance);
 		return this;
 	}
 
@@ -125,7 +126,8 @@ public class GBC extends GridBagConstraints {
 	 *            the spacing to use to the right
 	 * @return this object for further modification
 	 */
-	public final GBC setInsets(final int top, final int left, final int bottom, final int right) {
+	public final GBC setInsets(final int top, final int left, final int bottom,
+			final int right) {
 		this.insets = new java.awt.Insets(top, left, bottom, right);
 		return this;
 	}

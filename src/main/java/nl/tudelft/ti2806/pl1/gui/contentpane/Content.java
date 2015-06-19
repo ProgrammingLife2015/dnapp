@@ -71,7 +71,8 @@ public class Content extends JPanel {
 		tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
-				window.getToolBar().viewContextChanged((ContentTab) tabs.getSelectedComponent());
+				window.getToolBar().viewContextChanged(
+						(ContentTab) tabs.getSelectedComponent());
 			}
 		});
 		add(tabs, BorderLayout.CENTER);
@@ -94,7 +95,8 @@ public class Content extends JPanel {
 		for (ContentLoadedObserver clo : observers) {
 			clo.graphLoaded();
 		}
-		window.getToolBar().viewContextChanged((ContentTab) tabs.getSelectedComponent());
+		window.getToolBar().viewContextChanged(
+				(ContentTab) tabs.getSelectedComponent());
 	}
 
 	/**
@@ -124,8 +126,9 @@ public class Content extends JPanel {
 			}
 			DGraph dg = getGraphPanel().getDgraph();
 			for (Mutation m : dg.getPointMutations()) {
-				m.setAffectedNodeGroups(MutationFinder.getAffectedNodeGroupsCount(dg, m.getPreNode(),
-						m.getPostNode(), getPhyloPanel().getTree()));
+				m.setAffectedNodeGroups(MutationFinder
+						.getAffectedNodeGroupsCount(dg, m.getPreNode(),
+								m.getPostNode(), getPhyloPanel().getTree()));
 			}
 		}
 	}

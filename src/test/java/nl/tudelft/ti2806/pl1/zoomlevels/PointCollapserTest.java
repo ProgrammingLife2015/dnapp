@@ -74,7 +74,8 @@ public class PointCollapserTest {
 
 	@Test
 	public void simpleSNPCaseTest() {
-		Collection<PointMutation> muts = PointMutationFinder.findPointMutations(graph);
+		Collection<PointMutation> muts = PointMutationFinder
+				.findPointMutations(graph);
 		graph.setStart(start);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);

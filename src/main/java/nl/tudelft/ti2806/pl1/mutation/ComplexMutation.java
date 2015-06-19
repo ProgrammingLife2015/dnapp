@@ -29,7 +29,8 @@ public class ComplexMutation extends Mutation {
 	 * @param endpos
 	 *            The end position of the mutation in the reference genome.
 	 */
-	public ComplexMutation(final int pre, final Integer post, final Collection<Integer> insertedNodes,
+	public ComplexMutation(final int pre, final Integer post,
+			final Collection<Integer> insertedNodes,
 			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		super(pre, post, rgs, startpos, endpos);
 		this.inNodes = insertedNodes;
@@ -44,7 +45,8 @@ public class ComplexMutation extends Mutation {
 
 	@Override
 	public String toString() {
-		return "<CompMut[pre:" + getPreNode() + ",post:" + getPostNode() + ",ins:" + getInNodes() + "]>";
+		return "<CompMut[pre:" + getPreNode() + ",post:" + getPostNode()
+				+ ",ins:" + getInNodes() + "]>";
 	}
 
 	@Override
@@ -63,7 +65,8 @@ public class ComplexMutation extends Mutation {
 
 	@Override
 	public double getScore() {
-		return super.getScore() * ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
+		return super.getScore()
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
 	}
 
 }

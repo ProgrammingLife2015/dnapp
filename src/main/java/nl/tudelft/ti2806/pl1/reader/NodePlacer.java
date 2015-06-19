@@ -122,7 +122,8 @@ public final class NodePlacer {
 	 *             Placing node at invalid place.
 	 * @return The dimensions of the graph
 	 */
-	public static Dimension place(final DGraph graph) throws InvalidNodePlacementException {
+	public static Dimension place(final DGraph graph)
+			throws InvalidNodePlacementException {
 		if (graph.getNodeCount() == 0) {
 			return new Dimension(0, 0);
 		}
@@ -185,7 +186,8 @@ public final class NodePlacer {
 	 *            The maximum depth of the nodes in the graph
 	 * @return The width location of the node
 	 */
-	protected static int getWidth(final double screenwidth, final double nodedepth, final double maxdepth) {
+	protected static int getWidth(final double screenwidth,
+			final double nodedepth, final double maxdepth) {
 		double wdiff = screenwidth / maxdepth;
 		return (int) (wdiff * nodedepth);
 
@@ -206,7 +208,8 @@ public final class NodePlacer {
 	 * @throws InvalidNodePlacementException
 	 *             Placing node at invalid place.
 	 */
-	protected static int getHeight(final int depth, final ArrayList<Integer> heightdiff,
+	protected static int getHeight(final int depth,
+			final ArrayList<Integer> heightdiff,
 			final ArrayList<Integer> nodesatdepth, final int screenheight)
 			throws InvalidNodePlacementException {
 		int hdiff = heightdiff.get(depth);
@@ -228,8 +231,8 @@ public final class NodePlacer {
 	 *            The height of the viewer
 	 * @return The height difference for each node at depth i
 	 */
-	protected static ArrayList<Integer> heightDiff(final ArrayList<Integer> nodesatdepth,
-			final int heightofscreen) {
+	protected static ArrayList<Integer> heightDiff(
+			final ArrayList<Integer> nodesatdepth, final int heightofscreen) {
 		ArrayList<Integer> hdiff = new ArrayList<Integer>(nodesatdepth.size());
 		for (int i = 0; i < nodesatdepth.size(); i++) {
 			hdiff.add(heightofscreen / (nodesatdepth.get(i) + 1));
@@ -283,7 +286,8 @@ public final class NodePlacer {
 				boolean bothSides = false;
 				while (iter.hasNext()) {
 					Node next = iter.next();
-					if ((int) next.getAttribute("y") == standardY && !next.getId().equals(start.getId())) {
+					if ((int) next.getAttribute("y") == standardY
+							&& !next.getId().equals(start.getId())) {
 						if (bothSides) {
 							next.setAttribute("y", Y_MULTIPLIER);
 						}

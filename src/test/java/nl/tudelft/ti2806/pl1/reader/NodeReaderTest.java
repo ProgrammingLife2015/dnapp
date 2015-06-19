@@ -31,25 +31,29 @@ public class NodeReaderTest {
 
 	@Test(expected = InvalidFileFormatException.class)
 	public void wrongNumberOfInputTest() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader("> | b | c"));
+		BufferedReader reader = new BufferedReader(
+				new StringReader("> | b | c"));
 		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
 	public void wrongIdTest() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader(">a | b | c | d" + "\n" + "A"));
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">a | b | c | d" + "\n" + "A"));
 		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
 	public void nonMatchingRefTest() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader(">0 | b | 1 | 2" + "\n" + "AA"));
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">0 | b | 1 | 2" + "\n" + "AA"));
 		NodeReader.readNodes(reader);
 	}
 
 	@Test(expected = InvalidFileFormatException.class)
 	public void startAndEndNotIntegerTest() throws IOException {
-		BufferedReader reader = new BufferedReader(new StringReader(">0 | b | a | 2" + "\n" + "AA"));
+		BufferedReader reader = new BufferedReader(new StringReader(
+				">0 | b | a | 2" + "\n" + "AA"));
 		NodeReader.readNodes(reader);
 	}
 }

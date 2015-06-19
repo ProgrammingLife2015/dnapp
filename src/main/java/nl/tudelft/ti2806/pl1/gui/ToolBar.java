@@ -29,16 +29,18 @@ public class ToolBar extends JToolBar {
 	private JLabel lblImport = new JLabel("Import: ");
 
 	/** The import phylogenetic tree button. */
-	private JButton btnImportPhylo = makeButton("Phylogenetic tree", null, AppEvent.IMPORT_PHYLO,
+	private JButton btnImportPhylo = makeButton("Phylogenetic tree", null,
+			AppEvent.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
 
 	/** Button for importing a gene annotation file. */
-	private JButton btnImportGeneAnn = makeButton("Gene annotation", null, AppEvent.IMPORT_GENE_ANN,
+	private JButton btnImportGeneAnn = makeButton("Gene annotation", null,
+			AppEvent.IMPORT_GENE_ANN,
 			"Click to load gene annotation information from a gff file.");
 
 	/** Button for importing resistance causing mutations. */
-	private JButton btnImportResCausMut = makeButton("Known resistant mutations", null,
-			AppEvent.IMPORT_RES_CAUS_MUT,
+	private JButton btnImportResCausMut = makeButton(
+			"Known resistant mutations", null, AppEvent.IMPORT_RES_CAUS_MUT,
 			"Click to load information about known resistant mutations from a krm file.");
 
 	/**
@@ -72,8 +74,8 @@ public class ToolBar extends JToolBar {
 	 *            Tool tip text.
 	 * @return The created button.
 	 */
-	public static JButton makeButton(final String text, final String imageName, final ActionListener action,
-			final String toolTipText) {
+	public static JButton makeButton(final String text, final String imageName,
+			final ActionListener action, final String toolTipText) {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);

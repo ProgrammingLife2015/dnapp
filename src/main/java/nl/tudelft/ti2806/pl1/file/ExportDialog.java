@@ -22,6 +22,7 @@ public class ExportDialog extends JFileChooser {
 		setFileSelectionMode(JFileChooser.FILES_ONLY); // default
 		setCurrentDirectory(null);
 		setAcceptAllFileFilterUsed(false);
-		addChoosableFileFilter(new FileNameExtensionFilter("DGS graph format", "dgs"));
+		addChoosableFileFilter(new FileNameExtensionFilter("DGS graph format",
+				"dgs"));
 	}
 }

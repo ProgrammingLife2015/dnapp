@@ -15,8 +15,8 @@ import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
  * @author Maarten
  * @since 15-6-2015
  */
-public class Minimap extends JPanel implements GraphScrollObserver, ViewChangeObserver,
-		ResistanceMutationObserver {
+public class Minimap extends JPanel implements GraphScrollObserver,
+		ViewChangeObserver, ResistanceMutationObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -5634260033871592350L;
@@ -56,7 +56,8 @@ public class Minimap extends JPanel implements GraphScrollObserver, ViewChangeOb
 	 * @param newDrugResMuts
 	 *            The new resistances causing mutations.
 	 */
-	public void setDrugResMuts(final Map<Long, ResistanceMutation> newDrugResMuts) {
+	public void setDrugResMuts(
+			final Map<Long, ResistanceMutation> newDrugResMuts) {
 		this.drugResMuts = newDrugResMuts;
 	}
 
@@ -78,7 +79,8 @@ public class Minimap extends JPanel implements GraphScrollObserver, ViewChangeOb
 		int mapWidth = getWidth();
 		int boxWidth = (viewArea.getWidth() * mapWidth) / (graphWidth + 1);
 		g.setColor(Color.RED);
-		g.fillRect(viewArea.getLeftBoundary() * mapWidth / (graphWidth + 1), 0, boxWidth, HEIGHT);
+		g.fillRect(viewArea.getLeftBoundary() * mapWidth / (graphWidth + 1), 0,
+				boxWidth, HEIGHT);
 		if (isMutsShowable()) {
 			g.setColor(Color.GREEN);
 			for (Long r : drugResMuts.keySet()) {
@@ -139,6 +141,7 @@ public class Minimap extends JPanel implements GraphScrollObserver, ViewChangeOb
 
 	@Override
 	public String toString() {
-		return "<Minimap[width=" + getWidth() + ",viewWidth=" + graphWidth + ",viewArea=" + viewArea + "]>";
+		return "<Minimap[width=" + getWidth() + ",viewWidth=" + graphWidth
+				+ ",viewArea=" + viewArea + "]>";
 	}
 }

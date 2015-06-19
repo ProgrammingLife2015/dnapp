@@ -67,7 +67,8 @@ public class InDelCollapserDeletionsTest {
 
 	@Test
 	public void simpleDeletionCaseTest() {
-		Collection<DeletionMutation> muts = MutationFinder.findDeletionMutations(graph, null);
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -95,7 +96,8 @@ public class InDelCollapserDeletionsTest {
 		graph.addDEdge(new DEdge(end, deletion2));
 		graph.addDEdge(new DEdge(deletion2, end2));
 		graph.addDEdge(new DEdge(end, end2));
-		Collection<DeletionMutation> muts = MutationFinder.findDeletionMutations(graph, null);
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -136,7 +138,8 @@ public class InDelCollapserDeletionsTest {
 		graph.addDEdge(new DEdge(end2, end3));
 		graph.addDEdge(new DEdge(end2, deletion2));
 		graph.addDEdge(new DEdge(deletion2, end3));
-		Collection<DeletionMutation> muts = MutationFinder.findDeletionMutations(graph, null);
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
 		assertTrue(gsg.getNode("5").hasEdgeBetween(gsg.getNode("8")));
@@ -177,7 +180,8 @@ public class InDelCollapserDeletionsTest {
 		graph.addDEdge(new DEdge(end2, end3));
 		graph.addDEdge(new DEdge(end2, deletion2));
 		graph.addDEdge(new DEdge(deletion2, end3));
-		Collection<DeletionMutation> muts = MutationFinder.findDeletionMutations(graph, null);
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
 		assertTrue(gsg.getNode("5").hasEdgeBetween(gsg.getNode("8")));

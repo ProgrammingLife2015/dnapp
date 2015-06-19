@@ -106,7 +106,9 @@ public class ReferenceGeneStorage {
 					String[] linesplit = columns[0].split(":");
 					String[] info = linesplit[1].split(",");
 					Long genomePos = Long.parseLong(info[MUTATION_INDEX]);
-					ret.put(genomePos, new ResistanceMutation(genomePos, String.valueOf(info[MUTATION_NAME])));
+					ret.put(genomePos,
+							new ResistanceMutation(genomePos, String
+									.valueOf(info[MUTATION_NAME])));
 				}
 			}
 			sc.close();
@@ -132,7 +134,8 @@ public class ReferenceGeneStorage {
 			Collection<ResistanceMutation> resMuts = map.values();
 			for (DNode dn : dgraph.getNodes().values()) {
 				for (ResistanceMutation mut : resMuts) {
-					if (dn.getStart() <= mut.getRefIndex() && mut.getRefIndex() < dn.getEnd()) {
+					if (dn.getStart() <= mut.getRefIndex()
+							&& mut.getRefIndex() < dn.getEnd()) {
 						mut.setDnode(dn);
 						dn.addResistantMutationIndex(mut);
 					}
@@ -150,7 +153,8 @@ public class ReferenceGeneStorage {
 	 * @return HashSet containing all the genes for the reference genome.
 	 */
 	private TreeSet<ReferenceGene> extractReferenceGenes(final File file) {
-		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(new RefGeneCompare());
+		TreeSet<ReferenceGene> ret = new TreeSet<ReferenceGene>(
+				new RefGeneCompare());
 		Scanner sc;
 		try {
 			sc = new Scanner(new FileInputStream(file), "UTF-8");
@@ -158,15 +162,19 @@ public class ReferenceGeneStorage {
 				String line = sc.nextLine();
 				if (line.contains("CDS")) {
 					String[] info = line.split("\\t");
-					String name = info[INDEX_ATTRIBUTES].split(";")[1].replace("Name=", "");
-					ret.add(new ReferenceGene(Integer.parseInt(info[INDEX_START]), Integer
-							.parseInt(info[INDEX_END]), Double.parseDouble(info[INDEX_SCORE]),
+					String name = info[INDEX_ATTRIBUTES].split(";")[1].replace(
+							"Name=", "");
+					ret.add(new ReferenceGene(Integer
+							.parseInt(info[INDEX_START]), Integer
+							.parseInt(info[INDEX_END]), Double
+							.parseDouble(info[INDEX_SCORE]),
 							info[INDEX_STRAND], name));
 				}
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
-			AppEvent.statusBarError(file.getAbsolutePath() + " for gene annotation could not be found!");
+			AppEvent.statusBarError(file.getAbsolutePath()
+					+ " for gene annotation could not be found!");
 		}
 		return ret;
 	}

@@ -21,8 +21,8 @@ public class DeletionMutation extends Mutation {
 	 * @param endpos
 	 *            The end position on the reference genome.
 	 */
-	public DeletionMutation(final int pre, final int post, final ReferenceGeneStorage rgs,
-			final int startpos, final int endpos) {
+	public DeletionMutation(final int pre, final int post,
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		super(pre, post, rgs, startpos, endpos);
 	}
 
@@ -47,6 +47,7 @@ public class DeletionMutation extends Mutation {
 
 	@Override
 	public double getScore() {
-		return super.getScore() * ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
+		return super.getScore()
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
 	}
 }

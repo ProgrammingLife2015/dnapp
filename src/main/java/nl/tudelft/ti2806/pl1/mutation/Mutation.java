@@ -45,8 +45,8 @@ public abstract class Mutation {
 	 * @param endpos
 	 *            End position on the reference genome.
 	 */
-	public Mutation(final int pre, final int post, final ReferenceGeneStorage rgs, final int startpos,
-			final int endpos) {
+	public Mutation(final int pre, final int post,
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		this.preNode = pre;
 		this.postNode = post;
 		this.referenceGeneStorage = rgs;
@@ -86,17 +86,22 @@ public abstract class Mutation {
 		score = 0;
 		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
 		if (rgs.isIntragenic(startposition) || rgs.isIntragenic(endposition)) {
-			addScore(SCORE_IN_GENE * ScoreMultiplier.getMult(MutationMultipliers.IN_GENE.name()));
+			addScore(SCORE_IN_GENE
+					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
+							.name()));
 			if (rgs.getDrugResistanceMutations() != null) {
 				for (long pos : rgs.getDrugResistanceMutations().keySet()) {
 					if (startposition <= pos && pos < endposition) {
 						addScore(SCORE_MUT
-								* ScoreMultiplier.getMult(MutationMultipliers.KNOWN_MUTATION.name()));
+								* ScoreMultiplier
+										.getMult(MutationMultipliers.KNOWN_MUTATION
+												.name()));
 						break;
 					}
 				}
 			}
-			double phylomult = ScoreMultiplier.getMult(MutationMultipliers.PHYLO.name());
+			double phylomult = ScoreMultiplier
+					.getMult(MutationMultipliers.PHYLO.name());
 			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
 				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
 			} else {
@@ -123,7 +128,8 @@ public abstract class Mutation {
 	public boolean equals(final Object obj) {
 		if (obj instanceof Mutation) {
 			Mutation that = (Mutation) obj;
-			return this.preNode == that.preNode && this.postNode == that.postNode;
+			return this.preNode == that.preNode
+					&& this.postNode == that.postNode;
 		}
 		return false;
 	}

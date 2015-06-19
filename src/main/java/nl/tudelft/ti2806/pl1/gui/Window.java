@@ -61,8 +61,8 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	public Window(final WindowSettings wSettings) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 
@@ -127,8 +127,10 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 
 		@Override
 		public void windowClosing(final WindowEvent e) {
-			if (JOptionPane.showConfirmDialog(window, "Are you sure you want to close the application?",
-					"Exit DN/App?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(window,
+					"Are you sure you want to close the application?",
+					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				AppEvent.EXIT_APP.actionPerformed(null);
 			}
 		}
@@ -186,7 +188,8 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
-		AppEvent.statusBarRight("[" + (int) getSize().getWidth() + "," + (int) getSize().getHeight() + "]");
+		AppEvent.statusBarRight("[" + (int) getSize().getWidth() + ","
+				+ (int) getSize().getHeight() + "]");
 	}
 
 	// ***** Getters for the high level window elements. ***** //

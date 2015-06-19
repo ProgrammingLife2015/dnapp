@@ -47,7 +47,8 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	private JTable table = new JTable(gtm);
 
 	/** The size of the table. */
-	private static final Dimension SIZE = new Dimension(OptionsPane.MAX_CHILD_WIDTH, 200);
+	private static final Dimension SIZE = new Dimension(
+			OptionsPane.MAX_CHILD_WIDTH, 200);
 
 	/** Initializes the genome table. */
 	public GenomeTable() {
@@ -62,7 +63,8 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 			@Override
 			public void tableChanged(final TableModelEvent e) {
 				// if (!idk) {
-				notifyObservers(e.getColumn() == GenomeRow.COL_SHOW, e.getColumn() == GenomeRow.COL_HIGHLIGHT);
+				notifyObservers(e.getColumn() == GenomeRow.COL_SHOW,
+						e.getColumn() == GenomeRow.COL_HIGHLIGHT);
 				// }
 			}
 		});
@@ -102,7 +104,8 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	 * @throws InvalidGenomeIdException
 	 *             if the requested genome does not exist.
 	 */
-	public final GenomeRow getGenomeRow(final String id) throws InvalidGenomeIdException {
+	public final GenomeRow getGenomeRow(final String id)
+			throws InvalidGenomeIdException {
 		for (GenomeRow gr : gtm.data) {
 			if (gr.getId().equals(id)) {
 				return gr;
@@ -124,7 +127,8 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	 * @param shown
 	 *            The value of the check box for all genome rows created.
 	 */
-	public final void fill(final Collection<String> genomeIds, final boolean empty, final boolean shown) {
+	public final void fill(final Collection<String> genomeIds,
+			final boolean empty, final boolean shown) {
 		List<GenomeRow> res = new ArrayList<GenomeRow>();
 		for (String id : genomeIds) {
 			res.add(new GenomeRow(id, shown, false));
@@ -140,7 +144,8 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	 *            If true, the list will first be emptied before filled with the
 	 *            new rows.
 	 */
-	private void fill(final Collection<GenomeRow> genomeRows, final boolean empty) {
+	private void fill(final Collection<GenomeRow> genomeRows,
+			final boolean empty) {
 		if (empty) {
 			gtm.data.clear();
 		}
@@ -152,14 +157,16 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	 * TODO delete.
 	 */
 	public final void fillDebug() {
-		fill(Arrays.asList(new GenomeRow("Genome 1", true, false), new GenomeRow("Genome 2", false, false),
-				new GenomeRow("Genome 3", false, false), new GenomeRow("Genome 4", true, false),
-				new GenomeRow("Genome 5", false, false)), true);
-
-		fill(Arrays.asList("GenomeString1t", "GenomeString2t", "GenomeString3t", "GenomeString4t"), false,
+		fill(Arrays.asList(new GenomeRow("Genome 1", true, false),
+				new GenomeRow("Genome 2", false, false), new GenomeRow(
+						"Genome 3", false, false), new GenomeRow("Genome 4",
+						true, false), new GenomeRow("Genome 5", false, false)),
 				true);
-		fill(Arrays.asList("GenomeString5f", "GenomeString6f", "GenomeString7f", "GenomeString48f"), false,
-				false);
+
+		fill(Arrays.asList("GenomeString1t", "GenomeString2t",
+				"GenomeString3t", "GenomeString4t"), false, true);
+		fill(Arrays.asList("GenomeString5f", "GenomeString6f",
+				"GenomeString7f", "GenomeString48f"), false, false);
 	}
 
 	/**
@@ -191,9 +198,11 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 	 *            Specifically: when a genome was checked or unchecked to
 	 *            highlight.
 	 */
-	private void notifyObservers(final boolean genomeFilterChanged, final boolean genomeHighlightChanged) {
+	private void notifyObservers(final boolean genomeFilterChanged,
+			final boolean genomeHighlightChanged) {
 		for (GenomeTableObserver sgo : observers) {
-			sgo.update(gtm.data.get(table.getSelectedRow()), genomeFilterChanged, genomeHighlightChanged);
+			sgo.update(gtm.data.get(table.getSelectedRow()),
+					genomeFilterChanged, genomeHighlightChanged);
 		}
 	}
 

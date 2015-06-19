@@ -22,5 +22,6 @@ public interface ZoomlevelObserver {
 	 * @param zoomLevelIndex
 	 *            The current zoom level threshold.
 	 */
-	void update(final int totalNodesCount, final int visualNodesCount, final int zoomLevelIndex);
+	void update(final int totalNodesCount, final int visualNodesCount,
+			final int zoomLevelIndex);
 }

@@ -44,7 +44,8 @@ public final class NodeReader {
 	 * @throws IOException
 	 *             When the file can't be read
 	 */
-	public static ArrayList<DNode> readNodes(final BufferedReader reader) throws IOException {
+	public static ArrayList<DNode> readNodes(final BufferedReader reader)
+			throws IOException {
 		ArrayList<DNode> nodes = new ArrayList<DNode>();
 		String nextnode;
 		while ((nextnode = reader.readLine()) != null) {
@@ -52,7 +53,8 @@ public final class NodeReader {
 				nextnode = nextnode.substring(1);
 				String[] data = nextnode.split("\\s\\|\\s");
 				if (data.length != AMOUNT_OF_INFORMATION) {
-					throw new InvalidFileFormatException("Missing some information to create this node");
+					throw new InvalidFileFormatException(
+							"Missing some information to create this node");
 				}
 				String content = reader.readLine();
 				int id;
@@ -61,23 +63,27 @@ public final class NodeReader {
 				try {
 					id = Integer.parseInt(data[0]);
 				} catch (Exception e) {
-					throw new InvalidFileFormatException("The id should be an integer");
+					throw new InvalidFileFormatException(
+							"The id should be an integer");
 				}
 				try {
 					start = Integer.parseInt(data[STAR_TLOCATION]);
 					end = Integer.parseInt(data[END_LOCATION]);
 				} catch (Exception e) {
-					throw new InvalidFileFormatException("The start and end reference should be integers");
+					throw new InvalidFileFormatException(
+							"The start and end reference should be integers");
 				}
 				if (content != null && end - start != content.length()) {
 					throw new InvalidFileFormatException(
 							"Size of Node content doesn't match with its reference size");
 				}
-				HashSet<String> sources = new HashSet<String>(Arrays.asList(data[1].split(",")));
+				HashSet<String> sources = new HashSet<String>(
+						Arrays.asList(data[1].split(",")));
 				DNode node = new DNode(id, sources, start, end, content);
 				nodes.add(node);
 			} else {
-				throw new InvalidFileFormatException("Every new node line should start with >");
+				throw new InvalidFileFormatException(
+						"Every new node line should start with >");
 			}
 		}
 		return nodes;

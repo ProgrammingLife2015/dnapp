@@ -12,7 +12,8 @@ public class WindowSettings extends Observable {
 	/**
 	 * 
 	 */
-	private static final int DEFAULT_MIN_SIZE_X = 500, DEFAULT_MIN_SIZE_Y = 350;
+	private static final int DEFAULT_MIN_SIZE_X = 500,
+			DEFAULT_MIN_SIZE_Y = 350;
 
 	/**
 	 * 
@@ -27,7 +28,8 @@ public class WindowSettings extends Observable {
 	/**
 	 * The minimum size of the window.
 	 */
-	private Dimension minimumSize = new Dimension(DEFAULT_MIN_SIZE_X, DEFAULT_MIN_SIZE_Y);
+	private Dimension minimumSize = new Dimension(DEFAULT_MIN_SIZE_X,
+			DEFAULT_MIN_SIZE_Y);
 
 	/**
 	 * The initial size of the window.

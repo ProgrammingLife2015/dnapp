@@ -59,7 +59,8 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Maarten
  */
-public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionObserver, PhyloChosenObserver {
+public class GraphPanel extends JSplitPane implements ContentTab,
+		GeneSelectionObserver, PhyloChosenObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -209,8 +210,10 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	 */
 	private void fillGeneNavigatorBox() {
 		if (dgraph.getReferenceGeneStorage().getReferenceGenes() != null) {
-			for (ReferenceGene rg : dgraph.getReferenceGeneStorage().getReferenceGenes()) {
-				window.getOptionPanel().getGeneNavigator().addItem(rg.getName());
+			for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+					.getReferenceGenes()) {
+				window.getOptionPanel().getGeneNavigator()
+						.addItem(rg.getName());
 			}
 		}
 	}
@@ -233,9 +236,11 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	public final void writeGraph(final String filePath) {
 		try {
 			graph.write(filePath);
-			AppEvent.statusBarInfo("Exported graph representation to: " + filePath);
+			AppEvent.statusBarInfo("Exported graph representation to: "
+					+ filePath);
 		} catch (IOException e) {
-			AppEvent.statusBarError("Error during visual graph export: " + e.getMessage());
+			AppEvent.statusBarError("Error during visual graph export: "
+					+ e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -251,7 +256,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	 */
 	public final boolean loadGraph(final File nodes, final File edges) {
 		boolean ret = true;
-		final ProgressDialog pd = new ProgressDialog(window, "Importing...", true);
+		final ProgressDialog pd = new ProgressDialog(window, "Importing...",
+				true);
 		GraphLoadWorker pw = new GraphLoadWorker(nodes, edges, pd);
 		pw.execute();
 		pd.start();
@@ -281,7 +287,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		 */
 		public void locateGenes(final Graph vGraph) {
 			if (dgraph.getReferenceGeneStorage().getReferenceGenes() != null) {
-				for (ReferenceGene rg : dgraph.getReferenceGeneStorage().getReferenceGenes()) {
+				for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+						.getReferenceGenes()) {
 					Integer start = searchNode(rg.getStart(), vGraph);
 					Integer end = searchNode(rg.getEnd(), vGraph);
 					if (start != null && end != null) {
@@ -306,7 +313,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		@SuppressWarnings("unchecked")
 		private Node findNode(final int id, final Graph vGraph) {
 			for (Node n : vGraph.getEachNode()) {
-				for (Integer index : (HashSet<Integer>) n.getAttribute("collapsed")) {
+				for (Integer index : (HashSet<Integer>) n
+						.getAttribute("collapsed")) {
 					if (index == id) {
 						return n;
 					}
@@ -328,8 +336,10 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 					ArrayList<Node> nodes = new ArrayList<Node>(2);
 					Node begin = findNode(entry.getValue().get(0), vGraph);
 					Node end = findNode(entry.getValue().get(1), vGraph);
-					if (begin != null && end != null
-							&& (int) begin.getAttribute("x") <= (int) end.getAttribute("x")) {
+					if (begin != null
+							&& end != null
+							&& (int) begin.getAttribute("x") <= (int) end
+									.getAttribute("x")) {
 						nodes.add(begin);
 						nodes.add(end);
 						geneLocs.put(entry.getKey(), nodes);
@@ -350,7 +360,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		private Integer searchNode(final int loc, final Graph vGraph) {
 			for (Node n : vGraph.getEachNode()) {
 				for (int id : (HashSet<Integer>) n.getAttribute("collapsed")) {
-					if (dgraph.getDNode(id).getStart() <= loc && dgraph.getDNode(id).getEnd() > loc) {
+					if (dgraph.getDNode(id).getStart() <= loc
+							&& dgraph.getDNode(id).getEnd() > loc) {
 						return id;
 					}
 				}
@@ -386,7 +397,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		 *            The progress bar dialog to end once the task has been
 		 *            finished.
 		 */
-		public GraphLoadWorker(final File nodesIn, final File edgesIn, final ProgressDialog pd) {
+		public GraphLoadWorker(final File nodesIn, final File edgesIn,
+				final ProgressDialog pd) {
 			this.nodes = nodesIn;
 			this.edges = edgesIn;
 
@@ -407,7 +419,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		@Override
 		protected Graph doInBackground() throws Exception {
 			try {
-				dgraph = Reader.read(nodes.getAbsolutePath(), edges.getAbsolutePath());
+				dgraph = Reader.read(nodes.getAbsolutePath(),
+						edges.getAbsolutePath());
 				dgraph.getReferenceGeneStorage().registerObserver(minimap);
 				dgraph.getReferenceGeneStorage().registerObserver(gl);
 				zlc = new ZoomlevelCreator(dgraph);
@@ -415,7 +428,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 				graph = ConvertDGraph.convert(dgraph);
 				viewSize = NodePlacer.place(graph, viewSize);
 				analyzeDGraph();
-				window.getOptionPanel().fillGenomeList(dgraph.getReferencesSet(), true, true);
+				window.getOptionPanel().fillGenomeList(
+						dgraph.getReferencesSet(), true, true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				AppEvent.statusBarError(e.getMessage());
@@ -428,10 +442,14 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	private void analyzeDGraph() {
 		BinaryTree tree = window.getContent().getPhyloPanel().getTree();
 		dgraph.calculateReferenceLength();
-		dgraph.setPointMutations(MutationFinder.findPointMutations(dgraph, tree));
-		dgraph.setDeletionMutations(MutationFinder.findDeletionMutations(dgraph, tree));
-		dgraph.setInsertionMutations(MutationFinder.findInsertionMutations(dgraph, tree));
-		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph, tree));
+		dgraph.setPointMutations(MutationFinder
+				.findPointMutations(dgraph, tree));
+		dgraph.setDeletionMutations(MutationFinder.findDeletionMutations(
+				dgraph, tree));
+		dgraph.setInsertionMutations(MutationFinder.findInsertionMutations(
+				dgraph, tree));
+		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph,
+				tree));
 	}
 
 	/**
@@ -442,9 +460,11 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	 */
 	private void visualizeGraph(final Graph vGraph) {
 		gl.searchGeneLocs(vGraph);
-		Viewer viewer = new Viewer(vGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		Viewer viewer = new Viewer(vGraph,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.disableAutoLayout();
-		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID, Viewer.newGraphRenderer()) {
+		view = new DefaultView(viewer, Viewer.DEFAULT_VIEW_ID,
+				Viewer.newGraphRenderer()) {
 			/** The serial version UID. */
 			private static final long serialVersionUID = 4902528839853178375L;
 
@@ -491,9 +511,11 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
 			g.setColor(Color.ORANGE);
-			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft + NODE_DIAMETER, NODE_DIAMETER / 2);
+			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
 			g.setColor(Color.BLACK);
-			g.drawRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft + NODE_DIAMETER, NODE_DIAMETER / 2);
+			g.drawRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
 
 		}
 	}
@@ -502,8 +524,10 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	 * Vertically centers the scroll pane scroll bar.
 	 */
 	private void centerVertical() {
-		graphPane.getVerticalScrollBar().setValue(graphPane.getVerticalScrollBar().getMaximum());
-		graphPane.getVerticalScrollBar().setValue(graphPane.getVerticalScrollBar().getValue() / 2);
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getMaximum());
+		graphPane.getVerticalScrollBar().setValue(
+				graphPane.getVerticalScrollBar().getValue() / 2);
 	}
 
 	/**
@@ -552,7 +576,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	 * @param selectedNodeIn
 	 *            The node clicked on by the user.
 	 */
-	private void notifyNodeSelectionObservers(final HashSet<DNode> selectedNodeIn) {
+	private void notifyNodeSelectionObservers(
+			final HashSet<DNode> selectedNodeIn) {
 		for (NodeSelectionObserver sgo : nodeSelectionObservers) {
 			sgo.update(selectedNodeIn);
 		}
@@ -624,14 +649,17 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		// Restores the old class of the previous selected node if present.
 		Node oldSelected = graph.getNode(String.valueOf(dgraph.getSelected()));
 		if (oldSelected != null) {
-			oldSelected.setAttribute("ui.class", oldSelected.getAttribute("oldclass"));
+			oldSelected.setAttribute("ui.class",
+					oldSelected.getAttribute("oldclass"));
 			oldSelected.setAttribute("oldclass",
-					checkClassType((HashSet<Integer>) oldSelected.getAttribute("collapsed")));
+					checkClassType((HashSet<Integer>) oldSelected
+							.getAttribute("collapsed")));
 		}
 
 		// Assigns new selected node and stores old ui.class
 		dgraph.setSelected(newSelectedNode.getId());
-		newSelectedNode.setAttribute("oldclass", newSelectedNode.getAttribute("ui.class"));
+		newSelectedNode.setAttribute("oldclass",
+				newSelectedNode.getAttribute("ui.class"));
 		newSelectedNode.setAttribute("ui.class", "selected");
 	}
 
@@ -641,11 +669,14 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	@SuppressWarnings("unchecked")
 	public final void highlight() {
 		for (Node n : graph.getEachNode()) {
-			HashSet<Integer> ids = (HashSet<Integer>) n.getAttribute("collapsed");
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
 			boolean contains = false;
 			for (int id : ids) {
 				for (String highlight : highlightedGenomes) {
-					contains = contains || dgraph.getDNode(id).getSources().contains(highlight);
+					contains = contains
+							|| dgraph.getDNode(id).getSources()
+									.contains(highlight);
 				}
 			}
 			if (contains) {
@@ -667,7 +698,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 	@SuppressWarnings("unchecked")
 	public final void unHighlight() {
 		for (Node n : graph.getEachNode()) {
-			HashSet<Integer> ids = (HashSet<Integer>) n.getAttribute("collapsed");
+			HashSet<Integer> ids = (HashSet<Integer>) n
+					.getAttribute("collapsed");
 			boolean contains = false;
 			for (int id : ids) {
 				for (String source : dgraph.getDNode(id).getSources()) {
@@ -736,7 +768,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 			if (newZoomLevel == 0) {
 				threshold = MAXIMUM_THRESHOLD;
 			} else {
-				threshold = MAXIMUM_THRESHOLD - newZoomLevel * THRESHOLD_DIFFERENCE;
+				threshold = MAXIMUM_THRESHOLD - newZoomLevel
+						* THRESHOLD_DIFFERENCE;
 			}
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr, viewSize));
@@ -840,7 +873,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		}
 
 		@Override
-		public void update(final GenomeRow genomeRow, final boolean genomeFilterChanged,
+		public void update(final GenomeRow genomeRow,
+				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
 			// && genomeRow.isVisible()
 			if (genomeHighlightChanged) {
@@ -885,7 +919,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 		public void buttonReleased(final String id) {
 			AppEvent.statusBarMid(" Selected node: " + id);
 			HashSet<DNode> ret = new HashSet<DNode>();
-			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute("collapsed")) {
+			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
+					"collapsed")) {
 				ret.add(dgraph.getDNode(n));
 			}
 			notifyNodeSelectionObservers(ret);
@@ -962,7 +997,8 @@ public class GraphPanel extends JSplitPane implements ContentTab, GeneSelectionO
 			Node beginnode = this.geneLocs.get(selectedGene).get(0);
 			this.selectNode(beginnode);
 			graphPane.getHorizontalScrollBar().setValue(
-					(int) beginnode.getAttribute("x") - graphPane.getViewport().getWidth() / 2);
+					(int) beginnode.getAttribute("x")
+							- graphPane.getViewport().getWidth() / 2);
 		}
 
 	}

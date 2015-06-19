@@ -41,7 +41,8 @@ public final class InDelCollapser {
 	 *         collapsed.
 	 * 
 	 */
-	public static Graph collapseInsertions(final Collection<InsertionMutation> insmutations,
+	public static Graph collapseInsertions(
+			final Collection<InsertionMutation> insmutations,
 			final Graph graph, final int threshold) {
 		for (InsertionMutation ins : insmutations) {
 			if (ins.getScore() < threshold) {
@@ -63,7 +64,8 @@ public final class InDelCollapser {
 	 * @return graphstream graph object with all the deletion mutations
 	 *         collapsed.
 	 */
-	public static Graph collapseDeletions(final Collection<DeletionMutation> delmutations, final Graph graph,
+	public static Graph collapseDeletions(
+			final Collection<DeletionMutation> delmutations, final Graph graph,
 			final int threshold) {
 		for (DeletionMutation del : delmutations) {
 			if (del.getScore() < threshold) {
@@ -92,7 +94,8 @@ public final class InDelCollapser {
 		}
 		int start;
 		int end;
-		if (pre.getAttribute("end") instanceof Integer && post.getAttribute("start") instanceof Integer) {
+		if (pre.getAttribute("end") instanceof Integer
+				&& post.getAttribute("start") instanceof Integer) {
 			start = pre.getAttribute("end");
 			end = post.getAttribute("start");
 		} else {
@@ -109,7 +112,8 @@ public final class InDelCollapser {
 	 * @param graph
 	 *            The graph.
 	 */
-	public static void collapseDeletion(final DeletionMutation del, final Graph graph) {
+	public static void collapseDeletion(final DeletionMutation del,
+			final Graph graph) {
 		Node preNode = graph.getNode(del.getPreNode() + "");
 		Node postNode = graph.getNode(del.getPostNode() + "");
 		Edge edge = preNode.getEdgeToward(postNode);
@@ -124,7 +128,8 @@ public final class InDelCollapser {
 	 * @param graph
 	 *            The graph.
 	 */
-	public static void collapseInsertion(final InsertionMutation ins, final Graph graph) {
+	public static void collapseInsertion(final InsertionMutation ins,
+			final Graph graph) {
 		Node insertedNode = graph.getNode(ins.getInNode() + "");
 		graph.removeNode(insertedNode);
 	}

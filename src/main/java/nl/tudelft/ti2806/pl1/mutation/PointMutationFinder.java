@@ -36,7 +36,8 @@ public final class PointMutationFinder {
 	 *            The initial graph of the original zoom level.
 	 * @return The graph with collapsed point mutations.
 	 */
-	public static Collection<PointMutation> findPointMutations(final DGraph graph) {
+	public static Collection<PointMutation> findPointMutations(
+			final DGraph graph) {
 		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
 		Collection<DNode> dnodes = graph.getNodes().values();
 		for (DNode node : dnodes) {
@@ -51,9 +52,10 @@ public final class PointMutationFinder {
 				}
 			}
 			if (muts.size() > 1) {
-				HashMap<Integer, Set<Integer>> nodegroups = makeNodeGroups(muts, graph);
-				pointmutations.addAll(createPointMutations(node.getId(), nodegroups, graph,
-						graph.getReferenceGeneStorage()));
+				HashMap<Integer, Set<Integer>> nodegroups = makeNodeGroups(
+						muts, graph);
+				pointmutations.addAll(createPointMutations(node.getId(),
+						nodegroups, graph, graph.getReferenceGeneStorage()));
 			}
 		}
 		return pointmutations;
@@ -72,15 +74,17 @@ public final class PointMutationFinder {
 	 * 
 	 * @return Collection of pointmutations.
 	 */
-	private static Collection<PointMutation> createPointMutations(final int begin,
-			final HashMap<Integer, Set<Integer>> nodegroups, final DGraph graph,
-			final ReferenceGeneStorage rgs) {
+	private static Collection<PointMutation> createPointMutations(
+			final int begin, final HashMap<Integer, Set<Integer>> nodegroups,
+			final DGraph graph, final ReferenceGeneStorage rgs) {
 		Collection<PointMutation> pointmutations = new HashSet<PointMutation>();
 		for (Entry<Integer, Set<Integer>> end : nodegroups.entrySet()) {
 			Set<Integer> group = end.getValue();
 			if (group.size() > 1) {
-				int position = graph.getDNode(group.iterator().next()).getStart();
-				pointmutations.add(new PointMutation(begin, group, end.getKey(), position, position, rgs));
+				int position = graph.getDNode(group.iterator().next())
+						.getStart();
+				pointmutations.add(new PointMutation(begin, group,
+						end.getKey(), position, position, rgs));
 			}
 		}
 		return pointmutations;
@@ -96,7 +100,8 @@ public final class PointMutationFinder {
 	 *            The graph we want to collapse
 	 * @return The grouped nodes
 	 */
-	private static HashMap<Integer, Set<Integer>> makeNodeGroups(final ArrayList<Integer> muts, final DGraph g) {
+	private static HashMap<Integer, Set<Integer>> makeNodeGroups(
+			final ArrayList<Integer> muts, final DGraph g) {
 		HashMap<Integer, Set<Integer>> nodegroups = new HashMap<Integer, Set<Integer>>();
 		for (Integer n : muts) {
 			ArrayList<Integer> ns = getNextNodes(g, n);
@@ -122,7 +127,8 @@ public final class PointMutationFinder {
 	 *            ID of the node.
 	 * @return The nodes following the given node.
 	 */
-	private static ArrayList<Integer> getNextNodes(final DGraph graph, final int id) {
+	private static ArrayList<Integer> getNextNodes(final DGraph graph,
+			final int id) {
 		ArrayList<Integer> nodes = new ArrayList<Integer>();
 		DNode n = graph.getDNode(id);
 		Iterator<DEdge> edges = n.getOutEdges().iterator();

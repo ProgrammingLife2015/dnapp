@@ -86,7 +86,8 @@ public class DGraph implements DynamicGraph {
 	 * @param newReferences
 	 *            the references to set
 	 */
-	protected void setReferences(final HashMap<String, Collection<DNode>> newReferences) {
+	protected void setReferences(
+			final HashMap<String, Collection<DNode>> newReferences) {
 		this.references = newReferences;
 	}
 
@@ -206,7 +207,8 @@ public class DGraph implements DynamicGraph {
 	 * @return A boolean indicating of the operation succeeded
 	 */
 	public boolean addDEdge(final DEdge edge) {
-		if (!nodes.containsKey(edge.getStartNode().getId()) || !nodes.containsKey(edge.getEndNode().getId())) {
+		if (!nodes.containsKey(edge.getStartNode().getId())
+				|| !nodes.containsKey(edge.getEndNode().getId())) {
 			return false;
 		}
 		if (edges.contains(edge)) {
@@ -226,7 +228,8 @@ public class DGraph implements DynamicGraph {
 	 * @return A boolean indicating of the operation succeeded
 	 */
 	public boolean removeDEdge(final DEdge edge) {
-		if (!nodes.containsKey(edge.getStartNode().getId()) || !nodes.containsKey(edge.getEndNode().getId())) {
+		if (!nodes.containsKey(edge.getStartNode().getId())
+				|| !nodes.containsKey(edge.getEndNode().getId())) {
 			return false;
 		}
 		if (!edges.contains(edge)) {
@@ -293,7 +296,8 @@ public class DGraph implements DynamicGraph {
 	 * @param newPointMutations
 	 *            pointMutations to set.
 	 */
-	public void setPointMutations(final Collection<PointMutation> newPointMutations) {
+	public void setPointMutations(
+			final Collection<PointMutation> newPointMutations) {
 		this.pointMutations = newPointMutations;
 	}
 
@@ -301,7 +305,8 @@ public class DGraph implements DynamicGraph {
 	 * @param deletionMutationsIn
 	 *            deletion mutations to set.
 	 */
-	public void setDeletionMutations(final Collection<DeletionMutation> deletionMutationsIn) {
+	public void setDeletionMutations(
+			final Collection<DeletionMutation> deletionMutationsIn) {
 		delMutations = deletionMutationsIn;
 	}
 
@@ -321,7 +326,8 @@ public class DGraph implements DynamicGraph {
 	 * @param mutationsIn
 	 *            The complex mutations to set.
 	 */
-	public void setComplexMutations(final Collection<ComplexMutation> mutationsIn) {
+	public void setComplexMutations(
+			final Collection<ComplexMutation> mutationsIn) {
 		this.compmutations = mutationsIn;
 	}
 
@@ -343,7 +349,8 @@ public class DGraph implements DynamicGraph {
 	 * @param newInsMutations
 	 *            the insertion mutations to set
 	 */
-	public void setInsertionMutations(final Collection<InsertionMutation> newInsMutations) {
+	public void setInsertionMutations(
+			final Collection<InsertionMutation> newInsMutations) {
 		this.insMutations = newInsMutations;
 	}
 
