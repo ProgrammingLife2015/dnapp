@@ -30,13 +30,15 @@ public final class ComplexCollapser {
 	 *            The complex mutations.
 	 * @param graph
 	 *            The graph.
+	 * @param threshold
+	 *            the thresholds.
 	 * @return The graph with the complex mutations collapsed.
 	 */
 	public static Graph collapseComplexMutations(
 			final Collection<ComplexMutation> mutations, final Graph graph,
 			final int threshold) {
 		for (ComplexMutation mut : mutations) {
-			if (threshold >= 90) {
+			if (threshold >= COMPLEXTHRESHOLD) {
 				collapseComplexMutation(mut, graph);
 			}
 		}
