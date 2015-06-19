@@ -112,7 +112,6 @@ public class ToolBar extends JToolBar {
 		for (JComponent c : contentTab.getToolBarControls()) {
 			add(c);
 		}
-		// revalidate();
 		repaint();
 	}
 
