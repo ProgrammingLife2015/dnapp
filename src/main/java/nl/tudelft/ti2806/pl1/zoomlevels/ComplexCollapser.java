@@ -14,6 +14,9 @@ import org.graphstream.graph.Node;
  */
 public final class ComplexCollapser {
 
+	/** Threshold for when complex mutations get collapsed. **/
+	public static final int COMPLEXTHRESHOLD = 90;
+
 	/**
 	 * 
 	 */
@@ -30,9 +33,12 @@ public final class ComplexCollapser {
 	 * @return The graph with the complex mutations collapsed.
 	 */
 	public static Graph collapseComplexMutations(
-			final Collection<ComplexMutation> mutations, final Graph graph) {
+			final Collection<ComplexMutation> mutations, final Graph graph,
+			final int threshold) {
 		for (ComplexMutation mut : mutations) {
-			collapseComplexMutation(mut, graph);
+			if (threshold >= 90) {
+				collapseComplexMutation(mut, graph);
+			}
 		}
 		return graph;
 	}
