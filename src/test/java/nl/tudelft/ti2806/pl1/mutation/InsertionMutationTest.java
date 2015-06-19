@@ -68,7 +68,7 @@ public class InsertionMutationTest {
 	@Test
 	public void simpleInsertionCaseTest() {
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		Collection<InsertionMutation> expected = Arrays
 				.asList(new InsertionMutation(start.getId(), end.getId(),
 						insertion.getId(), rgs, 0, 0));
@@ -85,7 +85,7 @@ public class InsertionMutationTest {
 		graph.addDEdge(sy);
 		graph.addDEdge(ye);
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
 						.getId(), rgs, 0, 0),
@@ -108,7 +108,7 @@ public class InsertionMutationTest {
 		graph.addDEdge(ye);
 		graph.addDEdge(ee);
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
 						.getId(), rgs, 0, 0), new InsertionMutation(
@@ -141,7 +141,7 @@ public class InsertionMutationTest {
 		graph.addDEdge(new DEdge(insertion2, end3));
 
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
 						.getId(), rgs, 0, 0),
@@ -171,7 +171,7 @@ public class InsertionMutationTest {
 		graph.addDEdge(new DEdge(insertion2, end3));
 
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
 						.getId(), rgs, 0, 0),

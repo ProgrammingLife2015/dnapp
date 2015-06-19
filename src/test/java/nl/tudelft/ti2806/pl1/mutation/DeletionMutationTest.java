@@ -73,7 +73,7 @@ public class DeletionMutationTest {
 	@Test
 	public void simpleDeletionCaseTest() {
 		Collection<DeletionMutation> muts = MutationFinder
-				.findDeletionMutations(graph);
+				.findDeletionMutations(graph, null);
 		Collection<DeletionMutation> expected = new ArrayList<DeletionMutation>();
 		expected.add(new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
@@ -91,7 +91,7 @@ public class DeletionMutationTest {
 		graph.addDEdge(new DEdge(deletion2, end2));
 		graph.addDEdge(new DEdge(end, end2));
 		Collection<DeletionMutation> muts = MutationFinder
-				.findDeletionMutations(graph);
+				.findDeletionMutations(graph, null);
 		Collection<DeletionMutation> expected = Arrays.asList(
 				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
 				new DeletionMutation(end.getId(), end2.getId(), rgs, 0, 0));
@@ -124,7 +124,7 @@ public class DeletionMutationTest {
 		graph.addDEdge(new DEdge(end2, deletion2));
 		graph.addDEdge(new DEdge(deletion2, end3));
 		Collection<DeletionMutation> muts = MutationFinder
-				.findDeletionMutations(graph);
+				.findDeletionMutations(graph, null);
 		Collection<DeletionMutation> expected = Arrays.asList(
 				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
 				new DeletionMutation(end2.getId(), end3.getId(), rgs, 0, 0));
@@ -153,7 +153,7 @@ public class DeletionMutationTest {
 		graph.addDEdge(new DEdge(end2, deletion2));
 		graph.addDEdge(new DEdge(deletion2, end3));
 		Collection<DeletionMutation> muts = MutationFinder
-				.findDeletionMutations(graph);
+				.findDeletionMutations(graph, null);
 		Collection<DeletionMutation> expected = Arrays.asList(
 				new DeletionMutation(start.getId(), end.getId(), rgs, 0, 0),
 				new DeletionMutation(end2.getId(), end3.getId(), rgs, 0, 0));
