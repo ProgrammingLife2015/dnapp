@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
 import java.awt.event.ActionEvent;
@@ -13,21 +10,19 @@ import javax.swing.JComboBox;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
- * @author ChakShun
- *
+ * @author Chak Shun
+ * @since 18-6-2015
  */
 public class GeneComboBox extends JComboBox<String> {
 
-	/**
-	 * 
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The list of gene selection observers. */
 	private List<GeneSelectionObserver> geneSelectionObservers = new ArrayList<GeneSelectionObserver>();
 
 	/**
-	 * 
+	 * Initialize the gene combo box.
 	 */
 	public GeneComboBox() {
 		super(new String[] { " " });
