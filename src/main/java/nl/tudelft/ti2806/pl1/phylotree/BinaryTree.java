@@ -397,13 +397,18 @@ public abstract class BinaryTree extends JButton {
 	 * @return A collection of selected sources
 	 */
 	public Collection<String> getChosen(final BinaryTree root) {
-		if (root.isLeaf() && root.isChosen()) {
-			return Arrays.asList(root.getID());
+		if (root.isLeaf()) {
+			if (root.isChosen()) {
+				return Arrays.asList(root.getID());
+			} else {
+				return Arrays.asList();
+			}
+		} else {
+			Collection<String> chosen = new ArrayList<String>();
+			chosen.addAll(getChosen(root.getLeft()));
+			chosen.addAll(getChosen(root.getRight()));
+			return chosen;
 		}
-		Collection<String> chosen = new ArrayList<String>();
-		chosen.addAll(getChosen(root.getLeft()));
-		chosen.addAll(getChosen(root.getRight()));
-		return chosen;
 	}
 
 	/**

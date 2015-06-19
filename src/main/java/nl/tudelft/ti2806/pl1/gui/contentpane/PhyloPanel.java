@@ -22,8 +22,6 @@ import javax.swing.JScrollPane;
 
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
-import nl.tudelft.ti2806.pl1.gui.observable.ChosenObservable;
-import nl.tudelft.ti2806.pl1.gui.observable.ChosenObserver;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -33,7 +31,7 @@ import com.wordpress.tips4java.ScrollablePanel;
  *
  */
 public class PhyloPanel extends JScrollPane implements ContentTab,
-		ChosenObservable {
+		PhyloChosenObservable {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -65,7 +63,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	/** The tree that this panel will show. */
 	private BinaryTree tree;
 
-	private Collection<ChosenObserver> observers;
+	/** The observers for the phylopanel. */
+	private Collection<PhyloChosenObserver> observers = new ArrayList<PhyloChosenObserver>();
 
 	/**
 	 * @return The loaded tree.
@@ -100,7 +99,6 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 			}
 		};
 		treePanel.setLayout(null);
-		observers = new ArrayList<ChosenObserver>();
 		setViewportView(treePanel);
 	}
 
@@ -108,7 +106,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
 		ret.add(ToolBar.makeButton("Highlight selection", null,
-				new sourceHighlightListener(), null));
+				new SourceHighlightListener(), null));
 		ret.add(ToolBar.makeButton("Filter selection", null, null, null));
 		return ret;
 	}
@@ -256,18 +254,18 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	}
 
 	@Override
-	public void registerObserver(final ChosenObserver o) {
+	public void registerObserver(final PhyloChosenObserver o) {
 		observers.add(o);
 	}
 
 	@Override
-	public void deleteObserver(final ChosenObserver o) {
+	public void deleteObserver(final PhyloChosenObserver o) {
 		observers.remove(o);
 	}
 
 	@Override
 	public void notifyObservers(final Collection<String> chosen) {
-		for (ChosenObserver o : observers) {
+		for (PhyloChosenObserver o : observers) {
 			o.update(chosen);
 		}
 	}
@@ -278,7 +276,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 	 * @author mark
 	 *
 	 */
-	class sourceHighlightListener implements ActionListener {
+	class SourceHighlightListener implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			Collection<String> chosen = getTree().getChosen(getTree());

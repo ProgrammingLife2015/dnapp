@@ -104,6 +104,7 @@ public class Content extends JPanel {
 
 		graphPanel = new GraphPanel(window);
 		phyloPanel = new PhyloPanel();
+		phyloPanel.registerObserver(graphPanel);
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addChangeListener(new ChangeListener() {
