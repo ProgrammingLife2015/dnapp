@@ -46,6 +46,13 @@ public enum MutationMultipliers {
 		public String getGUI() {
 			return "Importance Pointmutations";
 		}
+	},
+	/** Use the Phylogenetic tree. **/
+	PHYLO {
+		@Override
+		public String getGUI() {
+			return "Use phylogenetic tree";
+		}
 	};
 
 	/**
