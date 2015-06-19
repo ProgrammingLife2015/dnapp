@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -106,11 +107,18 @@ public class SelectedGenomeGroup extends JPanel implements GenomeTableObserver {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void update(final GenomeRow genomeRow,
 			final boolean genomeFilterChanged,
 			final boolean genomeHightlightChanged) {
 		gID.setText(genomeRow.getId());
 		gShow.setText(String.valueOf(genomeRow.isVisible()));
 		gHigh.setText(String.valueOf(genomeRow.isHighlighted()));
+	}
+
+	@Override
+	public void update(final Collection<String> chosen) {
+		// TODO Auto-generated method stub
+
 	}
 }

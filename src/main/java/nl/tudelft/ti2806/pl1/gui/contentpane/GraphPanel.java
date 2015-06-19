@@ -52,8 +52,7 @@ import org.graphstream.ui.view.ViewerPipe;
 /**
  * @author Maarten
  */
-public class GraphPanel extends JSplitPane implements ContentTab,
-		PhyloChosenObserver {
+public class GraphPanel extends JSplitPane implements ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -723,6 +722,14 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			}
 
 		}
+
+		@Override
+		public void update(final Collection<String> chosen) {
+			highlightedGenomes.clear();
+			unHighlight();
+			highlightedGenomes = chosen;
+			highlight();
+		}
 	}
 
 	/**
@@ -812,13 +819,5 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	public int getZoomLevel() {
 		return zoomLevel;
-	}
-
-	@Override
-	public void update(final Collection<String> chosen) {
-		highlightedGenomes.clear();
-		unHighlight();
-		highlightedGenomes = chosen;
-		highlight();
 	}
 }

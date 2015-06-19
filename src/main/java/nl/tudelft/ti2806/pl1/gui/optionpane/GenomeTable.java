@@ -16,13 +16,14 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
+import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloChosenObserver;
 
 /**
  * 
  * @author Maarten
  * 
  */
-public class GenomeTable extends JScrollPane {
+public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2803975406952542688L;
@@ -62,8 +63,10 @@ public class GenomeTable extends JScrollPane {
 		table.getModel().addTableModelListener(new TableModelListener() {
 			@Override
 			public void tableChanged(final TableModelEvent e) {
+				// if (!idk) {
 				notifyObservers(e.getColumn() == GenomeRow.COL_SHOW,
 						e.getColumn() == GenomeRow.COL_HIGHLIGHT);
+				// }
 			}
 		});
 
@@ -215,6 +218,28 @@ public class GenomeTable extends JScrollPane {
 	}
 
 	/**
+	 * Notify the observers if the more than 1 gene has changed for the
+	 * selection.
+	 * 
+	 * @param chosen
+	 *            Selected genes.
+	 */
+	private void notifyObservers(final Collection<String> chosen) {
+		for (GenomeTableObserver sgo : observers) {
+			sgo.update(chosen);
+		}
+	}
+
+	@Override
+	public void update(final Collection<String> chosen) {
+		for (GenomeRow gr : this.gtm.data) {
+			gr.setHighlighted(chosen.contains(gr.getId()));
+		}
+		repaint();
+		notifyObservers(chosen);
+	}
+
+	/**
 	 * 
 	 * @author Maarten
 	 * 
@@ -281,7 +306,13 @@ public class GenomeTable extends JScrollPane {
 			gr.set(col, value);
 			fireTableCellUpdated(row, col);
 		}
+	}
 
+	/**
+	 * @return the gtm
+	 */
+	public final GenomeTableModel getGtm() {
+		return gtm;
 	}
 
 }
