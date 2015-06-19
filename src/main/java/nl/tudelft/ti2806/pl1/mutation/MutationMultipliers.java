@@ -8,21 +8,15 @@ package nl.tudelft.ti2806.pl1.mutation;
  */
 public enum MutationMultipliers {
 
-	/**
-	 * Multiplier for score if mutation is in a gene.
-	 */
+	/** Multiplier for score if mutation is in a gene. */
 	IN_GENE {
-
 		@Override
 		public String getGUI() {
 			return "Mutation in Gene";
 		}
-
 	},
 
-	/**
-	 * Multiplier for score of its a known mutation.
-	 */
+	/** Multiplier for score of its a known mutation. */
 	KNOWN_MUTATION {
 
 		@Override

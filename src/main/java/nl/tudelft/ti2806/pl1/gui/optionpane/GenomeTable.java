@@ -19,17 +19,12 @@ import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloChosenObserver;
 
 /**
- * 
  * @author Maarten
- * 
  */
 public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -2803975406952542688L;
-
-	// /** The width of the show column. */
-	// private static final int COL_SHOW_WIDTH = 40;
 
 	/** The width of the highlight column. */
 	private static final int COL_HIGHLIGHT_WIDTH = 55;
