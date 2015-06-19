@@ -126,6 +126,8 @@ public class InnerNode extends BinaryTree {
 	public final Color getBackground() {
 		if (isCollapsed()) {
 			return PhyloPanel.INNER_NODE_COLLAPSED;
+		} else if (isChosen()) {
+			return PhyloPanel.NODE_SELECTED_COLOR;
 		}
 		return PhyloPanel.INNER_NODE_NORMAL;
 	}

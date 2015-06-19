@@ -9,17 +9,15 @@ import java.util.Set;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 /**
- * 
- * @author Justin, Maarten
+ * @author Justin, Maarten, Mark
  * @since 10-6-2015
  */
 public final class MutationFinder {
 
-	/**
-	 * Reference genome name.
-	 */
+	/** Reference genome name. */
 	private static final String REFERENCE_GENOME = "TKK_REF";
 
 	/**
@@ -28,14 +26,79 @@ public final class MutationFinder {
 	}
 
 	/**
+	 * This method returns the amount of groups of nodes which share a common
+	 * direct ancestor according to the phylogenetic tree.
+	 * 
+	 * @param graph
+	 *            The graph.
+	 * @param id1
+	 *            The begin node id.
+	 * @param id2
+	 *            The end node id.
+	 * @param root
+	 *            The root node of the phylogenetic tree.
+	 * @return The amount of groups of nodes which share a common parent
+	 *         according to the phylogenetic tree.
+	 */
+	public static int getAffectedNodeGroupsCount(final DGraph graph,
+			final int id1, final int id2, final BinaryTree root) {
+		Set<String> sources1 = graph.getDNode(id1).getSources();
+		Set<String> sources2 = graph.getDNode(id2).getSources();
+		Set<String> sources = intersect(sources1, sources2);
+		return BinaryTree.findGroups(sources, root).size();
+	}
+
+	/**
+	 * This method finds the intersection between 2 hash sets.
+	 * 
+	 * @param set1
+	 *            The first hash set
+	 * @param set2
+	 *            The second hash set
+	 * @return The intersection between set1 and set2
+	 */
+	protected static Set<String> intersect(final Set<String> set1,
+			final Set<String> set2) {
+		Set<String> set = new HashSet<String>();
+		if (set1.size() < set2.size()) {
+			for (String s : set1) {
+				set.add(s);
+			}
+			set.retainAll(set2);
+		} else {
+			for (String s : set2) {
+				set.add(s);
+			}
+			set.retainAll(set1);
+		}
+		return set;
+	}
+
+	/**
+	 * Finds the Point mutations of a DGraph.
+	 * 
+	 * @param graph
+	 *            The data graph.
+	 * @param tree
+	 *            The binary tree.
+	 * @return A collection of the Point mutations.
+	 */
+	public static Collection<PointMutation> findPointMutations(
+			final DGraph graph, final BinaryTree tree) {
+		return PointMutationFinder.findPointMutations(graph);
+	}
+
+	/**
 	 * Finds the simple Insertion mutations of a DGraph.
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the Insertion mutations.
 	 */
 	public static Collection<InsertionMutation> findInsertionMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		ArrayList<InsertionMutation> ins = new ArrayList<InsertionMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		for (DNode node : nodes) {
@@ -45,10 +108,12 @@ public final class MutationFinder {
 					if (nextnodes.size() == 1) {
 						DNode endnode = nextnodes.iterator().next();
 						if (node.getNextNodes().contains(endnode)) {
-							ins.add(new InsertionMutation(node.getId(), endnode
-									.getId(), next.getId(), graph
-									.getReferenceGeneStorage(),
-									node.getStart(), node.getEnd()));
+							InsertionMutation mut = new InsertionMutation(
+									node.getId(), endnode.getId(),
+									next.getId(),
+									graph.getReferenceGeneStorage(),
+									node.getStart(), node.getEnd());
+							ins.add(mut);
 						}
 					}
 				}
@@ -62,10 +127,12 @@ public final class MutationFinder {
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the Deletion mutations.
 	 */
 	public static Collection<DeletionMutation> findDeletionMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		ArrayList<DeletionMutation> dels = new ArrayList<DeletionMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		for (DNode node : nodes) {
@@ -86,9 +153,10 @@ public final class MutationFinder {
 				}
 			}
 			if (isDeletion) {
-				dels.add(new DeletionMutation(node.getId(), endnode.getId(),
-						graph.getReferenceGeneStorage(), node.getStart(), node
-								.getEnd()));
+				DeletionMutation mut = new DeletionMutation(node.getId(),
+						endnode.getId(), graph.getReferenceGeneStorage(),
+						node.getStart(), node.getEnd());
+				dels.add(mut);
 			}
 		}
 		return dels;
@@ -99,10 +167,12 @@ public final class MutationFinder {
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the complex mutations.
 	 */
 	public static Collection<ComplexMutation> findComplexMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		HashSet<DNode> visitednodes = new HashSet<DNode>();
@@ -136,18 +206,14 @@ public final class MutationFinder {
 				}
 			}
 			int srcId = getSourceSinkNode(srcNodes, graph);
-			if (node.getOutEdges().size() > 0) {
-				if (inNodes.size() > 1) {
-					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage(), node.getStart(),
-							node.getEnd()));
-				} else if (inNodes.size() == 1
-						&& graph.getDNode(inNodes.iterator().next())
-								.getContent().length() > 1) {
-					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage(), node.getStart(),
-							node.getEnd()));
-				}
+			if (node.getOutEdges().size() > 0
+					&& (inNodes.size() > 1 || (inNodes.size() == 1 && graph
+							.getDNode(inNodes.iterator().next()).getContent()
+							.length() > 1))) {
+				ComplexMutation mut = new ComplexMutation(node.getId(), srcId,
+						inNodes, graph.getReferenceGeneStorage(),
+						node.getStart(), node.getEnd());
+				ins.add(mut);
 			}
 		}
 		return ins;

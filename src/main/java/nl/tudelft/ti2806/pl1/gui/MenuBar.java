@@ -1,11 +1,14 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -72,7 +75,7 @@ public class MenuBar extends JMenuBar {
 		JMenuItem exit = new JMenuItem();
 		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
 				AppEvent.EXIT_APP);
-		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
+		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK));
 		ret.add(exit);
 
 		return ret;
@@ -111,18 +114,30 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset view", null, 'R',
-				"Reset to the initial view.", AppEvent.RESET_GRAPH);
+		setMenuItem(reset, "Reset initial view", null, 'R',
+				"Reset to the initial zoom level view.",
+				AppEvent.RESET_INITIAL_LEVEL);
 		setAcc(reset,
 				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
+
+		JMenuItem resetCurrent = new JMenuItem();
+		setMenuItem(resetCurrent, "Reset current view", null, 'C',
+				"Reset the current zoom level view.",
+				AppEvent.RESET_CURRENT_LEVEL);
+		setAcc(resetCurrent, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		ret.add(resetCurrent);
 
 		JMenuItem zoomIn = new JMenuItem();
 		setMenuItem(zoomIn, "Zoom in", null, 'I',
 				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.",
 				AppEvent.ZOOMLEVEL_IN);
-		setAcc(zoomIn, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, Event.CTRL_MASK));
+		setAcc(zoomIn,
+				KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, Event.CTRL_MASK));
 		ret.add(zoomIn);
+		addKeyBinding(KeyEvent.VK_SUBTRACT, Event.CTRL_MASK,
+				AppEvent.ZOOMLEVEL_OUT);
+		addKeyBinding(KeyEvent.VK_ADD, Event.CTRL_MASK, AppEvent.ZOOMLEVEL_IN);
 
 		JMenuItem zoomOut = new JMenuItem();
 		setMenuItem(zoomOut, "Zoom out", null, 'O',
@@ -131,10 +146,34 @@ public class MenuBar extends JMenuBar {
 		setAcc(zoomOut,
 				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
 		ret.add(zoomOut);
-
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());
 		return ret;
+	}
+
+	/**
+	 * @param keyCode
+	 *            The key code.
+	 * @param modifiers
+	 *            The key mask(s).
+	 * @param event
+	 *            The app event to bind to the key stoke.
+	 */
+	private void addKeyBinding(final int keyCode, final int modifiers,
+			final AppEvent event) {
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(keyCode, modifiers), event.name());
+
+		getActionMap().put(event.name(), new AbstractAction() {
+
+			/** The serial version UID. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				event.actionPerformed(null);
+			}
+		});
 	}
 
 	/**

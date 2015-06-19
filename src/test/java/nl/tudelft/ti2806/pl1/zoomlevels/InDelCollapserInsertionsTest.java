@@ -67,7 +67,7 @@ public class InDelCollapserInsertionsTest {
 	@Test
 	public void simpleInsertionCaseTest() {
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -90,7 +90,7 @@ public class InDelCollapserInsertionsTest {
 		graph.addDEdge(sy);
 		graph.addDEdge(ye);
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -119,7 +119,7 @@ public class InDelCollapserInsertionsTest {
 		graph.addDEdge(ye);
 		graph.addDEdge(ee);
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -160,7 +160,7 @@ public class InDelCollapserInsertionsTest {
 		graph.addDEdge(new DEdge(insertion2, end3));
 
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -204,7 +204,7 @@ public class InDelCollapserInsertionsTest {
 		graph.addDEdge(new DEdge(insertion2, end3));
 
 		Collection<InsertionMutation> muts = MutationFinder
-				.findInsertionMutations(graph);
+				.findInsertionMutations(graph, null);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);

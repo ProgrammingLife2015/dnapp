@@ -1,9 +1,11 @@
 package nl.tudelft.ti2806.pl1.gui.contentpane;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -43,9 +45,9 @@ import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.ZoomlevelObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
+import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
-import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
 import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
@@ -274,7 +276,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * @author ChakShun
+	 * @author Chak Shun
 	 * @since 18-6-2015
 	 */
 	class GeneLocator implements ReferenceGeneObserver {
@@ -440,13 +442,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	/** Performs all the analyze methods on the DGraph. */
 	private void analyzeDGraph() {
+		BinaryTree tree = window.getContent().getPhyloPanel().getTree();
 		dgraph.calculateReferenceLength();
-		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
-		dgraph.setDeletionMutations(MutationFinder
-				.findDeletionMutations(dgraph));
-		dgraph.setInsertionMutations(MutationFinder
-				.findInsertionMutations(dgraph));
-		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph));
+		dgraph.setPointMutations(MutationFinder
+				.findPointMutations(dgraph, tree));
+		dgraph.setDeletionMutations(MutationFinder.findDeletionMutations(
+				dgraph, tree));
+		dgraph.setInsertionMutations(MutationFinder.findInsertionMutations(
+				dgraph, tree));
+		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph,
+				tree));
 	}
 
 	/**
@@ -504,6 +509,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 *            The Graphics object to protect.
 	 */
 	private void paintGeneBoxes(final Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(1));
 		for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
 			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
@@ -749,6 +756,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
+	 * Reloads the current zoom level.
+	 */
+	public void reloadCurrentLevel() {
+		applyZoomLevel(zoomLevel);
+	}
+
+	/**
 	 * 
 	 * @param newZoomLevel
 	 *            The zoom level to apply.
@@ -856,7 +870,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * Observer class implementing the GenomeTableObserver interface processing
 	 * events for filtering genomes.
 	 * 
-	 * @author ChakShun
+	 * @author Chak Shun
 	 * @since 18-05-2015
 	 */
 	class GenomeHighlight implements GenomeTableObserver {
@@ -873,7 +887,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
 				final boolean genomeHighlightChanged) {
-			// && genomeRow.isVisible()
 			if (genomeHighlightChanged) {
 				if (genomeRow.isHighlighted()) {
 					highlightedGenomes.add(genomeRow.getId());
@@ -883,7 +896,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 					unHighlight();
 				}
 			}
-
 		}
 
 		@Override
@@ -903,7 +915,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * 
 	 * @author Maarten
 	 * @since 18-5-2015
-	 * @version 1.0
 	 */
 	class NodeClickListener implements ViewerListener {
 
@@ -927,44 +938,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
 		}
-	}
-
-	/**
-	 * A mouse listener pumping the viewer pipe each time the mouse is pressed
-	 * or released. This makes sure that the NodeClickListener receives its
-	 * click events immediately when a node is clicked.
-	 * 
-	 * @see NodeClickListener
-	 * @see ViewerPipe
-	 * 
-	 * @author Maarten
-	 * @since 18-5-2015
-	 * @version 1.0
-	 */
-	class ViewMouseListener implements MouseListener {
-
-		@Override
-		public void mouseReleased(final MouseEvent e) {
-			vp.pump();
-		}
-
-		@Override
-		public void mousePressed(final MouseEvent e) {
-			vp.pump();
-		}
-
-		@Override
-		public void mouseExited(final MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(final MouseEvent e) {
-		}
-
-		@Override
-		public void mouseClicked(final MouseEvent e) {
-		}
-
 	}
 
 	/**
@@ -1002,7 +975,42 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	@Override
 	public void update(final Collection<String> chosen) {
-		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * A mouse listener pumping the viewer pipe each time the mouse is pressed
+	 * or released. This makes sure that the NodeClickListener receives its
+	 * click events immediately when a node is clicked.
+	 * 
+	 * @see NodeClickListener
+	 * @see ViewerPipe
+	 * 
+	 * @author Maarten
+	 * @since 18-5-2015
+	 */
+	class ViewMouseListener implements MouseListener {
+
+		@Override
+		public void mouseReleased(final MouseEvent e) {
+			vp.pump();
+		}
+
+		@Override
+		public void mousePressed(final MouseEvent e) {
+			vp.pump();
+		}
+
+		@Override
+		public void mouseExited(final MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(final MouseEvent e) {
+		}
+
+		@Override
+		public void mouseClicked(final MouseEvent e) {
+		}
 
 	}
 }

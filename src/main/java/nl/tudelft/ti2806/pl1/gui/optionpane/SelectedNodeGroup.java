@@ -46,7 +46,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	private static final int XW_VAL_LABEL = 10;
 
 	/** The default visible title. */
-	private static final String DEFAULT_TITLE = "Selected node";
+	private static final String DEFAULT_TITLE = "<html><b>Selected node";
 
 	/** The insets. */
 	private static final Insets INSETS = new Insets(2, 5, 2, 5);

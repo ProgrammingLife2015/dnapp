@@ -5,35 +5,32 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 /**
  * @author Maarten, Justin
  * @since 2-6-2015
- * @version 1.0
  */
 public abstract class Mutation {
 
-	/**
-	 * The IDs of the nodes before and after the mutation.
-	 */
+	/** The IDs of the nodes before and after the mutation. */
 	private final int preNode, postNode;
 
-	/**
-	 * Score of the mutation.
-	 */
+	/** Score of the mutation. */
 	private double score = 0;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
 
-	/**
-	 * Score for a mutation if it is located on a gene.
-	 */
+	/** The scores for the number of phylo groups. */
+	private static final int[] GROUP_SCORE = { 0, 0, 8, 16, 24 };
+
+	/** Score for a mutation if it is located on a gene. */
 	private static final int SCORE_MUT = 70;
 
-	/**
-	 * Score for a mutation if it is not located on a gene.
-	 */
+	/** Score for a mutation if it is not located on a gene. */
 	private static final int SCORE_IN_GENE = 10;
 
 	/** Start and end position on reference genome. **/
 	private final int startposition, endposition;
+
+	/** The number of node groups which are affected by the mutation. */
+	private int affectedNodeGroups;
 
 	/**
 	 * 
@@ -55,10 +52,28 @@ public abstract class Mutation {
 		this.referenceGeneStorage = rgs;
 		this.startposition = startpos;
 		this.endposition = endpos;
+		affectedNodeGroups = 0;
 		calculateGeneralScore();
 	}
 
-	/** @return the score */
+	/**
+	 * @return the affectedNodeGroups
+	 */
+	public int getAffectedNodeGroups() {
+		return affectedNodeGroups;
+	}
+
+	/**
+	 * @param newAffectedNodeGroups
+	 *            the affectedNodeGroups to set
+	 */
+	public void setAffectedNodeGroups(final int newAffectedNodeGroups) {
+		this.affectedNodeGroups = newAffectedNodeGroups;
+	}
+
+	/**
+	 * @return the score of the mutation.
+	 */
 	public double getScore() {
 		calculateGeneralScore();
 		return score;
@@ -66,7 +81,6 @@ public abstract class Mutation {
 
 	/**
 	 * Calculate the general score for a mutation.
-	 * 
 	 */
 	private void calculateGeneralScore() {
 		score = 0;
@@ -75,14 +89,23 @@ public abstract class Mutation {
 			addScore(SCORE_IN_GENE
 					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
 							.name()));
-			for (long pos : rgs.getDrugResistanceMutations().keySet()) {
-				if (startposition <= pos && pos < endposition) {
-					addScore(SCORE_MUT
-							* ScoreMultiplier
-									.getMult(MutationMultipliers.KNOWN_MUTATION
-											.name()));
-					break;
+			if (rgs.getDrugResistanceMutations() != null) {
+				for (long pos : rgs.getDrugResistanceMutations().keySet()) {
+					if (startposition <= pos && pos < endposition) {
+						addScore(SCORE_MUT
+								* ScoreMultiplier
+										.getMult(MutationMultipliers.KNOWN_MUTATION
+												.name()));
+						break;
+					}
 				}
+			}
+			double phylomult = ScoreMultiplier
+					.getMult(MutationMultipliers.PHYLO.name());
+			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
+				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
+			} else {
+				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 			}
 		}
 	}

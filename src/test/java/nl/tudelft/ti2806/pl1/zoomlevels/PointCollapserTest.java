@@ -11,13 +11,14 @@ import nl.tudelft.ti2806.pl1.DGraph.DEdge;
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
+import nl.tudelft.ti2806.pl1.mutation.PointMutationFinder;
 
 import org.graphstream.graph.Graph;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PointGraphConverterTest {
+public class PointCollapserTest {
 
 	DGraph graph;
 	DNode start, end, SNPNode1, SNPNode2;
@@ -56,7 +57,6 @@ public class PointGraphConverterTest {
 		graph.addDEdge(e2);
 		graph.addDEdge(e3);
 		graph.addDEdge(e4);
-		graph.setStart(start);
 	}
 
 	@After
@@ -74,8 +74,9 @@ public class PointGraphConverterTest {
 
 	@Test
 	public void simpleSNPCaseTest() {
-		Collection<PointMutation> muts = PointGraphConverter
-				.getPointMutations(graph);
+		Collection<PointMutation> muts = PointMutationFinder
+				.findPointMutations(graph);
+		graph.setStart(start);
 		gsg = ConvertDGraph.convert(graph);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
@@ -84,7 +85,7 @@ public class PointGraphConverterTest {
 		for (PointMutation mut : muts) {
 			mut.setScore(0);
 		}
-		gsg = PointGraphConverter.collapseNodes(muts, gsg, 10, "");
+		gsg = PointCollapser.collapseNodes(muts, gsg, 10, "");
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") == null);
 		assertTrue(gsg.getNode("3") == null);

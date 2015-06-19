@@ -10,8 +10,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.gui.Window;
+import nl.tudelft.ti2806.pl1.mutation.Mutation;
+import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
 
 /**
  * A panel representing the content pane of the main window. Contains a tabbed
@@ -62,7 +65,7 @@ public class Content extends JPanel {
 		setLayout(new BorderLayout());
 
 		graphPanel = new GraphPanel(window);
-		phyloPanel = new PhyloPanel();
+		phyloPanel = new PhyloPanel(tabs);
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addChangeListener(new ChangeListener() {
@@ -115,10 +118,18 @@ public class Content extends JPanel {
 	 *            The Newick tree file to load
 	 */
 	public final void loadTree(final File newick) {
-		setPhyloTab();
 		treeLoaded = phyloPanel.loadTree(newick);
-		for (ContentLoadedObserver clo : observers) {
-			clo.phyloLoaded();
+		if (treeLoaded) {
+			setPhyloTab();
+			for (ContentLoadedObserver clo : observers) {
+				clo.phyloLoaded();
+			}
+			DGraph dg = getGraphPanel().getDgraph();
+			for (Mutation m : dg.getPointMutations()) {
+				m.setAffectedNodeGroups(MutationFinder
+						.getAffectedNodeGroupsCount(dg, m.getPreNode(),
+								m.getPostNode(), getPhyloPanel().getTree()));
+			}
 		}
 	}
 

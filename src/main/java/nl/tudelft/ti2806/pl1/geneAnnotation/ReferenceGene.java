@@ -7,7 +7,7 @@ import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 /**
  * Storage location for information about a gene.
  * 
- * @author ChakShun
+ * @author Chak Shun
  * @since 2-6-2015
  */
 public class ReferenceGene {

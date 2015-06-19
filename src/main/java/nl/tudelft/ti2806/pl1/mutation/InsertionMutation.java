@@ -8,9 +8,6 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public class InsertionMutation extends Mutation {
 
-	/** Extra points for being insertion or deletion. **/
-	private static final int INDELMODIFIER = 10;
-
 	/** The node(s) inserted in the graph. */
 	private int inNode;
 

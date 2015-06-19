@@ -18,7 +18,6 @@ public enum AppEvent implements ActionListener {
 
 	/** Exits the application. */
 	EXIT_APP {
-
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
@@ -93,7 +92,7 @@ public enum AppEvent implements ActionListener {
 				window.getContent().getGraphPanel().getDgraph()
 						.getReferenceGeneStorage()
 						.setDrugRestistantMutations(knownResMut);
-				RESET_GRAPH.actionPerformed(null);
+				RESET_CURRENT_LEVEL.actionPerformed(null);
 			} else {
 				dialogCanceled();
 			}
@@ -120,10 +119,18 @@ public enum AppEvent implements ActionListener {
 	},
 
 	/** Reset graph to original representation. **/
-	RESET_GRAPH {
+	RESET_INITIAL_LEVEL {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			window.getContent().getGraphPanel().applyZoomLevel(0);
+		}
+	},
+
+	/** Reset graph to original representation. **/
+	RESET_CURRENT_LEVEL {
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			window.getContent().getGraphPanel().reloadCurrentLevel();
 		}
 	},
 

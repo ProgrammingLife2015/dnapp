@@ -84,8 +84,8 @@ public class ComplexMutationTest {
 		graph.addDEdge(e6);
 		graph.addDEdge(e7);
 		graph.addDEdge(e8);
-		Collection<ComplexMutation> muts = MutationFinder
-				.findComplexMutations(graph);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
+				graph, null);
 		Collection<ComplexMutation> expected = new ArrayList<ComplexMutation>();
 		Collection<Integer> inNodes = new ArrayList<Integer>();
 		inNodes.add(ins1.getId());
@@ -137,8 +137,8 @@ public class ComplexMutationTest {
 		graph.addDEdge(e8);
 		graph.addDEdge(e9);
 		graph.addDEdge(e10);
-		Collection<ComplexMutation> muts = MutationFinder
-				.findComplexMutations(graph);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
+				graph, null);
 		Collection<ComplexMutation> expected = new ArrayList<ComplexMutation>();
 		Collection<Integer> inNodes = new ArrayList<Integer>();
 		inNodes.add(ins1.getId());
