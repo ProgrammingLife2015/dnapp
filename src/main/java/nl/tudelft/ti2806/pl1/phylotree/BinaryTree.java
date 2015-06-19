@@ -375,6 +375,7 @@ public abstract class BinaryTree extends JButton {
 	public abstract boolean isLeaf();
 
 	/**
+<<<<<<< HEAD
 	 * This method returns a list of all sources accessible from this node.
 	 * 
 	 * @return A list of sources accessible from this node
@@ -390,6 +391,8 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
+=======
+>>>>>>> cf02b74fb5e5e327bb01b450b65c8e4541dcc96a
 	 * Returns a collection of sources which have been selected.
 	 * 
 	 * @param root
