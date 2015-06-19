@@ -67,7 +67,6 @@ public abstract class Mutation {
 	/**
 	 * Calculate the general score for a mutation.
 	 * 
-	 * @return
 	 */
 	private void calculateGeneralScore() {
 		score = 0;
