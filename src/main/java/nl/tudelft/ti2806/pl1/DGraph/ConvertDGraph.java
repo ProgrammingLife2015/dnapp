@@ -59,6 +59,7 @@ public final class ConvertDGraph {
 	 *            The data graph to convert.
 	 * @return The visual graph containing all the nodes from the data graph.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Graph convert(final DGraph dgraph) {
 		int totalGenomes = dgraph.getStart().getSources().size();
 		Graph graph = new SingleGraph("");
@@ -96,7 +97,6 @@ public final class ConvertDGraph {
 				addNodeToGraph(graph, to, dgraph);
 			}
 			Edge eg = graph.addEdge(from + to, from, to, true);
-			@SuppressWarnings("unchecked")
 			Collection<String> m = (Collection<String>) edge.getStartNode()
 					.getSources().clone();
 			m.retainAll(edge.getEndNode().getSources());
