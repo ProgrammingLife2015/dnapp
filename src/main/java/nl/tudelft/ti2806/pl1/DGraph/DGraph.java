@@ -277,7 +277,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		this.start = s;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
 		return pointMutations;

@@ -146,23 +146,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		return ret;
 	}
 
-	/**
-	 * @param sb
-	 *            The string builder.
-	 * @param label
-	 *            The row label.
-	 * @param value
-	 *            The row value.
-	 */
-	private void mkRow(final StringBuilder sb, final String label,
-			final String value) {
-		sb.append("<tr><td><b>");
-		sb.append(label);
-		sb.append("</b></td><td>");
-		sb.append(value);
-		sb.append("</td></tr>");
-	}
-
 	/** Sets up the grid bag constraints. */
 	private void setupGBC() {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -182,9 +165,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setBorder(BorderFactory.createTitledBorder(newTitle));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void update(final HashSet<DNode> selectedNodes) {
 		this.show = selectedNodes.size() == 1;

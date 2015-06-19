@@ -73,8 +73,6 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 						/ totalNodes, 2));
 		sb.append("</table></html>");
 		info.setText(sb.toString());
-		System.out.println(this);
-		System.out.println(info);
 	}
 
 	/**

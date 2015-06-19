@@ -16,13 +16,9 @@ import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
  */
 public enum AppEvent implements ActionListener {
 
-	/**
-	 * Exits the application.
-	 */
+	/** Exits the application. */
 	EXIT_APP {
-		/**
-		 * {@inheritDoc}
-		 */
+
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			System.out.println("Bye bye!");
@@ -32,9 +28,7 @@ public enum AppEvent implements ActionListener {
 
 	},
 
-	/**
-	 * Loads a graph into the window content.
-	 */
+	/** Loads a graph into the window content. */
 	IMPORT_GRAPH {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
@@ -106,16 +100,7 @@ public enum AppEvent implements ActionListener {
 		}
 	},
 
-	/**  */
-	IMPORT_INFECTED {
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-		}
-	},
-
-	/**
-	 * Export the visual graph representation to DGS format.
-	 */
+	/** Export the visual graph representation to DGS format. */
 	WRITE_TO_DGS {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
@@ -166,9 +151,7 @@ public enum AppEvent implements ActionListener {
 		}
 	};
 
-	/**
-	 * The window effected by the actions performed by these events.
-	 */
+	/** The window effected by the actions performed by these events. */
 	private static Window window;
 
 	/**

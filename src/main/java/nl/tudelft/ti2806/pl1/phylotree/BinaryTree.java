@@ -542,7 +542,6 @@ public abstract class BinaryTree extends JButton {
 		public void mouseClicked(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mousePressed(final MouseEvent e) {
 			switch (e.getButton()) {
