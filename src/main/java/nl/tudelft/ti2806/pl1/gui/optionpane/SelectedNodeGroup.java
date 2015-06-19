@@ -23,6 +23,9 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
  */
 public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
+	/** The serial version UID. */
+	private static final long serialVersionUID = -4851724739205792429L;
+
 	/** Vertical grid coordinate of ID field. */
 	private static final int Y_ID = 0;
 
@@ -43,9 +46,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
 	/** Horizontal weight of info labels containing the values. */
 	private static final int XW_VAL_LABEL = 10;
-
-	/** The serial version UID. */
-	private static final long serialVersionUID = -4851724739205792429L;
 
 	/** The default visible title. */
 	private static final String DEFAULT_TITLE = "Selected node";
@@ -89,7 +89,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setMaximumSize(SIZE);
 		setupGBC();
 		setAlignmentY(TOP_ALIGNMENT);
-		setBorder(BorderFactory.createTitledBorder(DEFAULT_TITLE));
+		setBorder(BorderFactory.createTitledBorder("<html><b>" + DEFAULT_TITLE));
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.gridy = SelectedNodeGroup.Y_ID;
 		gbc.gridx = 0;
