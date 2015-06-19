@@ -30,17 +30,17 @@ public class ToolBar extends JToolBar {
 
 	/** The import phylogenetic tree button. */
 	private JButton btnImportPhylo = makeButton("Phylogenetic tree", null,
-			Event.IMPORT_PHYLO,
+			AppEvent.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
 
 	/** Button for importing a gene annotation file. */
 	private JButton btnImportGeneAnn = makeButton("Gene annotation", null,
-			Event.IMPORT_GENE_ANN,
+			AppEvent.IMPORT_GENE_ANN,
 			"Click to load gene annotation information from a gff file.");
 
 	/** Button for importing resistance causing mutations. */
 	private JButton btnImportResCausMut = makeButton(
-			"Known resistant mutations", null, Event.IMPORT_RES_CAUS_MUT,
+			"Known resistant mutations", null, AppEvent.IMPORT_RES_CAUS_MUT,
 			"Click to load information about known resistant mutations from a krm file.");
 
 	/**

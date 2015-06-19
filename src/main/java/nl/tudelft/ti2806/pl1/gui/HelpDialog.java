@@ -2,7 +2,6 @@ package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -14,8 +13,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.horstmann.corejava.GBC;
-
 /**
  * @author Marissa, Maarten
  * @since 15-6-2015
@@ -25,11 +22,20 @@ public class HelpDialog extends JDialog {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -4612253023180773554L;
 
-	/** The size of the help dialog. */
-	private static final Dimension SIZE = new Dimension(400, 300);
-
 	/** The file name of the source text for the 'Using DNApp' tab. */
-	private static final String USING_DNAPP_HELP_FILE = "usingDNApp.help";
+	private static final String HELP_USING_DNAPP = "usingDNApp.help";
+
+	/** The file name of the source text for the 'Shortcuts' tab. */
+	private static final String HELP_SHORTCUTS_FILE = "shortcuts.help";
+
+	/** The size of the help dialog. */
+	private static final int WIDTH = 600, HEIGHT = 500;
+
+	/** The width difference between the dialog and its components. */
+	private static final int I_OFFSET = 50;
+
+	/** The size of the content label. */
+	private static final int I_WIDTH = WIDTH - I_OFFSET, I_HEIGHT = 580;
 
 	/** The padding around the labels. */
 	private static final Border EMPTY_BORDER = new EmptyBorder(10, 10, 10, 10);
@@ -50,17 +56,14 @@ public class HelpDialog extends JDialog {
 		super(window);
 		this.setTitle("Help");
 		setLayout(new BorderLayout());
-		setPreferredSize(SIZE);
-		setMinimumSize(SIZE);
-
+		Dimension size = new Dimension(WIDTH, HEIGHT);
+		setMinimumSize(size);
+		setResizable(false);
 		content = new JPanel(new BorderLayout());
-
 		tabs = new JTabbedPane();
 		tabs.addTab("Using DN/App", makeUsingDNApp());
 		tabs.addTab("Keyboard shortcuts", makeShortcuts());
-
 		content.add(tabs, BorderLayout.CENTER);
-
 		add(content, BorderLayout.CENTER);
 	}
 
@@ -69,22 +72,13 @@ public class HelpDialog extends JDialog {
 	 */
 	private JPanel makeUsingDNApp() {
 		JPanel ret = new JPanel(new BorderLayout());
-		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(
-				USING_DNAPP_HELP_FILE);
-		Scanner sc = new Scanner(is, "UTF-8");
-		StringBuilder sb = new StringBuilder("<html>");
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			sb.append(line).append("<br>");
-		}
-		sc.close();
-		sb.append("</html>");
 		JLabel info = new JLabel();
-		info.setText(sb.toString());
+		info.setText(readHelpFile(HELP_USING_DNAPP));
 		info.setBorder(EMPTY_BORDER);
+		info.setPreferredSize(new Dimension(I_WIDTH, I_HEIGHT));
 		JScrollPane jsp = new JScrollPane(info,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		ret.add(jsp, BorderLayout.CENTER);
 		return ret;
 	}
@@ -93,20 +87,29 @@ public class HelpDialog extends JDialog {
 	 * @return The panel with information about the available shortcuts.
 	 */
 	private JPanel makeShortcuts() {
-		JPanel ret = new JPanel(new GridBagLayout());
-
-		String[][] info = { { "Shortcuts: ", "" }, { "F1", "Help" },
-				{ "CTRL + R", "Reset to default view (zoom level)" },
-				{ "CTRL + C", "Close the application" },
-				{ "CTRL + O", "Open a file" },
-				{ "+", "Go to the next zoomlevel" },
-				{ "-", "Go to the previous zoomlevel" } };
-
-		for (int i = 0; i < info.length; i++) {
-			for (int j = 0; j < info[0].length; j++) {
-				ret.add(new JLabel(info[i][j]), new GBC(j, i));
-			}
-		}
+		JPanel ret = new JPanel(new BorderLayout());
+		JLabel info = new JLabel();
+		info.setText(readHelpFile(HELP_SHORTCUTS_FILE));
+		info.setBorder(EMPTY_BORDER);
+		ret.add(info, BorderLayout.NORTH);
 		return ret;
+	}
+
+	/**
+	 * @param fileName
+	 *            The file name of the help file.
+	 * @return The content of the help file.
+	 */
+	private String readHelpFile(final String fileName) {
+		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(
+				fileName);
+		Scanner sc = new Scanner(is, "UTF-8");
+		StringBuilder sb = new StringBuilder();
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			sb.append(line); // append("<br>");
+		}
+		sc.close();
+		return sb.toString();
 	}
 }

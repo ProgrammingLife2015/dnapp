@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui;
 
+import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 
@@ -47,7 +48,9 @@ public class MenuBar extends JMenuBar {
 		JMenuItem impGraph = new JMenuItem();
 		setMenuItem(impGraph, "Import graph", null, 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
-				Event.IMPORT_FILE);
+				AppEvent.IMPORT_GRAPH);
+
+		setAcc(impGraph, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		ret.add(impGraph);
 
 		JMenu export = new JMenu("Export graph layout as...") {
@@ -62,12 +65,14 @@ public class MenuBar extends JMenuBar {
 		export.setMnemonic('E');
 		JMenuItem exportDGS = new JMenuItem();
 		setMenuItem(exportDGS, "DGS format", null, 'D', null,
-				Event.WRITE_TO_DGS);
+				AppEvent.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
-		setMenuItem(exit, "Exit", null, 'E', "Exit the program", Event.EXIT_APP);
+		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
+				AppEvent.EXIT_APP);
+		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 		ret.add(exit);
 
 		return ret;
@@ -82,7 +87,7 @@ public class MenuBar extends JMenuBar {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
 		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
-				Event.HELP);
+				AppEvent.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
 		return ret;
@@ -106,25 +111,24 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset view", null, 'R', "Reset to default view.",
-				Event.RESET_GRAPH);
-		setAcc(reset, KeyStroke.getKeyStroke(reset.getMnemonic(),
-				java.awt.Event.CTRL_MASK));
+		setMenuItem(reset, "Reset view", null, 'R',
+				"Reset to the initial view.", AppEvent.RESET_GRAPH);
+		setAcc(reset,
+				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomlevelplus = new JMenuItem();
-		setMenuItem(zoomlevelplus, "Next zoomlevel", null, 'N',
-				"Go to next zoomlevel", Event.NEXTZOOMLEVEL);
-		setAcc(zoomlevelplus, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,
-				java.awt.Event.CTRL_MASK + java.awt.Event.SHIFT_MASK));
-		ret.add(zoomlevelplus);
+		JMenuItem zoomUp = new JMenuItem();
+		setMenuItem(zoomUp, "Up zoomlevel", null, 'U',
+				"Go to the next zoomlevel", AppEvent.ZOOMLEVEL_UP);
+		setAcc(zoomUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK));
+		ret.add(zoomUp);
 
-		JMenuItem zoomlevelminus = new JMenuItem();
-		setMenuItem(zoomlevelminus, "Previous zoomlevel", null, 'P',
-				"Go to previous zoomlevel", Event.PREVIOUSZOOMLEVEL);
-		setAcc(zoomlevelminus, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
-				java.awt.Event.CTRL_MASK));
-		ret.add(zoomlevelminus);
+		JMenuItem zoomDown = new JMenuItem();
+		setMenuItem(zoomDown, "Down zoomlevel", null, 'D',
+				"Go to previous zoomlevel", AppEvent.ZOOMLEVEL_DOWN);
+		setAcc(zoomDown,
+				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
+		ret.add(zoomDown);
 
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());
@@ -190,11 +194,11 @@ public class MenuBar extends JMenuBar {
 	 * @param action
 	 *            The event name.
 	 * 
-	 * @see Event
+	 * @see AppEvent
 	 */
 	private void setMenuItem(final JMenuItem item, final String text,
 			final String iconName, final char mnemonic,
-			final String toolTipText, final Event action) {
+			final String toolTipText, final AppEvent action) {
 		item.setText(text);
 		item.setMnemonic(mnemonic);
 		item.setToolTipText(toolTipText);

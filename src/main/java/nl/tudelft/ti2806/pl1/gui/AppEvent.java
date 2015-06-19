@@ -13,9 +13,8 @@ import nl.tudelft.ti2806.pl1.file.ImportDialog.ImportType;
 
 /**
  * @author Maarten
- *
  */
-public enum Event implements ActionListener {
+public enum AppEvent implements ActionListener {
 
 	/**
 	 * Exits the application.
@@ -36,10 +35,7 @@ public enum Event implements ActionListener {
 	/**
 	 * Loads a graph into the window content.
 	 */
-	IMPORT_FILE {
-		/**
-		 * {@inheritDoc}
-		 */
+	IMPORT_GRAPH {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			final ImportDialog fsNode = new ImportDialog(ImportType.NODES);
@@ -85,6 +81,7 @@ public enum Event implements ActionListener {
 				final File geneAnn = fcGeneAnn.getSelectedFile();
 				window.getContent().getGraphPanel().getDgraph()
 						.getReferenceGeneStorage().setGeneAnnotation(geneAnn);
+				window.repaint();
 			} else {
 				dialogCanceled();
 			}
@@ -156,26 +153,20 @@ public enum Event implements ActionListener {
 	/**
 	 * 
 	 */
-	NEXTZOOMLEVEL {
+	ZOOMLEVEL_UP {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent()
-					.getGraphPanel()
-					.applyZoomLevel(
-							window.getContent().getGraphPanel().getZoomLevel() + 1);
+			window.getContent().getGraphPanel().upZoomlevel();
 		}
 	},
 
 	/**
 	 * 
 	 */
-	PREVIOUSZOOMLEVEL {
+	ZOOMLEVEL_DOWN {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent()
-					.getGraphPanel()
-					.applyZoomLevel(
-							window.getContent().getGraphPanel().getZoomLevel() - 1);
+			window.getContent().getGraphPanel().downZoomlevel();
 		}
 	};
 

@@ -10,7 +10,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.mutation.MutationMultipliers;
 import nl.tudelft.ti2806.pl1.mutation.ScoreMultiplier;
 
@@ -67,7 +67,7 @@ public class ZoomConfigureGroup extends JPanel {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
 					JSlider changed = (JSlider) e.getSource();
-					Event.statusBarInfo("Slider to "
+					AppEvent.statusBarInfo("Slider to "
 							+ ((double) changed.getValue() / SLIDERVALUES));
 					ScoreMultiplier.multiplierChange(changed);
 				}

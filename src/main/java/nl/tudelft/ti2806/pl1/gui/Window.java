@@ -70,7 +70,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		setLayout(new BorderLayout());
 		setWindowSettings(wSettings);
 
-		Event.setWindow(this);
+		AppEvent.setWindow(this);
 
 		helpDialog = new HelpDialog(this);
 
@@ -128,7 +128,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 					"Are you sure you want to close the application?",
 					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				Event.EXIT_APP.actionPerformed(null);
+				AppEvent.EXIT_APP.actionPerformed(null);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * Gets called from the windows events class when the window is resized.
 	 */
 	public final void resized() {
-		Event.statusBarRight("[" + (int) getSize().getWidth() + ","
+		AppEvent.statusBarRight("[" + (int) getSize().getWidth() + ","
 				+ (int) getSize().getHeight() + "]");
 	}
 

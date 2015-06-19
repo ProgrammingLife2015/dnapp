@@ -20,7 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
-import nl.tudelft.ti2806.pl1.gui.Event;
+import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
@@ -184,7 +184,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 			this.newickSource = readIntoString(newick);
 		} catch (IOException e) {
 			ret = false;
-			Event.statusBarError("File " + newick.getAbsolutePath()
+			AppEvent.statusBarError("File " + newick.getAbsolutePath()
 					+ " could not be read.");
 			e.printStackTrace();
 		}
