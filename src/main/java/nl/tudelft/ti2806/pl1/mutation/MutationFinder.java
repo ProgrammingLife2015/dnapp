@@ -9,6 +9,7 @@ import java.util.Set;
 
 import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 /**
  * 
@@ -28,14 +29,30 @@ public final class MutationFinder {
 	}
 
 	/**
+	 * Finds the Point mutations of a DGraph.
+	 * 
+	 * @param graph
+	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
+	 * @return A collection of the Point mutations.
+	 */
+	public static Collection<PointMutation> findPointMutations(
+			final DGraph graph, final BinaryTree tree) {
+		return PointMutationFinder.findPointMutations(graph);
+	}
+
+	/**
 	 * Finds the simple Insertion mutations of a DGraph.
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the Insertion mutations.
 	 */
 	public static Collection<InsertionMutation> findInsertionMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		ArrayList<InsertionMutation> ins = new ArrayList<InsertionMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		for (DNode node : nodes) {
@@ -62,10 +79,12 @@ public final class MutationFinder {
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the Deletion mutations.
 	 */
 	public static Collection<DeletionMutation> findDeletionMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		ArrayList<DeletionMutation> dels = new ArrayList<DeletionMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		for (DNode node : nodes) {
@@ -99,10 +118,12 @@ public final class MutationFinder {
 	 * 
 	 * @param graph
 	 *            The DGraph.
+	 * @param tree
+	 *            The Binarytree.
 	 * @return A collection of the complex mutations.
 	 */
 	public static Collection<ComplexMutation> findComplexMutations(
-			final DGraph graph) {
+			final DGraph graph, final BinaryTree tree) {
 		Collection<ComplexMutation> ins = new ArrayList<ComplexMutation>();
 		Collection<DNode> nodes = graph.getReference(REFERENCE_GENOME);
 		HashSet<DNode> visitednodes = new HashSet<DNode>();

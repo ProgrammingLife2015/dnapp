@@ -42,9 +42,9 @@ import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
+import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
-import nl.tudelft.ti2806.pl1.zoomlevels.PointGraphConverter;
 import nl.tudelft.ti2806.pl1.zoomlevels.ZoomlevelCreator;
 
 import org.graphstream.graph.Graph;
@@ -440,13 +440,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	/** Performs all the analyze methods on the DGraph. */
 	private void analyzeDGraph() {
+		BinaryTree tree = window.getContent().getPhyloPanel().getTree();
 		dgraph.calculateReferenceLength();
-		dgraph.setPointMutations(PointGraphConverter.getPointMutations(dgraph));
-		dgraph.setDeletionMutations(MutationFinder
-				.findDeletionMutations(dgraph));
-		dgraph.setInsertionMutations(MutationFinder
-				.findInsertionMutations(dgraph));
-		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph));
+		dgraph.setPointMutations(MutationFinder
+				.findPointMutations(dgraph, tree));
+		dgraph.setDeletionMutations(MutationFinder.findDeletionMutations(
+				dgraph, tree));
+		dgraph.setInsertionMutations(MutationFinder.findInsertionMutations(
+				dgraph, tree));
+		dgraph.setComplexMutations(MutationFinder.findComplexMutations(dgraph,
+				tree));
 	}
 
 	/**

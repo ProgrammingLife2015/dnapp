@@ -40,10 +40,10 @@ public final class ZoomlevelCreator {
 				threshold);
 		ret = ComplexCollapser.collapseComplexMutations(
 				graph.getComplexMutations(), ret);
-		ret = PointGraphConverter.collapseNodes(graph.getAllPointMutations(),
+		ret = PointCollapser.collapseNodes(graph.getAllPointMutations(),
 				ret, threshold, graph.getSelected());
 		ret = HorizontalCollapser.horizontalCollapse(ret);
-		graph.setSelected(PointGraphConverter.findSelected(ret));
+		graph.setSelected(PointCollapser.findSelected(ret));
 		return ret;
 	}
 }

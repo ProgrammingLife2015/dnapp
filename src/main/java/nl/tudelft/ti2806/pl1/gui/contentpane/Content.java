@@ -93,6 +93,14 @@ public class Content extends JPanel {
 	private PhyloPanel phyloPanel;
 
 	/**
+	 * 
+	 * @return the phylo panel.
+	 */
+	public final PhyloPanel getPhyloPanel() {
+		return phyloPanel;
+	}
+
+	/**
 	 * Initializes the content panel.
 	 * 
 	 * @param w
