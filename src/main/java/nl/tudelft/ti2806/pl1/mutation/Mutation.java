@@ -36,6 +36,11 @@ public abstract class Mutation {
 	private final int startposition, endposition;
 
 	/**
+	 * The number of node groups which are affected by the mutation.
+	 */
+	private int affectedNodeGroups;
+
+	/**
 	 * 
 	 * @param pre
 	 *            The ID of the node before the mutation.
@@ -55,7 +60,23 @@ public abstract class Mutation {
 		this.referenceGeneStorage = rgs;
 		this.startposition = startpos;
 		this.endposition = endpos;
+		affectedNodeGroups = 0;
 		calculateGeneralScore();
+	}
+
+	/**
+	 * @return the affectedNodeGroups
+	 */
+	public int getAffectedNodeGroups() {
+		return affectedNodeGroups;
+	}
+
+	/**
+	 * @param newAffectedNodeGroups
+	 *            the affectedNodeGroups to set
+	 */
+	public void setAffectedNodeGroups(final int newAffectedNodeGroups) {
+		this.affectedNodeGroups = newAffectedNodeGroups;
 	}
 
 	/** @return the score */

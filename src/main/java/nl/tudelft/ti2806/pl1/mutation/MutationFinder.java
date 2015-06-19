@@ -29,6 +29,55 @@ public final class MutationFinder {
 	}
 
 	/**
+	 * This method returns the amount of groups of nodes which share a common
+	 * parent according to the phylotree.
+	 * 
+	 * @param graph
+	 *            The graph
+	 * @param id1
+	 *            The begin node id
+	 * @param id2
+	 *            The end node id
+	 * @param root
+	 *            The root node of the phylotree
+	 * @return The amount of groups of nodes which share a common parent
+	 *         according to the phylotree
+	 */
+	public static int getAffectedNodeGroupsCount(final DGraph graph,
+			final int id1, final int id2, final BinaryTree root) {
+		HashSet<String> sources1 = graph.getDNode(id1).getSources();
+		HashSet<String> sources2 = graph.getDNode(id2).getSources();
+		HashSet<String> sources = intersect(sources1, sources2);
+		return root.findGroups(sources, root).size();
+	}
+
+	/**
+	 * This method finds the intersection between 2 hash sets.
+	 * 
+	 * @param set1
+	 *            The first hash set
+	 * @param set2
+	 *            The second hash set
+	 * @return The intersection between set1 and set2
+	 */
+	protected static HashSet<String> intersect(final HashSet<String> set1,
+			final HashSet<String> set2) {
+		HashSet<String> set = new HashSet<String>();
+		if (set1.size() < set2.size()) {
+			for (String s : set1) {
+				set.add(s);
+			}
+			set.retainAll(set2);
+		} else {
+			for (String s : set2) {
+				set.add(s);
+			}
+			set.retainAll(set1);
+		}
+		return set;
+	}
+
+	/**
 	 * Finds the Point mutations of a DGraph.
 	 * 
 	 * @param graph
@@ -39,7 +88,13 @@ public final class MutationFinder {
 	 */
 	public static Collection<PointMutation> findPointMutations(
 			final DGraph graph, final BinaryTree tree) {
-		return PointMutationFinder.findPointMutations(graph);
+		Collection<PointMutation> pointMuts = PointMutationFinder
+				.findPointMutations(graph);
+		for (PointMutation pm : pointMuts) {
+			pm.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
+					pm.getPreNode(), pm.getPostNode(), tree));
+		}
+		return pointMuts;
 	}
 
 	/**
@@ -62,10 +117,15 @@ public final class MutationFinder {
 					if (nextnodes.size() == 1) {
 						DNode endnode = nextnodes.iterator().next();
 						if (node.getNextNodes().contains(endnode)) {
-							ins.add(new InsertionMutation(node.getId(), endnode
-									.getId(), next.getId(), graph
-									.getReferenceGeneStorage(),
-									node.getStart(), node.getEnd()));
+							InsertionMutation mut = new InsertionMutation(
+									node.getId(), endnode.getId(),
+									next.getId(),
+									graph.getReferenceGeneStorage(),
+									node.getStart(), node.getEnd());
+							mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(
+									graph, mut.getPreNode(), mut.getPostNode(),
+									tree));
+							ins.add(mut);
 						}
 					}
 				}
@@ -105,9 +165,12 @@ public final class MutationFinder {
 				}
 			}
 			if (isDeletion) {
-				dels.add(new DeletionMutation(node.getId(), endnode.getId(),
-						graph.getReferenceGeneStorage(), node.getStart(), node
-								.getEnd()));
+				DeletionMutation mut = new DeletionMutation(node.getId(),
+						endnode.getId(), graph.getReferenceGeneStorage(),
+						node.getStart(), node.getEnd());
+				mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
+						mut.getPreNode(), mut.getPostNode(), tree));
+				dels.add(mut);
 			}
 		}
 		return dels;
@@ -158,16 +221,16 @@ public final class MutationFinder {
 			}
 			int srcId = getSourceSinkNode(srcNodes, graph);
 			if (node.getOutEdges().size() > 0) {
-				if (inNodes.size() > 1) {
-					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage(), node.getStart(),
-							node.getEnd()));
-				} else if (inNodes.size() == 1
-						&& graph.getDNode(inNodes.iterator().next())
-								.getContent().length() > 1) {
-					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage(), node.getStart(),
-							node.getEnd()));
+				if (inNodes.size() > 1
+						|| (inNodes.size() == 1 && graph
+								.getDNode(inNodes.iterator().next())
+								.getContent().length() > 1)) {
+					ComplexMutation mut = new ComplexMutation(node.getId(),
+							srcId, inNodes, graph.getReferenceGeneStorage(),
+							node.getStart(), node.getEnd());
+					mut.setAffectedNodeGroups(getAffectedNodeGroupsCount(graph,
+							mut.getPreNode(), mut.getPostNode(), tree));
+					ins.add(mut);
 				}
 			}
 		}
