@@ -1,11 +1,14 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -72,7 +75,7 @@ public class MenuBar extends JMenuBar {
 		JMenuItem exit = new JMenuItem();
 		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
 				AppEvent.EXIT_APP);
-		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
+		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK));
 		ret.add(exit);
 
 		return ret;
@@ -129,8 +132,12 @@ public class MenuBar extends JMenuBar {
 		setMenuItem(zoomIn, "Zoom in", null, 'I',
 				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.",
 				AppEvent.ZOOMLEVEL_IN);
-		setAcc(zoomIn, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, Event.CTRL_MASK));
+		setAcc(zoomIn,
+				KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, Event.CTRL_MASK));
 		ret.add(zoomIn);
+		addKeyBinding(KeyEvent.VK_SUBTRACT, Event.CTRL_MASK,
+				AppEvent.ZOOMLEVEL_OUT);
+		addKeyBinding(KeyEvent.VK_ADD, Event.CTRL_MASK, AppEvent.ZOOMLEVEL_IN);
 
 		JMenuItem zoomOut = new JMenuItem();
 		setMenuItem(zoomOut, "Zoom out", null, 'O',
@@ -142,6 +149,31 @@ public class MenuBar extends JMenuBar {
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());
 		return ret;
+	}
+
+	/**
+	 * @param keyCode
+	 *            The key code.
+	 * @param modifiers
+	 *            The key mask(s).
+	 * @param event
+	 *            The app event to bind to the key stoke.
+	 */
+	private void addKeyBinding(final int keyCode, final int modifiers,
+			final AppEvent event) {
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(keyCode, modifiers), event.name());
+
+		getActionMap().put(event.name(), new AbstractAction() {
+
+			/** The serial version UID. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				event.actionPerformed(null);
+			}
+		});
 	}
 
 	/**
