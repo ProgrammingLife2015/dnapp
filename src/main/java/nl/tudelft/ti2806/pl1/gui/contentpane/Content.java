@@ -167,4 +167,11 @@ public class Content extends JPanel {
 		return this.getClass().toString();
 	}
 
+	/**
+	 * @return the phyloPanel
+	 */
+	public final PhyloPanel getPhyloPanel() {
+		return phyloPanel;
+	}
+
 }
