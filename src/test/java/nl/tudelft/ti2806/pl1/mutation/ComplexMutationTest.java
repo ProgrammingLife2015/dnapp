@@ -93,7 +93,7 @@ public class ComplexMutationTest {
 		inNodes.add(ins3.getId());
 		inNodes.add(ins4.getId());
 		expected.add(new ComplexMutation(start.getId(), end.getId(), inNodes,
-				rgs));
+				rgs, 0, 0));
 		assertEquals(expected.toString(), muts.toString());
 	}
 
@@ -146,7 +146,7 @@ public class ComplexMutationTest {
 		inNodes.add(ins3.getId());
 		inNodes.add(ins4.getId());
 		expected.add(new ComplexMutation(start.getId(), end2.getId(), inNodes,
-				rgs));
+				rgs, 0, 0));
 		assertEquals(expected.toString(), muts.toString());
 	}
 }

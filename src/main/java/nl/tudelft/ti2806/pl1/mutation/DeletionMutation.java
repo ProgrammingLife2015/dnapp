@@ -8,6 +8,9 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public class DeletionMutation extends Mutation {
 
+	/** Extra points for being insertion or deletion. **/
+	private static final int INDELMODIFIER = 10;
+
 	/**
 	 * @param pre
 	 *            The ID of the node before the mutation.
@@ -15,10 +18,15 @@ public class DeletionMutation extends Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
+	 * @param startpos
+	 *            The start position on the reference genome.
+	 * 
+	 * @param endpos
+	 *            The end position on the reference genome.
 	 */
 	public DeletionMutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs) {
-		super(pre, post, rgs);
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
+		super(pre, post, rgs, startpos, endpos);
 	}
 
 	@Override
@@ -38,5 +46,11 @@ public class DeletionMutation extends Mutation {
 	@Override
 	public final int hashCode() {
 		return super.hashCode();
+	}
+
+	@Override
+	public double getScore() {
+		return super.getScore()
+				* ScoreMultiplier.getMult((MutationMultipliers.INDEL.name()));
 	}
 }
