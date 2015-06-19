@@ -97,8 +97,6 @@ public class NodeContentBar extends JPanel {
 			default:
 				AppEvent.statusBarError("invalid nucleotide base \'" + c
 						+ "\' found in selected node.");
-				System.out.println("ERROR: Invalid nucleotide found (" + c
-						+ ") in string: " + newSequence);
 			}
 		}
 		calculated = true;

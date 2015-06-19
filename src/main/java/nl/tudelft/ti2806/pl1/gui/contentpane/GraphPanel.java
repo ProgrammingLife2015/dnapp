@@ -41,6 +41,7 @@ import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GeneSelectionObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeRow;
 import nl.tudelft.ti2806.pl1.gui.optionpane.GenomeTableObserver;
+import nl.tudelft.ti2806.pl1.gui.optionpane.ZoomlevelObserver;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;
 import nl.tudelft.ti2806.pl1.reader.NodePlacer;
 import nl.tudelft.ti2806.pl1.reader.Reader;
@@ -76,26 +77,17 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/** How far zoomed in. **/
 	private int count = 0;
 
-	/**
-	 * Threshold value for first zoom level.
-	 */
-	private static final int THRESHOLD_1 = 10;
-
-	/**
-	 * Threshold value for second zoom level.
-	 */
-	private static final int THRESHOLD_2 = 20;
-
-	/**
-	 * Threshold value for third zoom level.
-	 */
-	private static final int THRESHOLD_3 = 90;
-
 	/** Which zoom level is currently shown. **/
 	private int zoomLevel = 0;
 
 	/** The zoom level thresholds. */
-	private int[] thresholds = { THRESHOLD_1, THRESHOLD_2, THRESHOLD_3 };
+	private static final int ZOOMLEVEL_AMOUNT = 10;
+
+	/** The threshold difference between zoomlevels. */
+	private static final int THRESHOLD_DIFFERENCE = 10;
+
+	/** The maximum threshold score. */
+	private static final int MAXIMUM_THRESHOLD = 100;
 
 	/**
 	 * The list of node selection observers.
@@ -117,6 +109,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * @see ViewChangeObserver
 	 */
 	private List<ViewChangeObserver> viewChangeObservers = new ArrayList<ViewChangeObserver>();
+
+	/**
+	 * The list of zoom level observers.
+	 * 
+	 * @see ZoomlevelObserver
+	 */
+	private List<ZoomlevelObserver> zoomLevelObserver = new ArrayList<ZoomlevelObserver>();
 
 	/** The window this panel is part of. */
 	private Window window;
@@ -149,7 +148,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private ZoomlevelCreator zlc;
 
 	/** The scroll behaviour. */
-	private Scrolling scroll;
+	private ZoomScrollListener scroll;
 
 	/** The DGraph data storage. */
 	private DGraph dgraph;
@@ -164,9 +163,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private HashMap<String, ArrayList<Node>> geneLocs;
 
 	/** Diameter of nodes in pixels. */
-	private final int nodeDiameter = 20;
+	private static final int NODE_DIAMETER = 20;
 
-	/** Genelocator object for detecting genes. */
+	/** Gene locator object for detecting genes. */
 	private final GeneLocator gl;
 
 	/**
@@ -177,8 +176,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	public GraphPanel(final Window w) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
-		this.window = w;
-		this.window.getOptionPanel().getGeneNavigator().registerObserver(this);
+		window = w;
+		window.getOptionPanel().getGeneNavigator().registerObserver(this);
 
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
@@ -199,7 +198,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		setResizeWeight(1);
 
 		new GenomeHighlight();
-		new ScrollListener(graphPane.getHorizontalScrollBar());
+		new GraphScrollListener(graphPane.getHorizontalScrollBar());
 		gl = new GeneLocator();
 		graphPane.getHorizontalScrollBar().setUnitIncrement(HOR_SCROLL_INCR);
 		highlightedGenomes = new HashSet<String>();
@@ -270,6 +269,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		}
 		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
+		applyZoomLevel(0);
 		return ret;
 	}
 
@@ -480,7 +480,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		vp = viewer.newViewerPipe();
 		vp.addViewerListener(new NodeClickListener());
 
-		scroll = new Scrolling();
+		scroll = new ZoomScrollListener();
 		view.addMouseWheelListener(scroll);
 		view.addMouseListener(new ViewMouseListener());
 
@@ -494,6 +494,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		centerVertical();
 		notifyGraphScrollObservers();
 		notifyViewChangeObservers();
+		notifyZoomLevelObservers();
 	}
 
 	/**
@@ -507,11 +508,12 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
 			g.setColor(Color.ORANGE);
-			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
-					+ nodeDiameter, nodeDiameter / 2);
+			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
 			g.setColor(Color.BLACK);
-			g.drawRect(xleft - nodeDiameter / 2, 0, xright - xleft
-					+ nodeDiameter, nodeDiameter / 2);
+			g.drawRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
+
 		}
 	}
 
@@ -556,6 +558,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
+	 * Register a new zoom level observer.
+	 * 
+	 * @param zlo
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ZoomlevelObserver zlo) {
+		zoomLevelObserver.add(zlo);
+	}
+
+	/**
 	 * Notifies the node selection observers.
 	 * 
 	 * @param selectedNodeIn
@@ -583,7 +595,15 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private void notifyViewChangeObservers() {
 		for (ViewChangeObserver vco : viewChangeObservers) {
 			vco.update(view.getWidth());
+		}
+	}
 
+	/**
+	 * Notifies the zoom level observers.
+	 */
+	private void notifyZoomLevelObservers() {
+		for (ZoomlevelObserver zlo : zoomLevelObserver) {
+			zlo.update(dgraph.getNodeCount(), graph.getNodeCount(), zoomLevel);
 		}
 	}
 
@@ -737,15 +757,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		count = 0;
 		if (newZoomLevel < 0) {
 			AppEvent.statusBarError("There is no zoom level further from the current level");
-		} else if (newZoomLevel > thresholds.length) {
+		} else if (newZoomLevel > ZOOMLEVEL_AMOUNT) {
 			AppEvent.statusBarError("There is no zoom level further from the current level");
 		} else {
 			zoomLevel = newZoomLevel;
 			int threshold;
 			if (newZoomLevel == 0) {
-				threshold = Integer.MIN_VALUE;
+				threshold = MAXIMUM_THRESHOLD;
 			} else {
-				threshold = thresholds[newZoomLevel - 1];
+				threshold = MAXIMUM_THRESHOLD - newZoomLevel
+						* THRESHOLD_DIFFERENCE;
 			}
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr, viewSize));
@@ -777,13 +798,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * @author Marissa
 	 * @since 27-05-2015
 	 */
-	class Scrolling implements MouseWheelListener {
+	class ZoomScrollListener implements MouseWheelListener {
 
 		/** How far there has to be zoomed in to get to a new zoomlevel. **/
 		private static final int NEWLEVEL = 3;
-
-		// /** How far one scroll zooms in. **/
-		// private static final double ZOOMPERCENTAGE = 1.1;
 
 		/**
 		 * This method decides what to do when the mouse is scrolled.
@@ -796,42 +814,25 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = e.getWheelRotation();
 			if (count > NEWLEVEL) {
-				upZoomlevel();
+				zoomLevelOut();
 			} else if (count < -NEWLEVEL) {
-				downZoomlevel();
+				zoomLevelIn();
 			} else if (rotation > 0) {
 				count++;
-				// zoomIn(ZOOMPERCENTAGE);
 			} else if (rotation < 0) {
 				count--;
-				// zoomOut(ZOOMPERCENTAGE);
 			}
 		}
 
-		/**
-		 * @return The geographical zoom value.
-		 */
-		public double getZoomPercentage() {
-			return view.getCamera().getViewPercent();
-		}
-
-		/**
-		 * Resets zoom percentage to 1.
-		 */
-		public void resetZoom() {
-			view.getCamera().setViewPercent(1.0);
-			count = 0;
-		}
 	}
 
 	/**
-	 * A Listener for the scroll bars of a scroll panel.
+	 * A Listener for the scroll bars of a graph scroll panel.
 	 * 
 	 * @author Maarten
 	 * @since 22-5-2015
-	 * @version 1.0
 	 */
-	final class ScrollListener implements AdjustmentListener {
+	final class GraphScrollListener implements AdjustmentListener {
 
 		/**
 		 * Initialize the scroll listener and make it observe a given scroll
@@ -840,11 +841,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		 * @param scrollBar
 		 *            The scroll bar to observe.
 		 */
-		private ScrollListener(final JScrollBar scrollBar) {
+		private GraphScrollListener(final JScrollBar scrollBar) {
 			scrollBar.addAdjustmentListener(this);
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void adjustmentValueChanged(final AdjustmentEvent e) {
 			notifyGraphScrollObservers();
@@ -869,7 +869,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			window.getOptionPanel().getGenomes().registerObserver(this);
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void update(final GenomeRow genomeRow,
 				final boolean genomeFilterChanged,
@@ -908,12 +907,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	class NodeClickListener implements ViewerListener {
 
-		/** {@inheritDoc} */
 		@Override
 		public void viewClosed(final String viewName) {
 		}
 
-		/** {@inheritDoc} */
 		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
@@ -926,7 +923,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			notifyNodeSelectionObservers(ret);
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void buttonPushed(final String id) {
 			selectNode(graph.getNode(id));
@@ -947,29 +943,24 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	class ViewMouseListener implements MouseListener {
 
-		/** {@inheritDoc} */
 		@Override
 		public void mouseReleased(final MouseEvent e) {
 			vp.pump();
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mousePressed(final MouseEvent e) {
 			vp.pump();
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
@@ -979,14 +970,14 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/**
 	 * Lets you zoom in one level further.
 	 */
-	public void upZoomlevel() {
+	public void zoomLevelIn() {
 		applyZoomLevel(zoomLevel + 1);
 	}
 
 	/**
-	 * Lets you zoom out one level further.
+	 * Lets you zoom out one level back.
 	 */
-	public void downZoomlevel() {
+	public void zoomLevelOut() {
 		applyZoomLevel(zoomLevel - 1);
 	}
 

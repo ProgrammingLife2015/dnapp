@@ -50,9 +50,11 @@ public abstract class BinaryTree extends JButton {
 	private boolean collapsed = false;
 
 	/**
-	 * The parent of the node, initialised at null for the root.
+	 * <<<<<<< HEAD The parent of the node, initialised at null for the root.
+	 * ======= The parent of the node, initialized at null for the root. >>>>>>>
+	 * master
 	 */
-	private BinaryTree parent;
+	private BinaryTree ancestor;
 
 	/** The placement of this node in the tree grid. */
 	private Point gridCoordinates = new Point(0, 0);
@@ -77,7 +79,7 @@ public abstract class BinaryTree extends JButton {
 	public BinaryTree(final String nameIn, final double length,
 			final PhyloPanel panel) {
 		super(nameIn);
-		this.parent = null;
+		this.ancestor = null;
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
@@ -142,22 +144,6 @@ public abstract class BinaryTree extends JButton {
 
 	/** @return an array of the children of this node. */
 	public abstract List<BinaryTree> getChildren();
-
-	/**
-	 * @return the parent
-	 */
-	@Override
-	public BinaryTree getParent() {
-		return parent;
-	}
-
-	/**
-	 * @param parentIn
-	 *            the parent to set
-	 */
-	public void setParent(final BinaryTree parentIn) {
-		this.parent = parentIn;
-	}
 
 	/**
 	 * Sets the grid coordinates of the node and computes the children's
@@ -250,8 +236,8 @@ public abstract class BinaryTree extends JButton {
 			final String[] pieces = label.split(":");
 			BinaryTree current = new InnerNode(parseName(pieces, 0),
 					parseDouble(pieces, 1), left, right, panel);
-			left.setParent(current);
-			right.setParent(current);
+			left.setAncestor(current);
+			right.setAncestor(current);
 			return current;
 		} else { // Leaf
 			final String[] pieces = token.split(":");
@@ -375,8 +361,8 @@ public abstract class BinaryTree extends JButton {
 	public abstract boolean isLeaf();
 
 	/**
-<<<<<<< HEAD
-	 * This method returns a list of all sources accessible from this node.
+	 * <<<<<<< HEAD This method returns a list of all sources accessible from
+	 * this node.
 	 * 
 	 * @return A list of sources accessible from this node
 	 */
@@ -391,9 +377,8 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-=======
->>>>>>> cf02b74fb5e5e327bb01b450b65c8e4541dcc96a
-	 * Returns a collection of sources which have been selected.
+	 * ======= >>>>>>> cf02b74fb5e5e327bb01b450b65c8e4541dcc96a Returns a
+	 * collection of sources which have been selected.
 	 * 
 	 * @param root
 	 *            The root node
@@ -553,12 +538,27 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
+	 * @return the ancestor.
+	 */
+	public BinaryTree getAncestor() {
+		return ancestor;
+	}
+
+	/**
+	 * Sets the ancestor.
+	 * 
+	 * @param newAncestor
+	 *            the parent to set
+	 */
+	public void setAncestor(final BinaryTree newAncestor) {
+		this.ancestor = newAncestor;
+	}
+
+	/**
 	 * This listener handles the click events on the node button.
 	 * 
 	 * @author Maarten, Justin
 	 * @since 27-5-2015
-	 * @version 1.0
-	 *
 	 */
 	class NodeMouseListener implements MouseListener {
 
@@ -567,7 +567,6 @@ public abstract class BinaryTree extends JButton {
 		public void mouseClicked(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void mousePressed(final MouseEvent e) {
 			switch (e.getButton()) {

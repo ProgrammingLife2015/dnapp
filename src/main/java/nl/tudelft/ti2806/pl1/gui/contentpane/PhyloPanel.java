@@ -199,7 +199,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 				* (NODE_WIDTH + INSETS.left) + INSETS.left, (treeWidth + 1)
 				* (NODE_HEIGHT + INSETS.top) + INSETS.top));
 		repaint();
-		revalidate();
+		// revalidate();
 	}
 
 	/**
