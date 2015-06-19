@@ -165,9 +165,6 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		revalidate();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void update(final Observable o, final Object arg) {
 		applyWindowSettings();

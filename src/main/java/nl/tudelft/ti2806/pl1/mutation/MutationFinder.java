@@ -47,7 +47,8 @@ public final class MutationFinder {
 						if (node.getNextNodes().contains(endnode)) {
 							ins.add(new InsertionMutation(node.getId(), endnode
 									.getId(), next.getId(), graph
-									.getReferenceGeneStorage()));
+									.getReferenceGeneStorage(),
+									node.getStart(), node.getEnd()));
 						}
 					}
 				}
@@ -86,7 +87,8 @@ public final class MutationFinder {
 			}
 			if (isDeletion) {
 				dels.add(new DeletionMutation(node.getId(), endnode.getId(),
-						graph.getReferenceGeneStorage()));
+						graph.getReferenceGeneStorage(), node.getStart(), node
+								.getEnd()));
 			}
 		}
 		return dels;
@@ -137,12 +139,14 @@ public final class MutationFinder {
 			if (node.getOutEdges().size() > 0) {
 				if (inNodes.size() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage()));
+							graph.getReferenceGeneStorage(), node.getStart(),
+							node.getEnd()));
 				} else if (inNodes.size() == 1
 						&& graph.getDNode(inNodes.iterator().next())
 								.getContent().length() > 1) {
 					ins.add(new ComplexMutation(node.getId(), srcId, inNodes,
-							graph.getReferenceGeneStorage()));
+							graph.getReferenceGeneStorage(), node.getStart(),
+							node.getEnd()));
 				}
 			}
 		}

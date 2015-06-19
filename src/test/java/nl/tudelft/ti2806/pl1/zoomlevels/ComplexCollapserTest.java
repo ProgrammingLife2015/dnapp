@@ -98,7 +98,7 @@ public class ComplexCollapserTest {
 		assertTrue(gsg.getNode("4") != null);
 		assertTrue(gsg.getNode("5") != null);
 		assertTrue(gsg.getNode("6") != null);
-		ComplexCollapser.collapseComplexMutations(muts, gsg);
+		ComplexCollapser.collapseComplexMutations(muts, gsg, 100);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") == null);
 		assertTrue(gsg.getNode("3") == null);
@@ -157,7 +157,7 @@ public class ComplexCollapserTest {
 		assertTrue(gsg.getNode("5") != null);
 		assertTrue(gsg.getNode("6") != null);
 		assertTrue(gsg.getNode("7") != null);
-		ComplexCollapser.collapseComplexMutations(muts, gsg);
+		ComplexCollapser.collapseComplexMutations(muts, gsg, 100);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") == null);
 		assertTrue(gsg.getNode("3") == null);

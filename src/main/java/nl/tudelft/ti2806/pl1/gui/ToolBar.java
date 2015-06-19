@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 
@@ -106,13 +107,12 @@ public class ToolBar extends JToolBar {
 	 *            The content tab which tool bar buttons should now be shown.
 	 */
 	public void viewContextChanged(final ContentTab contentTab) {
-		// removeAll();
-		// addGeneralButtons();
-		// for (JComponent c : contentTab.getToolBarControls()) {
-		// add(c);
-		// }
-		// // revalidate();
-		// repaint();
+		removeAll();
+		addGeneralButtons();
+		for (JComponent c : contentTab.getToolBarControls()) {
+			add(c);
+		}
+		repaint();
 	}
 
 }

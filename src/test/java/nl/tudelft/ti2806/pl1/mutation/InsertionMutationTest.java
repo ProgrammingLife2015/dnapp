@@ -71,7 +71,7 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays
 				.asList(new InsertionMutation(start.getId(), end.getId(),
-						insertion.getId(), rgs));
+						insertion.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -88,8 +88,9 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId(), rgs), new InsertionMutation(start.getId(),
-						end.getId(), insertion2.getId(), rgs));
+						.getId(), rgs, 0, 0),
+				new InsertionMutation(start.getId(), end.getId(), insertion2
+						.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -110,9 +111,9 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId(), rgs),
-				new InsertionMutation(end.getId(), end2.getId(), insertion2
-						.getId(), rgs));
+						.getId(), rgs, 0, 0), new InsertionMutation(
+						end.getId(), end2.getId(), insertion2.getId(), rgs, 0,
+						0));
 		assertEquals(expected, muts);
 	}
 
@@ -143,8 +144,9 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId(), rgs), new InsertionMutation(end2.getId(),
-						end3.getId(), insertion2.getId(), rgs));
+						.getId(), rgs, 0, 0),
+				new InsertionMutation(end2.getId(), end3.getId(), insertion2
+						.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 
@@ -172,8 +174,9 @@ public class InsertionMutationTest {
 				.findInsertionMutations(graph);
 		Collection<InsertionMutation> expected = Arrays.asList(
 				new InsertionMutation(start.getId(), end.getId(), insertion
-						.getId(), rgs), new InsertionMutation(end2.getId(),
-						end3.getId(), insertion2.getId(), rgs));
+						.getId(), rgs, 0, 0),
+				new InsertionMutation(end2.getId(), end3.getId(), insertion2
+						.getId(), rgs, 0, 0));
 		assertEquals(expected, muts);
 	}
 }

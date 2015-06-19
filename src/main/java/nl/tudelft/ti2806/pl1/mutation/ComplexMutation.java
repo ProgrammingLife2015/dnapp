@@ -24,11 +24,15 @@ public class ComplexMutation extends Mutation {
 	 *            The IDs of the inserted nodes.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
+	 * @param startpos
+	 *            The starting position of the mutation in the reference genome.
+	 * @param endpos
+	 *            The end position of the mutation in the reference genome.
 	 */
 	public ComplexMutation(final int pre, final Integer post,
 			final Collection<Integer> insertedNodes,
-			final ReferenceGeneStorage rgs) {
-		super(pre, post, rgs);
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
+		super(pre, post, rgs, startpos, endpos);
 		this.inNodes = insertedNodes;
 	}
 
@@ -57,6 +61,12 @@ public class ComplexMutation extends Mutation {
 	@Override
 	public final int hashCode() {
 		return getPreNode();
+	}
+
+	@Override
+	public double getScore() {
+		return super.getScore()
+				* ScoreMultiplier.getMult(MutationMultipliers.INDEL.name());
 	}
 
 }
