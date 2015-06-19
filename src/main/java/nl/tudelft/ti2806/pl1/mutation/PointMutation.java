@@ -45,7 +45,7 @@ public class PointMutation extends Mutation {
 	@Override
 	public double getScore() {
 		return super.getScore()
-				* ScoreMultiplier.getMult((MutationMultipliers.POINTMUTATION
-						.name()));
+				* ScoreMultiplier.getMult(MutationMultipliers.POINTMUTATION
+						.name());
 	}
 }
