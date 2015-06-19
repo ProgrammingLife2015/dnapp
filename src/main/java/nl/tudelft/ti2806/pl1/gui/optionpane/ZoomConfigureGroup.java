@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.gui.optionpane;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -28,9 +29,7 @@ public class ZoomConfigureGroup extends JPanel {
 	private static final Dimension SIZE = new Dimension(
 			OptionsPane.MAX_CHILD_WIDTH, 200);
 
-	/**
-	 * The number of sliders.
-	 */
+	/** The number of sliders. */
 	private static final int NUM_SLIDERS = MutationMultipliers.values().length;
 
 	/** The default visible title. */
@@ -56,13 +55,18 @@ public class ZoomConfigureGroup extends JPanel {
 	}
 
 	/**
-	 * Add the sliders.
+	 * Add the sliders and top labels.
 	 */
 	private void addComponents() {
+		JPanel label = new JPanel(new BorderLayout());
+		label.add(new JLabel("<html><u>Ignore"), BorderLayout.WEST);
+		label.add(new JLabel("<html><u>Default"), BorderLayout.EAST);
+		add(label);
 		for (int i = 0; i < NUM_SLIDERS; i++) {
 			JSlider slider = new JSlider(0, SLIDERVALUES, SLIDERVALUES);
 			slider.setName(SLIDERS[i].name());
 			slider.setPaintTicks(true);
+			slider.setPaintLabels(true);
 			slider.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(final ChangeEvent e) {
