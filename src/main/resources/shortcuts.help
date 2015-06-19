@@ -1,0 +1,11 @@
+<html>
+<b>Shortcuts:</b><br>
+<table>
+<tr><td>F1</td><td>Help</td></tr>
+<tr><td>CTRL + C</td><td>Close the application</td></tr>
+<tr><td>CTRL + R</td><td>Reset to initial zoom level</td></tr>
+<tr><td>CTRL + O</td><td>Import a sequence graph</td></tr>
+<tr><td>CTRL + +</td><td>Zoom in one zoom level</td></tr>
+<tr><td>CTRL + -</td><td>Zoom out one zoom level</td></tr>
+</table>
+</html>

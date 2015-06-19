@@ -77,26 +77,17 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/** How far zoomed in. **/
 	private int count = 0;
 
-	/**
-	 * Threshold value for first zoom level.
-	 */
-	private static final int THRESHOLD_1 = 10;
-
-	/**
-	 * Threshold value for second zoom level.
-	 */
-	private static final int THRESHOLD_2 = 20;
-
-	/**
-	 * Threshold value for third zoom level.
-	 */
-	private static final int THRESHOLD_3 = 90;
-
 	/** Which zoom level is currently shown. **/
 	private int zoomLevel = 0;
 
 	/** The zoom level thresholds. */
-	private int[] thresholds = { THRESHOLD_1, THRESHOLD_2, THRESHOLD_3 };
+	private static final int ZOOMLEVEL_AMOUNT = 10;
+
+	/** The threshold difference between zoomlevels. */
+	private static final int THRESHOLD_DIFFERENCE = 10;
+
+	/** The maximum threshold score. */
+	private static final int MAXIMUM_THRESHOLD = 100;
 
 	/**
 	 * The list of node selection observers.
@@ -276,9 +267,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			e1.printStackTrace();
 			ret = false;
 		}
-		gl.locateGenes(graph);
 		NodePlacer.placeY(graph);
 		visualizeGraph(graph);
+		applyZoomLevel(0);
 		return ret;
 	}
 
@@ -381,6 +372,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		@Override
 		public void update() {
 			locateGenes(graph);
+			searchGeneLocs(graph);
 			fillGeneNavigatorBox();
 		}
 	}
@@ -518,6 +510,10 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			g.setColor(Color.ORANGE);
 			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
 					+ NODE_DIAMETER, NODE_DIAMETER / 2);
+			g.setColor(Color.BLACK);
+			g.drawRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
+
 		}
 	}
 
@@ -761,15 +757,16 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		count = 0;
 		if (newZoomLevel < 0) {
 			AppEvent.statusBarError("There is no zoom level further from the current level");
-		} else if (newZoomLevel > thresholds.length) {
+		} else if (newZoomLevel > ZOOMLEVEL_AMOUNT) {
 			AppEvent.statusBarError("There is no zoom level further from the current level");
 		} else {
 			zoomLevel = newZoomLevel;
 			int threshold;
 			if (newZoomLevel == 0) {
-				threshold = Integer.MIN_VALUE;
+				threshold = MAXIMUM_THRESHOLD;
 			} else {
-				threshold = thresholds[newZoomLevel - 1];
+				threshold = MAXIMUM_THRESHOLD - newZoomLevel
+						* THRESHOLD_DIFFERENCE;
 			}
 			Graph gr = zlc.createGraph(threshold);
 			setViewSize(NodePlacer.place(gr, viewSize));
@@ -1016,7 +1013,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	@Override
 	public void update(final String selectedGene) {
 		if (geneLocs.containsKey(selectedGene)) {
-			System.out.println("???");
 			Node beginnode = this.geneLocs.get(selectedGene).get(0);
 			this.selectNode(beginnode);
 			graphPane.getHorizontalScrollBar().setValue(

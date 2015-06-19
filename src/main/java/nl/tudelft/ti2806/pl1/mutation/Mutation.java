@@ -17,10 +17,23 @@ public abstract class Mutation {
 	/**
 	 * Score of the mutation.
 	 */
-	private double score;
+	private double score = 0;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
+
+	/**
+	 * Score for a mutation if it is located on a gene.
+	 */
+	private static final int SCORE_MUT = 70;
+
+	/**
+	 * Score for a mutation if it is not located on a gene.
+	 */
+	private static final int SCORE_IN_GENE = 10;
+
+	/** Start and end position on reference genome. **/
+	private final int startposition, endposition;
 
 	/**
 	 * 
@@ -30,18 +43,48 @@ public abstract class Mutation {
 	 *            The ID of the node after the mutation.
 	 * @param rgs
 	 *            The storage containing all the interesting gene information.
+	 * @param startpos
+	 *            Start position on the reference genome.
+	 * @param endpos
+	 *            End position on the reference genome.
 	 */
 	public Mutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs) {
+			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
 		this.preNode = pre;
 		this.postNode = post;
 		this.referenceGeneStorage = rgs;
-		this.score = 0;
+		this.startposition = startpos;
+		this.endposition = endpos;
+		calculateGeneralScore();
 	}
 
 	/** @return the score */
-	public final double getScore() {
+	public double getScore() {
+		calculateGeneralScore();
 		return score;
+	}
+
+	/**
+	 * Calculate the general score for a mutation.
+	 * 
+	 */
+	private void calculateGeneralScore() {
+		score = 0;
+		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
+		if (rgs.isIntragenic(startposition) || rgs.isIntragenic(endposition)) {
+			addScore(SCORE_IN_GENE
+					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
+							.name()));
+			for (long pos : rgs.getDrugResistanceMutations().keySet()) {
+				if (startposition <= pos && pos < endposition) {
+					addScore(SCORE_MUT
+							* ScoreMultiplier
+									.getMult(MutationMultipliers.KNOWN_MUTATION
+											.name()));
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -86,7 +129,7 @@ public abstract class Mutation {
 	 * @param addScore
 	 *            Score to add.
 	 */
-	public final void addSCore(final double addScore) {
+	public final void addScore(final double addScore) {
 		this.score += addScore;
 	}
 
@@ -97,4 +140,5 @@ public abstract class Mutation {
 	public final void setScore(final double scoreIn) {
 		this.score = scoreIn;
 	}
+
 }
