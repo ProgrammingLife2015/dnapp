@@ -154,23 +154,19 @@ public enum AppEvent implements ActionListener {
 		}
 	},
 
-	/**
-	 * 
-	 */
-	ZOOMLEVEL_UP {
+	/** Zoom in one zoom level. */
+	ZOOMLEVEL_IN {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent().getGraphPanel().upZoomlevel();
+			window.getContent().getGraphPanel().zoomLevelIn();
 		}
 	},
 
-	/**
-	 * 
-	 */
-	ZOOMLEVEL_DOWN {
+	/** Zoom out one zoom level. */
+	ZOOMLEVEL_OUT {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			window.getContent().getGraphPanel().downZoomlevel();
+			window.getContent().getGraphPanel().zoomLevelOut();
 		}
 	};
 

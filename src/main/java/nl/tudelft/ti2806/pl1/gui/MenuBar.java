@@ -117,18 +117,20 @@ public class MenuBar extends JMenuBar {
 				KeyStroke.getKeyStroke(reset.getMnemonic(), Event.CTRL_MASK));
 		ret.add(reset);
 
-		JMenuItem zoomUp = new JMenuItem();
-		setMenuItem(zoomUp, "Up zoomlevel", null, 'U',
-				"Go to the next zoomlevel", AppEvent.ZOOMLEVEL_UP);
-		setAcc(zoomUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK));
-		ret.add(zoomUp);
+		JMenuItem zoomIn = new JMenuItem();
+		setMenuItem(zoomIn, "Zoom in", null, 'I',
+				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.",
+				AppEvent.ZOOMLEVEL_IN);
+		setAcc(zoomIn, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, Event.CTRL_MASK));
+		ret.add(zoomIn);
 
-		JMenuItem zoomDown = new JMenuItem();
-		setMenuItem(zoomDown, "Down zoomlevel", null, 'D',
-				"Go to previous zoomlevel", AppEvent.ZOOMLEVEL_DOWN);
-		setAcc(zoomDown,
-				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
-		ret.add(zoomDown);
+		JMenuItem zoomOut = new JMenuItem();
+		setMenuItem(zoomOut, "Zoom out", null, 'O',
+				"<html>Go to previous zoomlevel.<br>Nodes might be collapsed.",
+				AppEvent.ZOOMLEVEL_OUT);
+		setAcc(zoomOut,
+				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
+		ret.add(zoomOut);
 
 		ret.add(makeShowToolBar());
 		ret.add(makeShowOptionPane());

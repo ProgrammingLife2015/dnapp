@@ -172,9 +172,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private HashMap<String, ArrayList<Node>> geneLocs;
 
 	/** Diameter of nodes in pixels. */
-	private static final int nodeDiameter = 20;
+	private static final int NODE_DIAMETER = 20;
 
-	/** Genelocator object for detecting genes. */
+	/** Gene locator object for detecting genes. */
 	private final GeneLocator gl;
 
 	/**
@@ -185,8 +185,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 */
 	public GraphPanel(final Window w) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
-		this.window = w;
-		this.window.getOptionPanel().getGeneNavigator().registerObserver(this);
+		window = w;
+		window.getOptionPanel().getGeneNavigator().registerObserver(this);
 
 		graphPane = new JScrollPane();
 		graphPane.setMinimumSize(new Dimension(2, 2));
@@ -516,8 +516,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
 			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
 			g.setColor(Color.ORANGE);
-			g.fillRect(xleft - nodeDiameter / 2, 0, xright - xleft
-					+ nodeDiameter, nodeDiameter / 2);
+			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
+					+ NODE_DIAMETER, NODE_DIAMETER / 2);
 		}
 	}
 
@@ -599,7 +599,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	private void notifyViewChangeObservers() {
 		for (ViewChangeObserver vco : viewChangeObservers) {
 			vco.update(view.getWidth());
-
 		}
 	}
 
@@ -607,21 +606,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * Notifies the zoom level observers.
 	 */
 	private void notifyZoomLevelObservers() {
-		double percentage = calculatePercentageCollapsed();
-		System.out.println(percentage);
 		for (ZoomlevelObserver zlo : zoomLevelObserver) {
-			zlo.update(percentage, zoomLevel);
-
+			zlo.update(dgraph.getNodeCount(), graph.getNodeCount(), zoomLevel);
 		}
-	}
-
-	/**
-	 * Calculates the percentage of collapsed nodes in the visual graph.
-	 * 
-	 * @return percentage of collapsed nodes in the visual graph.
-	 */
-	private double calculatePercentageCollapsed() {
-		return (double) graph.getNodeCount() / dgraph.getNodeCount();
 	}
 
 	/**
@@ -833,9 +820,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void mouseWheelMoved(final MouseWheelEvent e) {
 			int rotation = e.getWheelRotation();
 			if (count > NEWLEVEL) {
-				upZoomlevel();
+				zoomLevelIn();
 			} else if (count < -NEWLEVEL) {
-				downZoomlevel();
+				zoomLevelOut();
 			} else if (rotation > 0) {
 				count++;
 				// zoomIn(ZOOMPERCENTAGE);
@@ -1008,14 +995,14 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/**
 	 * Lets you zoom in one level further.
 	 */
-	public void upZoomlevel() {
+	public void zoomLevelIn() {
 		applyZoomLevel(zoomLevel + 1);
 	}
 
 	/**
-	 * Lets you zoom out one level further.
+	 * Lets you zoom out one level back.
 	 */
-	public void downZoomlevel() {
+	public void zoomLevelOut() {
 		applyZoomLevel(zoomLevel - 1);
 	}
 

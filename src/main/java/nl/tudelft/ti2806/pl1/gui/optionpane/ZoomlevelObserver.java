@@ -15,10 +15,13 @@ public interface ZoomlevelObserver {
 	/**
 	 * Called the view is changed to another zoomlevel.
 	 * 
-	 * @param percCollapsed
-	 *            percentage collapsed nodes in the visual graph.
-	 * @param threshold
-	 *            Current threshold of the graph.
+	 * @param totalNodesCount
+	 *            The total number of nodes in the original graph.
+	 * @param visualNodesCount
+	 *            The number of nodes in the visual graph.
+	 * @param zoomLevelIndex
+	 *            The current zoom level threshold.
 	 */
-	void update(final double percCollapsed, final int threshold);
+	void update(final int totalNodesCount, final int visualNodesCount,
+			final int zoomLevelIndex);
 }

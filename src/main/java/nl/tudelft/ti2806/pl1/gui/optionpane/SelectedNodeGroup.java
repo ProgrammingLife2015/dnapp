@@ -18,8 +18,6 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
 /**
  * @author Maarten
  * @since 18-5-2015
- * @version 1.0
- * 
  */
 public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 
@@ -146,6 +144,23 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		JLabel ret = new JLabel(text);
 		ret.setAlignmentX(align);
 		return ret;
+	}
+
+	/**
+	 * @param sb
+	 *            The string builder.
+	 * @param label
+	 *            The row label.
+	 * @param value
+	 *            The row value.
+	 */
+	private void mkRow(final StringBuilder sb, final String label,
+			final String value) {
+		sb.append("<tr><td><b>");
+		sb.append(label);
+		sb.append("</b></td><td>");
+		sb.append(value);
+		sb.append("</td></tr>");
 	}
 
 	/** Sets up the grid bag constraints. */

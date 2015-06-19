@@ -34,44 +34,10 @@ public class Content extends JPanel {
 	private boolean graphLoaded = false;
 
 	/**
-	 * @return true iff there is a graph loaded
-	 */
-	public final boolean isGraphLoaded() {
-		return graphLoaded;
-	}
-
-	/**
 	 * Flag to indicate whether a phylogenetic tree has been loaded into the
 	 * phylo panel.
 	 */
 	private boolean treeLoaded = false;
-
-	/**
-	 * @return true iff there is a phylogenetic tree loaded
-	 */
-	public final boolean isTreeLoaded() {
-		return treeLoaded;
-	}
-
-	/**
-	 * Register a new content loaded observer.
-	 * 
-	 * @param o
-	 *            The observer to add.
-	 */
-	public final void registerObserver(final ContentLoadedObserver o) {
-		observers.add(o);
-	}
-
-	/**
-	 * Unregistrer a content loaded observer.
-	 * 
-	 * @param o
-	 *            The observer to delete.
-	 */
-	public final void unregisterObserver(final ContentLoadedObserver o) {
-		observers.remove(o);
-	}
 
 	/** The window this content pane is part of. */
 	private Window window;
@@ -81,13 +47,6 @@ public class Content extends JPanel {
 
 	/** Content of the graph tab showing most importantly the graph. */
 	private GraphPanel graphPanel;
-
-	/**
-	 * @return the graph panel.
-	 */
-	public final GraphPanel getGraphPanel() {
-		return graphPanel;
-	}
 
 	/** The panel showing the phylogenetic tree. */
 	private PhyloPanel phyloPanel;
@@ -117,17 +76,6 @@ public class Content extends JPanel {
 	}
 
 	/**
-	 * Directly calls the write graph method of the graph panel.
-	 * 
-	 * @param filePath
-	 *            The path to the file to write.
-	 * @see GraphPanel#writeGraph(String)
-	 */
-	public final void writeGraph(final String filePath) {
-		graphPanel.writeGraph(filePath);
-	}
-
-	/**
 	 * Loads a graph into the graph tab. Directly calls the load graph method of
 	 * the graph panel.
 	 * 
@@ -146,6 +94,17 @@ public class Content extends JPanel {
 		}
 		window.getToolBar().viewContextChanged(
 				(ContentTab) tabs.getSelectedComponent());
+	}
+
+	/**
+	 * Directly calls the write graph method of the graph panel.
+	 * 
+	 * @param filePath
+	 *            The path to the file to write.
+	 * @see GraphPanel#writeGraph(String)
+	 */
+	public final void writeGraph(final String filePath) {
+		graphPanel.writeGraph(filePath);
 	}
 
 	/**
@@ -170,6 +129,37 @@ public class Content extends JPanel {
 		if (tabs.getTabCount() <= 1) {
 			tabs.addTab("Phylogenetic tree", phyloPanel);
 		}
+	}
+
+	/**
+	 * Register a new content loaded observer.
+	 * 
+	 * @param o
+	 *            The observer to add.
+	 */
+	public final void registerObserver(final ContentLoadedObserver o) {
+		observers.add(o);
+	}
+
+	/**
+	 * @return true iff a graph is loaded
+	 */
+	public final boolean isGraphLoaded() {
+		return graphLoaded;
+	}
+
+	/**
+	 * @return true iff a phylogenetic is tree loaded.
+	 */
+	public final boolean isTreeLoaded() {
+		return treeLoaded;
+	}
+
+	/**
+	 * @return the graph panel.
+	 */
+	public final GraphPanel getGraphPanel() {
+		return graphPanel;
 	}
 
 	@Override
