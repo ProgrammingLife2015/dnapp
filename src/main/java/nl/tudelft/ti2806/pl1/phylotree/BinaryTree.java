@@ -152,11 +152,11 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @param parent
+	 * @param parentIn
 	 *            the parent to set
 	 */
-	public void setParent(final BinaryTree parent) {
-		this.parent = parent;
+	public void setParent(final BinaryTree parentIn) {
+		this.parent = parentIn;
 	}
 
 	/**

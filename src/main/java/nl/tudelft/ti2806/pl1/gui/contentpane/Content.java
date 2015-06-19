@@ -104,7 +104,6 @@ public class Content extends JPanel {
 
 		graphPanel = new GraphPanel(window);
 		phyloPanel = new PhyloPanel();
-		phyloPanel.registerObserver(graphPanel);
 
 		tabs.addTab("Main", graphPanel);
 		tabs.addChangeListener(new ChangeListener() {
@@ -176,6 +175,13 @@ public class Content extends JPanel {
 	@Override
 	public final String toString() {
 		return this.getClass().toString();
+	}
+
+	/**
+	 * @return the phyloPanel
+	 */
+	public final PhyloPanel getPhyloPanel() {
+		return phyloPanel;
 	}
 
 }

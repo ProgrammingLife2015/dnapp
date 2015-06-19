@@ -886,6 +886,14 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			}
 
 		}
+
+		@Override
+		public void update(final Collection<String> chosen) {
+			highlightedGenomes.clear();
+			unHighlight();
+			highlightedGenomes = chosen;
+			highlight();
+		}
 	}
 
 	/**
@@ -1003,9 +1011,7 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	@Override
 	public void update(final Collection<String> chosen) {
-		highlightedGenomes.clear();
-		unHighlight();
-		highlightedGenomes = chosen;
-		highlight();
+		// TODO Auto-generated method stub
+
 	}
 }
