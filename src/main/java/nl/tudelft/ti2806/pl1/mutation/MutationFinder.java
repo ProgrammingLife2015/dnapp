@@ -12,15 +12,12 @@ import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 /**
- * 
- * @author Justin, Maarten
+ * @author Justin, Maarten, Mark
  * @since 10-6-2015
  */
 public final class MutationFinder {
 
-	/**
-	 * Reference genome name.
-	 */
+	/** Reference genome name. */
 	private static final String REFERENCE_GENOME = "TKK_REF";
 
 	/**
@@ -30,24 +27,24 @@ public final class MutationFinder {
 
 	/**
 	 * This method returns the amount of groups of nodes which share a common
-	 * parent according to the phylotree.
+	 * direct ancestor according to the phylogenetic tree.
 	 * 
 	 * @param graph
-	 *            The graph
+	 *            The graph.
 	 * @param id1
-	 *            The begin node id
+	 *            The begin node id.
 	 * @param id2
-	 *            The end node id
+	 *            The end node id.
 	 * @param root
-	 *            The root node of the phylotree
+	 *            The root node of the phylogenetic tree.
 	 * @return The amount of groups of nodes which share a common parent
-	 *         according to the phylotree
+	 *         according to the phylogenetic tree.
 	 */
 	public static int getAffectedNodeGroupsCount(final DGraph graph,
 			final int id1, final int id2, final BinaryTree root) {
-		HashSet<String> sources1 = graph.getDNode(id1).getSources();
-		HashSet<String> sources2 = graph.getDNode(id2).getSources();
-		HashSet<String> sources = intersect(sources1, sources2);
+		Set<String> sources1 = graph.getDNode(id1).getSources();
+		Set<String> sources2 = graph.getDNode(id2).getSources();
+		Set<String> sources = intersect(sources1, sources2);
 		return root.findGroups(sources, root).size();
 	}
 
@@ -60,9 +57,9 @@ public final class MutationFinder {
 	 *            The second hash set
 	 * @return The intersection between set1 and set2
 	 */
-	protected static HashSet<String> intersect(final HashSet<String> set1,
-			final HashSet<String> set2) {
-		HashSet<String> set = new HashSet<String>();
+	protected static Set<String> intersect(final Set<String> set1,
+			final Set<String> set2) {
+		Set<String> set = new HashSet<String>();
 		if (set1.size() < set2.size()) {
 			for (String s : set1) {
 				set.add(s);
@@ -81,9 +78,9 @@ public final class MutationFinder {
 	 * Finds the Point mutations of a DGraph.
 	 * 
 	 * @param graph
-	 *            The DGraph.
+	 *            The data graph.
 	 * @param tree
-	 *            The Binarytree.
+	 *            The binary tree.
 	 * @return A collection of the Point mutations.
 	 */
 	public static Collection<PointMutation> findPointMutations(
@@ -209,16 +206,14 @@ public final class MutationFinder {
 				}
 			}
 			int srcId = getSourceSinkNode(srcNodes, graph);
-			if (node.getOutEdges().size() > 0) {
-				if (inNodes.size() > 1
-						|| (inNodes.size() == 1 && graph
-								.getDNode(inNodes.iterator().next())
-								.getContent().length() > 1)) {
-					ComplexMutation mut = new ComplexMutation(node.getId(),
-							srcId, inNodes, graph.getReferenceGeneStorage(),
-							node.getStart(), node.getEnd());
-					ins.add(mut);
-				}
+			if (node.getOutEdges().size() > 0
+					&& (inNodes.size() > 1 || (inNodes.size() == 1 && graph
+							.getDNode(inNodes.iterator().next()).getContent()
+							.length() > 1))) {
+				ComplexMutation mut = new ComplexMutation(node.getId(), srcId,
+						inNodes, graph.getReferenceGeneStorage(),
+						node.getStart(), node.getEnd());
+				ins.add(mut);
 			}
 		}
 		return ins;

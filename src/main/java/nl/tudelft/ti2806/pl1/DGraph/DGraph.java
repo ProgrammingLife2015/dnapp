@@ -12,7 +12,6 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
 import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
-import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 /**
@@ -20,7 +19,7 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
  * 
  * @author Mark, PL1
  */
-public class DGraph implements MutatedGraph, DynamicGraph {
+public class DGraph implements DynamicGraph {
 
 	/** The nodes in the graph. */
 	private final Map<Integer, DNode> nodes;
@@ -277,17 +276,6 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 		this.start = s;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Collection<PointMutation> getAllPointMutations() {
-		return pointMutations;
-	}
-
-	@Override
-	public Collection<PointMutation> getAllInDelMutations() {
-		return pointMutations;
-	}
-
 	@Override
 	public Collection<DNode> getDNodes(final ViewArea va) {
 		ArrayList<DNode> ret = new ArrayList<DNode>();
@@ -348,6 +336,13 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	 */
 	public Collection<ComplexMutation> getComplexMutations() {
 		return compmutations;
+	}
+
+	/**
+	 * @return The point mutations.
+	 */
+	public Collection<PointMutation> getPointMutations() {
+		return pointMutations;
 	}
 
 	/**

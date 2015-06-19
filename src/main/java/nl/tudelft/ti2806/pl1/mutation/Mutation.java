@@ -9,37 +9,28 @@ import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
  */
 public abstract class Mutation {
 
-	/**
-	 * The IDs of the nodes before and after the mutation.
-	 */
+	/** The IDs of the nodes before and after the mutation. */
 	private final int preNode, postNode;
 
-	/**
-	 * Score of the mutation.
-	 */
+	/** Score of the mutation. */
 	private double score = 0;
 
 	/** Storage of all the genes in the reference genome. */
 	private ReferenceGeneStorage referenceGeneStorage;
 
+	/**  */
 	private static final int[] GROUP_SCORE = { 0, 0, 10, 10, 20 };
 
-	/**
-	 * Score for a mutation if it is located on a gene.
-	 */
+	/** Score for a mutation if it is located on a gene. */
 	private static final int SCORE_MUT = 70;
 
-	/**
-	 * Score for a mutation if it is not located on a gene.
-	 */
+	/** Score for a mutation if it is not located on a gene. */
 	private static final int SCORE_IN_GENE = 10;
 
 	/** Start and end position on reference genome. **/
 	private final int startposition, endposition;
 
-	/**
-	 * The number of node groups which are affected by the mutation.
-	 */
+	/** The number of node groups which are affected by the mutation. */
 	private int affectedNodeGroups;
 
 	/**
@@ -81,7 +72,9 @@ public abstract class Mutation {
 		this.affectedNodeGroups = newAffectedNodeGroups;
 	}
 
-	/** @return the score */
+	/**
+	 * @return the score
+	 */
 	public double getScore() {
 		calculateGeneralScore();
 		return score;
@@ -89,7 +82,6 @@ public abstract class Mutation {
 
 	/**
 	 * Calculate the general score for a mutation.
-	 * 
 	 */
 	private void calculateGeneralScore() {
 		score = 0;

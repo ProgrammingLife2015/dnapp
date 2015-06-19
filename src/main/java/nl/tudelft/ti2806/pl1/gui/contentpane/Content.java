@@ -165,9 +165,12 @@ public class Content extends JPanel {
 	 */
 	public final void loadTree(final File newick) {
 		treeLoaded = phyloPanel.loadTree(newick);
-		setPhyloTab();
-		for (ContentLoadedObserver clo : observers) {
-			clo.phyloLoaded();
+		if (treeLoaded) {
+			setPhyloTab();
+			for (ContentLoadedObserver clo : observers) {
+				clo.phyloLoaded();
+			}
+
 		}
 	}
 
