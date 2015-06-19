@@ -404,12 +404,12 @@ public abstract class BinaryTree extends JButton {
 	 * This method finds all the groups for a given list of sources.
 	 * 
 	 * @param sources
-	 *            The sources for which we want to find the groups
+	 *            The sources for which we want to find the groups.
 	 * @param root
-	 *            The root node
-	 * @return A list of groups for which each group share a common ancestor
+	 *            The root node.
+	 * @return A list of groups for which each group share a common ancestor.
 	 */
-	public Collection<Collection<String>> findGroups(
+	public static Collection<Collection<String>> findGroups(
 			final Collection<String> sources, final BinaryTree root) {
 		Collection<Collection<String>> groupList = new ArrayList<Collection<String>>();
 		while (!sources.isEmpty()) {
@@ -431,8 +431,8 @@ public abstract class BinaryTree extends JButton {
 	 *            The root node
 	 * @return A list of sources which share a common ancestor
 	 */
-	public Collection<String> findGroup(final Collection<String> sources,
-			final BinaryTree root) {
+	public static Collection<String> findGroup(
+			final Collection<String> sources, final BinaryTree root) {
 		if (root.isLeaf()) {
 			if (sources.contains(root.getID())) {
 				List<String> group = new ArrayList<String>();

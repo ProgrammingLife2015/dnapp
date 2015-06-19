@@ -253,7 +253,7 @@ public class BinaryTreeTest {
 		list.addAll(Arrays.asList("A", "B", "C"));
 		groups.add(Arrays.asList("A"));
 		groups.add(Arrays.asList("B", "C"));
-		assertEquals(groups, tree.findGroups(list, tree));
+		assertEquals(groups, BinaryTree.findGroups(list, tree));
 	}
 
 	@Test
@@ -263,6 +263,6 @@ public class BinaryTreeTest {
 		ArrayList<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList("A", "B", "C", "D"));
 		groups.add(Arrays.asList("A", "B", "C", "D"));
-		assertEquals(groups, tree.findGroups(list, tree));
+		assertEquals(groups, BinaryTree.findGroups(list, tree));
 	}
 }

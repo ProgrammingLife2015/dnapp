@@ -45,7 +45,7 @@ public final class MutationFinder {
 		Set<String> sources1 = graph.getDNode(id1).getSources();
 		Set<String> sources2 = graph.getDNode(id2).getSources();
 		Set<String> sources = intersect(sources1, sources2);
-		return root.findGroups(sources, root).size();
+		return BinaryTree.findGroups(sources, root).size();
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package nl.tudelft.ti2806.pl1.mutation;
 
+import java.util.Arrays;
+
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 
 /**
@@ -73,7 +75,7 @@ public abstract class Mutation {
 	}
 
 	/**
-	 * @return the score
+	 * @return the score of the mutation.
 	 */
 	public double getScore() {
 		calculateGeneralScore();
@@ -106,6 +108,7 @@ public abstract class Mutation {
 			} else {
 				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 			}
+			System.out.println(Arrays.toString(GROUP_SCORE));
 		}
 	}
 
