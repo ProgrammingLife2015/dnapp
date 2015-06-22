@@ -8,9 +8,7 @@ package nl.tudelft.ti2806.pl1.exceptions;
  */
 public class InvalidFileFormatException extends ApplicationException {
 
-	/**
-	 * The serial version of this exception.
-	 */
+	/** The serial version UID. */
 	private static final long serialVersionUID = -3175084850174905842L;
 
 	/**

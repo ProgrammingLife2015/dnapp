@@ -7,6 +7,8 @@ import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneStorage;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
+import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
 import nl.tudelft.ti2806.pl1.mutation.MutatedGraph;
 import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
@@ -52,6 +54,15 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	// /** File with all the drug resistance causing mutations. */
 	// private static final String MUTATION_FILE =
 	// "resistanceCausingMutations.txt";
+
+	/** All the point mutations in the graph. */
+	private Collection<PointMutation> pointmutations;
+
+	/** All the deletion mutations in the graph. */
+	private Collection<DeletionMutation> delmutations;
+
+	/** All the insertion mutations in the graph. */
+	private Collection<InsertionMutation> insmutations;
 
 	/**
 	 * Creates a new DGraph.
@@ -277,8 +288,7 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 	/** {@inheritDoc} */
 	@Override
 	public Collection<PointMutation> getAllPointMutations() {
-		// TODO Auto-generated method stub
-		return null;
+		return pointmutations;
 	}
 
 	/** {@inheritDoc} */
@@ -298,5 +308,55 @@ public class DGraph implements MutatedGraph, DynamicGraph {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public String toString() {
+		return nodes + " " + edges;
+	}
+
+	/**
+	 * @param pointMutations
+	 *            pointMutations to set.
+	 */
+	public void setPointMutations(final Collection<PointMutation> pointMutations) {
+		pointmutations = pointMutations;
+	}
+
+	/**
+	 * @param deletionMutationsIn
+	 *            deletion mutations to set.
+	 */
+	public void setDeletionMutations(
+			final Collection<DeletionMutation> deletionMutationsIn) {
+		delmutations = deletionMutationsIn;
+	}
+
+	/** @return the deletion mutations. */
+	public Collection<DeletionMutation> getDelmutations() {
+		return delmutations;
+	}
+
+	/**
+	 * @return the insmutations
+	 */
+	public Collection<InsertionMutation> getInsmutations() {
+		return insmutations;
+	}
+
+	/**
+	 * @param insmutationsIn
+	 *            the insmutations to set
+	 */
+	public void setInsertionmutations(
+			final Collection<InsertionMutation> insmutationsIn) {
+		this.insmutations = insmutationsIn;
+	}
+
+	/**
+	 * @return the referenceGeneStorage
+	 */
+	public final ReferenceGeneStorage getReferenceGeneStorage() {
+		return referenceGeneStorage;
 	}
 }

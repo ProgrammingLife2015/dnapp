@@ -37,6 +37,9 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	/** The width of the edges connecting the nodes. */
 	private static final float EDGE_WIDTH = 2;
 
+	/** The number of decimal places to round the path lengths to. */
+	private static final int DIST_ROUND_TO_N = 3;
+
 	/** The color of a chosen/selected node. */
 	public static final Color NODE_SELECTED_COLOR = Color.ORANGE;
 
@@ -47,7 +50,7 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	public static final Color INNER_NODE_COLLAPSED = Color.RED;
 
 	/** The color of a normal (not collapsed) inner node. */
-	public static final Color INNER_NODE_NORMAL = Color.GREEN;
+	public static final Color INNER_NODE_NORMAL = Color.BLACK;
 
 	/** The default color to use. */
 	public static final Color DEFAULT_COLOR = Color.BLACK;
@@ -120,9 +123,13 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 				int childY = (int) child.getCenter().getY();
 				if (childY == y) {
 					g2.drawLine(x, y, childX, y);
+					// g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N),
+					// (x + childX) / 2, childY);
 				} else {
 					g2.drawLine(x, y, x, childY);
 					g2.drawLine(x, childY, childX, childY);
+					// g2.drawString(child.getPathLengthN(DIST_ROUND_TO_N), x,
+					// (y + childY) / 2);
 				}
 				g2.setColor(DEFAULT_COLOR);
 				drawLines(g, child);

@@ -1,9 +1,13 @@
 package nl.tudelft.ti2806.pl1.phylotree;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -44,15 +48,13 @@ public abstract class BinaryTree extends JButton {
 	/** Whether the ancestors of this node are collapsed 'into' this node. */
 	private boolean collapsed = false;
 
+	/**
+	 * The parent of the node, initialised at null for the root
+	 */
+	private BinaryTree parent;
+
 	/** The placement of this node in the tree grid. */
 	private Point gridCoordinates = new Point(0, 0);
-
-	/**
-	 * @return the gridCoordinates
-	 */
-	public final Point getGridCoordinates() {
-		return gridCoordinates;
-	}
 
 	/**
 	 * Constructs leaf node with no children.
@@ -67,6 +69,7 @@ public abstract class BinaryTree extends JButton {
 	public BinaryTree(final String nameIn, final double length,
 			final PhyloPanel panel) {
 		super(nameIn);
+		this.setParent(null);
 		this.id = nameIn;
 		this.pathLength = length;
 		this.phyloPanel = panel;
@@ -78,11 +81,46 @@ public abstract class BinaryTree extends JButton {
 					+ roundN(pathLength, PATH_LENGTH_ROUND_TO_N) + "</html>");
 		}
 		addMouseListener(new NodeMouseListener());
+		this.setBackground(Color.GRAY);
+
+	}
+
+	/**
+	 * @return The grid coordinates of this node.
+	 */
+	public final Point getGridCoordinates() {
+		return gridCoordinates;
 	}
 
 	/** @return the path length. */
 	public final double getPathLength() {
 		return pathLength;
+	}
+
+	/**
+	 * @return the parent
+	 */
+	@Override
+	public BinaryTree getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent
+	 *            the parent to set
+	 */
+	public void setParent(final BinaryTree parent) {
+		this.parent = parent;
+	}
+
+	/**
+	 * @param n
+	 *            The number of digits to round the path length to.
+	 * @return The path length, rounded to a specified number of decimals
+	 *         places.
+	 */
+	public final String getPathLengthN(final int n) {
+		return String.valueOf(roundN(pathLength, n));
 	}
 
 	/** @return the node name. */
@@ -100,8 +138,8 @@ public abstract class BinaryTree extends JButton {
 	 * Checks whether two trees are equal.
 	 * 
 	 * @param t2
-	 *            the tree to compare with.
-	 * @return true iff this tree is equal to t2.
+	 *            the tree to compare this tree to.
+	 * @return true iff this tree is equal to <code>t2</code>.
 	 */
 	public abstract boolean equalsTree(final BinaryTree t2);
 
@@ -121,10 +159,13 @@ public abstract class BinaryTree extends JButton {
 	public abstract List<BinaryTree> getChildren();
 
 	/**
+	 * Sets the grid coordinates of the node and computes the children's
+	 * placement.
+	 * 
 	 * @param x
-	 *            The horizontal grid coordinate of the node
+	 *            The horizontal grid coordinate of the node.
 	 * @param y
-	 *            The vertical grid coordinate of the node
+	 *            The vertical grid coordinate of the node.
 	 * @return the width (delta y) of the tree
 	 */
 	public abstract int computePlacement(int x, int y);
@@ -133,9 +174,9 @@ public abstract class BinaryTree extends JButton {
 	 * Sets the grid coordinates.
 	 * 
 	 * @param x
-	 *            The horizontal coordinate
+	 *            The horizontal coordinate.
 	 * @param y
-	 *            The vertical coordinate
+	 *            The vertical coordinate.
 	 */
 	protected final void setGridLoc(final int x, final int y) {
 		this.gridCoordinates = new Point(x, y);
@@ -206,8 +247,11 @@ public abstract class BinaryTree extends JButton {
 			st.nextToken();
 			final String label = st.nextToken();
 			final String[] pieces = label.split(":");
-			return new InnerNode(parseName(pieces, 0), parseDouble(pieces, 1),
-					left, right, panel);
+			BinaryTree current = new InnerNode(parseName(pieces, 0),
+					parseDouble(pieces, 1), left, right, panel);
+			left.setParent(current);
+			right.setParent(current);
+			return current;
 		} else { // Leaf
 			final String[] pieces = token.split(":");
 			return new Leaf(parseName(pieces, 0), parseDouble(pieces, 1), panel);
@@ -287,7 +331,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
-	 * @return the collapsed
+	 * @return true iff this node collapses all its descendants.
 	 */
 	public final boolean isCollapsed() {
 		return collapsed;
@@ -295,16 +339,17 @@ public abstract class BinaryTree extends JButton {
 
 	/**
 	 * @param b
-	 *            the collapsed to set
+	 *            Whether this node should collapse all its descendants.
 	 */
 	public final void setCollapsed(final boolean b) {
 		this.collapsed = b;
 	}
 
-	/**
+	/*
 	 * Note: don't use keyword selected! superclass has methods isSelected and
 	 * setSelected.
-	 * 
+	 */
+	/**
 	 * @return true iff this node is selected.
 	 */
 	public abstract boolean isChosen();
@@ -322,25 +367,108 @@ public abstract class BinaryTree extends JButton {
 	public abstract void setChosen(final boolean b);
 
 	/**
-	 * Checks if a node is a leaf.
+	 * Checks whether a node is a leaf.
 	 * 
 	 * @return True if the current node is a leaf, false otherwise
 	 */
 	public abstract boolean isLeaf();
 
 	/**
-	 * Checks if a node contains a path to a given source.
+	 * This method returns a list of all sources accessible from this node.
+	 * 
+	 * @return A list of sources accessible from this node
+	 */
+	public List<String> getSources() {
+		if (this.isLeaf()) {
+			return Arrays.asList(this.getID());
+		}
+		ArrayList<String> sources = new ArrayList<String>();
+		sources.addAll(this.getLeft().getSources());
+		sources.addAll(this.getRight().getSources());
+		return sources;
+	}
+
+	/**
+	 * Checks whether a node contains a path to a given source.
 	 * 
 	 * @param source
 	 *            The source to which we search a path
-	 * @return True if there exist a path to the source, false otherwise
+	 * @return true iff there exist a path to the source, false otherwise
 	 */
 	public boolean contains(final String source) {
-		if (this.isLeaf()) {
-			return this.getID().equals(source);
+		return this.getSources().contains(source);
+	}
+
+	/**
+	 * This method finds all the groups for a given list of sources.
+	 * 
+	 * @param sources
+	 *            The sources for which we want to find the groups
+	 * @param root
+	 *            The root node
+	 * @return A list of groups for which each group share a common ancestor
+	 */
+	public List<List<String>> findGroups(final List<String> sources,
+			final BinaryTree root) {
+		List<List<String>> groupList = new ArrayList<List<String>>();
+		while (!sources.isEmpty()) {
+			List<String> group = findGroup(sources, root);
+			groupList.add(group);
+			for (String s : group) {
+				sources.remove(s);
+			}
 		}
-		return this.getLeft().contains(source)
-				|| this.getRight().contains(source);
+		return groupList;
+	}
+
+	/**
+	 * This method finds a group of sources with a common ancestor.
+	 * 
+	 * @param sources
+	 *            The sources for which we want to find a group
+	 * @param root
+	 *            The root node
+	 * @return A list of sources which share a common ancestor
+	 */
+	public List<String> findGroup(final List<String> sources,
+			final BinaryTree root) {
+		if (root.isLeaf()) {
+			if (sources.contains(root.getID())) {
+				List<String> group = new ArrayList<String>();
+				group.add(root.getID());
+				return group;
+			}
+			return null;
+		}
+		List<String> left = findGroup(sources, root.getLeft());
+		List<String> right = findGroup(sources, root.getRight());
+		if (left == null || right == null) {
+			if (left == null) {
+				return right;
+			}
+			return left;
+		}
+
+		if (root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			left.addAll(right);
+			return left;
+		} else if (!root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			if (root.getLeft().getSources().equals(left)) {
+				left.addAll(right);
+			}
+			return left;
+		} else if (root.getLeft().isLeaf() && root.getRight().isLeaf()) {
+			if (root.getRight().getSources().equals(right)) {
+				left.addAll(right);
+			}
+			return left;
+		} else {
+			if (root.getLeft().getSources().equals(left)
+					&& root.getRight().getSources().equals(right)) {
+				left.addAll(right);
+			}
+			return left;
+		}
 	}
 
 	/**
@@ -358,19 +486,44 @@ public abstract class BinaryTree extends JButton {
 	 */
 	public double getDistance(final String source1, final String source2,
 			final BinaryTree root) {
+		return getDistance(Arrays.asList(source1, source2), root);
+	}
+
+	/**
+	 * Calculates the distance between the common ancestor and the root for a
+	 * list of nodes.
+	 * 
+	 * @param sources
+	 *            The list of sources for which we want to calculate the
+	 *            distance
+	 * @param root
+	 *            The root node
+	 * @return The distance between the common ancestor of a list of sources and
+	 *         the root node
+	 */
+	public double getDistance(final List<String> sources, final BinaryTree root) {
 		if (root.isLeaf()) {
 			return 0;
 		}
-		boolean src1L = root.getLeft().contains(source1);
-		boolean src2L = root.getLeft().contains(source2);
-		if (src1L && src2L) {
-			return root.getLeft().getPathLength()
-					+ getDistance(source1, source2, root.getLeft());
-		} else if (!(src1L || src2L)) {
-			return root.getRight().getPathLength()
-					+ getDistance(source1, source2, root.getRight());
+		boolean containsL = false;
+		boolean containsR = false;
+		Iterator<String> it = sources.iterator();
+		while (it.hasNext() && !(containsL && containsR)) {
+			String source = it.next();
+			containsL = containsL || root.getLeft().contains(source);
+			containsR = containsR || root.getRight().contains(source);
 		}
-		return 0;
+		if (containsL && containsR) {
+			return 0;
+		} else if (containsL) {
+			return root.getLeft().getPathLength()
+					+ getDistance(sources, root.getLeft());
+		} else if (containsR) {
+			return root.getRight().getPathLength()
+					+ getDistance(sources, root.getRight());
+		} else {
+			return 0;
+		}
 	}
 
 	public double getDistance(final List<String> sources, final BinaryTree root) {
@@ -386,6 +539,7 @@ public abstract class BinaryTree extends JButton {
 	}
 
 	/**
+	 * This listener handles the click events on the node button.
 	 * 
 	 * @author Maarten, Justin
 	 * @since 27-5-2015
@@ -394,7 +548,7 @@ public abstract class BinaryTree extends JButton {
 	 */
 	class NodeMouseListener implements MouseListener {
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseClicked(final MouseEvent e) {
 		}
@@ -405,7 +559,6 @@ public abstract class BinaryTree extends JButton {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				setChosen(!isChosen());
-				System.out.println("Node " + id + " set chosen=" + isChosen());
 				getPhyloPanel().plotTree();
 				break;
 			case MouseEvent.BUTTON3:
@@ -417,17 +570,17 @@ public abstract class BinaryTree extends JButton {
 			}
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseReleased(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseEntered(final MouseEvent e) {
 		}
 
-		/** {@inheritDoc} */
+		/** Not implemented. */
 		@Override
 		public void mouseExited(final MouseEvent e) {
 		}

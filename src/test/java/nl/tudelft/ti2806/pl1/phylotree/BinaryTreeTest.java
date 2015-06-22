@@ -10,6 +10,9 @@ import static org.junit.Assert.assertTrue;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.PhyloPanel;
 
@@ -234,5 +237,32 @@ public class BinaryTreeTest {
 	public void distanceCommonAncestorIsRootTest() {
 		BinaryTree tree = BinaryTree.parseNewick(s4, null);
 		assertTrue(tree.getDistance("A", "C", tree) == 0);
+	}
+
+	@Test
+	public void distanceNonExistingSourceIsZeroTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		assertTrue(tree.getDistance(Arrays.asList("hello world"), tree) == 0);
+	}
+
+	@Test
+	public void getGroups2GroupsTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		List<List<String>> groups = new ArrayList<List<String>>();
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList("A", "B", "C"));
+		groups.add(Arrays.asList("A"));
+		groups.add(Arrays.asList("B", "C"));
+		assertEquals(groups, tree.findGroups(list, tree));
+	}
+
+	@Test
+	public void getGroups1GroupTest() {
+		BinaryTree tree = BinaryTree.parseNewick(s4, null);
+		List<List<String>> groups = new ArrayList<List<String>>();
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList("A", "B", "C", "D"));
+		groups.add(Arrays.asList("A", "B", "C", "D"));
+		assertEquals(groups, tree.findGroups(list, tree));
 	}
 }
