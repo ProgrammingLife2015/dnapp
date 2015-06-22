@@ -1,9 +1,7 @@
 package nl.tudelft.ti2806.pl1.gui;
 
 import java.awt.event.ActionListener;
-import java.net.URL;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -29,19 +27,19 @@ public class ToolBar extends JToolBar {
 	private JLabel lblImport = new JLabel("Import: ");
 
 	/** The import phylogenetic tree button. */
-	private JButton btnImportPhylo = makeButton("Phylogenetic tree", null,
+	private JButton btnImportPhylo = makeButton("Phylogenetic tree",
 			AppEvent.IMPORT_PHYLO,
 			"Click to load a phylogenetic tree from a newick file format.");
 
 	/** Button for importing a gene annotation file. */
-	private JButton btnImportGeneAnn = makeButton("Gene annotation", null,
+	private JButton btnImportGeneAnn = makeButton("Gene annotation",
 			AppEvent.IMPORT_GENE_ANN,
-			"Click to load gene annotation information from a gff file.");
+			"Click to load gene annotation information from a gff file format.");
 
 	/** Button for importing resistance causing mutations. */
 	private JButton btnImportResCausMut = makeButton(
-			"Known resistant mutations", null, AppEvent.IMPORT_RES_CAUS_MUT,
-			"Click to load information about known resistant mutations from a krm file.");
+			"Known resistant mutations", AppEvent.IMPORT_RES_CAUS_MUT,
+			"Click to load information about known resistant mutations from a rcm file.");
 
 	/**
 	 * Initializes the tool bar.
@@ -66,29 +64,18 @@ public class ToolBar extends JToolBar {
 	 * 
 	 * @param text
 	 *            The text to show.
-	 * @param imageName
-	 *            File name of the image icon.
 	 * @param action
 	 *            Action id.
 	 * @param toolTipText
 	 *            Tool tip text.
 	 * @return The created button.
 	 */
-	public static JButton makeButton(final String text, final String imageName,
+	public static JButton makeButton(final String text,
 			final ActionListener action, final String toolTipText) {
 		JButton button = new JButton();
 		button.setText(text);
 		button.setToolTipText(toolTipText);
 		button.addActionListener(action);
-		if (imageName != null) {
-			String imgLocation = "images/" + imageName;
-			URL imageURL = ToolBar.class.getResource(imgLocation);
-			if (imageURL != null) {
-				button.setIcon(new ImageIcon(imageURL, text));
-			} else {
-				System.err.println("Resource not found: " + imgLocation);
-			}
-		}
 		return button;
 	}
 

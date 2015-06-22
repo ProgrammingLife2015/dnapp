@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
-import nl.tudelft.ti2806.pl1.gui.ToolBar;
 import nl.tudelft.ti2806.pl1.phylotree.BinaryTree;
 
 import com.wordpress.tips4java.ScrollablePanel;
@@ -104,9 +104,8 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	@Override
 	public List<JComponent> getToolBarControls() {
 		List<JComponent> ret = new ArrayList<JComponent>(2);
-		ret.add(ToolBar.makeButton("Highlight selection", null,
-				new SourceHighlightListener(), null));
-		// ret.add(ToolBar.makeButton("Filter selection", null, null, null));
+		ret.add(new JButton(AppEvent.mkAction("Highlight selection",
+				"highlight.png", new SourceHighlightListener())));
 		return ret;
 	}
 
@@ -251,18 +250,20 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	}
 
 	/**
+	 * Adds an an observer to the list of phylotree chosen observers.
 	 * 
 	 * @param pco
+	 *            The phylotree chosen observer to register.
 	 */
 	public void registerObserver(final PhyloChosenObserver pco) {
 		observers.add(pco);
 	}
 
 	/**
-	 * 
-	 * @param chosen
+	 * Notifies the phylotree chosen observers.
 	 */
-	public void notifyObservers(final Collection<String> chosen) {
+	public void notifyObservers() {
+		Collection<String> chosen = getTree().getChosen(getTree());
 		for (PhyloChosenObserver o : observers) {
 			o.update(chosen);
 		}
@@ -278,13 +279,12 @@ public class PhyloPanel extends JScrollPane implements ContentTab {
 	/**
 	 * The event listener for the filter selection button.
 	 * 
-	 * @author Mark
+	 * @author Mark, Maarten
 	 */
 	class SourceHighlightListener implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			Collection<String> chosen = getTree().getChosen(getTree());
-			notifyObservers(chosen);
+			notifyObservers();
 			tabsParent.setSelectedIndex(0);
 		}
 	}

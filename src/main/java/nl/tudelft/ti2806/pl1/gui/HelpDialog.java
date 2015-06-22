@@ -22,11 +22,14 @@ public class HelpDialog extends JDialog {
 	/** The serial version UID. */
 	private static final long serialVersionUID = -4612253023180773554L;
 
+	/** The folder in resouces where all help files are located. */
+	private static final String HELP_FOLDER = "help/";
+
 	/** The file name of the source text for the 'Using DNApp' tab. */
-	private static final String HELP_USING_DNAPP = "usingDNApp.help";
+	private static final String HELP_USING_DNAPP = "usingDNApp";
 
 	/** The file name of the source text for the 'Shortcuts' tab. */
-	private static final String HELP_SHORTCUTS_FILE = "shortcuts.help";
+	private static final String HELP_SHORTCUTS_FILE = "shortcuts";
 
 	/** The size of the help dialog. */
 	private static final int WIDTH = 600, HEIGHT = 500;
@@ -102,7 +105,7 @@ public class HelpDialog extends JDialog {
 	 */
 	private String readHelpFile(final String fileName) {
 		InputStream is = HelpDialog.class.getClassLoader().getResourceAsStream(
-				fileName);
+				HELP_FOLDER + fileName + ".html");
 		Scanner sc = new Scanner(is, "UTF-8");
 		StringBuilder sb = new StringBuilder();
 		while (sc.hasNextLine()) {
@@ -112,4 +115,5 @@ public class HelpDialog extends JDialog {
 		sc.close();
 		return sb.toString();
 	}
+
 }

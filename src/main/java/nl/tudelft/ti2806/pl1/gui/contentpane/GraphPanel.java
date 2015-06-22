@@ -26,7 +26,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -63,7 +65,7 @@ import org.graphstream.ui.view.ViewerPipe;
  * @author Maarten
  */
 public class GraphPanel extends JSplitPane implements ContentTab,
-		GeneSelectionObserver, PhyloChosenObserver {
+		GeneSelectionObserver {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -3581428828970208653L;
@@ -223,10 +225,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 
 	@Override
 	public List<JComponent> getToolBarControls() {
-		List<JComponent> ret = new ArrayList<JComponent>(2);
-		// ret.add(ToolBar
-		// .makeButton("Reload visible part", null, Event.RELOAD_GRAPH,
-		// "Loads or reloads the part of the graph currently in the view port."));
+		final int length = 4;
+		List<JComponent> ret = new ArrayList<JComponent>(length);
+		ret.add(new JLabel("Graph: "));
+		ret.add(new JButton(AppEvent.mkAction("Reset current view.", null,
+				AppEvent.RESET_CURRENT_LEVEL)));
+		ret.add(new JButton(AppEvent.ZOOM_IN));
+		ret.add(new JButton(AppEvent.ZOOM_OUT));
 		return ret;
 	}
 
@@ -995,10 +1000,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 			inner.add(dgraph.getDNode(n));
 		}
 		return inner;
-	}
-
-	@Override
-	public void update(final Collection<String> chosen) {
 	}
 
 	/**
