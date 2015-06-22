@@ -526,18 +526,6 @@ public abstract class BinaryTree extends JButton {
 		}
 	}
 
-	public double getDistance(final List<String> sources, final BinaryTree root) {
-		if (root.isLeaf())
-			return 0;
-		boolean containsL = true;
-		boolean containsR = true;
-		for (String s : sources) {
-			containsL = root.contains(s);
-			containsR = root.contains(s);
-		}
-
-	}
-
 	/**
 	 * This listener handles the click events on the node button.
 	 * 
