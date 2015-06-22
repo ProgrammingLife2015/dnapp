@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
@@ -577,13 +578,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	/**
 	 * Notifies the node selection observers.
 	 * 
-	 * @param selectedNodeIn
-	 *            The node clicked on by the user.
+	 * @param node
+	 *            The selected visual node.
 	 */
-	private void notifyNodeSelectionObservers(
-			final HashSet<DNode> selectedNodeIn) {
-		for (NodeSelectionObserver sgo : nodeSelectionObservers) {
-			sgo.update(selectedNodeIn);
+	private void notifyNodeSelectionObservers(final Node node) {
+		Set<DNode> innerNodes = getInnerDNodes(node);
+		for (NodeSelectionObserver nso : nodeSelectionObservers) {
+			nso.update(node, innerNodes);
 		}
 	}
 
@@ -646,10 +647,11 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * Also restores the css for the previous selected node.
 	 * 
 	 * @param newSelectedNode
-	 *            Newly selected node.
+	 *            The new selected node.
 	 */
 	@SuppressWarnings("unchecked")
-	public final void selectNode(final Node newSelectedNode) {
+	public final void setSelectedNode(final Node newSelectedNode) {
+
 		// Restores the old class of the previous selected node if present.
 		Node oldSelected = graph.getNode(String.valueOf(dgraph.getSelected()));
 		if (oldSelected != null) {
@@ -665,6 +667,9 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		newSelectedNode.setAttribute("oldclass",
 				newSelectedNode.getAttribute("ui.class"));
 		newSelectedNode.setAttribute("ui.class", "selected");
+
+		notifyNodeSelectionObservers(newSelectedNode);
+		AppEvent.statusBarMid("Selected node: " + newSelectedNode.getId());
 	}
 
 	/**
@@ -922,21 +927,13 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		public void viewClosed(final String viewName) {
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void buttonReleased(final String id) {
-			AppEvent.statusBarMid(" Selected node: " + id);
-			HashSet<DNode> ret = new HashSet<DNode>();
-			for (Integer n : (HashSet<Integer>) graph.getNode(id).getAttribute(
-					"collapsed")) {
-				ret.add(dgraph.getDNode(n));
-			}
-			notifyNodeSelectionObservers(ret);
 		}
 
 		@Override
 		public void buttonPushed(final String id) {
-			selectNode(graph.getNode(id));
+			setSelectedNode(graph.getNode(id));
 		}
 	}
 
@@ -964,13 +961,40 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	@Override
 	public void update(final String selectedGene) {
 		if (geneLocs.containsKey(selectedGene)) {
-			Node beginnode = this.geneLocs.get(selectedGene).get(0);
-			this.selectNode(beginnode);
-			graphPane.getHorizontalScrollBar().setValue(
-					(int) beginnode.getAttribute("x")
-							- graphPane.getViewport().getWidth() / 2);
+			Node firstNode = this.geneLocs.get(selectedGene).get(0);
+			jumpToNode(firstNode, true);
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param node
+	 *            The visual node to jump to.
+	 * @param select
+	 *            Whether the given node should be selected.
+	 */
+	public void jumpToNode(final Node node, final boolean select) {
+		if (select) {
+			setSelectedNode(node);
+		}
+		graphPane.getHorizontalScrollBar().setValue(
+				(int) node.getAttribute("x")
+						- graphPane.getViewport().getWidth() / 2);
+	}
+
+	/**
+	 * @param node
+	 *            The visual node.
+	 * @return The set of data nodes inside the visual node <code>n</code>.
+	 */
+	@SuppressWarnings("unchecked")
+	private Set<DNode> getInnerDNodes(final Node node) {
+		HashSet<DNode> inner = new HashSet<DNode>();
+		for (Integer n : (HashSet<Integer>) node.getAttribute("collapsed")) {
+			inner.add(dgraph.getDNode(n));
+		}
+		return inner;
 	}
 
 	@Override

@@ -16,8 +16,9 @@ import nl.tudelft.ti2806.pl1.gui.contentpane.ContentLoadedObserver;
 import nl.tudelft.ti2806.pl1.gui.optionpane.OptionsPane;
 
 /**
+ * The main frame of the application.
+ * 
  * @author Maarten
- *
  */
 public class Window extends JFrame implements Observer, ContentLoadedObserver {
 

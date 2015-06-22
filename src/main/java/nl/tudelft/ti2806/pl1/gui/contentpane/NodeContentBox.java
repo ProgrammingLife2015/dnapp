@@ -3,7 +3,7 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,6 +20,8 @@ import javax.swing.text.StyledDocument;
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.NucleoBase;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
+
+import org.graphstream.graph.Node;
 
 /**
  * @author Maarten
@@ -82,10 +84,10 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 	 * {@inheritDoc} Changes to the graph graphics based on the selected node.
 	 */
 	@Override
-	public final void update(final HashSet<DNode> newSelectedNodes) {
+	public final void update(final Node node, final Set<DNode> innerNodes) {
 		SimpleAttributeSet set = new SimpleAttributeSet();
-		if (newSelectedNodes.size() == 1) {
-			DNode dn = newSelectedNodes.iterator().next();
+		if (innerNodes.size() == 1) {
+			DNode dn = innerNodes.iterator().next();
 			String content = dn.getContent();
 			text.setText(content);
 			for (int i = 0; i < text.getDocument().getLength(); i++) {
@@ -108,8 +110,8 @@ public class NodeContentBox extends JPanel implements NodeSelectionObserver {
 				}
 			}
 		} else {
-			text.setText("This is a collapsed section consisting containing "
-					+ newSelectedNodes.size()
+			text.setText("This is a collapsed section containing "
+					+ innerNodes.size()
 					+ " nodes.\nPlease zoom in to gain more information about this section.");
 			StyleConstants.setForeground(set, Color.BLACK);
 			doc.setCharacterAttributes(0, text.getText().length(), set, true);

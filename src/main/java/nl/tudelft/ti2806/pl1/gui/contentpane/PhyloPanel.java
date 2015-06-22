@@ -30,8 +30,7 @@ import com.wordpress.tips4java.ScrollablePanel;
 /**
  * @author Maarten
  */
-public class PhyloPanel extends JScrollPane implements ContentTab,
-		PhyloChosenObservable {
+public class PhyloPanel extends JScrollPane implements ContentTab {
 
 	/** The serial version UID. */
 	private static final long serialVersionUID = -1936473122898892804L;
@@ -251,17 +250,18 @@ public class PhyloPanel extends JScrollPane implements ContentTab,
 		return buff.toString();
 	}
 
-	@Override
-	public void registerObserver(final PhyloChosenObserver o) {
-		observers.add(o);
+	/**
+	 * 
+	 * @param pco
+	 */
+	public void registerObserver(final PhyloChosenObserver pco) {
+		observers.add(pco);
 	}
 
-	@Override
-	public void deleteObserver(final PhyloChosenObserver o) {
-		observers.remove(o);
-	}
-
-	@Override
+	/**
+	 * 
+	 * @param chosen
+	 */
 	public void notifyObservers(final Collection<String> chosen) {
 		for (PhyloChosenObserver o : observers) {
 			o.update(chosen);

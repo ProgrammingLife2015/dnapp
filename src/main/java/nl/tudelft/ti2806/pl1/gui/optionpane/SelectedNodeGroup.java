@@ -5,7 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 
 import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
+
+import org.graphstream.graph.Node;
 
 /**
  * @author Maarten
@@ -166,16 +168,15 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	}
 
 	@Override
-	public final void update(final HashSet<DNode> selectedNodes) {
-		this.show = selectedNodes.size() == 1;
-		if (selectedNodes.size() == 1) {
-			DNode selectedNode = selectedNodes.iterator().next();
+	public final void update(final Node node, final Set<DNode> innerNodes) {
+		show = innerNodes.size() == 1;
+		if (show) {
+			DNode selectedNode = innerNodes.iterator().next();
 			lblID.setText(String.valueOf(selectedNode.getId()));
 			lblContentLength.setText(String.valueOf(selectedNode.getContent()
 					.length()));
 			lblSources.setText(collectionToString(selectedNode.getSources()));
 			nodeChart.analyseString(selectedNode.getContent());
-			nodeChart.repaint();
 		}
 		revalidate();
 	}
@@ -193,7 +194,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 			sb.append(item.toString());
 			sb.append("<br>");
 		}
-		return sb.toString() + "</html>";
+		return sb.append("</html>").toString();
 	}
 
 	@Override

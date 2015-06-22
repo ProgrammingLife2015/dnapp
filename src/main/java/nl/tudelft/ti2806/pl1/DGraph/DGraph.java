@@ -53,6 +53,7 @@ public class DGraph implements DynamicGraph {
 
 	/** Id of the selected id. */
 	private String selected = String.valueOf(Integer.MIN_VALUE);
+
 	/** All the insertion mutations in the graph. */
 	private Collection<ComplexMutation> compmutations;
 
@@ -423,25 +424,5 @@ public class DGraph implements DynamicGraph {
 	public final void setSelected(final String id) {
 		this.selected = id;
 	}
-
-	// /**
-	// * Takes a list of nodes, and sorts them according to their start
-	// property.
-	// *
-	// * @param dnodes
-	// * List of nodes to sort.
-	// * @return A list with the nodes sorted nodes.
-	// */
-	// public List<DNode> sortNodes(final List<DNode> dnodes) {
-	// dnodes.sort(new Comparator<DNode>() {
-	// @Override
-	// public int compare(final DNode n1, final DNode n2) {
-	// int start1 = n1.getStart();
-	// int start2 = n2.getStart();
-	// return start1 - start2;
-	// }
-	// });
-	// return dnodes;
-	// }
 
 }
