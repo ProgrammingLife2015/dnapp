@@ -53,6 +53,7 @@ public class HelpDialog extends JDialog {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setResizable(false);
+		setLocationRelativeTo(null);
 		content = new JPanel(new BorderLayout());
 		tabs = new JTabbedPane();
 		tabs.addTab("Using DN/App", makeUsingDNApp());
