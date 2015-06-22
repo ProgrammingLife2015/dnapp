@@ -85,7 +85,7 @@ public class ImportDialog extends JFileChooser {
 			}
 		},
 
-		/** */
+		/** Only phylo files will be shown. */
 		PHYLO {
 			@Override
 			public FileFilter getFileFilter() {
@@ -98,7 +98,7 @@ public class ImportDialog extends JFileChooser {
 			}
 		},
 
-		/** */
+		/** Only gene annotation files will be shown. */
 		GENE_ANNOTATION {
 			@Override
 			public FileFilter getFileFilter() {
@@ -111,7 +111,7 @@ public class ImportDialog extends JFileChooser {
 			}
 		},
 
-		/** */
+		/** Only known resistance mutations will be shown. */
 		KNOWN_RES_MUT {
 			@Override
 			public FileFilter getFileFilter() {
