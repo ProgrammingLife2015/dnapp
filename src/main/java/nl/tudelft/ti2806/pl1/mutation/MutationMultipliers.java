@@ -27,11 +27,11 @@ public enum MutationMultipliers {
 	/**
 	 * Score multipliers for the mutation.
 	 * 
-	 * @param guiname
+	 * @param name
 	 *            The GUI name for the multiplier.
 	 */
-	MutationMultipliers(final String guiname) {
-		this.guiname = guiname;
+	MutationMultipliers(final String name) {
+		this.guiname = name;
 	}
 
 	/**

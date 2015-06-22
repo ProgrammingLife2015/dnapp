@@ -46,4 +46,21 @@ public final class ScoreMultiplier {
 		}
 		return 1.0;
 	}
+
+	/**
+	 * Set the score for a multiplier.
+	 * 
+	 * @param mult
+	 *            The multiplier you want to set the value for.
+	 * @param score
+	 *            The score you want to set it to.
+	 */
+	public static void setMult(final String mult, final double score) {
+		try {
+			MutationMultipliers.valueOf(mult);
+			mults.put(mult, score);
+		} catch (IllegalArgumentException exception) {
+			System.out.println("This multiplier does not exist");
+		}
+	}
 }
