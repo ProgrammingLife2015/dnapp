@@ -89,24 +89,39 @@ public abstract class Mutation {
 			addScore(SCORE_IN_GENE
 					* ScoreMultiplier.getMult(MutationMultipliers.IN_GENE
 							.name()));
-			if (rgs.getDrugResistanceMutations() != null) {
-				for (long pos : rgs.getDrugResistanceMutations().keySet()) {
-					if (startposition <= pos && pos < endposition) {
-						addScore(SCORE_MUT
-								* ScoreMultiplier
-										.getMult(MutationMultipliers.KNOWN_MUTATION
-												.name()));
-						break;
-					}
+			scoreKnownMutation();
+			scoreNodeGroups();
+		}
+	}
+
+	/**
+	 * Add score for KnownMutation.
+	 */
+	private void scoreKnownMutation() {
+		ReferenceGeneStorage rgs = this.getReferenceGeneStorage();
+		if (rgs.getDrugResistanceMutations() != null) {
+			for (long pos : rgs.getDrugResistanceMutations().keySet()) {
+				if (startposition <= pos && pos < endposition) {
+					addScore(SCORE_MUT
+							* ScoreMultiplier
+									.getMult(MutationMultipliers.KNOWN_MUTATION
+											.name()));
+					return;
 				}
 			}
-			double phylomult = ScoreMultiplier
-					.getMult(MutationMultipliers.PHYLO.name());
-			if (affectedNodeGroups < GROUP_SCORE.length - 1) {
-				addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
-			} else {
-				addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
-			}
+		}
+	}
+
+	/**
+	 * Add score for NodeGroups.
+	 */
+	private void scoreNodeGroups() {
+		double phylomult = ScoreMultiplier.getMult(MutationMultipliers.PHYLO
+				.name());
+		if (affectedNodeGroups < GROUP_SCORE.length - 1) {
+			addScore(GROUP_SCORE[affectedNodeGroups] * phylomult);
+		} else {
+			addScore(GROUP_SCORE[GROUP_SCORE.length - 1] * phylomult);
 		}
 	}
 
