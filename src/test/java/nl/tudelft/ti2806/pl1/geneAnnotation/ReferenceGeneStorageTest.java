@@ -1,5 +1,6 @@
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -85,6 +86,16 @@ public class ReferenceGeneStorageTest {
 	public void testNSYmutationMAX() {
 		assertFalse(RGS.containsMutationIndex(Integer.MAX_VALUE));
 		assertFalse(RGS.isIntragenic(Integer.MAX_VALUE));
+	}
+
+	@Test
+	public void testEmptyFiles() {
+		ReferenceGeneStorage rgs = new ReferenceGeneStorage(null);
+		rgs.setGeneAnnotation(null);
+		assertEquals(null, rgs.getReferenceGenes());
+		rgs.setDrugRestistantMutations(null);
+		assertEquals(null, rgs.getDrugResistanceMutations());
+		assertFalse(rgs.isIntragenic(0));
 	}
 
 	// @Test
