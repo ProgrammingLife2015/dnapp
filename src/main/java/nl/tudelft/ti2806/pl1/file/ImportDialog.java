@@ -86,6 +86,14 @@ public class ImportDialog extends JFileChooser {
 		/** The title for the file chooser dialog. */
 		private String title;
 
+		/**
+		 * Create a new FileFilter.
+		 * 
+		 * @param inFilter
+		 *            The type of file filter.
+		 * @param inTitle
+		 *            The title for the file chooser dialog.
+		 */
 		ImportType(final FileFilter inFilter, final String inTitle) {
 			filter = inFilter;
 			title = inTitle;
