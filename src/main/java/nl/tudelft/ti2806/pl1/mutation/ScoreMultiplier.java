@@ -3,8 +3,6 @@ package nl.tudelft.ti2806.pl1.mutation;
 import java.util.HashMap;
 
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * Keeps track of multiplier for each score category.
@@ -12,7 +10,7 @@ import javax.swing.event.ChangeListener;
  * @author Marissa
  * @since 18-06-15
  */
-public final class ScoreMultiplier implements ChangeListener {
+public final class ScoreMultiplier {
 
 	/** The multiplier value for each score category. **/
 	private static HashMap<String, Double> mults = new HashMap<String, Double>();
@@ -47,9 +45,5 @@ public final class ScoreMultiplier implements ChangeListener {
 			return mults.get(mult);
 		}
 		return 1.0;
-	}
-
-	@Override
-	public void stateChanged(final ChangeEvent e) {
 	}
 }
