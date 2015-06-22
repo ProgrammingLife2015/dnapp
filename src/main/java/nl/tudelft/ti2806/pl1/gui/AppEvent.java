@@ -233,7 +233,6 @@ public enum AppEvent implements ActionListener {
 		if (imageName != null) {
 			String imgLocation = "images/" + imageName;
 			URL u = AppEvent.class.getClassLoader().getResource(imgLocation);
-			System.out.println(u);
 			icon = new ImageIcon(u, text);
 		}
 		return new MenuAction(event, text, icon);
