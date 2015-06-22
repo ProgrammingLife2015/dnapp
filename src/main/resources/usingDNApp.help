@@ -1,4 +1,5 @@
 <html>
+<body style='width: 420px'>
 <b>Setup:</b><br>
 To load a sequence graph, click on <i>Import graph</i> in the <i>File</i> menu. You will first get so select a <code>.node.graph</code> file and after that a new file chooser dialog will able you to open a <code>.edge.graph</code> file. After confirming the second file chooser dialog the sequence graph will be parsed. If the input files have wrong encoding, the importing will stop and an error message will be shown in the status bar.<br>
 <br>
@@ -26,4 +27,5 @@ Nodes which represent a collection of original nodes are highlighed purple.<br>
 If a phylogenetic tree has been loaded, it will be shown in the <i>Phylogenetic tree</i> tab.<br>
 You can select sets of genomes by left clicking on nodes in the tree. Clicking inner nodes will select or deselect the entire subtree below it.<br>
 By right clicking inner nodes in the tree, you can of the phylogenetic tree can be collapsed by right clicking on a branch inside the tree.
+</body>
 </html>
