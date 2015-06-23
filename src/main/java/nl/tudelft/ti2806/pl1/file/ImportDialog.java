@@ -66,16 +66,16 @@ public class ImportDialog extends JFileChooser {
 		EDGES(new GraphEdgeFileFilter(), "Load edge file"),
 
 		/** Only phylo files will be shown. */
-		PHYLO(new ExtensionFileFilter("Newick file", "nwk"),
+		PHYLO(new ExtensionFileFilter("Newick phylogenetic tree file", "nwk"),
 				"Load phylogenetic tree file"),
 
 		/** Only gene annotation files will be shown. */
-		GENE_ANNOTATION(new ExtensionFileFilter("GFF file", "gff"),
+		GENE_ANNOTATION(new ExtensionFileFilter("General Feature Format file", "gff"),
 				"Load gene annotation"),
 
 		/** Only known resistance mutations will be shown. */
 		KNOWN_RES_MUT(new ExtensionFileFilter(
-				"RCM file (resistance causing mutations)", "rcm"),
+				"Resistance Causing Mutations file", "rcm"),
 				"Load resistance causing mutations file.");
 
 		/**
