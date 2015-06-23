@@ -2,7 +2,7 @@ package nl.tudelft.ti2806.pl1.gui.contentpane;
 
 import java.util.Set;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 import org.graphstream.graph.Node;
 

@@ -6,8 +6,8 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidFileFormatException;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

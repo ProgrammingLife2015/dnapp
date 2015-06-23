@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.DGraph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 import org.junit.After;
 import org.junit.Before;

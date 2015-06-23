@@ -36,11 +36,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingWorker;
 
-import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGene;
 import nl.tudelft.ti2806.pl1.geneAnnotation.ReferenceGeneObserver;
+import nl.tudelft.ti2806.pl1.graph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.gui.ProgressDialog;
 import nl.tudelft.ti2806.pl1.gui.Window;
@@ -522,8 +522,8 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
 		for (Entry<String, ArrayList<Node>> entry : geneLocs.entrySet()) {
-			Integer xleft = (int) entry.getValue().get(0).getAttribute("x");
-			Integer xright = (int) entry.getValue().get(1).getAttribute("x");
+			int xleft = (int) entry.getValue().get(0).getAttribute("x");
+			int xright = (int) entry.getValue().get(1).getAttribute("x");
 			g.setColor(Color.ORANGE);
 			g.fillRect(xleft - NODE_DIAMETER / 2, 0, xright - xleft
 					+ NODE_DIAMETER, NODE_DIAMETER / 2);

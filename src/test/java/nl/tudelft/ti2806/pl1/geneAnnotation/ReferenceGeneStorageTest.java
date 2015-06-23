@@ -11,8 +11,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 import org.junit.Before;
 import org.junit.Test;

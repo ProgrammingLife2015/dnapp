@@ -10,8 +10,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
 import nl.tudelft.ti2806.pl1.gui.Window;
 import nl.tudelft.ti2806.pl1.mutation.Mutation;
 import nl.tudelft.ti2806.pl1.mutation.MutationFinder;

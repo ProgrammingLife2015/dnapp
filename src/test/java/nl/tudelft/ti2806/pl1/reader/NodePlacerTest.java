@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
 
 import org.junit.After;
 import org.junit.Before;

@@ -110,7 +110,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * @author Maarten
 	 * @since 17-6-2015
 	 */
-	final class CloseConfirmationAdapter extends WindowAdapter {
+	static final class CloseConfirmationAdapter extends WindowAdapter {
 		@Override
 		public void windowClosing(final WindowEvent e) {
 			AppEvent.EXIT_APP.actionPerformed(null);
