@@ -16,6 +16,10 @@ import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
+import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
+import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;
+import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 
 import org.junit.After;
 import org.junit.Before;
@@ -73,6 +77,7 @@ public class DGraphTest {
 
 		when(edge2.getStartNode()).thenReturn(node2);
 		when(edge2.getEndNode()).thenReturn(node3);
+
 	}
 
 	@After
@@ -251,6 +256,12 @@ public class DGraphTest {
 	@Test
 	public void gettersTest() {
 		assertEquals(graph.getReferencesSet(), new HashSet<String>());
+		assertEquals(String.valueOf(Integer.MIN_VALUE), graph.getSelected());
+		assertEquals(0, graph.getReferenceLength());
+		assertEquals("TKK_REF", graph.getRefGenomeName());
+		assertEquals(new ArrayList<DNode>(), graph.getRefGenome());
+		assertEquals(null, graph.getDNode(1));
+		assertEquals(null, graph.getStart());
 	}
 
 	@Test(expected = InvalidGenomeIdException.class)
@@ -302,5 +313,45 @@ public class DGraphTest {
 	public void testRemoveInvalidEdge() {
 		graph.addDNode(node1);
 		assertFalse(graph.removeDEdge(edge1));
+	}
+
+	@Test
+	public void testIsRefGeneSet() {
+		assertTrue(graph.isRefGenSet());
+	}
+
+	@Test
+	public void testSetters() {
+		String sel = "2";
+		graph.setSelected(sel);
+		assertEquals(sel, graph.getSelected());
+
+		Collection<PointMutation> pm = new HashSet<PointMutation>();
+		pm.add(mock(PointMutation.class));
+		graph.setPointMutations(pm);
+		assertEquals(pm, graph.getPointMutations());
+
+		Collection<ComplexMutation> cm = new HashSet<ComplexMutation>();
+		cm.add(mock(ComplexMutation.class));
+		graph.setComplexMutations(cm);
+		assertEquals(cm, graph.getComplexMutations());
+
+		Collection<DeletionMutation> dm = new HashSet<DeletionMutation>();
+		dm.add(mock(DeletionMutation.class));
+		graph.setDeletionMutations(dm);
+		assertEquals(dm, graph.getDelMutations());
+
+		Collection<InsertionMutation> im = new HashSet<InsertionMutation>();
+		im.add(mock(InsertionMutation.class));
+		graph.setInsertionMutations(im);
+		assertEquals(im, graph.getInsMutations());
+
+		graph.setStart(node2);
+		assertEquals(node2, graph.getStart());
+
+		Collection<DEdge> edges = new HashSet<DEdge>();
+		edges.add(edge2);
+		graph.setEdges(edges);
+		assertEquals(edges, graph.getEdges());
 	}
 }
