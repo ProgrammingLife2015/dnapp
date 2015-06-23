@@ -7,7 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -128,12 +127,7 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 
 		@Override
 		public void windowClosing(final WindowEvent e) {
-			if (JOptionPane.showConfirmDialog(window,
-					"Are you sure you want to close the application?",
-					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				AppEvent.EXIT_APP.actionPerformed(null);
-			}
+			AppEvent.EXIT_APP.actionPerformed(null);
 		}
 	}
 
