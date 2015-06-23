@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -19,10 +21,9 @@ public class ConvertDGraphTest {
 
 	DGraph graph;
 
-	DNode node1;
-	DNode node2;
+	DNode node1, node2;
 
-	DEdge edge;
+	DEdge edge, edge2;
 
 	Graph gsGraph;
 
@@ -31,11 +32,13 @@ public class ConvertDGraphTest {
 	@Before
 	public void setup() {
 		graph = mock(DGraph.class);
+		when(graph.getSelected()).thenReturn("1");
 
 		node1 = mock(DNode.class);
 		node2 = mock(DNode.class);
 
 		edge = mock(DEdge.class);
+		edge2 = mock(DEdge.class);
 		va = mock(ViewArea.class);
 
 		when(node1.getId()).thenReturn(1);
@@ -44,6 +47,8 @@ public class ConvertDGraphTest {
 		when(node1.getPercUnknown()).thenReturn(1.0);
 		when(node1.getContent()).thenReturn("CATG");
 		when(node1.getAllEdges()).thenReturn(Arrays.asList(edge));
+		when(node1.getResMuts())
+				.thenReturn(new ArrayList<ResistanceMutation>());
 
 		when(node2.getId()).thenReturn(2);
 		when(node2.getX()).thenReturn(20);
@@ -51,6 +56,7 @@ public class ConvertDGraphTest {
 		when(node2.getPercUnknown()).thenReturn(1.0);
 		when(node2.getContent()).thenReturn("CATGASJDNASJDN");
 		when(node2.getAllEdges()).thenReturn(Arrays.asList(edge));
+		when(node2.getResMuts()).thenReturn(null);
 
 		when(edge.getStartNode()).thenReturn(node1);
 		when(edge.getEndNode()).thenReturn(node2);
