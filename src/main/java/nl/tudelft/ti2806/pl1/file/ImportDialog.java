@@ -60,82 +60,60 @@ public class ImportDialog extends JFileChooser {
 		/**
 		 * Only graph node files will be shown.
 		 */
-		NODES {
-			@Override
-			public FileFilter getFileFilter() {
-				return new GraphNodeFileFilter();
-			}
-
-			@Override
-			public String getTitle() {
-				return "Load node file";
-			}
-		},
+		NODES(new GraphNodeFileFilter(), "Load node file"),
 
 		/** Only graph edge files will be shown. */
-		EDGES {
-			@Override
-			public FileFilter getFileFilter() {
-				return new GraphEdgeFileFilter();
-			}
+		EDGES(new GraphEdgeFileFilter(), "Load edge file"),
 
-			@Override
-			public String getTitle() {
-				return "Load edge file";
-			}
-		},
+		/** Only phylo files will be shown. */
+		PHYLO(new ExtensionFileFilter("Newick phylogenetic tree file", "nwk"),
+				"Load phylogenetic tree file"),
 
-		/** */
-		PHYLO {
-			@Override
-			public FileFilter getFileFilter() {
-				return new ExtensionFileFilter("Newick file", "nwk");
-			}
+		/** Only gene annotation files will be shown. */
+		GENE_ANNOTATION(new ExtensionFileFilter("General Feature Format file", "gff"),
+				"Load gene annotation"),
 
-			@Override
-			public String getTitle() {
-				return "Load phylogenetic tree file";
-			}
-		},
+		/** Only known resistance mutations will be shown. */
+		KNOWN_RES_MUT(new ExtensionFileFilter(
+				"Resistance Causing Mutations file", "rcm"),
+				"Load resistance causing mutations file.");
 
-		/** */
-		GENE_ANNOTATION {
-			@Override
-			public FileFilter getFileFilter() {
-				return new ExtensionFileFilter("GFF file", "gff");
-			}
+		/**
+		 * The typefilter of the importType.
+		 */
+		private FileFilter filter;
 
-			@Override
-			public String getTitle() {
-				return "Load gene annotation";
-			}
-		},
+		/** The title for the file chooser dialog. */
+		private String title;
 
-		/** */
-		KNOWN_RES_MUT {
-			@Override
-			public FileFilter getFileFilter() {
-				return new ExtensionFileFilter(
-						"RCM file (resistance causing mutations)", "rcm");
-			}
-
-			@Override
-			public String getTitle() {
-				return "Load resistance causing mutations file.";
-			}
-		};
+		/**
+		 * Create a new FileFilter.
+		 * 
+		 * @param inFilter
+		 *            The type of file filter.
+		 * @param inTitle
+		 *            The title for the file chooser dialog.
+		 */
+		ImportType(final FileFilter inFilter, final String inTitle) {
+			filter = inFilter;
+			title = inTitle;
+		}
 
 		/**
 		 * @return a file filter accepting only files for this type of
 		 *         importable files.
 		 */
-		public abstract FileFilter getFileFilter();
+		public FileFilter getFileFilter() {
+			return filter;
+		}
 
 		/**
 		 * @return The title for the file chooser dialog this type of importable
 		 *         files.
 		 */
-		public abstract String getTitle();
+		public String getTitle() {
+			return title;
+		}
 	}
 
 }
