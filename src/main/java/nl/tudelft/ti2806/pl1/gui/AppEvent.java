@@ -9,6 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
 import nl.tudelft.ti2806.pl1.file.ExportDialog;
@@ -24,9 +25,14 @@ public enum AppEvent implements ActionListener {
 	EXIT_APP {
 		@Override
 		public void actionPerformed(final ActionEvent e) {
-			System.out.println("Bye bye!");
-			window.dispose();
-			System.exit(0);
+			if (JOptionPane.showConfirmDialog(window,
+					"Are you sure you want to close the application?",
+					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				System.out.println("Bye bye!");
+				window.dispose();
+				System.exit(0);
+			}
 		}
 
 	},

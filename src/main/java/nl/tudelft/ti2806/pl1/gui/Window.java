@@ -7,7 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -96,11 +95,11 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
 
+		addComponentListener(new WindowEvents(this));
+		addWindowListener(new CloseConfirmationAdapter());
+
 		// now let's call all cross dependent things.
 		callAfterInitialization();
-
-		addComponentListener(new WindowEvents(this));
-		addWindowListener(new CloseConfirmationAdapter(this));
 
 		pack();
 		setLocationRelativeTo(null);
@@ -112,28 +111,9 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * @since 17-6-2015
 	 */
 	final class CloseConfirmationAdapter extends WindowAdapter {
-
-		/** The window. */
-		private Window window;
-
-		/**
-		 * Initialize the close confirmation adapter.
-		 * 
-		 * @param w
-		 *            The window.
-		 */
-		public CloseConfirmationAdapter(final Window w) {
-			this.window = w;
-		}
-
 		@Override
 		public void windowClosing(final WindowEvent e) {
-			if (JOptionPane.showConfirmDialog(window,
-					"Are you sure you want to close the application?",
-					"Exit DN/App?", JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				AppEvent.EXIT_APP.actionPerformed(null);
-			}
+			AppEvent.EXIT_APP.actionPerformed(null);
 		}
 	}
 
