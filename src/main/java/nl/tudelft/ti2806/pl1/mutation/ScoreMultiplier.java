@@ -18,6 +18,9 @@ public final class ScoreMultiplier {
 	/** Convert it from 0-10 to 0-1 scale. **/
 	private static final int MAKEPERCENTAGE = 10;
 
+	/** The default value for the multiplier. */
+	private static final double DEFAULT = 1;
+
 	/** Private constructor to avoid instantiation. **/
 	private ScoreMultiplier() {
 	}
@@ -44,7 +47,7 @@ public final class ScoreMultiplier {
 		if (mults.containsKey(mult)) {
 			return mults.get(mult);
 		}
-		return 1.0;
+		return DEFAULT;
 	}
 
 	/**
@@ -54,13 +57,19 @@ public final class ScoreMultiplier {
 	 *            The multiplier you want to set the value for.
 	 * @param score
 	 *            The score you want to set it to.
+	 * @throws IllegalArgumentException
+	 *             Non-existent multiplier.
 	 */
-	public static void setMult(final String mult, final double score) {
-		try {
-			MutationMultipliers.valueOf(mult);
-			mults.put(mult, score);
-		} catch (IllegalArgumentException exception) {
-			System.out.println("This multiplier does not exist");
-		}
+	public static void setMult(final String mult, final double score)
+			throws IllegalArgumentException {
+		MutationMultipliers.valueOf(mult);
+		mults.put(mult, score);
+	}
+
+	/**
+	 * Reset all multipliers to default value.
+	 */
+	public static void resetMults() {
+		mults = new HashMap<String, Double>();
 	}
 }
