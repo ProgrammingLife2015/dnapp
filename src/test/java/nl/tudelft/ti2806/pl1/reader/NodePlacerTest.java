@@ -1,7 +1,6 @@
 package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,15 +15,17 @@ import org.junit.Test;
 public class NodePlacerTest {
 
 	private ArrayList<Integer> hdiff;
-	private ArrayList<Integer> nodesatdepth;
+	private ArrayList<Integer> nodesatdepth, nodesatdepthInvalid;
 	private int height = 60;
 	private DGraph graph;
 
 	@Before
 	public void startUp() throws InvalidNodePlacementException, IOException {
-		nodesatdepth = new ArrayList<Integer>();
+		nodesatdepth = new ArrayList<Integer>(2);
 		nodesatdepth.add(3);
 		nodesatdepth.add(1);
+		nodesatdepthInvalid = new ArrayList<Integer>(1);
+		nodesatdepthInvalid.add(0);
 		hdiff = NodePlacer.heightDiff(nodesatdepth, height);
 		graph = Reader.read("src/test/resources/nodes.txt",
 				"src/test/resources/edges.txt");
@@ -38,43 +39,48 @@ public class NodePlacerTest {
 
 	@Test
 	public void heightDiffTest() throws InvalidNodePlacementException {
-		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), -15);
-		assertEquals(NodePlacer.getHeight(0, hdiff, nodesatdepth, height), 0);
+		assertEquals(-15, NodePlacer.getHeight(0, hdiff, nodesatdepth, height));
+		assertEquals(0, NodePlacer.getHeight(0, hdiff, nodesatdepth, height));
+	}
+
+	@Test(expected = InvalidNodePlacementException.class)
+	public void heightDiffInvalidTest() throws InvalidNodePlacementException {
+		NodePlacer.getHeight(0, hdiff, nodesatdepthInvalid, height);
 	}
 
 	@Test
 	public void getWidthTest() {
-		assertTrue(NodePlacer.getWidth(50, 0, nodesatdepth.size()) == 0);
-		assertTrue(NodePlacer.getWidth(50, 1, nodesatdepth.size()) == 25);
+		assertEquals(0, NodePlacer.getWidth(50, 0, nodesatdepth.size()));
+		assertEquals(25, NodePlacer.getWidth(50, 1, nodesatdepth.size()));
 	}
 
 	@Test
 	public void depthLevelStartNodeTest() {
-		assertEquals(graph.getDNode(-2).getDepth(), 0);
+		assertEquals(0, graph.getDNode(-2).getDepth());
 	}
 
 	@Test
 	public void depthLevelNode0Test() {
-		assertEquals(graph.getDNode(0).getDepth(), 1);
+		assertEquals(1, graph.getDNode(0).getDepth());
 	}
 
 	@Test
 	public void depthLevelNode1Test() {
-		assertEquals(graph.getDNode(1).getDepth(), 2);
+		assertEquals(2, graph.getDNode(1).getDepth());
 	}
 
 	@Test
 	public void xLevelNodeStartTest() {
-		assertEquals(graph.getDNode(-2).getX(), 0);
+		assertEquals(0, graph.getDNode(-2).getX());
 	}
 
 	@Test
 	public void xLevelNode0Test() {
-		assertEquals(graph.getDNode(0).getX(), 30);
+		assertEquals(30, graph.getDNode(0).getX());
 	}
 
 	@Test
 	public void xLevelNode1Test() {
-		assertEquals(graph.getDNode(1).getX(), 60);
+		assertEquals(60, graph.getDNode(1).getX());
 	}
 }

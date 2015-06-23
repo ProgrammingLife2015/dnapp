@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.tudelft.ti2806.pl1.phylotree;
 
 import static org.junit.Assert.assertEquals;
@@ -8,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import org.junit.Test;
 
 /**
  * @author Maarten, Justin
- *
  */
 public class BinaryTreeTest {
 
@@ -33,9 +30,6 @@ public class BinaryTreeTest {
 
 	/**
 	 * Set the variables' values.
-	 * 
-	 * @throws IOException
-	 *             path not found
 	 */
 	@Before
 	public final void setUp() {
@@ -45,11 +39,22 @@ public class BinaryTreeTest {
 		s4 = "(A:1,((B:3,C:3)c:2,D:2)b:1)a;";
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public final void testStringOrElse() {
+		assertEquals("else", BinaryTree.stringOrElse("", "else"));
+		assertEquals("boe", BinaryTree.stringOrElse("boe", "else"));
+	}
+
+	@Test
+	public final void testMouseListener() {
+		final BinaryTree t = BinaryTree.parseNewick(s1, null);
+		for (MouseListener ml : t.getMouseListeners()) {
+			ml.mouseClicked(null);
+		}
 	}
 
 	/**
@@ -101,7 +106,6 @@ public class BinaryTreeTest {
 	/**
 	 * Test method for
 	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#equalsTree(nl.tudelft.ti2806.pl1.phylotree.BinaryTree)}
-	 * .
 	 */
 	@Test
 	public final void testEqualsTree() {
@@ -142,7 +146,6 @@ public class BinaryTreeTest {
 	/**
 	 * Test method for
 	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#parseNewick(java.lang.String)}
-	 * .
 	 */
 	@Test
 	public final void testParseNewick() {
@@ -161,9 +164,6 @@ public class BinaryTreeTest {
 	/**
 	 * Test method for
 	 * {@link nl.tudelft.ti2806.pl1.phylotree.BinaryTree#readIntoString(java.lang.String)}
-	 * .
-	 * 
-	 * @throws IOException
 	 */
 	@Test
 	public final void testReadIntoString() throws IOException {
@@ -172,10 +172,6 @@ public class BinaryTreeTest {
 						"src/test/resources/readIntoFileTest.txt")));
 	}
 
-	/**
-	 * 
-	 * @throws IOException
-	 */
 	@Test
 	public final void testGetCenter() {
 		final InnerNode t = (InnerNode) BinaryTree.parseNewick(

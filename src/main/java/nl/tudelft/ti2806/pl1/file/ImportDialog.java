@@ -8,10 +8,10 @@ import javax.swing.filechooser.FileFilter;
 import org.jfree.ui.ExtensionFileFilter;
 
 /**
+ * The file chooser dialog used for importing files.
  * 
  * @author Maarten
  * @since 20-5-2015
- * @version 1.0
  */
 public class ImportDialog extends JFileChooser {
 
@@ -70,17 +70,15 @@ public class ImportDialog extends JFileChooser {
 				"Load phylogenetic tree file"),
 
 		/** Only gene annotation files will be shown. */
-		GENE_ANNOTATION(new ExtensionFileFilter("General Feature Format file", "gff"),
-				"Load gene annotation"),
+		GENE_ANNOTATION(new ExtensionFileFilter("General Feature Format file",
+				"gff"), "Load gene annotation"),
 
 		/** Only known resistance mutations will be shown. */
 		KNOWN_RES_MUT(new ExtensionFileFilter(
 				"Resistance Causing Mutations file", "rcm"),
 				"Load resistance causing mutations file.");
 
-		/**
-		 * The typefilter of the importType.
-		 */
+		/** The type filter of the import type. */
 		private FileFilter filter;
 
 		/** The title for the file chooser dialog. */

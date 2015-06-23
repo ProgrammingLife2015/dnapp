@@ -42,26 +42,6 @@ public class StatusBar extends JPanel {
 		add(rightLabel, BorderLayout.EAST);
 	}
 
-	// /**
-	// * Shows an error message in the main text label.
-	// *
-	// * @param message
-	// * The error message to show.
-	// */
-	// public final void error(final String message) {
-	// mainLabel.setText("Error: " + message);
-	// }
-	//
-	// /**
-	// * Shows an info message in the main text label.
-	// *
-	// * @param message
-	// * The info message to show.
-	// */
-	// public final void info(final String message) {
-	// mainLabel.setText(message);
-	// }
-
 	/**
 	 * Shows a message in the left text label.
 	 * 
@@ -101,27 +81,30 @@ public class StatusBar extends JPanel {
 	public enum MessageType {
 
 		/** An informative message. */
-		INFO {
-			@Override
-			String getPrefix() {
-				return "";
-			}
-		},
+		INFO(""),
 
 		/** An error message. */
-		ERROR {
-			@Override
-			String getPrefix() {
-				return "Error: ";
-			}
-		};
+		ERROR("Error: ");
+
+		/** The prefix to put in front of every message of this kind/type. */
+		private String prefix;
+
+		/**
+		 * @param prefixIn
+		 *            The prefix to be used for the message type.
+		 */
+		private MessageType(final String prefixIn) {
+			this.prefix = prefixIn;
+		}
 
 		/**
 		 * 
 		 * @return The prefix to put in front of every message of this
 		 *         kind/type.
 		 */
-		abstract String getPrefix();
+		public String getPrefix() {
+			return prefix;
+		}
 	}
 
 }

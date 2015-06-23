@@ -9,73 +9,39 @@ import java.awt.Color;
 public enum NucleoBase {
 
 	/** ADENINE. */
-	A {
-		@Override
-		public Color getColor() {
-			return COLOR_A;
-		}
-	},
+	A(Color.RED),
 
 	/** GUANINE. */
-	G {
-		@Override
-		public Color getColor() {
-			return COLOR_G;
-		}
-	},
+	G(Color.GREEN),
 
 	/** THYMINE. */
-	T {
-		@Override
-		public Color getColor() {
-			return COLOR_T;
-		}
-	},
+	T(Color.BLUE),
 
 	/** CYTOSINE. */
-	C {
-		@Override
-		public Color getColor() {
-			return COLOR_C;
-		}
-	},
+	C(Color.YELLOW),
 
-	/** Uracil. */
-	U {
-		@Override
-		public Color getColor() {
-			return COLOR_U;
-		}
-	},
+	/** URACIL. */
+	U(Color.PINK),
 
 	/** Unknown. */
-	N {
-		@Override
-		public Color getColor() {
-			return COLOR_N;
-		}
-	};
+	N(Color.GRAY);
 
-	/** The bar color for the relative amount of Adenine. */
-	private static final Color COLOR_A = Color.RED;
+	/** The base color for the nucleotide type. */
+	private Color color;
 
-	/** The bar color for the relative amount of Thymine . */
-	private static final Color COLOR_T = Color.BLUE;
-
-	/** The bar color for the relative amount of Cytosine. */
-	private static final Color COLOR_C = Color.YELLOW;
-
-	/** The bar color for the relative amount of Guanine. */
-	private static final Color COLOR_G = Color.GREEN;
-
-	/** The bar color for the relative amount of Uracil. */
-	private static final Color COLOR_U = Color.PINK;
-
-	/** The bar color for the relative amount of Adenine. */
-	private static final Color COLOR_N = Color.GRAY;
+	/**
+	 * 
+	 * @param colorIn
+	 *            The base color to be used for the nucleotide type.
+	 */
+	NucleoBase(final Color colorIn) {
+		this.color = colorIn;
+	}
 
 	/**
 	 * @return The color representing the base type.
 	 */
-	public abstract Color getColor();
+	public Color getColor() {
+		return color;
+	}
 }
