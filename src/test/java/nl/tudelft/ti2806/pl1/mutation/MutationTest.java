@@ -39,45 +39,45 @@ public class MutationTest {
 
 	@Test
 	public void mutNotInGeneTest() {
-		assertEquals(mutnotgen.getScore(), 0, 0);
+		assertEquals(0, mutnotgen.getScore(), 0);
 	}
 
 	@Test
 	public void mutInGeneTest() {
-		assertEquals(mutingen.getScore(), 10, 0);
+		assertEquals(10, mutingen.getScore(), 0);
 	}
 
 	@Test
 	public void mutBeginInGeneTest() {
-		assertEquals(mutbegin.getScore(), 10, 0);
+		assertEquals(10, mutbegin.getScore(), 0);
 	}
 
 	@Test
 	public void mutEndInGeneTest() {
-		assertEquals(mutend.getScore(), 10, 0);
+		assertEquals(10, mutend.getScore(), 0);
 	}
 
 	@Test
 	public void mutResist() {
 		rgs.setDrugRestistantMutations(new File(
 				"src/test/resources/mutationTestResistant.txt"));
-		assertEquals(mutresist.getScore(), 80, 0);
+		assertEquals(80, mutresist.getScore(), 0);
 	}
 
 	@Test
 	public void mutNoResistance() {
-		assertEquals(mutresist.getScore(), 10, 0);
+		assertEquals(10, mutresist.getScore(), 0);
 	}
 
 	@Test
 	public void mutEmptyFile() {
 		rgs.setDrugRestistantMutations(new File("test.txt"));
-		assertEquals(mutresist.getScore(), 10, 0);
+		assertEquals(10, mutresist.getScore(), 0);
 	}
 
 	@Test
 	public void mutAffectedGroups() {
 		mutingen.setAffectedNodeGroups(10);
-		assertEquals(mutingen.getScore(), 34, 0);
+		assertEquals(34, mutingen.getScore(), 0);
 	}
 }

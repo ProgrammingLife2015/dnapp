@@ -47,11 +47,11 @@ public class ScoreMultiplierTest {
 	 */
 	@Test
 	public void pointMutationMultiplierTest() {
-		assertEquals(mutingen.getScore(), 10, 0.1);
-		assertEquals(del.getScore(), 10, 0.1);
+		assertEquals(10, mutingen.getScore(), 0.1);
+		assertEquals(10, del.getScore(), 0.1);
 		ScoreMultiplier.setMult(MutationMultipliers.POINTMUTATION.name(), 2.0);
-		assertEquals(mutingen.getScore(), 20, 0.1);
-		assertEquals(del.getScore(), 10, 0.1);
+		assertEquals(20, mutingen.getScore(), 0.1);
+		assertEquals(10, del.getScore(), 0.1);
 	}
 
 	/**
@@ -59,9 +59,9 @@ public class ScoreMultiplierTest {
 	 */
 	@Test
 	public void inGeneMultiplierTest() {
-		assertEquals(mutingen.getScore(), 10, 0.1);
+		assertEquals(10, mutingen.getScore(), 0.1);
 		ScoreMultiplier.setMult(MutationMultipliers.IN_GENE.name(), 2.0);
-		assertEquals(mutingen.getScore(), 20, 0.1);
+		assertEquals(20, mutingen.getScore(), 0.1);
 	}
 
 	/**
@@ -69,9 +69,9 @@ public class ScoreMultiplierTest {
 	 */
 	@Test
 	public void knownMutationMultiplierTest() {
-		assertEquals(mutresist.getScore(), 80, 0.1);
+		assertEquals(80, mutresist.getScore(), 0.1);
 		ScoreMultiplier.setMult(MutationMultipliers.KNOWN_MUTATION.name(), 0.5);
-		assertEquals(mutresist.getScore(), 45, 0.1);
+		assertEquals(45, mutresist.getScore(), 0.1);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
