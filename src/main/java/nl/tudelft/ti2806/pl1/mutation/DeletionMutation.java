@@ -21,9 +21,9 @@ public class DeletionMutation extends Mutation {
 	 * @param endpos
 	 *            The end position on the reference genome.
 	 */
-	public DeletionMutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
-		super(pre, post, rgs, startpos, endpos);
+	public DeletionMutation(final int pre, final int post, final int startpos,
+			final int endpos, final ReferenceGeneStorage rgs) {
+		super(pre, post, startpos, endpos, rgs);
 	}
 
 	@Override
