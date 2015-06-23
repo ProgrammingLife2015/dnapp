@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
@@ -214,12 +215,15 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	 * all the genes.
 	 */
 	private void fillGeneNavigatorBox() {
-		if (dgraph.getReferenceGeneStorage().getReferenceGenes() != null) {
-			for (ReferenceGene rg : dgraph.getReferenceGeneStorage()
+		TreeSet<ReferenceGene> gItems = dgraph.getReferenceGeneStorage()
+				.getReferenceGenes();
+		if (gItems != null) {
+			TreeSet<String> items = new TreeSet<String>();
+			for (ReferenceGene g : dgraph.getReferenceGeneStorage()
 					.getReferenceGenes()) {
-				window.getOptionPanel().getGeneNavigator()
-						.addItem(rg.getName());
+				items.add(g.getName());
 			}
+			window.getOptionPanel().getGeneNavigator().setList(items);
 		}
 	}
 

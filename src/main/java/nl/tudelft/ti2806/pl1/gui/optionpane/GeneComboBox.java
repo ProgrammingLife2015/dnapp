@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -25,21 +27,38 @@ public class GeneComboBox extends JComboBox<String> {
 	 * Initialize the gene combo box.
 	 */
 	public GeneComboBox() {
-		super(new String[] { " " });
+		this.setModel(new DefaultComboBoxModel<String>(new String[] {}));
 		this.setEditable(true);
 		this.addActionListener(new ActionListener() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxEdited")) {
-					JComboBox<String> cb = (JComboBox<String>) e.getSource();
-					String newSelection = (String) cb.getSelectedItem();
-					notifyNodeSelectionObservers(newSelection);
+					notifyNodeSelectionObservers((String) getSelectedItem());
 				}
 			}
 		});
 		AutoCompleteDecorator.decorate(this);
+	}
+
+	@Override
+	public void addItem(final String item) {
+		if (((DefaultComboBoxModel<String>) getModel()).getIndexOf(item) < 0) {
+			super.addItem(item);
+		}
+	}
+
+	/**
+	 * Replaces the combo box model by a new one containing all the items in the
+	 * given list.
+	 * 
+	 * @param items
+	 *            The list of gene names to add.
+	 */
+	public void setList(final SortedSet<String> items) {
+		items.add("");
+		setModel(new DefaultComboBoxModel<String>(
+				items.toArray(new String[] {})));
 	}
 
 	/**
@@ -53,12 +72,12 @@ public class GeneComboBox extends JComboBox<String> {
 	}
 
 	/**
-	 * Unregister a new observer for the gene selection box.
+	 * Unregister an observer for the gene selection box.
 	 * 
 	 * @param gso
-	 *            Observer to remove..
+	 *            The observer to remove..
 	 */
-	public final void unRgisterObserver(final GeneSelectionObserver gso) {
+	public final void deleteObserver(final GeneSelectionObserver gso) {
 		geneSelectionObservers.remove(gso);
 	}
 
@@ -66,7 +85,7 @@ public class GeneComboBox extends JComboBox<String> {
 	 * Notify all the gene selection observers of the newly selected gene.
 	 * 
 	 * @param selectedGene
-	 *            Newly selected gene.
+	 *            The name of the selected gene.
 	 */
 	public final void notifyNodeSelectionObservers(final String selectedGene) {
 		for (GeneSelectionObserver gso : geneSelectionObservers) {
