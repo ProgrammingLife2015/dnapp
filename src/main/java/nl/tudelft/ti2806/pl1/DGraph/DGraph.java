@@ -412,7 +412,7 @@ public class DGraph implements DynamicGraph {
 	/**
 	 * @return the selected node.
 	 */
-	public final String getSelected() {
+	public String getSelected() {
 		return selected;
 	}
 
