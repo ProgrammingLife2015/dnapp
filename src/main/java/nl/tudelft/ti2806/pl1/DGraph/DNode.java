@@ -399,7 +399,7 @@ public class DNode {
 	/**
 	 * @return the resMuts
 	 */
-	public final List<ResistanceMutation> getResMuts() {
+	public List<ResistanceMutation> getResMuts() {
 		return resMuts;
 	}
 

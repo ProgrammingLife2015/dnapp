@@ -45,12 +45,14 @@ public class ReferenceGeneTest {
 		assertEquals(score, rg.getScore(), 0.0);
 		assertEquals(strand, rg.getStrand());
 		assertEquals(name, rg.getName());
+		assertEquals(null, rg.getMutations());
 	}
 
-	// @Test
-	// public void testToString() {
-	// assertEquals("Gene[1, 2, 0.0, +, hypothetical protein,{}]",
-	// rg.toString());
-	// }
+	@Test
+	public void testToString() {
+		assertEquals(
+				"<Gene[1-2,score=0.0,strand=+,name=hypothetical protein,mutations=null]>",
+				rg.toString());
+	}
 
 }

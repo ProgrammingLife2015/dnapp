@@ -7,7 +7,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+
+import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +35,7 @@ public class DNodeTest {
 		edge2 = mock(DEdge.class);
 		edge3 = mock(DEdge.class);
 
-		node1 = new DNode(1, new HashSet<String>(), 0, 0, "");
+		node1 = new DNode(1, new HashSet<String>(), 0, 0, "NASDJASD");
 		node2 = new DNode(2, new HashSet<String>(), 0, 0, "");
 		node3 = new DNode(3, new HashSet<String>(), 0, 0, "");
 		node4 = new DNode(1, new HashSet<String>(), 0, 0, "");
@@ -57,6 +61,69 @@ public class DNodeTest {
 	}
 
 	@Test
+	public void testGetters() {
+		assertEquals(node1.getX(), 0);
+		assertEquals(node1.getY(), 0);
+		assertEquals(node1.getResMuts(), null);
+		assertEquals(node1.getContent(), "NASDJASD");
+		assertEquals(node1.getStart(), 0);
+		assertEquals(node1.getEnd(), 0);
+		assertEquals(node1.getDepth(), 0);
+		assertEquals(node1.getSources(), new HashSet<String>());
+		assertEquals(node1.getPercUnknown(), 0.125, 0);
+		assertEquals(node1.getId(), 1);
+	}
+
+	@Test
+	public void testSetters() {
+		List<ResistanceMutation> LRM = new ArrayList<ResistanceMutation>();
+		String content = "NASDJASD";
+		int newx = 30;
+		int newy = 1;
+		int newstart = Integer.MAX_VALUE;
+		int newend = Integer.MIN_VALUE;
+		int newdepth = -200;
+		HashSet<String> newsources = new HashSet<String>();
+		newsources.add("a source");
+		int newid = 2;
+		double newperc = 2.0;
+		Collection<DEdge> newedges = new HashSet<DEdge>();
+		node1.setX(newx);
+		assertEquals(node1.getX(), newx);
+		node1.setY(newy);
+		assertEquals(node1.getY(), newy);
+		node1.setResMuts(LRM);
+		assertEquals(node1.getResMuts(), LRM);
+		node1.setContent(content);
+		assertEquals(node1.getContent(), content);
+		node1.setStart(newstart);
+		assertEquals(node1.getStart(), newstart);
+		node1.setEnd(newend);
+		assertEquals(node1.getEnd(), newend);
+		node1.setDepth(newdepth);
+		assertEquals(node1.getDepth(), newdepth);
+		node1.setSources(newsources);
+		assertEquals(node1.getSources(), newsources);
+		node1.setId(newid);
+		assertEquals(node1.getId(), newid);
+		node1.setPercUnknown(newperc);
+		assertEquals(node1.getPercUnknown(), newperc, 0);
+		node1.setOutEdges(newedges);
+		assertEquals(node1.getOutEdges(), newedges);
+	}
+
+	@Test
+	public void testToString() {
+		assertEquals(node1.toString(), "<Node[1]>");
+	}
+
+	@Test
+	public void negativeId() {
+		DNode node = new DNode(-2, new HashSet<String>(), 0, 0, "");
+		assertEquals(node.getPercUnknown(), 1.0, 0);
+	}
+
+	@Test
 	public void addEdgeStartNodeTest() {
 		node2.addEdge(edge1);
 		assertEquals(node2.getInEdges().size(), 1);
@@ -72,7 +139,7 @@ public class DNodeTest {
 	public void rightEdgeHasBeenAddedTest() {
 		node2.addEdge(edge1);
 		ArrayList<DEdge> edges = (ArrayList<DEdge>) node2.getInEdges();
-		assertTrue(edges.get(0) == edge1);
+		assertEquals(edges.get(0), edge1);
 	}
 
 	@Test
@@ -100,6 +167,11 @@ public class DNodeTest {
 	@Test
 	public void equalsACTest() {
 		assertTrue(node1.equals(node5));
+	}
+
+	@Test
+	public void equalsFalseTest() {
+		assertFalse(node1.equals(node2));
 	}
 
 	@Test
@@ -162,5 +234,44 @@ public class DNodeTest {
 	public void addExistingEdgeTest() {
 		node2.addEdge(edge2);
 		assertFalse(node2.addEdge(edge2));
+	}
+
+	@Test
+	public void hasResMuts() {
+		ResistanceMutation rm = mock(ResistanceMutation.class);
+		assertFalse(node1.hasResMuts());
+		node1.addResistantMutationIndex(rm);
+		assertTrue(node1.hasResMuts());
+		node1.setResMuts(new ArrayList<ResistanceMutation>());
+		assertFalse(node1.hasResMuts());
+	}
+
+	@Test
+	public void addResistantMutationWithFailingStart() {
+		List<ResistanceMutation> resMuts = new ArrayList<ResistanceMutation>();
+		resMuts.add(new ResistanceMutation(Long.MIN_VALUE, "description2"));
+		node1.setResMuts(resMuts);
+
+		ResistanceMutation rm = new ResistanceMutation(Long.MAX_VALUE,
+				"description");
+		node1.addResistantMutationIndex(rm);
+		assertFalse(node1.getResMuts().contains(rm));
+	}
+
+	@Test
+	public void addResistantMutationWithFailingEnd() {
+		ResistanceMutation rm = new ResistanceMutation(Long.MIN_VALUE,
+				"description");
+		node1.setResMuts(new ArrayList<ResistanceMutation>());
+		node1.addResistantMutationIndex(rm);
+		assertFalse(node1.getResMuts().contains(rm));
+	}
+
+	@Test
+	public void deleteInvalidEdge() {
+		Collection<DEdge> e = node1.getAllEdges();
+		node1.deleteEdge(edge2);
+		assertEquals(node1.getAllEdges(), e);
+
 	}
 }

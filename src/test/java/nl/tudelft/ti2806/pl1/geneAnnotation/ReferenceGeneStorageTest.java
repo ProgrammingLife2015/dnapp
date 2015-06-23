@@ -1,9 +1,18 @@
 package nl.tudelft.ti2806.pl1.geneAnnotation;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.DGraph.DNode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -87,29 +96,62 @@ public class ReferenceGeneStorageTest {
 		assertFalse(RGS.isIntragenic(Integer.MAX_VALUE));
 	}
 
-	// @Test
-	// public void testToString() {
-	// assertEquals(
-	// "Gene[958526, 960154, 0.0, -, DNA helicase Ercc3,{960154=nsy, 959526=nsy}]\n"
-	// + "Gene[974294, 975940, 0.0, -, transmembrane protein,{}]\n"
-	// +
-	// "Gene[1122226, 1123602, 0.0, -, para-aminobenzoate synthase component I PABD,{1122227=del3bp}]\n"
-	// +
-	// "Gene[1824437, 1825894, 0.0, -, integral membrane cytochrome D ubiquinol oxidase CydA,{1825894=snp}]\n"
-	// +
-	// "Gene[3255695, 3262261, 0.0, +, phenolpthiocerol synthesis type-I polyketide synthase PpsC,{3255895=snp}]\n",
-	// RGS.toString());
-	// }
+	@Test
+	public void testEmptyFiles() {
+		ReferenceGeneStorage rgs = new ReferenceGeneStorage(null);
+		rgs.setGeneAnnotation(null);
+		assertEquals(null, rgs.getReferenceGenes());
+		rgs.setDrugRestistantMutations(null);
+		assertEquals(null, rgs.getDrugResistanceMutations());
+		assertFalse(rgs.isIntragenic(0));
 
-	// @Test
-	// public void testNoGeneFile() {
-	// new ReferenceGeneStorage("src/test/resources/NonExistingFile.gff",
-	// TSV_TEST_FILE);
-	// }
-	//
-	// @Test
-	// public void testNoMutationFile() {
-	// new ReferenceGeneStorage(GFF_TEST_FILE,
-	// "src/test/resources/NoExistingMutationsFile.txt");
-	// }
+	}
+
+	@Test
+	public void testResistanceMutationObservers() {
+		ResistanceMutationObserver rmo = mock(ResistanceMutationObserver.class);
+		RGS.registerObserver(rmo);
+		RGS.setDrugRestistantMutations(new File(TSV_TEST_FILE));
+		verify(rmo).update(RGS.getDrugResistanceMutations());
+	}
+
+	@Test
+	public void testGeneObservers() {
+		ReferenceGeneObserver rgo = mock(ReferenceGeneObserver.class);
+		RGS.registerObserver(rgo);
+		RGS.setGeneAnnotation(new File(GFF_TEST_FILE));
+		verify(rgo).update();
+	}
+
+	@Test
+	public void testNonExistingGeneFile() {
+		File file = new File("NON_EXISTING_FILE.gff");
+		RGS.setGeneAnnotation(file);
+		RGS.setDrugRestistantMutations(file);
+	}
+
+	@Test
+	public void testDNodes() {
+		Map<Integer, DNode> map = new HashMap<Integer, DNode>();
+		DNode n1 = mock(DNode.class);
+		DNode n2 = mock(DNode.class);
+		DNode n3 = mock(DNode.class);
+		map.put(1, n1);
+		map.put(2, n2);
+		map.put(3, n3);
+		when(n1.getStart()).thenReturn(960153);
+		when(n1.getEnd()).thenReturn(960155);
+		when(n2.getStart()).thenReturn(0);
+		when(n2.getEnd()).thenReturn(1);
+		when(n3.getStart()).thenReturn(Integer.MAX_VALUE);
+		when(n3.getEnd()).thenReturn(Integer.MAX_VALUE);
+		DGraph dgraph = mock(DGraph.class);
+		when(dgraph.getNodes()).thenReturn(map);
+
+		ReferenceGeneStorage rgs = new ReferenceGeneStorage(dgraph);
+		rgs.setDrugRestistantMutations(new File(TSV_TEST_FILE));
+
+		verify(n1).addResistantMutationIndex(
+				rgs.getDrugResistanceMutations().get((long) 960154));
+	}
 }
