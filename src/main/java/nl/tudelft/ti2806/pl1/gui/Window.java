@@ -95,11 +95,11 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 		menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
 
+		addComponentListener(new WindowEvents(this));
+		addWindowListener(new CloseConfirmationAdapter());
+
 		// now let's call all cross dependent things.
 		callAfterInitialization();
-
-		addComponentListener(new WindowEvents(this));
-		addWindowListener(new CloseConfirmationAdapter(this));
 
 		pack();
 		setLocationRelativeTo(null);
@@ -111,20 +111,6 @@ public class Window extends JFrame implements Observer, ContentLoadedObserver {
 	 * @since 17-6-2015
 	 */
 	final class CloseConfirmationAdapter extends WindowAdapter {
-
-		/** The window. */
-		private Window window;
-
-		/**
-		 * Initialize the close confirmation adapter.
-		 * 
-		 * @param w
-		 *            The window.
-		 */
-		public CloseConfirmationAdapter(final Window w) {
-			this.window = w;
-		}
-
 		@Override
 		public void windowClosing(final WindowEvent e) {
 			AppEvent.EXIT_APP.actionPerformed(null);
