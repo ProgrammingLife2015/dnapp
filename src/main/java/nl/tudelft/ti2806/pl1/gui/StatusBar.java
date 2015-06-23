@@ -101,27 +101,30 @@ public class StatusBar extends JPanel {
 	public enum MessageType {
 
 		/** An informative message. */
-		INFO {
-			@Override
-			String getPrefix() {
-				return "";
-			}
-		},
+		INFO(""),
 
 		/** An error message. */
-		ERROR {
-			@Override
-			String getPrefix() {
-				return "Error: ";
-			}
-		};
+		ERROR("Error: ");
+
+		/** The prefix to put in front of every message of this kind/type. */
+		private String prefix;
+
+		/**
+		 * @param prefixIn
+		 *            The prefix to be used for the message type.
+		 */
+		private MessageType(final String prefixIn) {
+			this.prefix = prefixIn;
+		}
 
 		/**
 		 * 
 		 * @return The prefix to put in front of every message of this
 		 *         kind/type.
 		 */
-		abstract String getPrefix();
+		public String getPrefix() {
+			return prefix;
+		}
 	}
 
 }

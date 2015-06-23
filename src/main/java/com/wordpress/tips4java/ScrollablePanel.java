@@ -33,9 +33,6 @@ import javax.swing.SwingConstants;
 public class ScrollablePanel extends JPanel implements Scrollable,
 		SwingConstants {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1579482524832563910L;
 
 	public enum ScrollableSizeHint {
@@ -249,10 +246,12 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 
 	// Implement Scrollable interface
 
+	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
 
+	@Override
 	public int getScrollableUnitIncrement(final Rectangle visible,
 			final int orientation, final int direction) {
 		switch (orientation) {
@@ -266,6 +265,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 		}
 	}
 
+	@Override
 	public int getScrollableBlockIncrement(final Rectangle visible,
 			final int orientation, final int direction) {
 		switch (orientation) {
@@ -287,6 +287,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 			return distance * info.getAmount() / 100;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		if (scrollableWidth == ScrollableSizeHint.NONE)
 			return false;
@@ -303,6 +304,7 @@ public class ScrollablePanel extends JPanel implements Scrollable,
 		return false;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportHeight() {
 		if (scrollableHeight == ScrollableSizeHint.NONE)
 			return false;
