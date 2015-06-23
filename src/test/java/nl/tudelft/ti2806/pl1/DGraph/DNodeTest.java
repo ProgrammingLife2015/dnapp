@@ -170,6 +170,11 @@ public class DNodeTest {
 	}
 
 	@Test
+	public void equalsFalseTest() {
+		assertFalse(node1.equals(node2));
+	}
+
+	@Test
 	public void equalsNullTest() {
 		assertFalse(node1.equals(null));
 	}
@@ -229,5 +234,44 @@ public class DNodeTest {
 	public void addExistingEdgeTest() {
 		node2.addEdge(edge2);
 		assertFalse(node2.addEdge(edge2));
+	}
+
+	@Test
+	public void hasResMuts() {
+		ResistanceMutation rm = mock(ResistanceMutation.class);
+		assertFalse(node1.hasResMuts());
+		node1.addResistantMutationIndex(rm);
+		assertTrue(node1.hasResMuts());
+		node1.setResMuts(new ArrayList<ResistanceMutation>());
+		assertFalse(node1.hasResMuts());
+	}
+
+	@Test
+	public void addResistantMutationWithFailingStart() {
+		List<ResistanceMutation> resMuts = new ArrayList<ResistanceMutation>();
+		resMuts.add(new ResistanceMutation(Long.MIN_VALUE, "description2"));
+		node1.setResMuts(resMuts);
+
+		ResistanceMutation rm = new ResistanceMutation(Long.MAX_VALUE,
+				"description");
+		node1.addResistantMutationIndex(rm);
+		assertFalse(node1.getResMuts().contains(rm));
+	}
+
+	@Test
+	public void addResistantMutationWithFailingEnd() {
+		ResistanceMutation rm = new ResistanceMutation(Long.MIN_VALUE,
+				"description");
+		node1.setResMuts(new ArrayList<ResistanceMutation>());
+		node1.addResistantMutationIndex(rm);
+		assertFalse(node1.getResMuts().contains(rm));
+	}
+
+	@Test
+	public void deleteInvalidEdge() {
+		Collection<DEdge> e = node1.getAllEdges();
+		node1.deleteEdge(edge2);
+		assertEquals(node1.getAllEdges(), e);
+
 	}
 }
