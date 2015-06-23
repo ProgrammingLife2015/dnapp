@@ -1,6 +1,9 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +17,7 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.mutation.PointMutationFinder;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,5 +95,59 @@ public class PointCollapserTest {
 		assertTrue(gsg.getNode("3") == null);
 		assertTrue(gsg.getNode("4") != null);
 		assertTrue(gsg.getNode("COLLAPSED_2/3/4") != null);
+	}
+
+	@Test
+	public void simpleSNPCaseThresholdTest() {
+		Collection<PointMutation> muts = new HashSet<PointMutation>();
+		PointMutation m1 = mock(PointMutation.class);
+		PointMutation m2 = mock(PointMutation.class);
+		PointMutation m3 = mock(PointMutation.class);
+		when(m1.getScore()).thenReturn(20d);
+		when(m2.getScore()).thenReturn(20d);
+		when(m3.getScore()).thenReturn(20d);
+		muts.add(m1);
+		muts.add(m2);
+		muts.add(m3);
+
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+
+		Graph newgsg = PointCollapser.collapseNodes(muts, gsg, 10, "");
+		assertEquals(newgsg, gsg);
+	}
+
+	@Test
+	public void findSelectedTest() {
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+		assertEquals(String.valueOf(Integer.MIN_VALUE),
+				PointCollapser.findSelected(gsg));
+
+		String id = "SELECTEDNODE";
+		gsg.addNode(id);
+		gsg.getNode(id).setAttribute("ui.class", "selected");
+		assertEquals(id, PointCollapser.findSelected(gsg));
+	}
+
+	@Test
+	public void testCheckViable() {
+		Graph g = mock(Graph.class);
+		PointMutation pm = mock(PointMutation.class);
+		Node node1 = mock(Node.class);
+		Node node2 = mock(Node.class);
+		int id1 = 1;
+		int id2 = 2;
+		when(pm.getPreNode()).thenReturn(id1);
+		when(pm.getPostNode()).thenReturn(id2);
+		when(g.getNode(id1)).thenReturn(node1);
+		when(g.getNode(id2)).thenReturn(node2);
+
+		Collection<PointMutation> muts = PointMutationFinder
+				.findPointMutations(graph);
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+
+		muts.add(pm);
 	}
 }

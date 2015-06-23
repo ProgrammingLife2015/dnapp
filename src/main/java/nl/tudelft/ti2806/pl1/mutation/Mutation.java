@@ -128,14 +128,14 @@ public abstract class Mutation {
 	/**
 	 * @return the preNode
 	 */
-	public final int getPreNode() {
+	public int getPreNode() {
 		return preNode;
 	}
 
 	/**
 	 * @return the postNode
 	 */
-	public final int getPostNode() {
+	public int getPostNode() {
 		return postNode;
 	}
 
