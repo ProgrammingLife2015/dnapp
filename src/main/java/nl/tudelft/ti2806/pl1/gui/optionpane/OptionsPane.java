@@ -92,10 +92,8 @@ public class OptionsPane extends JScrollPane {
 		this.grpZoomInfo = new ZoomlevelGroup();
 		this.geneNavigator = new GeneComboBox();
 
-		setMaximumSize(SIZE);
 		setPreferredSize(SIZE);
 		addControls();
-
 		setViewportView(pane);
 	}
 
@@ -124,10 +122,9 @@ public class OptionsPane extends JScrollPane {
 		place(grpZoomSettings);
 		place(grpSelectedNode);
 
-		final int boxWY = 100;
+		final int boxWY = 1000;
 		gbc.weighty = boxWY;
-
-		place(Box.createGlue());
+		place(Box.createVerticalGlue());
 	}
 
 	/**

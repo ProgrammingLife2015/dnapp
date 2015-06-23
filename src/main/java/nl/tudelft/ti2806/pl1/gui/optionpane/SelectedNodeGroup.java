@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -60,7 +59,7 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 	/** The width of the node content bar. */
 	private static final int NCB_WIDTH = 15;
 
-	/** The lenth of the node content bar. */
+	/** The length of the node content bar. */
 	private static final int NCB_LENGTH = 160;
 
 	/** The grid bag constraints for the layout manager. */
@@ -90,6 +89,15 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		setupGBC();
 		setAlignmentY(TOP_ALIGNMENT);
 		setBorder(BorderFactory.createTitledBorder("<html><b>" + DEFAULT_TITLE));
+
+		placeID();
+		placeLength();
+		placeDistr();
+		placeSources();
+	}
+
+	/** Place the node id elements. */
+	private void placeID() {
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.gridy = SelectedNodeGroup.Y_ID;
 		gbc.gridx = 0;
@@ -98,7 +106,10 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.gridx = 1;
 		gbc.weightx = XW_VAL_LABEL;
 		add(lblID, gbc);
+	}
 
+	/** Place the content length elements. */
+	private void placeLength() {
 		gbc.gridy = Y_LENGTH;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
@@ -106,7 +117,10 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.gridx = 1;
 		gbc.weightx = XW_VAL_LABEL;
 		add(lblContentLength, gbc);
+	}
 
+	/** Place the content distribution elements. */
+	private void placeDistr() {
 		gbc.gridy = Y_CONTENT_BAR_LABEL;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
@@ -118,7 +132,10 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.gridy = Y_CONTENT_BAR;
 		gbc.gridwidth = 2;
 		add(nodeChart, gbc);
+	}
 
+	/** Place the sources elements. */
+	private void placeSources() {
 		gbc.gridy = Y_SOURCES_LABEL;
 		gbc.gridx = 0;
 		gbc.weightx = 1;
@@ -127,10 +144,6 @@ public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
 		gbc.gridwidth = 2;
 		gbc.weightx = 2.0;
 		add(lblSources, gbc);
-
-		final int wyBox = 100;
-		gbc.weighty = wyBox;
-		add(Box.createVerticalGlue());
 	}
 
 	/**
