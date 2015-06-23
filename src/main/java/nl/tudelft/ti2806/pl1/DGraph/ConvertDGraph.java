@@ -71,11 +71,9 @@ public final class ConvertDGraph {
 			gn.addAttribute("x", n.getX());
 			gn.addAttribute("y", n.getY());
 			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
-			String nodeclass;
-			if (n.getResMuts() != null) {
+			String nodeclass = "common";
+			if (n.hasResMuts()) {
 				nodeclass = "resistant";
-			} else {
-				nodeclass = "common";
 			}
 			if (String.valueOf(n.getId()).equals(dgraph.getSelected())) {
 				gn.addAttribute("ui.class", "selected");

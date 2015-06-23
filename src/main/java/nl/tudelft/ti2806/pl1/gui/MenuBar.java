@@ -3,10 +3,8 @@ package nl.tudelft.ti2806.pl1.gui;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.net.URL;
 
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
@@ -49,7 +47,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
 		JMenuItem impGraph = new JMenuItem();
-		setMenuItem(impGraph, "Import graph", null, 'I',
+		setMenuItem(impGraph, "Import graph", 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
 				AppEvent.IMPORT_GRAPH);
 
@@ -67,14 +65,12 @@ public class MenuBar extends JMenuBar {
 		};
 		export.setMnemonic('E');
 		JMenuItem exportDGS = new JMenuItem();
-		setMenuItem(exportDGS, "DGS format", null, 'D', null,
-				AppEvent.WRITE_TO_DGS);
+		setMenuItem(exportDGS, "DGS format", 'D', null, AppEvent.WRITE_TO_DGS);
 		export.add(exportDGS);
 		ret.add(export);
 
 		JMenuItem exit = new JMenuItem();
-		setMenuItem(exit, "Exit", null, 'E', "Exit the program",
-				AppEvent.EXIT_APP);
+		setMenuItem(exit, "Exit", 'E', "Exit the program", AppEvent.EXIT_APP);
 		setAcc(exit, KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK));
 		ret.add(exit);
 
@@ -84,13 +80,12 @@ public class MenuBar extends JMenuBar {
 	/**
 	 * Creates and fills the info menu.
 	 * 
-	 * @return the info menu
+	 * @return the info menu.
 	 */
 	private JMenu helpMenu() {
 		JMenu ret = new JMenu("Help");
 		JMenuItem help = new JMenuItem();
-		setMenuItem(help, "Help", null, 'h', "Press to show shortcuts",
-				AppEvent.HELP);
+		setMenuItem(help, "Help", 'H', "Press to show shortcuts", AppEvent.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		ret.add(help);
 		return ret;
@@ -99,7 +94,7 @@ public class MenuBar extends JMenuBar {
 	/**
 	 * Creates and fills the view menu.
 	 * 
-	 * @return the view menu
+	 * @return the view menu.
 	 */
 	private JMenu viewMenu() {
 		JMenu ret = new JMenu("View") {
@@ -114,7 +109,7 @@ public class MenuBar extends JMenuBar {
 		};
 
 		JMenuItem reset = new JMenuItem();
-		setMenuItem(reset, "Reset initial view", null, 'R',
+		setMenuItem(reset, "Reset initial view", 'R',
 				"Reset to the initial zoom level view.",
 				AppEvent.RESET_INITIAL_LEVEL);
 		setAcc(reset,
@@ -122,16 +117,16 @@ public class MenuBar extends JMenuBar {
 		ret.add(reset);
 
 		JMenuItem resetCurrent = new JMenuItem();
-		setMenuItem(resetCurrent, "Reset current view", null, 'C',
+		setMenuItem(resetCurrent, "Reset current view", 'C',
 				"Reset the current zoom level view.",
 				AppEvent.RESET_CURRENT_LEVEL);
 		setAcc(resetCurrent, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		ret.add(resetCurrent);
 
-		JMenuItem zoomIn = new JMenuItem();
-		setMenuItem(zoomIn, "Zoom in", null, 'I',
+		JMenuItem zoomIn = new JMenuItem(AppEvent.ZOOM_IN);
+		setMenuItem(zoomIn, "Zoom in", 'I',
 				"<html>Zoom in one zoom level.<br>Nodes might be uncollapsed.",
-				AppEvent.ZOOMLEVEL_IN);
+				null);
 		setAcc(zoomIn,
 				KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, Event.CTRL_MASK));
 		ret.add(zoomIn);
@@ -139,10 +134,10 @@ public class MenuBar extends JMenuBar {
 				AppEvent.ZOOMLEVEL_OUT);
 		addKeyBinding(KeyEvent.VK_ADD, Event.CTRL_MASK, AppEvent.ZOOMLEVEL_IN);
 
-		JMenuItem zoomOut = new JMenuItem();
-		setMenuItem(zoomOut, "Zoom out", null, 'O',
+		JMenuItem zoomOut = new JMenuItem(AppEvent.ZOOM_OUT);
+		setMenuItem(zoomOut, "Zoom out", 'O',
 				"<html>Go to previous zoomlevel.<br>Nodes might be collapsed.",
-				AppEvent.ZOOMLEVEL_OUT);
+				null);
 		setAcc(zoomOut,
 				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Event.CTRL_MASK));
 		ret.add(zoomOut);
@@ -226,8 +221,6 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 * @param text
 	 *            The text to show on the menu item.
-	 * @param iconName
-	 *            The name of the icon file in the resources/images folder
 	 * @param mnemonic
 	 *            The mnemonic (fast key)
 	 * @param toolTipText
@@ -238,27 +231,17 @@ public class MenuBar extends JMenuBar {
 	 * @see AppEvent
 	 */
 	private void setMenuItem(final JMenuItem item, final String text,
-			final String iconName, final char mnemonic,
-			final String toolTipText, final AppEvent action) {
+			final char mnemonic, final String toolTipText, final AppEvent action) {
 		item.setText(text);
 		item.setMnemonic(mnemonic);
 		item.setToolTipText(toolTipText);
 		item.addActionListener(action);
-		if (iconName != null) {
-			String imgLocation = "images/" + iconName;
-			URL imageURL = ToolBar.class.getResource(imgLocation);
-			if (imageURL != null) {
-				item.setIcon(new ImageIcon(imageURL, text));
-			} else {
-				System.err.println("Resource not found: " + imgLocation);
-			}
-		}
 	}
 
 	/**
 	 * 
 	 * @param item
-	 *            JMenuItem we want to add an acceleator to.
+	 *            JMenuItem we want to add an accelerator to.
 	 * @param keyStroke
 	 *            The set of keys it will use.
 	 */

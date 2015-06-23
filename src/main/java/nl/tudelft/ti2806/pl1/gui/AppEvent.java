@@ -3,7 +3,11 @@ package nl.tudelft.ti2806.pl1.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.URL;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidNodePlacementException;
@@ -158,8 +162,30 @@ public enum AppEvent implements ActionListener {
 		}
 	};
 
+	/* ********** BUTTONS ********** */
+
+	/** The zoom in action. */
+	public static final Action ZOOM_IN = AppEvent.mkAction("Zoom in",
+			"zoomin.png", AppEvent.ZOOMLEVEL_IN);
+
+	/** The zoom out action. */
+	public static final Action ZOOM_OUT = AppEvent.mkAction("Zoom out",
+			"zoomout.png", AppEvent.ZOOMLEVEL_OUT);
+
+	/** The reset initial view action. */
+	public static final Action RESET_INITIAL = AppEvent.mkAction(
+			"Reset initial view", null, AppEvent.RESET_INITIAL_LEVEL);
+
+	/** The reset current view action. */
+	public static final Action RESET_CURRENT = AppEvent.mkAction(
+			"Reset current view", null, AppEvent.RESET_CURRENT_LEVEL);
+
+	/* ********** FIELDS ********** */
+
 	/** The window effected by the actions performed by these events. */
 	private static Window window;
+
+	/* ********** METHODS ********** */
 
 	/**
 	 * @param w
@@ -188,6 +214,62 @@ public enum AppEvent implements ActionListener {
 	@SuppressWarnings("unused")
 	private static ActionEvent mkCommand(final String command) {
 		return new ActionEvent(null, ActionEvent.ACTION_FIRST, command);
+	}
+
+	/**
+	 * Creates an action to be used in a button.
+	 * 
+	 * @param text
+	 *            The button text.
+	 * @param imageName
+	 *            The image icon file name.
+	 * @param event
+	 *            The application event to run.
+	 * @return The action object.
+	 */
+	public static Action mkAction(final String text, final String imageName,
+			final ActionListener event) {
+		ImageIcon icon = null;
+		if (imageName != null) {
+			String imgLocation = "images/" + imageName;
+			URL u = AppEvent.class.getClassLoader().getResource(imgLocation);
+			icon = new ImageIcon(u, text);
+		}
+		return new MenuAction(event, text, icon);
+	}
+
+	/**
+	 * 
+	 */
+	static class MenuAction extends AbstractAction {
+
+		/** The serial version UID. */
+		private static final long serialVersionUID = -2505052819734945649L;
+
+		/** The application event to run. */
+		private ActionListener event;
+
+		/**
+		 * Initializes the menu action.
+		 * 
+		 * @param eventIn
+		 *            The application event to run.
+		 * @param textIn
+		 *            The text to show.
+		 * @param imageIcon
+		 *            The image icon.
+		 */
+		public MenuAction(final ActionListener eventIn, final String textIn,
+				final ImageIcon imageIcon) {
+			super(textIn, imageIcon);
+			this.event = eventIn;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			event.actionPerformed(e);
+		}
+
 	}
 
 	/**
