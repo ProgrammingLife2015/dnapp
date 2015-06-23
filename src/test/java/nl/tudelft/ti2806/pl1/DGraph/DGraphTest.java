@@ -9,7 +9,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+
+import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
+import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +57,7 @@ public class DGraphTest {
 		when(node1.getAllEdges()).thenReturn(Arrays.asList(edge1));
 		when(node1.getInEdges()).thenReturn(new ArrayList<DEdge>());
 		when(node1.getSources()).thenReturn(reference1);
+		when(node1.getContent()).thenReturn("content");
 
 		when(node2.getId()).thenReturn(2);
 		when(node2.getAllEdges()).thenReturn(Arrays.asList(edge1, edge2));
@@ -213,21 +220,21 @@ public class DGraphTest {
 	@Test
 	public void referencesAreAddedTest2() {
 		graph.addDNode(node1);
-		assertTrue(graph.getReferences().size() == 1);
+		assertEquals(graph.getReferences().size(), 1);
 	}
 
 	@Test
 	public void referencesAreAddedTest3() {
 		graph.addDNode(node1);
 		graph.addDNode(node2);
-		assertTrue(graph.getReferences().get("tkk-1").size() == 2);
+		assertEquals(graph.getReferences().get("tkk-1").size(), 2);
 	}
 
 	@Test
 	public void removeReferenceNodeTest() {
 		graph.addDNode(node1);
 		graph.removeDNode(node1);
-		assertTrue(graph.getReferences().size() == 0);
+		assertEquals(graph.getReferences().size(), 0);
 	}
 
 	@Test
@@ -239,5 +246,61 @@ public class DGraphTest {
 	@Test
 	public void getReferenceTest2() {
 		assertTrue(graph.getReference("hs").isEmpty());
+	}
+
+	@Test
+	public void gettersTest() {
+		assertEquals(graph.getReferencesSet(), new HashSet<String>());
+	}
+
+	@Test(expected = InvalidGenomeIdException.class)
+	public void setInvalidRefGenomeTest() {
+		graph.setRefGenomeName("INVALID");
+	}
+
+	@Test
+	public void setGenomeTest() {
+		HashMap<String, Collection<DNode>> mp = new HashMap<String, Collection<DNode>>();
+		Collection<DNode> c = new HashSet<DNode>();
+		c.add(node1);
+		mp.put("tkk-1", c);
+		graph.setReferences(mp);
+		graph.setRefGenomeName("tkk-1");
+	}
+
+	@Test
+	public void testGetDNodes() {
+		ViewArea va = mock(ViewArea.class);
+		graph.addDNode(node1);
+		graph.addDNode(node2);
+		when(va.isContained(node1)).thenReturn(true);
+		ArrayList<DNode> ret = new ArrayList<DNode>();
+		ret.add(node1);
+		assertEquals(graph.getDNodes(va), ret);
+	}
+
+	@Test
+	public void testToString() {
+		graph.addDNode(node1);
+		graph.addDNode(node2);
+		graph.addDEdge(edge1);
+		Map<Integer, DNode> mp = new HashMap<Integer, DNode>();
+		mp.put(node1.getId(), node1);
+		mp.put(node2.getId(), node2);
+		Collection<DEdge> edges = new HashSet<DEdge>();
+		edges.add(edge1);
+		assertEquals(graph.toString(), mp + " " + edges);
+	}
+
+	@Test
+	public void testAddInvalidEdge() {
+		graph.addDNode(node1);
+		assertFalse(graph.addDEdge(edge1));
+	}
+
+	@Test
+	public void testRemoveInvalidEdge() {
+		graph.addDNode(node1);
+		assertFalse(graph.removeDEdge(edge1));
 	}
 }
