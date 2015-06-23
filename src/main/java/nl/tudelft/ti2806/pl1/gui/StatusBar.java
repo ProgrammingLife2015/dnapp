@@ -42,26 +42,6 @@ public class StatusBar extends JPanel {
 		add(rightLabel, BorderLayout.EAST);
 	}
 
-	// /**
-	// * Shows an error message in the main text label.
-	// *
-	// * @param message
-	// * The error message to show.
-	// */
-	// public final void error(final String message) {
-	// mainLabel.setText("Error: " + message);
-	// }
-	//
-	// /**
-	// * Shows an info message in the main text label.
-	// *
-	// * @param message
-	// * The info message to show.
-	// */
-	// public final void info(final String message) {
-	// mainLabel.setText(message);
-	// }
-
 	/**
 	 * Shows a message in the left text label.
 	 * 
