@@ -28,10 +28,10 @@ public class PointMutation extends Mutation {
 	 * @param endpos
 	 *            the end position on the reference genome.
 	 */
-	public PointMutation(final int pre, final Set<Integer> nodesIn,
-			final int post, final int startpos, final int endpos,
-			final ReferenceGeneStorage rgs) {
-		super(pre, post, rgs, startpos, endpos);
+	public PointMutation(final int pre, final int post, final int startpos,
+			final int endpos, final ReferenceGeneStorage rgs,
+			final Set<Integer> nodesIn) {
+		super(pre, post, startpos, endpos, rgs);
 		this.nodes = nodesIn;
 	}
 

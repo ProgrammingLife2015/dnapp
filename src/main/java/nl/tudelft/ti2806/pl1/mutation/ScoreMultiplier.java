@@ -3,8 +3,6 @@ package nl.tudelft.ti2806.pl1.mutation;
 import java.util.HashMap;
 
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * Keeps track of multiplier for each score category.
@@ -12,13 +10,16 @@ import javax.swing.event.ChangeListener;
  * @author Marissa
  * @since 18-06-15
  */
-public final class ScoreMultiplier implements ChangeListener {
+public final class ScoreMultiplier {
 
 	/** The multiplier value for each score category. **/
 	private static HashMap<String, Double> mults = new HashMap<String, Double>();
 
 	/** Convert it from 0-10 to 0-1 scale. **/
 	private static final int MAKEPERCENTAGE = 10;
+
+	/** The default value for the multiplier. */
+	private static final double DEFAULT = 1;
 
 	/** Private constructor to avoid instantiation. **/
 	private ScoreMultiplier() {
@@ -46,10 +47,29 @@ public final class ScoreMultiplier implements ChangeListener {
 		if (mults.containsKey(mult)) {
 			return mults.get(mult);
 		}
-		return 1.0;
+		return DEFAULT;
 	}
 
-	@Override
-	public void stateChanged(final ChangeEvent e) {
+	/**
+	 * Set the score for a multiplier.
+	 * 
+	 * @param mult
+	 *            The multiplier you want to set the value for.
+	 * @param score
+	 *            The score you want to set it to.
+	 * @throws IllegalArgumentException
+	 *             Non-existent multiplier.
+	 */
+	public static void setMult(final String mult, final double score)
+			throws IllegalArgumentException {
+		MutationMultipliers.valueOf(mult);
+		mults.put(mult, score);
+	}
+
+	/**
+	 * Reset all multipliers to default value.
+	 */
+	public static void resetMults() {
+		mults = new HashMap<String, Double>();
 	}
 }
