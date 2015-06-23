@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ContextPL1</groupId>
   <artifactId>ContextPL1</artifactId>
-  <version>7.1-SNAPSHOT</version>
+  <version>8.1</version>
   <name>Programming Life</name>
-  <description>Context project of programming life</description>
+  <description>Context project of Programming Life Team 1</description>
   <dependencies>
     <dependency>
     	<groupId>org.swinglabs</groupId>
