@@ -12,7 +12,7 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
 
 import org.graphstream.graph.Node;

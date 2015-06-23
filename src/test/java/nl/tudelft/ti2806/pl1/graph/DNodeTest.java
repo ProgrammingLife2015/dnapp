@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.DGraph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 import org.junit.After;

@@ -12,8 +12,8 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeSet;
 
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.AppEvent;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 

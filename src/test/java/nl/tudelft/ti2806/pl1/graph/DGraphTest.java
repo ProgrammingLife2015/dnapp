@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.DGraph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 import nl.tudelft.ti2806.pl1.exceptions.InvalidGenomeIdException;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;

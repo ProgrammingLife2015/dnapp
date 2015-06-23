@@ -1,4 +1,4 @@
-package nl.tudelft.ti2806.pl1.DGraph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import nl.tudelft.ti2806.pl1.graph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 

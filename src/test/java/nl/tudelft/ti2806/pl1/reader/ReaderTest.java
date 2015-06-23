@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import nl.tudelft.ti2806.pl1.DGraph.DEdge;
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
 
 import org.junit.After;
 import org.junit.Before;
