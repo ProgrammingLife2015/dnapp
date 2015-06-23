@@ -49,7 +49,7 @@ public class ConvertDGraphTest {
 		when(node2.getX()).thenReturn(20);
 		when(node2.getY()).thenReturn(0);
 		when(node2.getPercUnknown()).thenReturn(1.0);
-		when(node2.getContent()).thenReturn("CATG");
+		when(node2.getContent()).thenReturn("CATGASJDNASJDN");
 		when(node2.getAllEdges()).thenReturn(Arrays.asList(edge));
 
 		when(edge.getStartNode()).thenReturn(node1);
