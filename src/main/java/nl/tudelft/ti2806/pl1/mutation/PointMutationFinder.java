@@ -83,8 +83,8 @@ public final class PointMutationFinder {
 			if (group.size() > 1) {
 				int position = graph.getDNode(group.iterator().next())
 						.getStart();
-				pointmutations.add(new PointMutation(begin, group,
-						end.getKey(), position, position, rgs));
+				pointmutations.add(new PointMutation(begin, end.getKey(),
+						position, position, rgs, group));
 			}
 		}
 		return pointmutations;

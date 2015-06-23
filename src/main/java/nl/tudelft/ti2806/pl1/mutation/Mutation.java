@@ -45,13 +45,13 @@ public abstract class Mutation {
 	 * @param endpos
 	 *            End position on the reference genome.
 	 */
-	public Mutation(final int pre, final int post,
-			final ReferenceGeneStorage rgs, final int startpos, final int endpos) {
+	public Mutation(final int pre, final int post, final int startpos,
+			final int endpos, final ReferenceGeneStorage rgs) {
 		this.preNode = pre;
 		this.postNode = post;
-		this.referenceGeneStorage = rgs;
 		this.startposition = startpos;
 		this.endposition = endpos;
+		this.referenceGeneStorage = rgs;
 		affectedNodeGroups = 0;
 		calculateGeneralScore();
 	}

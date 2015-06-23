@@ -110,9 +110,9 @@ public final class MutationFinder {
 						if (node.getNextNodes().contains(endnode)) {
 							InsertionMutation mut = new InsertionMutation(
 									node.getId(), endnode.getId(),
-									next.getId(),
+									node.getStart(), node.getEnd(),
 									graph.getReferenceGeneStorage(),
-									node.getStart(), node.getEnd());
+									next.getId());
 							ins.add(mut);
 						}
 					}
@@ -154,8 +154,8 @@ public final class MutationFinder {
 			}
 			if (isDeletion) {
 				DeletionMutation mut = new DeletionMutation(node.getId(),
-						endnode.getId(), graph.getReferenceGeneStorage(),
-						node.getStart(), node.getEnd());
+						endnode.getId(), node.getStart(), node.getEnd(),
+						graph.getReferenceGeneStorage());
 				dels.add(mut);
 			}
 		}
@@ -211,8 +211,8 @@ public final class MutationFinder {
 							.getDNode(inNodes.iterator().next()).getContent()
 							.length() > 1))) {
 				ComplexMutation mut = new ComplexMutation(node.getId(), srcId,
-						inNodes, graph.getReferenceGeneStorage(),
-						node.getStart(), node.getEnd());
+						node.getStart(), node.getEnd(),
+						graph.getReferenceGeneStorage(), inNodes);
 				ins.add(mut);
 			}
 		}

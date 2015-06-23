@@ -25,16 +25,16 @@ public class MutationTest {
 		rgs = new ReferenceGeneStorage(null);
 		rgs.setGeneAnnotation(new File(
 				"src/test/resources/mutationTestGene.gff"));
-		mutingen = new PointMutation(1, new HashSet<Integer>(
-				Arrays.asList(2, 3)), 4, 6, 10, rgs);
-		mutnotgen = new PointMutation(1, new HashSet<Integer>(Arrays.asList(2,
-				3)), 4, 1, 5, rgs);
-		mutbegin = new PointMutation(1, new HashSet<Integer>(
-				Arrays.asList(2, 3)), 4, 10, 12, rgs);
-		mutend = new PointMutation(1,
-				new HashSet<Integer>(Arrays.asList(2, 3)), 4, 1, 6, rgs);
-		mutresist = new PointMutation(1, new HashSet<Integer>(Arrays.asList(2,
-				3)), 4, 12, 15, rgs);
+		mutingen = new PointMutation(1, 4, 6, 10, rgs, new HashSet<Integer>(
+				Arrays.asList(2, 3)));
+		mutnotgen = new PointMutation(1, 4, 1, 5, rgs, new HashSet<Integer>(
+				Arrays.asList(2, 3)));
+		mutbegin = new PointMutation(1, 4, 10, 12, rgs, new HashSet<Integer>(
+				Arrays.asList(2, 3)));
+		mutend = new PointMutation(1, 4, 1, 6, rgs, new HashSet<Integer>(
+				Arrays.asList(2, 3)));
+		mutresist = new PointMutation(1, 4, 12, 15, rgs, new HashSet<Integer>(
+				Arrays.asList(2, 3)));
 	}
 
 	@Test

@@ -26,10 +26,10 @@ public class InsertionMutation extends Mutation {
 	 * @param endpos
 	 *            The end position on the reference genome.
 	 */
-	public InsertionMutation(final int pre, final int post,
-			final int insertednode, final ReferenceGeneStorage rgs,
-			final int startpos, final int endpos) {
-		super(pre, post, rgs, startpos, endpos);
+	public InsertionMutation(final int pre, final int post, final int startpos,
+			final int endpos, final ReferenceGeneStorage rgs,
+			final int insertednode) {
+		super(pre, post, startpos, endpos, rgs);
 		this.inNode = insertednode;
 	}
 
