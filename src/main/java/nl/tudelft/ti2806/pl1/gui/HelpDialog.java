@@ -31,12 +31,6 @@ public class HelpDialog extends JDialog {
 	/** The size of the help dialog. */
 	private static final int WIDTH = 600, HEIGHT = 500;
 
-	/** The width difference between the dialog and its components. */
-	private static final int I_OFFSET = 50;
-
-	/** The size of the content label. */
-	private static final int I_WIDTH = WIDTH - I_OFFSET, I_HEIGHT = 620;
-
 	/** The padding around the labels. */
 	private static final Border EMPTY_BORDER = new EmptyBorder(10, 10, 10, 10);
 
@@ -59,6 +53,7 @@ public class HelpDialog extends JDialog {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setResizable(false);
+		setLocationRelativeTo(null);
 		content = new JPanel(new BorderLayout());
 		tabs = new JTabbedPane();
 		tabs.addTab("Using DN/App", makeUsingDNApp());
@@ -72,13 +67,15 @@ public class HelpDialog extends JDialog {
 	 */
 	private JPanel makeUsingDNApp() {
 		JPanel ret = new JPanel(new BorderLayout());
+
 		JLabel info = new JLabel();
-		info.setText(readHelpFile(HELP_USING_DNAPP));
+		String help = readHelpFile(HELP_USING_DNAPP);
+		info.setText(help);
+		pack();
 		info.setBorder(EMPTY_BORDER);
-		info.setPreferredSize(new Dimension(I_WIDTH, I_HEIGHT));
 		JScrollPane jsp = new JScrollPane(info,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		ret.add(jsp, BorderLayout.CENTER);
 		return ret;
 	}
