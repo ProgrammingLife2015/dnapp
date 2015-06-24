@@ -1,6 +1,7 @@
 package nl.tudelft.ti2806.pl1.reader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.Dimension;
 import java.io.IOException;
@@ -115,11 +116,13 @@ public class NodePlacerTest {
 		Graph gsg = ConvertDGraph.convert(graph);
 		assertEquals(0, gsg.getNode("0").getAttribute("y"));
 		assertEquals(0, gsg.getNode("1").getAttribute("y"));
+		int old1 = gsg.getNode("1").getAttribute("y");
 		assertEquals(0, gsg.getNode("2").getAttribute("y"));
+		int old2 = gsg.getNode("2").getAttribute("y");
 		NodePlacer.placeY(gsg);
 		assertEquals(0, gsg.getNode("0").getAttribute("y"));
-		assertEquals(30, gsg.getNode("1").getAttribute("y"));
-		assertEquals(0, gsg.getNode("2").getAttribute("y"));
+		assertTrue(old1 != (int) gsg.getNode("1").getAttribute("y")
+				|| old2 != (int) gsg.getNode("2").getAttribute("y"));
 	}
 
 	@Test
