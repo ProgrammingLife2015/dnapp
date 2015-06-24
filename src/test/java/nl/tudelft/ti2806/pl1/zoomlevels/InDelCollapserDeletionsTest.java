@@ -75,13 +75,92 @@ public class InDelCollapserDeletionsTest {
 		assertTrue(gsg.getNode("3") != null);
 		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
 		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
-		for (DeletionMutation mut : muts) {
-			InDelCollapser.collapseDeletion(mut, gsg);
-		}
+		InDelCollapser.collapseDeletions(muts, gsg, 30);
 		assertTrue(gsg.getNode("1") != null);
 		assertTrue(gsg.getNode("2") != null);
 		assertTrue(gsg.getNode("3") != null);
 		assertFalse(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+	}
+
+	@Test
+	public void belowThresholdTest() {
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+		InDelCollapser.collapseDeletions(muts, gsg, 0);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+	}
+
+	@Test
+	public void largeSize() {
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+
+		gsg.getNode("1").addAttribute("end", 1);
+		gsg.getNode("2").addAttribute("start", 50000);
+		InDelCollapser.collapseDeletions(muts, gsg, 5001);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertFalse(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+	}
+
+	@Test
+	public void largeSize2() {
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+
+		gsg.getNode("1").addAttribute("end", 1);
+		gsg.getNode("2").addAttribute("start", "50000");
+		InDelCollapser.collapseDeletions(muts, gsg, 5001);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertFalse(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+	}
+
+	@Test
+	public void largeSize3() {
+		Collection<DeletionMutation> muts = MutationFinder
+				.findDeletionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
+
+		gsg.getNode("1").addAttribute("end", 1);
+		gsg.getNode("2").addAttribute("start", 50000);
+		InDelCollapser.collapseDeletions(muts, gsg, 90);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("2")));
 		assertTrue(gsg.getNode("1").hasEdgeBetween(gsg.getNode("3")));
 	}
 

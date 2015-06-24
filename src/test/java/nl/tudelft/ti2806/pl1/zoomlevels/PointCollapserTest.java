@@ -1,6 +1,9 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -92,4 +95,69 @@ public class PointCollapserTest {
 		assertTrue(gsg.getNode("4") != null);
 		assertTrue(gsg.getNode("COLLAPSED_2/3/4") != null);
 	}
+
+	@Test
+	public void simpleSNPCaseThresholdTest() {
+		Collection<PointMutation> muts = new HashSet<PointMutation>();
+		PointMutation m1 = mock(PointMutation.class);
+		PointMutation m2 = mock(PointMutation.class);
+		PointMutation m3 = mock(PointMutation.class);
+		when(m1.getScore()).thenReturn(20d);
+		when(m2.getScore()).thenReturn(20d);
+		when(m3.getScore()).thenReturn(20d);
+		muts.add(m1);
+		muts.add(m2);
+		muts.add(m3);
+
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+
+		Graph newgsg = PointCollapser.collapseNodes(muts, gsg, 10, "");
+		assertEquals(newgsg, gsg);
+	}
+
+	@Test
+	public void findSelectedTest() {
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+		assertEquals(String.valueOf(Integer.MIN_VALUE),
+				PointCollapser.findSelected(gsg));
+
+		String id = "SELECTEDNODE";
+		gsg.addNode(id);
+		gsg.getNode(id).setAttribute("ui.class", "selected");
+		assertEquals(id, PointCollapser.findSelected(gsg));
+	}
+
+	@Test
+	public void extendedSNPTest() {
+		DNode extra = new DNode(5, sources, 0, 0, "");
+		DNode extra2 = new DNode(6, sources, 0, 0, "");
+		DEdge e5 = new DEdge(SNPNode1, extra);
+		DEdge e6 = new DEdge(extra2, SNPNode2);
+		graph.addDNode(extra);
+		graph.addDEdge(e5);
+		graph.addDNode(extra2);
+		graph.addDEdge(e6);
+
+		Collection<PointMutation> muts = PointMutationFinder
+				.findPointMutations(graph);
+		graph.setStart(start);
+		gsg = ConvertDGraph.convert(graph);
+
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		gsg = PointCollapser.collapseNodes(muts, gsg, 10,
+				String.valueOf(SNPNode1.getId()));
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		assertTrue(gsg.getNode("COLLAPSED_2/3/4") != null);
+		assertTrue(gsg.getNode("COLLAPSED_2/3/4").getAttribute("ui.class")
+				.equals("selected"));
+	}
+
 }

@@ -172,4 +172,67 @@ public class ComplexCollapserTest {
 		assertTrue(gsg.getNode("6") != null);
 		assertTrue(gsg.getNode("7") != null);
 	}
+
+	@Test
+	public void tooLowThresholdTest() {
+		DNode ins1 = new DNode(2, insertSrc, 0, 0, "");
+		DNode ins2 = new DNode(3, insertSrc2, 0, 0, "");
+		DNode ins3 = new DNode(4, insertSrc3, 0, 0, "");
+		DNode ins4 = new DNode(5, insertSrc3, 0, 0, "");
+		DNode end1 = new DNode(6, sources, 0, 0, "");
+		DNode end2 = new DNode(7, sources, 0, 0, "");
+		ins1.setDepth(2);
+		ins2.setDepth(3);
+		ins3.setDepth(3);
+		ins4.setDepth(4);
+		end1.setDepth(2);
+		end2.setDepth(5);
+		DEdge e1 = new DEdge(start, ins1);
+		DEdge e2 = new DEdge(start, end1);
+		DEdge e3 = new DEdge(ins1, ins2);
+		DEdge e4 = new DEdge(ins1, ins3);
+		DEdge e5 = new DEdge(ins2, end2);
+		DEdge e6 = new DEdge(ins3, ins4);
+		DEdge e7 = new DEdge(ins3, end1);
+		DEdge e8 = new DEdge(ins3, end2);
+		DEdge e9 = new DEdge(ins4, end2);
+		DEdge e10 = new DEdge(end1, end2);
+		graph.addDNode(ins1);
+		graph.addDNode(ins2);
+		graph.addDNode(ins3);
+		graph.addDNode(ins4);
+		graph.addDNode(end1);
+		graph.addDNode(end2);
+		graph.addDEdge(e1);
+		graph.addDEdge(e2);
+		graph.addDEdge(e3);
+		graph.addDEdge(e4);
+		graph.addDEdge(e5);
+		graph.addDEdge(e6);
+		graph.addDEdge(e7);
+		graph.addDEdge(e8);
+		graph.addDEdge(e9);
+		graph.addDEdge(e10);
+
+		graph.setStart(start);
+		Collection<ComplexMutation> muts = MutationFinder.findComplexMutations(
+				graph, null);
+
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		assertTrue(gsg.getNode("5") != null);
+		assertTrue(gsg.getNode("6") != null);
+		assertTrue(gsg.getNode("7") != null);
+		ComplexCollapser.collapseComplexMutations(muts, gsg, 50);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		assertTrue(gsg.getNode("5") != null);
+		assertTrue(gsg.getNode("6") != null);
+		assertTrue(gsg.getNode("7") != null);
+	}
 }
