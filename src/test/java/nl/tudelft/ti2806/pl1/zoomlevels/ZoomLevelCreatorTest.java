@@ -10,9 +10,9 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import nl.tudelft.ti2806.pl1.DGraph.DEdge;
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.mutation.ComplexMutation;
 import nl.tudelft.ti2806.pl1.mutation.DeletionMutation;
 import nl.tudelft.ti2806.pl1.mutation.InsertionMutation;

@@ -9,10 +9,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DEdge;
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.graph.DEdge;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 
 import org.graphstream.graph.Graph;
 import org.junit.After;
