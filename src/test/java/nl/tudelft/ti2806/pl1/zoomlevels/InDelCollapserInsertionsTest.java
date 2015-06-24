@@ -65,6 +65,34 @@ public class InDelCollapserInsertionsTest {
 	}
 
 	@Test
+	public void belowThreshHoldTest() {
+		Collection<InsertionMutation> muts = MutationFinder
+				.findInsertionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("4") != null);
+		InDelCollapser.collapseInsertions(muts, gsg, 30);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") == null);
+		assertTrue(gsg.getNode("4") != null);
+	}
+
+	@Test
+	public void aboveThreshHoldTest() {
+		Collection<InsertionMutation> muts = MutationFinder
+				.findInsertionMutations(graph, null);
+		gsg = ConvertDGraph.convert(graph);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("4") != null);
+		InDelCollapser.collapseInsertions(muts, gsg, 0);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("4") != null);
+	}
+
+	@Test
 	public void simpleInsertionCaseTest() {
 		Collection<InsertionMutation> muts = MutationFinder
 				.findInsertionMutations(graph, null);
