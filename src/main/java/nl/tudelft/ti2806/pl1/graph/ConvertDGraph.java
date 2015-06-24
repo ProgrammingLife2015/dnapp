@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
-
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -28,28 +26,12 @@ public final class ConvertDGraph {
 	 */
 	private static final int LABEL_LENGTH_THRESHOLD = 10;
 
-	/**
-	 * Maximum thickness of the edge.
-	 */
+	/** Maximum thickness of the edge. */
 	private static final int MAX_SIZE_EDGE = 5;
 
 	/**
 	 */
 	private ConvertDGraph() {
-	}
-
-	/**
-	 * Converts a part of a data graph into a visual graph.
-	 * 
-	 * @param dgraph
-	 *            The data graph to convert.
-	 * @param va
-	 *            The area of the graph to convert.
-	 * @return The visual graph containing the nodes positioned in the given
-	 *         view area of the data graph.
-	 */
-	public static Graph convert(final DGraph dgraph, final ViewArea va) {
-		return convert(dgraph);
 	}
 
 	/**

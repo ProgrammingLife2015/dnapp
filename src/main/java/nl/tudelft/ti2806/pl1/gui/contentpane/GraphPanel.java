@@ -625,25 +625,6 @@ public class GraphPanel extends JSplitPane implements ContentTab,
 	}
 
 	/**
-	 * Loads or reloads a specific part of the view panel.
-	 *
-	 * @param va
-	 *            The view area to (re)load
-	 */
-	public void loadViewArea(final ViewArea va) {
-		ConvertDGraph.convert(dgraph, va);
-	}
-
-	/**
-	 * Loads or reloads the part of the view panel currently on the screen.
-	 * 
-	 * @see JScrollPane#getViewport()
-	 */
-	public void loadCurrentViewArea() {
-		loadViewArea(getCurrentViewArea());
-	}
-
-	/**
 	 * @return The current view area of the scrollable graph pane.
 	 */
 	public ViewArea getCurrentViewArea() {

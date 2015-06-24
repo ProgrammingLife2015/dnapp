@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import nl.tudelft.ti2806.pl1.graph.ConvertDGraph;
-import nl.tudelft.ti2806.pl1.graph.DEdge;
-import nl.tudelft.ti2806.pl1.graph.DGraph;
-import nl.tudelft.ti2806.pl1.graph.DNode;
-import nl.tudelft.ti2806.pl1.gui.contentpane.ViewArea;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
 import org.graphstream.graph.Graph;
@@ -31,8 +26,6 @@ public class ConvertDGraphTest {
 
 	Graph gsGraph;
 
-	ViewArea va;
-
 	@Before
 	public void setup() {
 		graph = mock(DGraph.class);
@@ -43,7 +36,6 @@ public class ConvertDGraphTest {
 
 		edge = mock(DEdge.class);
 		edge2 = mock(DEdge.class);
-		va = mock(ViewArea.class);
 
 		when(node1.getId()).thenReturn(1);
 		when(node1.getX()).thenReturn(0);
@@ -72,9 +64,8 @@ public class ConvertDGraphTest {
 		when(graph.getNodes()).thenReturn(map);
 		when(graph.getEdges()).thenReturn(Arrays.asList(edge));
 		when(graph.getStart()).thenReturn(node1);
-		when(graph.getDNodes(va)).thenReturn(map.values());
 
-		gsGraph = ConvertDGraph.convert(graph, va);
+		gsGraph = ConvertDGraph.convert(graph);
 	}
 
 	@After

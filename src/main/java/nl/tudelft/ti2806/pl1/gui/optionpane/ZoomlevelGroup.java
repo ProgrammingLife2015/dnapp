@@ -19,7 +19,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	private static final long serialVersionUID = 8506736750408563126L;
 
 	/** The default visible title. */
-	private static final String DEFAULT_TITLE = "<html><b>Current zoom level";
+	private static final String DEFAULT_TITLE = "<html><body><b>Current zoom level";
 
 	/** The size of the group. */
 	private static final Dimension SIZE = new Dimension(
@@ -63,7 +63,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 	 */
 	private void updateContent() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<html><table>");
+		sb.append("<html><body><table>");
 		mkRow(sb, "Zoom level:", String.valueOf(zoomLevel));
 		mkRow(sb, "# visible nodes:", String.valueOf(visibleNodes));
 		mkRow(sb, "# total nodes:", String.valueOf(totalNodes));
@@ -71,7 +71,7 @@ public class ZoomlevelGroup extends JPanel implements ZoomlevelObserver {
 				"% collapsed:",
 				asPercentage(((double) (totalNodes - visibleNodes))
 						/ totalNodes, 2));
-		sb.append("</table></html>");
+		sb.append("</table></body></html>");
 		info.setText(sb.toString());
 	}
 

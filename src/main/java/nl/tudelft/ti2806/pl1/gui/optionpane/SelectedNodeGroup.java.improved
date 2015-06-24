@@ -1,0 +1,165 @@
+package nl.tudelft.ti2806.pl1.gui.optionpane;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.util.Collection;
+import java.util.Set;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import nl.tudelft.ti2806.pl1.graph.DNode;
+import nl.tudelft.ti2806.pl1.gui.contentpane.NodeSelectionObserver;
+
+import org.graphstream.graph.Node;
+
+/**
+ * @author Maarten
+ * @since 18-5-2015
+ */
+public class SelectedNodeGroup extends JPanel implements NodeSelectionObserver {
+
+	/** The serial version UID. */
+	private static final long serialVersionUID = -4851724739205792429L;
+
+	/** The default visible title. */
+	private static final String DEFAULT_TITLE = "<html><b>Selected node";
+
+	/** The insets. */
+	private static final Insets INSETS = new Insets(2, 5, 2, 5);
+
+	/** The size of the group. */
+	private static final Dimension SIZE = new Dimension(
+			OptionsPane.MAX_CHILD_WIDTH, 120);
+
+	// private static final int LABEL_WIDTH
+
+	/** The width of the node content bar. */
+	private static final int NCB_WIDTH = 15;
+
+	/** The lenth of the node content bar. */
+	private static final int NCB_LENGTH = 160;
+
+	/** Whether this group should be visible or not. */
+	private boolean show = false;
+
+	private Set<DNode> dNodes;
+
+	private Node selectedNode;
+
+	private JLabel info;
+
+	/** The simple bar chart showing the distribution of nucleotides. */
+	private NodeContentBar nodeChart;
+
+	private JLabel lblSources;
+
+	/** Initialize the group layout panel. */
+	public SelectedNodeGroup() {
+		super();
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setMaximumSize(SIZE);
+		setAlignmentX(CENTER_ALIGNMENT);
+		setBorder(BorderFactory.createTitledBorder("<html><b>" + DEFAULT_TITLE));
+
+		JPanel jp = new JPanel();
+		info = new JLabel();
+		info.setBorder(BorderFactory.createLineBorder(Color.PINK));
+		jp.add(info, BorderLayout.CENTER);
+		add(jp);
+
+		nodeChart = new NodeContentBar(NCB_WIDTH, NCB_LENGTH);
+		add(new JLabel("Nucleotide type distribution:"));
+		add(nodeChart);
+
+		lblSources = new JLabel();
+		lblSources.setBorder(BorderFactory.createLineBorder(Color.PINK));
+		add(new JLabel("Sources:"));
+		add(lblSources);
+	}
+
+	/**
+	 * 
+	 */
+	private void updateContent() {
+		show = dNodes.size() == 1;
+		if (show) {
+			DNode selDNode = dNodes.iterator().next();
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html><body style='width: " + NCB_LENGTH + "px'><table>");
+			mkRow(sb, "ID:", String.valueOf(selDNode.getId()));
+			mkRow(sb, "Length:", String.valueOf(selDNode.getContent().length()));
+			sb.append("</table></body></html>");
+			info.setText(sb.toString());
+
+			lblSources.setText(collectionToString(selDNode.getSources()));
+			nodeChart.analyseString(selDNode.getContent());
+		}
+		revalidate();
+	}
+
+	/**
+	 * @param sb
+	 *            The string builder.
+	 * @param label
+	 *            The row label.
+	 * @param value
+	 *            The row value.
+	 */
+	private void mkRow(final StringBuilder sb, final String label,
+			final String value) {
+		sb.append("<tr><td>");
+		sb.append(label);
+		sb.append("</td><td>");
+		sb.append(value);
+		sb.append("</td></tr>");
+	}
+
+	/**
+	 * Sets the visible title for the grouping.
+	 * 
+	 * @param newTitle
+	 *            The new title.
+	 */
+	public final void setTitle(final String newTitle) {
+		setBorder(BorderFactory.createTitledBorder(newTitle));
+	}
+
+	@Override
+	public final void update(final Node node, final Set<DNode> innerNodes) {
+		this.selectedNode = node;
+		this.dNodes = innerNodes;
+		updateContent();
+	}
+
+	/**
+	 * @param col
+	 *            The collection to stringify.
+	 * @param <A>
+	 *            The type of the collection items.
+	 * @return The basic string representation of <code>col</code>.
+	 */
+	private <A> String collectionToString(final Collection<A> col) {
+		StringBuilder sb = new StringBuilder("<html>");
+		for (A item : col) {
+			sb.append(item.toString());
+			sb.append("<br>");
+		}
+		return sb.append("</html>").toString();
+	}
+
+	@Override
+	public boolean isVisible() {
+		return super.isVisible() && show;
+	}
+
+	@Override
+	public final String toString() {
+		return this.getClass().toString();
+	}
+}

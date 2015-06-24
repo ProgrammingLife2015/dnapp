@@ -43,7 +43,7 @@ public class GenomeTable extends JScrollPane implements PhyloChosenObserver {
 
 	/** The size of the table. */
 	private static final Dimension SIZE = new Dimension(
-			OptionsPane.MAX_CHILD_WIDTH, 200);
+			OptionsPane.MAX_CHILD_WIDTH, 180);
 
 	/** Initializes the genome table. */
 	public GenomeTable() {
