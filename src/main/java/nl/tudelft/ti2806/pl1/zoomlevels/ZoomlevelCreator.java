@@ -1,7 +1,7 @@
 package nl.tudelft.ti2806.pl1.zoomlevels;
 
-import nl.tudelft.ti2806.pl1.DGraph.ConvertDGraph;
-import nl.tudelft.ti2806.pl1.DGraph.DGraph;
+import nl.tudelft.ti2806.pl1.graph.ConvertDGraph;
+import nl.tudelft.ti2806.pl1.graph.DGraph;
 
 import org.graphstream.graph.Graph;
 

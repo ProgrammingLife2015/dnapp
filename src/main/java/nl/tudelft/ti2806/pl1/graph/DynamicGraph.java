@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.tudelft.ti2806.pl1.DGraph;
+package nl.tudelft.ti2806.pl1.graph;
 
 import java.util.Collection;
 

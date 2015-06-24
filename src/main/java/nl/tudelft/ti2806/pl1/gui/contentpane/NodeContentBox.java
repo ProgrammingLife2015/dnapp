@@ -17,7 +17,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import nl.tudelft.ti2806.pl1.DGraph.DNode;
+import nl.tudelft.ti2806.pl1.graph.DNode;
 import nl.tudelft.ti2806.pl1.gui.NucleoBase;
 import nl.tudelft.ti2806.pl1.mutation.ResistanceMutation;
 
