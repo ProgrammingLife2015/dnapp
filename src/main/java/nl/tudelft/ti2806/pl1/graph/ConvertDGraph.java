@@ -41,49 +41,116 @@ public final class ConvertDGraph {
 	 *            The data graph to convert.
 	 * @return The visual graph containing all the nodes from the data graph.
 	 */
-	@SuppressWarnings("unchecked")
 	public static Graph convert(final DGraph dgraph) {
-		int totalGenomes = dgraph.getStart().getSources().size();
 		Graph graph = new SingleGraph("");
 		Set<DEdge> edges = new HashSet<DEdge>();
 		for (DNode n : dgraph.getNodes().values()) {
 			edges.addAll(n.getAllEdges());
-			String id = String.valueOf(n.getId());
-			Node gn = graph.addNode(id);
-			gn.addAttribute("x", n.getX());
-			gn.addAttribute("y", n.getY());
-			gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
-			String nodeclass = "common";
-			if (n.hasResMuts()) {
-				nodeclass = "resistant";
-			}
-			if (String.valueOf(n.getId()).equals(dgraph.getSelected())) {
-				gn.addAttribute("ui.class", "selected");
-				gn.addAttribute("oldclass", nodeclass);
-			} else {
-				gn.addAttribute("ui.class", nodeclass);
-			}
-			gn.addAttribute("ui.color", 1 - n.getPercUnknown());
-			gn.addAttribute("contentsize", n.getContent().length());
-			gn.addAttribute("collapsed",
-					new HashSet<Integer>(Arrays.asList(n.getId())));
+			graph = addNode(graph, dgraph, n);
 		}
 		for (DEdge edge : edges) {
-			String from = String.valueOf(edge.getStartNode().getId());
-			String to = String.valueOf(edge.getEndNode().getId());
-			if (graph.getNode(from) == null) {
-				addNodeToGraph(graph, from, dgraph);
-			} else if (graph.getNode(to) == null) {
-				addNodeToGraph(graph, to, dgraph);
-			}
-			Edge eg = graph.addEdge(from + to, from, to, true);
-			Collection<String> m = (Collection<String>) edge.getStartNode()
-					.getSources().clone();
-			m.retainAll(edge.getEndNode().getSources());
-			eg.addAttribute("ui.size",
-					(int) ((double) m.size() / totalGenomes * MAX_SIZE_EDGE));
+			graph = addEdge(graph, dgraph, edge);
 		}
 		return graph;
+	}
+
+	/**
+	 * Add a edge to the visual graph based on the data.
+	 * 
+	 * @param graph
+	 *            Visual graph which the node will be added to.
+	 * @param dgraph
+	 *            Data storage of the graph.
+	 * @param edge
+	 *            Edge data information.
+	 * @return Graph with the new edge added.
+	 */
+	private static Graph addEdge(final Graph graph, final DGraph dgraph,
+			final DEdge edge) {
+		String from = String.valueOf(edge.getStartNode().getId());
+		String to = String.valueOf(edge.getEndNode().getId());
+
+		if (graph.getNode(from) == null) {
+			addNodeToGraph(graph, from, dgraph);
+		} else if (graph.getNode(to) == null) {
+			addNodeToGraph(graph, to, dgraph);
+		}
+		Edge eg = graph.addEdge(from + to, from, to, true);
+		addEdgeWidth(eg, edge, dgraph.getStart().getSources().size());
+		return graph;
+	}
+
+	/**
+	 * Calculates the amount of sources going through the edge and adjust width
+	 * based on it.
+	 * 
+	 * @param eg
+	 *            Visual edge which has to be adjusted.
+	 * @param edge
+	 *            Data edge containing the information.
+	 * @param maxsources
+	 *            The maximum amount of sources in the graph.
+	 */
+	@SuppressWarnings("unchecked")
+	private static void addEdgeWidth(final Edge eg, final DEdge edge,
+			final int maxsources) {
+		Collection<String> m = (Collection<String>) edge.getStartNode()
+				.getSources().clone();
+		m.retainAll(edge.getEndNode().getSources());
+		eg.addAttribute("ui.size",
+				(int) ((double) m.size() / maxsources * MAX_SIZE_EDGE));
+
+	}
+
+	/**
+	 * Add a node to the visual graph based on the data.
+	 * 
+	 * @param graph
+	 *            Visual graph which the node will be added to.
+	 * @param dgraph
+	 *            Data storage of the graph.
+	 * @param n
+	 *            Corresponding data node which has to be added to the visual
+	 *            graph.
+	 * @return Visual graph with the new node added.
+	 */
+	private static Graph addNode(final Graph graph, final DGraph dgraph,
+			final DNode n) {
+		String id = String.valueOf(n.getId());
+		Node gn = graph.addNode(id);
+		addAttributes(gn, n, dgraph.getSelected());
+		return graph;
+	}
+
+	/**
+	 * Adds the corresponding attributes to the visual node.
+	 * 
+	 * @param gn
+	 *            Visual node to add attributes to.
+	 * @param n
+	 *            Corresponding data node.
+	 * @param selected
+	 *            Selected node of the graph if present.
+	 */
+	private static void addAttributes(final Node gn, final DNode n,
+			final String selected) {
+		gn.addAttribute("x", n.getX());
+		gn.addAttribute("y", n.getY());
+		gn.addAttribute("ui.label", checkLabelLength(n.getContent()));
+		String nodeclass = "common";
+		if (n.hasResMuts()) {
+			nodeclass = "resistant";
+		}
+		if (String.valueOf(n.getId()).equals(selected)) {
+			gn.addAttribute("ui.class", "selected");
+			gn.addAttribute("oldclass", nodeclass);
+		} else {
+			gn.addAttribute("ui.class", nodeclass);
+		}
+		gn.addAttribute("ui.color", 1 - n.getPercUnknown());
+		gn.addAttribute("contentsize", n.getContent().length());
+		gn.addAttribute("collapsed",
+				new HashSet<Integer>(Arrays.asList(n.getId())));
 	}
 
 	/**
