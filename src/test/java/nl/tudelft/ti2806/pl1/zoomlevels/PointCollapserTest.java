@@ -17,7 +17,6 @@ import nl.tudelft.ti2806.pl1.mutation.PointMutation;
 import nl.tudelft.ti2806.pl1.mutation.PointMutationFinder;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -131,23 +130,34 @@ public class PointCollapserTest {
 	}
 
 	@Test
-	public void testCheckViable() {
-		Graph g = mock(Graph.class);
-		PointMutation pm = mock(PointMutation.class);
-		Node node1 = mock(Node.class);
-		Node node2 = mock(Node.class);
-		int id1 = 1;
-		int id2 = 2;
-		when(pm.getPreNode()).thenReturn(id1);
-		when(pm.getPostNode()).thenReturn(id2);
-		when(g.getNode(id1)).thenReturn(node1);
-		when(g.getNode(id2)).thenReturn(node2);
+	public void extendedSNPTest() {
+		DNode extra = new DNode(5, sources, 0, 0, "");
+		DNode extra2 = new DNode(6, sources, 0, 0, "");
+		DEdge e5 = new DEdge(SNPNode1, extra);
+		DEdge e6 = new DEdge(extra2, SNPNode2);
+		graph.addDNode(extra);
+		graph.addDEdge(e5);
+		graph.addDNode(extra2);
+		graph.addDEdge(e6);
 
 		Collection<PointMutation> muts = PointMutationFinder
 				.findPointMutations(graph);
 		graph.setStart(start);
 		gsg = ConvertDGraph.convert(graph);
 
-		muts.add(pm);
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		gsg = PointCollapser.collapseNodes(muts, gsg, 10,
+				String.valueOf(SNPNode1.getId()));
+		assertTrue(gsg.getNode("1") != null);
+		assertTrue(gsg.getNode("2") != null);
+		assertTrue(gsg.getNode("3") != null);
+		assertTrue(gsg.getNode("4") != null);
+		assertTrue(gsg.getNode("COLLAPSED_2/3/4") != null);
+		assertTrue(gsg.getNode("COLLAPSED_2/3/4").getAttribute("ui.class")
+				.equals("selected"));
 	}
+
 }
