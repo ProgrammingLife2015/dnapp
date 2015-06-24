@@ -46,6 +46,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu fileMenu() {
 		JMenu ret = new JMenu("File");
+		ret.setMnemonic('F');
 		JMenuItem impGraph = new JMenuItem();
 		setMenuItem(impGraph, "Import graph", 'I',
 				"Import a sequence graph (.node.graph and .edge.graph)",
@@ -84,6 +85,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenu helpMenu() {
 		JMenu ret = new JMenu("Help");
+		ret.setMnemonic('H');
 		JMenuItem help = new JMenuItem();
 		setMenuItem(help, "Help", 'H', "Press to show shortcuts", AppEvent.HELP);
 		setAcc(help, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
@@ -107,6 +109,7 @@ public class MenuBar extends JMenuBar {
 				return window != null && window.getContent().isGraphLoaded();
 			}
 		};
+		ret.setMnemonic('V');
 
 		JMenuItem reset = new JMenuItem();
 		setMenuItem(reset, "Reset initial view", 'R',
