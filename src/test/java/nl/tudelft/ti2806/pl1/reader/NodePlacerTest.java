@@ -118,8 +118,8 @@ public class NodePlacerTest {
 		assertEquals(0, gsg.getNode("2").getAttribute("y"));
 		NodePlacer.placeY(gsg);
 		assertEquals(0, gsg.getNode("0").getAttribute("y"));
-		assertEquals(30, gsg.getNode("1").getAttribute("y"));
-		assertEquals(0, gsg.getNode("2").getAttribute("y"));
+		assertEquals(0, gsg.getNode("1").getAttribute("y"));
+		assertEquals(30, gsg.getNode("2").getAttribute("y"));
 	}
 
 	@Test
